@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "baseUrl": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "bundler",
@@ -12,30 +13,36 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "paths": {},
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "@PrismaClient": ["./generated/prisma/client"],
+      "@book-store-2026/libs": ["./apps/libs/src/index.ts"],
+      "@store/shared-models": ["./apps/libs/src/index.ts"],
+      "@store/libs": ["./apps/libs/src/index.ts"],
+      "@prisma-client": ["generated/prisma-entry.ts"],
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
   },
   "files": [],
-  "include": [],
+  "include": ["apps/**/*.ts", "libs/**/*.ts", "src/**/*.ts"],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.app.json",
     },
     {
-      "path": "./tsconfig.spec.json"
-    }
+      "path": "./tsconfig.spec.json",
+    },
   ],
   "compileOnSave": false,
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
 }

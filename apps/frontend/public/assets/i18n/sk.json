@@ -1,0 +1,229 @@
+{
+  "common": {
+    "success_logout": "Logout úspešný.",
+    "success_login": "Login úspešný.",
+    "failed_login": "Login neúspešný, skúste znova.",
+    "sold_out": "Vypredané",
+    "legal": "© 2000-2026 BookShop. Internetové kníhkupectvo. Všetky práva vyhradené.",
+    "sold_out_tooltip": "Ach, mrzí nás to, z tejto knihy sa už predali všetky výtlačky a nemáme ju na sklade my ani vydavateľ :( Teoreticky však môžete mať šťastie v niektorých iných obchodoch, ktoré ešte nepredali posledné kusy."
+  },
+  "footer": {
+    "apps": "Aplikácie BookShop",
+    "audiobooks": "Audioknihy",
+    "stores": "Predajne a podujatia",
+    "gift": "Darčekové karty",
+    "podcast": "Podcast",
+    "blog": "Blog Reads",
+    "pickup": "Osobný odber | v predajni",
+    "membership": "Členstvo",
+    "mastercard": "Mastercard",
+    "services": {
+      "services": "Služby",
+      "affiliate_program": "Partnerský program",
+      "publisher_author_guidelines": "Pokyny pre vydavateľov a autorov",
+      "bulk_order_discounts": "Zľavy na hromadné objednávky",
+      "mobile_apps": "Mobilné aplikácie",
+      "membership": "Členstvo",
+      "bookfairs": "Knižné veľtrhy"
+    },
+    "about_us": {
+      "about_us": "O nás",
+      "about_bookshop": "O BookShop",
+      "careers_at_bookshop": "Kariéra v BookShop",
+      "bookshop_inc": "BookShop, Inc.",
+      "bookshop_kitchen": "BookShop Kitchen"
+    },
+    "quick_help": {
+      "quick_help": "Rýchla pomoc",
+      "help_center": "Centrum pomoci",
+      "shipping_returns": "Doprava a vrátenie tovaru",
+      "store_pickup": "Osobný odber",
+      "order_status": "Stav objednávky",
+      "product_recalls": "Stiahnutie produktov",
+      "corrections_updates": "Opravy a aktualizácie",
+      "gift_cards": "Darčekové karty"
+    },
+    "shop_by_category": {
+      "shop_by_category": "Nakupovať podľa kategórie",
+      "books": "Knihy",
+      "fiction": "Beletria",
+      "nonfiction": "Náučná literatúra",
+      "kids": "Deti",
+      "teens_ya": "Dospievajúci a YA",
+      "ebooks": "eKnihy",
+      "audiobooks": "Audioknihy"
+    },
+    "privacy": "Zadajte svoju e‑mailovú adresu a získajte ponuky a novinky od BookShop. Môžete si pozrieť Zásady ochrany osobných údajov",
+    "unsubscribe": "Z odberu e‑mailov sa môžete kedykoľvek odhlásiť.",
+    "rewards": "Odmeny",
+    "learn_more": "Zistiť viac",
+    "sign_up_free": "Zaregistrujte sa zadarmo",
+    "follow_us": "Nasleduj nás",
+    "find_store": "Nájdi obchod",
+    "stay_know": "Zostaňte informovaní",
+    "here": "tu",
+    "store_placeholder": "Názov, umiestnenie, PSC",
+    "enroll": "Zapojte sa do programu Odmeny úplne <strong>ZADARMO</strong>. Sledujte, ako sa vaše úspory zvyšujú!"
+  },
+  "banner": {
+    "title": "✨ Objavte naše najnovšie príbehy na blogu →"
+  },
+  "administration": {
+    "title": "Administrácia",
+    "subtitle": "Spravujte svoj katalóg kníh a skladové zásoby",
+    "first": "Prvá",
+    "last": "Posledná",
+    "page": "Strana",
+    "catalog": "Katalóg",
+    "support": "Kontaktuj podporu",
+    "back_home": "Vráť sa domov",
+    "not_found": "Kniha sa nenašla",
+    "add_book": "Pridať knihu",
+    "delete_book": "Odstrániť knihu?",
+    "delete_book2": "Naozaj chcete vymazať knihu",
+    "delete_btn": "Vymazať",
+    "cancel_btn": "Zrušiť",
+    "upload": "Nahrať obálku knihy",
+    "upload2": "Vyberte kvalitný obrázok pre obálku knihy.",
+    "upload_btn": "Nahrať a uložiť",
+    "select_file_btn": "Vyber súbor prosím",
+    "no_file_chosen": "žiadny súbor",
+    "sorry": "Prepáčte, nenašli sme stránku, ktorú hľadáte.\nMožno bola presunutá na iné miesto alebo je nedostupná na neurčito."
+  },
+  "order_table": {
+    "date": "Dátum objednávky",
+    "order": "ID objednávky & Zákazník",
+    "total": "Celková suma",
+    "state": "Stav",
+    "actions": "Akcie",
+    "paid": "ZAPLATENÉ",
+    "cancel": "ZRUŠIŤ",
+    "remove": "ODSTRÁNIŤ",
+    "pending": "ČAKÁME"
+  },
+  "pricing": {
+    "discount_price": "Super cena",
+    "you_save": "Ušetríš: "
+  },
+  "cart": {
+    "remove_from_cart": "Odobrať",
+    "add_to_cart": "Do košíka"
+  },
+  "list_item": {
+    "cover": "Obálka {{title}}",
+    "news": "Nové",
+    "best": "Bestseller",
+    "sale": "Výpredaj",
+    "pages": "Strán",
+    "stock": "Na sklade {{items}} ks",
+    "soldOut": "Vypredané"
+  },
+  "book_table": {
+    "title": "Názov a autor",
+    "publisher": "Vydavateľ a dátum",
+    "brand": "Značka",
+    "category": "Kategória",
+    "availability": "Sklad",
+    "price": "Cena",
+    "status": "Stav",
+    "actions": "Akcie",
+    "soldOut": "Vypredané",
+    "news": "Novinky",
+    "available": "Na sklade",
+    "delete": "Vymazať",
+    "edit": "Upraviť",
+    "edit_cover": "Upraviť obálku",
+    "detail": "Detail",
+    "isbn": "ISBN"
+  },
+  "filters": {
+    "sections": {
+      "type": "Produkt",
+      "search": "Hľadať",
+      "status": "Stav",
+      "sort": "Zoradiť podľa",
+      "categories": "Kategórie"
+    },
+    "placeholders": {
+      "search": "Názov alebo autor..."
+    },
+    "actions": {
+      "clear": "Vymazať",
+      "submit": "Použiť filter",
+      "waiting": "Čakajte..."
+    },
+    "bar": {
+      "all": "Všetko",
+      "bestsellers": "Bestsellery",
+      "new_releases": "Najnovšie",
+      "most_expensive": "Najdrahšie",
+      "cheapest": "Najlacnejšie",
+      "discount": "Zľava",
+      "to_cart": "Do košíka",
+      "profile": "Profil",
+      "vip": "VIP"
+    },
+    "status_types": {
+      "available": "Dostupné",
+      "newReleases": "Novinky",
+      "discounted": "Zľavnené",
+      "bestsellers": "Bestsellery"
+    },
+    "sort_options": {
+      "popularity": "Popularita",
+      "price": "Cena"
+    },
+    "stats": {
+      "showing": "{{current}} / {{total}}"
+    }
+  },
+  "edit_modal": {
+    "edit": "Upraviť knihu",
+    "create": "Pridať novú knihu",
+    "name": "Názov",
+    "name_min": "Názov musí mať aspoň 3 znaky",
+    "author": "Autor",
+    "price": "Cena",
+    "available": "Dostupné (ks)",
+    "category": "Kategória",
+    "pick_category": "Vyberte kategóriu",
+    "discount": "Zľava",
+    "description": "Popis",
+    "pageCount": "Počet strán",
+    "popularity": "Popularita",
+    "publisher": "Vydavateľ",
+    "publishedDate": "Dátum vydania",
+    "btn_edit": "Uložiť zmeny",
+    "btn_create": "Vytvoriť knihu",
+    "local_save": "Uložiť LC",
+    "close": "Zatvoriť okno",
+    "cancel": "Zrušiť"
+  },
+  "comparison": {
+    "title": "Názov",
+    "author": "Autor",
+    "price": "Cena",
+    "category": "Kategória",
+    "pageCount": "Počet strán",
+    "publisher": "Vydavateľstvo",
+    "publishedDate": "Dátum vydania",
+    "popularity": "Popularita",
+    "book1": "Kniha A",
+    "book2": "Kniha B",
+    "isbn": "ISBN",
+    "availability": "Dostupnosť",
+    "soldOut": "Vypredané",
+    "available": "Na sklade",
+    "compare": "Porovnaj",
+    "heading": "Porovnávač kníh",
+    "subheading": "Vyberte knihy na porovnanie",
+    "left": "Lavá",
+    "right": "Pravá"
+  },
+  "premium": {
+    "title": "Prémiové členstvo",
+    "active": "Váš VIP prístup je aktívny",
+    "prolong": "Predĺžiť predplatné",
+    "days": "dní"
+  }
+}

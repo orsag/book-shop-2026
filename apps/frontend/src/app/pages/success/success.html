@@ -1,0 +1,75 @@
+<div class="min-h-screen bg-base-200 py-12 px-4">
+  <div class="max-w-3xl mx-auto">
+
+    @if (isLoading()) {
+      <div class="flex justify-center"><span class="loading loading-dots loading-lg"></span></div>
+    } @else if (order(); as details) {
+
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-success text-success-content rounded-full mb-4">
+          <svg lucideChessQueen size="48"></svg>
+        </div>
+        <h1 class="text-4xl font-bold">Ďakujeme za objednávku!</h1>
+        <p class="text-base-content/70 mt-2">Vaša objednávka <strong>#{{ details.id }}</strong> bola úspešne prijatá.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="md:col-span-2 space-y-4">
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title mb-4">Položky objednávky</h2>
+              <div class="divide-y divide-base-200">
+                @for (item of details.items; track item.productId) {
+                  <div class="py-4 flex items-center gap-4">
+                    <div class="avatar">
+                      <div class="w-16 rounded">
+                        <img [src]="item.product.coverUrl" [alt]="item.product.name" />
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="font-bold">{{ item.product.name }}</h3>
+                      <p class="text-sm opacity-50">{{ item.quantity }}x {{ item.price | currency:'EUR' }}</p>
+                    </div>
+                    <div class="font-semibold">
+                      {{ (item.quantity * item.price) | currency:'EUR' }}
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="card bg-primary text-primary-content shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title text-sm uppercase tracking-widest opacity-80">Celková suma</h2>
+              <p class="text-3xl font-black">{{ details.totalAmount | currency:'EUR' }}</p>
+              <div class="badge badge-secondary mt-2 font-bold">{{ details.status }}</div> </div>
+          </div>
+
+          <button routerLink="/home" class="btn btn-primary btn-block">
+            <svg lucideShoppingBasket></svg>
+            Späť do obchodu
+          </button>
+          <button routerLink="/profile" class="btn btn-primary btn-block">
+            <svg lucideCircleUserRound></svg>
+            Späť do profilu
+          </button>
+        </div>
+      </div>
+
+    } @else {
+      <div class="flex flex-col items-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-error text-error-content rounded-full mb-4">
+          <svg lucideFrown size="48"></svg>
+        </div>
+        <h1 class="text-4xl font-bold">Objednávku sa nepodarilo nájsť.</h1>
+        <p class="text-base-content/70 mt-2">Vaša objednávka <strong class="text-error">
+          #{{ routeId() }}</strong> sa nenašla.
+        </p>
+      </div>
+    }
+  </div>
+</div>

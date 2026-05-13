@@ -1,0 +1,86 @@
+@reference "tailwindcss";
+
+.active {
+  @apply font-bold shadow-sm;
+}
+
+/* More prominent gold pulse with a shimmer effect */
+.premium-glow {
+  animation: gold-pulse-prominent 1.4s infinite;
+  border-radius: 9999px; /* Ensures the glow follows the circle */
+}
+
+@keyframes gold-pulse-prominent {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2); /* Shimmer effect */
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); /* Larger spread */
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes rainbow-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.text-magic {
+  /* Define the rainbow gradient */
+  background-image: linear-gradient(
+    to right,
+    #ef4444, /* Red */
+    #f97316, /* Orange */
+    #eab308, /* Yellow */
+    #22c55e, /* Green */
+    #3b82f6, /* Blue */
+    #a855f7, /* Indigo */
+    #ec4899  /* Pink/Violet */
+  );
+
+  /* Required for text gradient effect */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+
+  /* Crucial: Make the background wider than the text so it can move */
+  background-size: 200% auto;
+
+  /* The animation */
+  animation: rainbow-move 1.5s linear infinite;
+}
+
+/* Base state: No transition, so it resets to 0 instantly */
+.logo-base {
+  transform: rotate(0deg);
+}
+
+/* Active state: Smoothly rotates to 360 */
+.logo-spin {
+  transform: rotate(360deg);
+  transition: transform 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add this to your navbar.css */
+.indicator-item.badge {
+  background-size: 200% 200%;
+  animation: shine-gradient 3s linear infinite;
+}
+
+@keyframes shine-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

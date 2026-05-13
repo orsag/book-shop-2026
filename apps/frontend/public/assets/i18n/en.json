@@ -1,0 +1,229 @@
+{
+  "common": {
+    "success_logout": "Logout successful.",
+    "success_login": "Login successful.",
+    "failed_login": "Login failed, try again.",
+    "sold_out": "Sold out",
+    "sold_out_tooltip": "Oh no, we’re sorry — all copies of this book have already been sold, and neither we nor the publisher have it in stock anymore :(\nTheoretically, you might still get lucky in some other stores that haven’t sold their last copies yet.",
+    "legal": "© 2000-2026 BookShop. Internetové kníhkupectvo. Všetky práva vyhradené."
+  },
+  "footer": {
+    "apps": "BookShop Apps",
+    "audiobooks": "Audiobooks",
+    "stores": "Stores & Events",
+    "gift": "Gift Cards",
+    "podcast": "Podcast",
+    "blog": "Reads Blog",
+    "pickup": "In Store Pickup",
+    "membership": "Membership",
+    "mastercard": "Mastercard",
+    "services": {
+      "services": "Services",
+      "affiliate_program": "Affiliate Program",
+      "publisher_author_guidelines": "Publisher & Author Guidelines",
+      "bulk_order_discounts": "Bulk Order Discounts",
+      "mobile_apps": "Mobile Apps",
+      "membership": "Membership",
+      "bookfairs": "Bookfairs"
+    },
+    "about_us": {
+      "about_us": "About Us",
+      "about_bookshop": "About BookShop",
+      "careers_at_bookshop": "Careers at BookShop",
+      "bookshop_inc": "BookShop, Inc.",
+      "bookshop_kitchen": "BookShop Kitchen"
+    },
+    "quick_help": {
+      "quick_help": "Quick Help",
+      "help_center": "Help Center",
+      "shipping_returns": "Shipping & Returns",
+      "store_pickup": "Store Pickup",
+      "order_status": "Order Status",
+      "product_recalls": "Product Recalls",
+      "corrections_updates": "Corrections & Updates",
+      "gift_cards": "Gift Cards"
+    },
+    "shop_by_category": {
+      "shop_by_category": "Shop by Category",
+      "books": "Books",
+      "fiction": "Fiction",
+      "nonfiction": "Nonfiction",
+      "kids": "Kids",
+      "teens_ya": "Teens & YA",
+      "ebooks": "eBooks",
+      "audiobooks": "Audiobooks"
+    },
+    "privacy": "Submit your email address to receive BookShop offers & updates. You can view Privacy Policy",
+    "unsubscribe": "Unsubscribe from our emails at any time.",
+    "rewards": "Rewards",
+    "learn_more": "Learn More",
+    "sign_up_free": "Sign Up Free",
+    "follow_us": "Follow us",
+    "find_store": "Find a Store",
+    "stay_know": "Stay in the Know",
+    "here": "here",
+    "store_placeholder": "Store name, location, or ZIP",
+    "enroll": "Enroll in Rewards for <strong>FREE</strong>. Watch your savings add up!"
+  },
+  "banner": {
+    "title": "✨ Discover our latest stories on the blog →"
+  },
+  "administration": {
+    "title": "Administration",
+    "subtitle": "Manage your book catalog and inventory",
+    "first": "First",
+    "last": "Last",
+    "page": "Page",
+    "catalog": "Catalog",
+    "support": "Contact support",
+    "back_home": "Go back home",
+    "not_found": "Book Not Found",
+    "add_book": "Add book",
+    "delete_book": "Delete book?",
+    "delete_book2": "Are you sure you want to delete the book",
+    "delete_btn": "Delete",
+    "cancel_btn": "Cancel",
+    "upload": "Upload Book Cover",
+    "upload2": "Select a high-quality image for the book cover.",
+    "upload_btn": "Upload & Save",
+    "select_file_btn": "Select file please",
+    "no_file_chosen": "No file chosen",
+    "sorry": "Sorry, we couldn’t find the page you’re looking for.\nIt might have been moved to a different shelf or checked out indefinitely."
+  },
+  "order_table": {
+    "date": "Order Date",
+    "order": "Order ID & Customer",
+    "total": "Total Amount",
+    "state": "Status",
+    "actions": "Actions",
+    "paid": "PAID",
+    "cancel": "CANCEL",
+    "remove": "REMOVE",
+    "pending": "PENDING"
+  },
+  "pricing": {
+    "discount_price": "Super price",
+    "you_save": "Saves: "
+  },
+  "cart": {
+    "remove_from_cart": "Remove cart",
+    "add_to_cart": "Add cart"
+  },
+  "list_item": {
+    "cover": "Book cover {{title}}",
+    "news": "New",
+    "best": "Bestseller",
+    "sale": "Sale",
+    "pages": "Pages",
+    "stock": "In stock {{items}} ks",
+    "soldOut": "Sold out"
+  },
+  "book_table": {
+    "title": "Title & Author",
+    "publisher": "Publisher & Date",
+    "brand": "Brand",
+    "category": "Category",
+    "availability": "Store",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "soldOut": "Sold out",
+    "news": "News",
+    "available": "Available",
+    "delete": "Delete",
+    "edit": "Edit",
+    "edit_cover": "Edit Cover",
+    "detail": "Detail",
+    "isbn": "ISBN"
+  },
+  "filters": {
+    "sections": {
+      "type": "Product",
+      "search": "Search",
+      "status": "Status",
+      "sort": "Sort By",
+      "categories": "Categories"
+    },
+    "placeholders": {
+      "search": "Title or author..."
+    },
+    "actions": {
+      "clear": "Clear",
+      "submit": "Apply Filter",
+      "waiting": "Wait..."
+    },
+    "bar": {
+      "all": "All",
+      "bestsellers": "Bestsellers",
+      "new_releases": "New releases",
+      "most_expensive": "Most expensive",
+      "cheapest": "Cheapest",
+      "discount": "Discount",
+      "to_cart": "Add to cart",
+      "profile": "Profile",
+      "vip": "VIP"
+    },
+    "status_types": {
+      "available": "Available",
+      "newReleases": "New Releases",
+      "discounted": "Discounted",
+      "bestsellers": "Bestsellers"
+    },
+    "sort_options": {
+      "popularity": "Popularity",
+      "price": "Price"
+    },
+    "stats": {
+      "showing": "{{current}} / {{total}}"
+    }
+  },
+  "edit_modal": {
+    "edit": "Edit book",
+    "create": "Create new book",
+    "name": "Name",
+    "name_min": "Name has at least 3 characters",
+    "author": "Author",
+    "price": "Price",
+    "available": "Available (items)",
+    "category": "Category",
+    "pick_category": "Pick category",
+    "discount": "Discount",
+    "description": "Description",
+    "pageCount": "Page count",
+    "popularity": "Popularity",
+    "publisher": "Publisher",
+    "publishedDate": "Published date",
+    "btn_edit": "Save changes",
+    "btn_create": "Create book",
+    "local_save": "Save LC",
+    "close": "Close window",
+    "cancel": "Cancel"
+  },
+  "comparison": {
+    "title": "Title",
+    "author": "Author",
+    "price": "Price",
+    "category": "Category",
+    "pageCount": "Page count",
+    "publisher": "Publisher",
+    "publishedDate": "Published",
+    "popularity": "Popularity",
+    "book1": "Book A",
+    "book2": "Book B",
+    "isbn": "ISBN",
+    "availability": "Availability",
+    "soldOut": "Sold out",
+    "available": "In stock",
+    "compare": "Compare",
+    "heading": "Book comparator",
+    "subheading": "Select Books to Compare",
+    "left": "Left",
+    "right": "Right"
+  },
+  "premium": {
+    "title": "Premium Membership",
+    "active": "Your VIP access is active",
+    "prolong": "Renew subscription",
+    "days": "days"
+  }
+}

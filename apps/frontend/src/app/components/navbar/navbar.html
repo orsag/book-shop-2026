@@ -1,0 +1,160 @@
+@let navBg = '/images/navbar2.svg';
+@let logo = '/images/logo.svg';
+
+<div class="navbar shadow-2xl h-18 relative bg-neutral text-white">
+
+  <div class="absolute inset-0 z-0 pointer-events-none opacity-50 overflow-hidden"
+       [style.backgroundImage]="'url(' + navBg + ')'"
+       style="background-position: bottom; background-repeat: no-repeat; background-size: cover;">
+  </div>
+
+  <div class="flex-1 flex items-center gap-2 md:pl-4 z-10">
+    <button type="button"
+            class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
+            (click)="handleButtonClick(false)">
+      <img [ngSrc]="logo"
+           width="50" height="50"
+           class="object-cover logo-base"
+           [class.logo-spin]="isRotating()"
+           alt="Bookshop logo">
+    </button>
+
+    <a routerLink="/"
+       class="ribeye-regular text-xl inline-block md:text-3xl px-4 py-2 font-bold transition-all duration-300"
+       [class.text-magic]="isRotating()"
+    >
+      Happy Book Store
+    </a>
+  </div>
+
+  <div class="flex items-center gap-4 z-10 pr-4">
+
+    @if (showSearchbar()) {
+      <div class="hidden md:block relative group" *transloco="let t">
+        <input type="text" [value]="searchQuery()" (input.debounce.500)="onSearchChange($event)"
+               [placeholder]="t('filters.placeholders.search')"
+               class="input input-sm w-34 md:w-auto transition-all bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40 focus:outline-none" />
+
+        @if (searchQuery()) {
+          <button (click)="onClearSearchbar()"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs btn-circle text-white transition-transform hover:scale-125">
+            ✕
+          </button>
+        }
+      </div>
+    }
+
+    <button (click)="toggleLang()" appNoHoverButton
+            class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold text-white group"
+            [title]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'">
+      <div
+        class="flex items-center gap-2 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 will-change-transform">
+        <svg lucideLanguages></svg>
+        <span class="uppercase text-xs">{{ activeLang() === 'en' ? 'SK' : 'EN' }}</span>
+      </div>
+    </button>
+
+    @if (!isLoggedIn()) {
+      <button (click)="handleLogin()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
+        <svg lucideLogIn></svg>
+      </button>
+    } @else {
+      <button (click)="handleLogout()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
+        <svg lucideLogOut></svg>
+      </button>
+    }
+
+    <button
+      appNoHoverButton
+      [disabled]="cartStore.itemCount() === 0"
+      [class.opacity-50]="cartStore.itemCount() === 0"
+      [routerLink]="cartStore.itemCount() > 0 ? '/shopping' : null"
+      class="btn btn-ghost btn-sm btn-square relative group text-white"
+      aria-label="View Shopping Cart">
+      <div
+        class="indicator transition-transform duration-300 group-hover:scale-110 group-active:scale-95 group-hover:-rotate-12">
+        @if (cartStore.itemCount() > 0) {
+          <span
+            class="indicator-item badge badge-primary badge-xs font-bold border-none shadow-sm scale-90 mt-1 text-white">
+            {{ cartStore.itemCount() }}
+          </span>
+        }
+        <svg lucideShoppingBasket></svg>
+      </div>
+    </button>
+
+    <div class="transition-transform duration-300 hover:scale-110">
+      <app-theme-picker></app-theme-picker>
+    </div>
+
+    @if (isLoggedIn()) {
+      <div class="dropdown dropdown-end group">
+        <div tabindex="0" role="button"
+             class="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          <div class="indicator">
+            @if (isPremium()) {
+              <span
+                class="indicator-item badge badge-xs py-2 px-1.5 text-[9px] font-black border-none z-20 -translate-x-2 translate-y-0 bg-gradient-to-tr from-[#BF953F] via-[#FCF6BA] to-[#B38728] text-black shadow-[0_2px_5px_rgba(0,0,0,0.3)] uppercase tracking-widest cursor-pointer">
+                VIP
+              </span>
+            }
+            <div class="rounded-full p-0.5 cursor-pointer"
+                 [class.premium-glow]="isPremium()"
+                 [class.ring]="isPremium()"
+                 [class.ring-warning]="isPremium()">
+              <div class="w-10 h-10 rounded-full overflow-hidden">
+                <img priority alt="User Avatar" width="40" height="40" class="object-cover w-full h-full"
+                     [ngSrc]="userAvatar() ?? 'images/user.png'" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <ul tabindex="-1"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-base-content">
+          @if (isAdmin()) {
+            <li><a routerLink="administration" (click)="closeDropdown($event)">Administration</a></li>
+          }
+          <li><a routerLink="/profile" class="justify-between" (click)="closeDropdown($event)">Profile <span
+            class="badge text-sm">{{ userName()?.username }}</span></a></li>
+          <li><a (click)="logoutMenuItem($event)" role="button" tabindex="0">Logout</a></li>
+          <li><a routerLink="/features" (click)="closeDropdown($event)">Features</a></li>
+        </ul>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showLoginModal()) {
+  <div class="modal" [class.modal-open]="showLoginModal()">
+    <div class="modal-box max-w-sm">
+      <h3 class="font-bold text-lg mb-4">Login</h3>
+
+      <form (submit)="onLoginSubmit($event)" class="space-y-4">
+        <div class="form-control">
+          <label for="loginModalName" class="label"><span class="label-text">Name</span></label>
+          <input id="loginModalName"
+                 type="text"
+                 placeholder="Login name"
+                 appNoFocusJump
+                 class="input input-bordered w-full" required
+                 name="loginModalName" [(ngModel)]="modelUsername" />
+        </div>
+
+        <div class="modal-action">
+          <button type="button" (click)="showLoginModal.set(false)" class="btn btn-ghost">Cancel</button>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+
+    <div
+      class="modal-backdrop"
+      role="button"
+      tabindex="0"
+      aria-label="Zatvoriť okno"
+      (click)="showLoginModal.set(false)"
+      (keydown.enter)="showLoginModal.set(false)"
+      (keydown.space)="showLoginModal.set(false)">
+    </div>
+  </div>
+}

@@ -1,0 +1,55 @@
+<div
+  style="background-color: oklch(90.1% 0.076 70.697)"
+  class="min-h-screen flex items-center justify-center"
+>
+
+  <div class="card w-full max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
+    <div class="card-body">
+
+      <div class="flex justify-center mb-4">
+        <div class="bg-primary/20 p-4 rounded-full">
+          <img src="/images/stack-of-books.png" width="80" height="80" alt="Stack of books" />
+        </div>
+      </div>
+
+      <h2 class="card-title text-2xl font-bold justify-center mb-2">Welcome Back</h2>
+      <p class="text-center text-base-content/70 mb-6">Enter your username to access your library</p>
+
+      <form (submit)="onLogin(); $event.preventDefault()">
+        <div class="form-control w-full">
+          <label for="username" class="label">
+            <span class="label-text font-semibold">Username</span>
+          </label>
+
+          <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
+            <svg lucideCircleUserRound size="20"></svg>
+            <input
+              type="text"
+              class="grow"
+              placeholder="user_name"
+              [(ngModel)]="username"
+              name="username"
+              required
+            />
+          </label>
+        </div>
+
+        <div class="card-actions mt-8">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block text-white"
+            [disabled]="!username() || isLoading()">
+            @if (isLoading()) {
+              <span class="loading loading-spinner"></span>
+            }
+            Login
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6 text-center text-xs text-base-content/50 uppercase tracking-widest font-medium">
+        <a routerLink="/">Continue without login</a>
+      </div>
+    </div>
+  </div>
+</div>

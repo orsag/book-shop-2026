@@ -1,0 +1,211 @@
+<div
+  *transloco="let t;"
+  class="min-w-60 flex flex-col h-full gap-6 overflow-y-auto no-scrollbar"
+  [class.hidden]="!showFilter()"
+>
+  @if (store.isMobile()) {
+    <section>
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-base-content/40">
+          {{ t('filters.sections.type') }}
+        </h3>
+      </div>
+
+      <div class="join w-full">
+        <button
+          type="button"
+          (click)="updateFilter('type', 'BOOK')"
+          [class.btn-primary]="filters().type === 'BOOK'"
+          class="btn join-item flex-1"
+        >
+          Books
+        </button>
+        <button
+          type="button"
+          (click)="updateFilter('type', 'GAME')"
+          [class.btn-primary]="filters().type === 'GAME'"
+          class="btn join-item flex-1"
+        >
+          Games
+        </button>
+        <button
+          type="button"
+          (click)="updateFilter('type', 'GASTRO')"
+          [class.btn-primary]="filters().type === 'GASTRO'"
+          class="btn join-item flex-1"
+        >
+          Gastro
+        </button>
+      </div>
+    </section>
+  }
+
+  <section>
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="text-xs font-bold uppercase tracking-widest text-base-content/40">
+        {{ t('filters.sections.search') }}
+      </h3>
+      <button
+        type="button"
+        (click)="updateFilter('search', '')"
+        class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 focus:outline-none px-1 transition-all"
+      >
+        {{ t('filters.actions.clear') }}
+      </button>
+    </div>
+
+    <!-- Container for Dropdown positioning -->
+    <div class="relative">
+      <label appNoFocusJump
+             class="input input-md flex w-full items-center gap-2 bg-base-200/30 focus-within:ring-1 focus-within:ring-primary">
+        <svg lucideSearch size="18" class="opacity-40"></svg>
+        <input
+          type="text"
+          class="grow bg-transparent border-none! outline-none!"
+          [placeholder]="t('filters.placeholders.search')"
+          [value]="filters().search"
+          (input)="updateFilter('search', $any($event.target).value)"
+          (focus)="showHistory.set(true)"
+          (blur)="showHistory.set(false)"
+          (keydown)="onKeyDown($event)"
+        />
+      </label>
+
+      <!-- History Dropdown -->
+      @if (showHistory() && store.searchHistory().length > 0) {
+        <ul class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl overflow-hidden">
+          @for (item of store.searchHistory(); track item; let i = $index) {
+            <li
+              (mousedown)="selectHistory(item)"
+              [class.bg-primary]="i === activeIndex()"
+              [class.text-primary-content]="i === activeIndex()"
+              class="px-4 py-2 text-sm cursor-pointer hover:bg-base-200 transition-colors flex items-center gap-2"
+            >
+              <svg lucideSearch size="14" class="opacity-30"></svg>
+              {{ item }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+
+  <section class="border-base-200">
+    <div class="flex flex-col gap-3">
+      @for (item of toggles; track item.key) {
+        <label class="flex items-center justify-between cursor-pointer group">
+          <span class="label-text text-sm font-semibold capitalize">
+            {{ t(`filters.status_types.${item.label}`) }}
+          </span>
+          <input
+            type="checkbox"
+            class="toggle toggle-sm"
+            [class.toggle-success]="item.key === 'isDiscounted'"
+            [checked]="$any(filters())[item.key]"
+            (change)="updateFilter($any(item.key), $any($event.target).checked)"
+          />
+        </label>
+      }
+    </div>
+  </section>
+
+  <section>
+    <div class="flex justify-between items-center mb-3">
+      <h3
+        class="text-xs font-bold uppercase tracking-widest text-base-content/40"
+      >
+        {{ t('filters.sections.sort') }}
+      </h3>
+      <button
+        type="button"
+        (click)="store.toggleSort(null)"
+        class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 focus:outline-none px-1 transition-all"
+      >
+        {{ t('filters.actions.clear') }}
+      </button>
+    </div>
+    <div class="flex flex-row justify-around gap-2">
+      <button
+        (click)="store.setViewLayout(store.viewLayout() === 'grid' ? 'list' : 'grid')"
+        class="btn btn-circle btn-ghost swap swap-rotate"
+        [class.swap-active]="store.viewLayout() === 'list'"
+        [title]="store.viewLayout() === 'grid' ? 'Switch to List' : 'Switch to Grid'"
+      >
+        <svg lucideList class="swap-on" size="20"></svg>
+
+        <svg lucideGrid class="swap-off" size="20"></svg>
+      </button>
+      <button
+        (click)="store.toggleSort('price')"
+        class="btn btn-circle btn-ghost swap swap-rotate"
+        [class.btn-active]="store.filters.sortBy()?.startsWith('price')"
+        [class.swap-active]="store.filters.sortBy() === 'price_desc'"
+      >
+        <svg lucideArrowDownNarrowWide class="swap-on text-primary" size="20"></svg>
+
+        <svg lucideArrowUpWideNarrow class="swap-off" size="20"></svg>
+      </button>
+    </div>
+  </section>
+
+  @if (filters().type === 'BOOK') {
+    <section>
+      <div class="flex justify-between items-center mb-3">
+        <h3
+          class="text-xs font-bold uppercase tracking-widest text-base-content/40"
+        >
+          {{ t('filters.sections.categories') }}
+          <span class="badge badge-ghost badge-xs ml-2"
+          >{{ store.products().length }} / {{ store.totalProducts() }}</span
+          >
+        </h3>
+        <button
+          type="button"
+          (click)="updateFilter('category', null)"
+          class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 focus:outline-none px-1 transition-all"
+        >
+          {{ 'filters.actions.clear' | transloco }}
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        @for (cat of bookCategories; track cat) {
+          <label
+            class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-base-200 cursor-pointer group transition-colors"
+          >
+            <input
+              type="radio"
+              name="bookCategory"
+              class="radio radio-sm radio-success"
+              [checked]="filters().category === cat"
+              (change)="updateFilter('category', cat)"
+            />
+            <div class="flex items-center gap-2">
+              <span
+                class="text-sm font-medium text-base-content/70 group-hover:text-base-content"
+              >
+                {{ cat }}
+              </span>
+            </div>
+          </label>
+        }
+      </div>
+    </section>
+  }
+
+  <div class="sticky bottom-0 bg-base-100 pt-4 pb-2 border-t border-base-200">
+    <button
+      (click)="onSubmit()"
+      [disabled]="isCoolingDown()"
+      class="btn btn-success btn-block shadow-lg"
+    >
+      @if (isCoolingDown()) {
+        <div>
+          <span class="loading loading-spinner loading-xs"></span>
+          {{ 'filters.actions.waiting' | transloco }}
+        </div>
+      } @else {
+        <div>{{ 'filters.actions.submit' | transloco }}</div>
+      }
+    </button>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<div *transloco="let t" class="flex flex-col gap-6 p-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">{{ t('administration.title') }}</h1>
+      <p class="text-sm text-base-content/60">{{ t('administration.subtitle') }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary gap-2 shadow-md"
+      (click)="openCreateModal()">
+        <svg lucidePlus size="20"></svg>
+      {{ t('administration.add_book') }}
+    </button>
+  </div>
+
+  <div class="w-full bg-base-100 shadow-sm">
+    <app-order-table></app-order-table>
+  </div>
+
+  @if (!store.isLoading()) {
+    <div class="flex flex-col gap-6">
+      <div class="flex items-center gap-4">
+        <h2 class="text-2xl font-black uppercase tracking-tight text-base-content">
+          {{ t('administration.catalog') }}
+        </h2>
+        <div class="h-px flex-1 bg-base-content/10"></div>
+      </div>
+
+      <div class="flex items-center justify-start">
+        <div class="join bg-base-200/50 p-1 rounded-xl">
+          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
+                  [disabled]="store.filters.page() <= 1"
+                  (click)="store.setPage(1)">
+            {{ t('administration.first') }}
+          </button>
+
+          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
+                  [disabled]="store.filters.page() <= 1"
+                  (click)="store.setPage(store.filters.page() - 1)">
+            {{ store.filters.page() - 1 }}
+          </button>
+
+          <button class="join-item btn btn-sm btn-active pointer-events-none font-bold">
+            {{ t('administration.page') }} {{ store.filters.page() }} / {{ store.totalPages() }}
+          </button>
+
+          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
+                  [disabled]="!store.hasMorePage()"
+                  (click)="store.setPage(store.filters.page() + 1)">
+            {{ store.filters.page() + 1 }}
+          </button>
+
+          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
+                  [disabled]="!store.hasMorePage()"
+                  (click)="store.setPage(store.totalPages())">
+            {{ t('administration.last') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="w-full bg-base-100 shadow-sm">
+    <app-book-table
+      (edit)="openEditModal($event)"
+      (remove)="openDeleteConfirmation($event)"
+      (editCover)="openCoverModal($event)"
+    ></app-book-table>
+  </div>
+
+</div>
+
+@if (isDeleteModalOpen()) {
+  <app-delete-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-delete-modal>
+}
+
+@if (isCoverModalOpen()) {
+  <app-cover-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-cover-modal>
+}
+
+@if (isEditModalOpen()) {
+  <app-edit-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-modal>
+}

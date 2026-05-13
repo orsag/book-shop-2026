@@ -1,0 +1,209 @@
+<div class="max-w-6xl mx-auto p-6">
+  <header class="mb-8 flex border-b border-base-300 pb-4">
+    <div>
+      <h1 class="text-3xl font-bold">Editácia profilu</h1>
+      <p class="text-base-content/60">Spravujte svoje osobné údaje a obľúbené knihy</p>
+    </div>
+  </header>
+
+  <section class="mb-12">
+    <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
+      Moje objednávky
+      <div class="badge badge-outline">{{ orders().length }}</div>
+    </h3>
+
+    @if (orders().length > 0) {
+      <div class="overflow-x-auto bg-base-100 rounded-xl border border-base-300 shadow-sm">
+        <table class="table w-full table-fixed">
+          <thead>
+          <tr class="bg-base-200">
+            <th>ID Objednávky</th>
+            <th>Dátum</th>
+            <th>Suma</th>
+            <th>Status</th>
+            <th class="text-right w-40">Akcie</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (order of orders(); track order.id) {
+              <tr class="hover:bg-base-200/50 transition-colors">
+                <td class="group">
+                  <button
+                    type="button"
+                    (click)="copyToClipboard(order.id)"
+                    class="flex items-center gap-3 font-mono text-xs opacity-70 hover:opacity-100 hover:text-primary transition-all focus:outline-none focus:text-primary cursor-pointer tooltip tooltip-right"
+                    data-tip="Kliknutím skopírujete"
+                  >
+                    <span>{{ order.id }}</span>
+
+                    <svg lucideClipboardCopy size="20"></svg>
+                  </button>
+                </td>
+                <td>{{ order.createdAt | date:'shortDate' }}</td>
+                <td class="font-bold">{{ order.totalAmount | currency:'EUR' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'badge-success': order.status === OrderStatus.PAID,
+                    'badge-warning': order.status === OrderStatus.PENDING,
+                    'badge-error': order.status === OrderStatus.CANCELLED,
+                  }">{{ order.status }}</span>
+                </td>
+                <td class="text-right w-40">
+                  <div class="flex justify-end items-center">
+                    @if (order.status !== OrderStatus.CANCELLED && canCancel(order.createdAt)) {
+                      <button (click)="handleCancelOrder(order.id)"
+                              class="btn btn-ghost btn-xs text-error">
+                        Zrušiť do 14 dní
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="alert bg-base-100 border border-base-300 italic text-base-content/50">
+        Zatiaľ ste nevytvorili žiadne objednávky.
+      </div>
+    }
+  </section>
+
+  <section class="mb-12">
+    <h3 class="font-bold mb-4 text-xl flex items-center gap-2">
+      Moje obľúbené
+      <div class="badge badge-secondary badge-lg">{{ store.favoriteCount() }}</div>
+    </h3>
+
+    @if (favoriteProducts().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
+        @for (book of favoriteProducts(); track book.id) {
+          <app-card-small [product]="book"></app-card-small>
+        }
+      </div>
+    } @else {
+      <div class="bg-base-200/50 rounded-xl p-12 text-center border-2 border-dashed border-base-300">
+        <p class="text-base-content/40 italic">Zatiaľ nemáte žiadne obľúbené knihy.</p>
+      </div>
+    }
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="lg:col-span-8 space-y-8">
+
+      <section class="card bg-base-100 shadow-sm border border-base-300 p-6">
+        <h3 class="font-bold mb-6 text-xl border-b pb-2">Osobné údaje</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-control w-full">
+            <label for="username" class="label"><span class="label-text">Používateľské meno</span></label>
+            <div
+              class="flex items-center justify-between h-10 px-4 rounded-sm bg-base-200 text-base-content/50 border border-base-300 cursor-not-allowed">
+              <span class="font-medium text-sm">{{ store.user()?.username }}</span>
+              <svg lucideLock size="20"></svg>
+            </div>
+          </div>
+
+          <div class="form-control w-full">
+            <label for="displayname" class="label"><span class="label-text">Zobrazované meno</span></label>
+            <input appNoFocusJump id="displayname" type="text" [formField]="detailForm.displayName"
+                   class="input input-bordered w-full" />
+          </div>
+
+          <div class="form-control w-full">
+            <label for="email" class="label"><span class="label-text">Email</span></label>
+            <input appNoFocusJump id="email" type="email" [formField]="userForm.email" class="input input-bordered w-full" />
+          </div>
+
+          <div class="form-control w-full">
+            <label for="phone" class="label"><span class="label-text">Telefón</span></label>
+            <input appNoFocusJump id="phone" type="text" [formField]="userForm.phoneNumber" class="input input-bordered w-full" />
+          </div>
+
+          <div class="form-control md:col-span-2">
+            <label for="user-bio" class="label"><span class="label-text font-bold">O mne</span></label>
+            <textarea appNoFocusJump id="user-bio" [formField]="detailForm.bio" class="textarea textarea-bordered h-24 w-full"
+                      placeholder="Povedzte nám niečo o sebe..."></textarea>
+          </div>
+
+          <div class="form-control">
+            <label for="city" class="label"><span class="label-text">Mesto</span></label>
+            <input appNoFocusJump id="city" type="text" [formField]="detailForm.city" class="input input-bordered w-full" />
+          </div>
+
+          <div class="form-control">
+            <label for="addressLine1" class="label"><span class="label-text">Ulica</span></label>
+            <input appNoFocusJump id="addressLine1" type="text" [formField]="detailForm.addressLine1"
+                   class="input input-bordered w-full" />
+          </div>
+
+          <div class="md:col-span-2 mt-4 p-5 bg-base-200/40 rounded-xl border border-base-300">
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 opacity-60 flex items-center gap-2">
+              <svg lucideCreditCard></svg>
+              Fakturačné údaje
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-control md:col-span-2">
+                <label for="iban" class="label text-xs uppercase">
+                  IBAN
+                </label>
+                <input
+                  appNoFocusJump
+                  type="text"
+                  [formField]="detailForm.iban"
+                  class="input input-sm input-bordered font-mono w-full"
+                  placeholder="SK..." />
+              </div>
+              <div class="form-control">
+                <label for="taxId" class="label text-xs">DIČ (Tax ID)</label>
+                <input appNoFocusJump type="text" [formField]="detailForm.taxId" class="input input-sm input-bordered" />
+              </div>
+              <div class="form-control">
+                <label for="dateOfBirth" class="label text-xs">Dátum narodenia</label>
+                <input appNoFocusJump type="date" [formField]="detailForm.dateOfBirth" class="input input-sm input-bordered" />
+              </div>
+            </div>
+          </div>
+          <div class="md:col-span-2 flex justify-end gap-2">
+              <button (click)="handleCancel()" class="btn btn-ghost">Zrušiť</button>
+              <button (click)="handleSave()" class="btn btn-primary px-8">Uložiť</button>
+            </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="lg:col-span-4 space-y-6">
+
+      @if (isPremium()) {
+        <app-premium-card [daysLeft]="daysLeft()"></app-premium-card>
+      }
+
+      <div class="card bg-base-100 border border-base-300 shadow-sm mt-6">
+        <div class="card-body p-6">
+          <h3 class="font-bold text-sm uppercase opacity-50 mb-4 tracking-widest">Nastavenia systému</h3>
+
+          <div class="form-control w-full mb-6">
+            <label for="theme" class="label"><span class="label-text-alt font-bold">Farebná téma</span></label>
+            <select appNoFocusJump [formField]="userForm.theme" class="select select-sm select-bordered w-full">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between text-xs border-b border-base-200 pb-2">
+              <span class="opacity-60">Jazyk:</span>
+              <span class="font-bold uppercase">{{ userDetailModel().preferredLanguage }}</span>
+            </div>
+            <div class="flex flex-col gap-1 text-xs">
+              <span class="opacity-60">Posledná aktivita:</span>
+              <span
+                class="font-mono opacity-80 bg-base-200 px-2 py-1 rounded">{{ userDetailModel().lastActiveAt | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

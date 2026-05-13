@@ -1,0 +1,91 @@
+<div class="hidden md:block gap-3" *transloco="let t">
+  <ul class="flex gap-2">
+    <li>
+      <button (click)="updateFilter('type', 'BOOK')"
+              class="menu-x bg-[#F075AE] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Books</h2>
+      </button>
+    </li>
+    <li>
+      <button (click)="updateFilter('type', 'GAME')"
+              class="menu-x bg-[#85cee0] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Games</h2>
+      </button>
+    </li>
+    <li>
+      <button (click)="updateFilter('type', 'GASTRO')"
+              class="menu-x bg-[#89b847] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Gastro</h2>
+      </button>
+    </li>
+    <li>
+      <button (click)="updateFilter('type','PUZZLE')"
+              class="menu-x bg-[#ffa64d] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Puzzle</h2>
+      </button>
+    </li>
+    <li>
+      <button (click)="updateFilter('type', 'CARDS')"
+              class="menu-x bg-[#a08ac1] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Cups</h2>
+      </button>
+    </li>
+    <li>
+      <button (click)="updateFilter('type', 'TOYS')"
+              class="menu-x bg-[#bc9076] hover:brightness-90 transition-all">
+        <h2 class="menu-title-x">Toys</h2>
+      </button>
+    </li>
+    @if (store.isLoggedIn()) {
+      <li>
+        <button routerLink="/profile"
+                class="menu-x bg-[#ff6666] hover:brightness-90 transition-all">
+          <h2 class="menu-title-x">{{ t('filters.bar.profile') }}</h2>
+        </button>
+      </li>
+    }
+  </ul>
+
+  <!--  @for (filter of filters(); track filter.label) {-->
+<!--    <button (click)="filter.action()"-->
+<!--            class="btn btn-sm rounded-full transition-all"-->
+<!--            [class.btn-primary]="filter.isActive()"-->
+<!--            [class.btn-dash]="filter.isActive()"-->
+<!--            [class.btn-soft]="!filter.isActive()"-->
+<!--            [disabled]="isCoolingDown()">-->
+
+<!--      @if (filter.icon === 'all') {-->
+<!--        <svg lucideGlobe aria-label="Everything" size="20" />-->
+<!--      } @else if (filter.icon === 'expensive') {-->
+<!--        <svg lucideGem aria-label="Expensive" size="20" />-->
+<!--      } @else if (filter.icon === 'cheapest') {-->
+<!--        <svg lucideHandCoins aria-label="Cheaper" size="20" />-->
+<!--      } @else if (filter.icon === 'discount') {-->
+<!--        <svg lucideCirclePercent aria-label="Discount" size="20" />-->
+<!--      }-->
+
+<!--      {{ t('filters.' + filter.label) }}-->
+
+<!--    </button>-->
+<!--  }-->
+
+<!--  @if (cartStore.itemCount() > 0) {-->
+<!--    <button routerLink="/shopping"-->
+<!--            class="btn btn-soft btn-sm rounded-full transition-all"-->
+<!--            [disabled]="isCoolingDown()">-->
+<!--      <svg lucideShoppingCart aria-label="Shopping cart" size="20" />-->
+<!--      {{ t('filters.bar.to_cart') }} ({{ cartStore.itemCount() }})-->
+<!--    </button>-->
+<!--  }-->
+
+<!--  @if (store.isLoggedIn()) {-->
+<!--    <button routerLink="/profile"-->
+<!--            class="btn btn-soft btn-sm rounded-full transition-all"-->
+<!--            [class.ml-auto]="cartStore.itemCount() === 0"-->
+<!--            [disabled]="isCoolingDown()">-->
+<!--      <svg lucideCircleUserRound aria-label="Profile user" size="20" />-->
+<!--      {{ t('filters.bar.profile') }}-->
+<!--    </button>-->
+<!--  }-->
+
+</div>

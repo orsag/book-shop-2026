@@ -1,0 +1,34 @@
+[
+  {
+    "label": "NX: Serve Frontend",
+    "command": "npx nx serve frontend",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false,
+  },
+  {
+    "label": "NX: Serve Backend",
+    "command": "npx nx serve backend",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false,
+  },
+  {
+    "label": "NX: Build Frontend",
+    "command": "npx nx build frontend",
+    "use_new_terminal": true,
+  },
+  {
+    "label": "NX: Build Backend",
+    "command": "npx nx build backend",
+    "use_new_terminal": true,
+  },
+  {
+    "label": "NX: Nuclear Reset",
+    "command": "rm -rf .nx/cache && rm -rf .angular/cache && npx nx reset",
+    "use_new_terminal": true,
+  },
+  {
+    "label": "NX: Stop All (Clean)",
+    "command": "pkill -2 -f 'nx serve' || true",
+    "use_new_terminal": false,
+  },
+]

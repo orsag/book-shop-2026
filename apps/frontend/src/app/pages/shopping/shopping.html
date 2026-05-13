@@ -1,0 +1,175 @@
+<div class="container mx-auto">
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <section class="flex-grow shopping-list">
+      <div class="card bg-base-100 shadow-xl border border-base-200">
+        <div class="card-body p-2 sm:p-6">
+
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="card-title text-2xl m-0">Tvoj košík</h2>
+            @if (cartStore.items().length > 0) {
+              <button class="btn btn-outline btn-error btn-sm" (click)="cartStore.clearCart()">
+                Vyprázdniť košík
+              </button>
+            }
+          </div>
+
+          @if (cartStore.items().length === 0) {
+            <div class="py-10 text-center">
+              <div class="text-5xl mb-4">🛒</div>
+              <p class="text-base-content/60 italic mb-6">Tvoj košík je prázdny.</p>
+              <button class="btn btn-secondary uppercase font-bold tracking-widest" routerLink="/">
+                Späť k nákupu
+              </button>
+            </div>
+          } @else {
+            <div class="space-y-4">
+              @for (item of items(); track item.product.id) {
+                <div class="flex items-center justify-between gap-2 bg-base-100">
+                  <div class="flex-grow min-w-0">
+                    <p class="font-semibold truncate text-sm">{{ item.product.name }}</p>
+
+                    <div class="flex items-center gap-2">
+                      <p class="text-xs font-bold text-primary">
+                        {{ (item.product.price * (1 - item.product.discount)) | currency:'EUR' }}
+                      </p>
+
+                      @if (item.product.discount > 0) {
+                        <p class="text-[10px] line-through opacity-50">
+                          {{ item.product.price | currency:'EUR' }}
+                        </p>
+                      }
+                    </div>
+
+                    <p class="text-[10px] text-base-content/70">{{ item.product.availableCount }} na sklade</p>
+                  </div>
+
+                  <div class="flex items-center gap-1">
+                    <div class="join">
+                      <button class="btn btn-xs join-item" (click)="cartStore.updateQuantity(item.product.id, -1)">-</button>
+                      <button class="btn btn-xs join-item no-animation cursor-default">{{ item.quantity }}</button>
+                      <button class="btn btn-xs join-item" (click)="cartStore.updateQuantity(item.product.id, 1)"
+                              [disabled]="item.quantity >= item.product.availableCount">+</button>
+                    </div>
+                    <button class="btn btn-ghost btn-xs text-error" (click)="cartStore.removeItem(item.product.id)">
+                      <svg lucideTrash2></svg>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="divider my-4"></div>
+
+            <div class="space-y-3 w-full ml-auto">
+
+              @if (cartStore.totalSavings() > 0) {
+                <div class="flex justify-between items-center text-sm text-success">
+                  <span>Ušetríte:</span>
+                  <span>-{{ cartStore.totalSavings() | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}</span>
+                </div>
+              }
+
+              <!-- Cena bez DPH -->
+              <div class="flex justify-between items-center gap-8 text-base">
+                <span class="text-base-content/70">Cena</span>
+                <span class="font-bold">{{ cartStore.subtotal() | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}</span>
+              </div>
+
+              <!-- DPH -->
+              <div class="flex justify-between items-center gap-8 text-base">
+                <span class="text-base-content/70">VAT (5%)</span>
+                <span class="font-bold">{{ cartStore.tax() | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}</span>
+              </div>
+
+              <!-- Celková suma -->
+              <div class="flex justify-between items-center gap-8 font-bold text-2xl mt-4 text-primary">
+                <span>Spolu</span>
+                <span>{{ cartStore.grandTotal() | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}</span>
+              </div>
+
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 mt-4">
+              <button
+                class="btn btn-sm btn-secondary uppercase tracking-widest shadow-lg"
+                routerLink="/">
+                Pokračovať v nákupe
+              </button>
+              <button
+                class="btn btn-sm btn-success uppercase tracking-widest shadow-lg"
+                (click)="handleCheckout()">
+                Objednať & Zaplatiť
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Pravý stĺpec: Akordeón (FAQ) -->
+    <aside class="w-full lg:w-96">
+      <div class="sticky top-6">
+        <h3 class="text-xl font-bold mb-4 px-1">Často kladené otázky</h3>
+
+        <div class="space-y-3">
+          <!-- Sekcia 1 -->
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
+            <input type="radio" name="faq-accordion" checked="checked" />
+            <div class="collapse-title text-base font-medium">
+              How do I create an account?
+            </div>
+            <div class="collapse-content text-sm text-base-content/80">
+              <p>To create an account, simply click on the "Sign Up" or "Register" button at the top right of the screen and follow the provided instructions to enter your details.</p>
+            </div>
+          </div>
+
+          <!-- Sekcia 2 -->
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
+            <input type="radio" name="faq-accordion" />
+            <div class="collapse-title text-base font-medium">
+              I forgot my username. What should I do?
+            </div>
+            <div class="collapse-content text-sm text-base-content/80">
+              <p>Click on the "Forgot Username" link on the login page. Enter your registered email address, and we will send you a secure link to reset your password.</p>
+            </div>
+          </div>
+
+          <!-- Sekcia 3 -->
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
+            <input type="radio" name="faq-accordion" />
+            <div class="collapse-title text-base font-medium">
+              How do I update my profile information?
+            </div>
+            <div class="collapse-content text-sm text-base-content/80">
+              <p>Once logged in, navigate to your "Account Settings" or "Profile" page. From there, you can edit your personal details, shipping address, and preferences.</p>
+            </div>
+          </div>
+
+          <!-- Sekcia 4 -->
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
+            <input type="radio" name="faq-accordion" />
+            <div class="collapse-title text-base font-medium">
+              How do I return books and items?
+            </div>
+            <div class="collapse-content text-sm text-base-content/80">
+              <p>To return an item, go to your "Order History" and select "Request Return" next to the eligible item within 30 days of purchase. We will provide a printable return shipping label and instructions on how to pack your books securely.</p>
+            </div>
+          </div>
+
+          <!-- Sekcia 5 -->
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
+            <input type="radio" name="faq-accordion" />
+            <div class="collapse-title text-base font-medium">
+              How do I get free shipping?
+            </div>
+            <div class="collapse-content text-sm text-base-content/80">
+              <p>We offer free standard shipping on all orders over 50 €. Once your cart subtotal reaches this amount, the free shipping option will automatically become available and selected for you during checkout.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>

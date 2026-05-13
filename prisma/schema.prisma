@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String      @id @default(cuid())
+  email       String      @unique
+  username    String      @unique
+  isAdmin     Boolean     @default(false)
+  phoneNumber String?     @default("")
+  theme       String      @default("light")
+  favorites   String[]    @default([])
+  cartItems   String[]    @default([])
+  lastLogin   DateTime?
+  avatarUrl   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orders      Order[]
+  userDetail  UserDetail?
+}
+
+model Product {
+  id                  String  @id @default(uuid())
+  sku                 String  @unique
+  name                String // Generic name (Title for books, Name for tea)
+  alternativeHeadline String
+  description         String?
+  price               Float
+  discount            Float   @default(0)
+  availableCount      Int     @default(0)
+  isAvailable         Boolean @default(true)
+  availability        String
+  deliveryLeadTime    Int
+  product_quality     String?
+  coverUrl            String?
+
+  // The "Type" discriminator
+  productType ProductType
+
+  // Shared Relations
+  rating     AggregateRating?
+  orderItems OrderItem[]
+
+  // Extension Relations (Optional)
+  bookDetails   Book?
+  gameDetails   Game?
+  gastroDetails Gastro?
+  cardDetails   GiftCard?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ProductType {
+  BOOK
+  GAME
+  GASTRO
+  GIFT_CARD
+  TOYS
+  CARDS
+  PUZZLE
+}
+
+model GiftCard {
+  id            String  @id @default(uuid())
+  productId     String  @unique
+  product       Product @relation(fields: [productId], references: [id])
+  price         Int
+  priceCurrency String
+}
+
+model Book {
+  id        String  @id @default(uuid())
+  productId String  @unique
+  product   Product @relation(fields: [productId], references: [id])
+
+  author        String
+  isbn          String   @unique
+  publisher     String
+  pageCount     Int
+  bookFormat    String
+  category      String
+  binding       String
+  publishedDate DateTime
+  audioBook     Boolean
+  audioLength   Int
+  audioLanguage String?
+}
+
+model Game {
+  id        String  @id @default(uuid())
+  productId String  @unique
+  product   Product @relation(fields: [productId], references: [id])
+  category  String
+  brand     String
+
+  playersMin      Int
+  playersMax      Int
+  playTimeMinutes Int
+  producer        String
+}
+
+model Gastro {
+  id        String  @id @default(uuid())
+  productId String  @unique
+  product   Product @relation(fields: [productId], references: [id])
+  producer  String
+  category  String
+  brand     String
+  binding   String
+  edition   Int
+  weight    Int
+}
+
+model AggregateRating {
+  id          String @id @default(uuid())
+  ratingValue Float
+  ratingCount Int
+  bestRating  Int
+  worstRating Int
+
+  // This side OWNS the relationship
+  productId String  @unique
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+  totalAmount Float
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  quantity  Int
+  price     Float // Price at the time of purchase
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  CANCELLED
+}
+
+model UserDetail {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // Personalization
+  displayName       String?
+  avatarUrl         String?
+  bio               String? @db.VarChar(255)
+  preferredLanguage String  @default("en")
+
+  // Membership
+  isPremium       Boolean   @default(false)
+  membershipStart DateTime?
+  membershipEnd   DateTime?
+
+  // Normalized Address Fields
+  addressLine1  String // House number, Street name
+  addressLine2  String? // Apartment, Suite, Unit, Building
+  city          String
+  stateProvince String? // Essential for US/Canada/Australia/India
+  postalCode    String? // Optional because not all countries use them
+  countryCode   String // Use ISO 3166-1 alpha-2 (e.g., "US", "SK", "DE")
+
+  // Banking
+  iban         String?
+  bic          String?
+  dateOfBirth  DateTime?
+  taxId        String?   @unique
+  lastActiveAt DateTime  @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ImageRecord {
+  id        Int      @id @default(autoincrement())
+  filename  String
+  url       String
+  createdAt DateTime @default(now())
+}

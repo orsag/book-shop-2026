@@ -1,0 +1,92 @@
+<div *transloco="let t"
+     class="flex items-stretch gap-5 group max-h-[400px] py-1">
+
+  <!-- LEFT: Bigger Picture (120x175 instead of 80x110) -->
+  <div class="shrink-0 cursor-pointer overflow-hidden rounded-md" [routerLink]="['/product', product.id]">
+    <img [ngSrc]="product.coverUrl || 'images/placeholder.webp'"
+         width="120" height="175"
+         class="object-cover shadow-sm transition-all duration-300 ease-in-out
+              hover:shadow-xl hover:scale-105 hover:contrast-105"
+         [alt]="t('list_item.cover', { title: product.name })">
+  </div>
+
+  <!-- RIGHT: All elements in a flex column -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Row 1: Badges & Category -->
+    <div class="flex flex-wrap gap-1 mb-1.5 items-center">
+      @if (product.discount > 0) {
+        <span class="badge badge-error badge-xs font-bold text-white uppercase">{{ t('list_item.sale') }}</span>
+      }
+      <!-- Moved category here to save vertical space -->
+      <div class="badge badge-outline badge-xs opacity-60 uppercase tracking-tighter" [class]="ux.isGradientClass()">
+        {{ ux.category() }}
+      </div>
+    </div>
+
+    <!-- Row 2: Title & Author -->
+    <h3 class="font-bold text-md md:text-lg text-base-content leading-tight group-hover:text-primary transition-colors cursor-pointer line-clamp-2"
+        [routerLink]="['/product', product.id]">
+      {{ product.name }}
+    </h3>
+    <p class="text-sm text-base-content/70 mt-0.5 truncate">{{ ux.author() }}</p>
+
+    <!-- Row 3: Metadata -->
+    @if (ux.isBook()) {
+      <div class="flex flex-col sm:flex-row gap-2 text-[11px] text-base-content/40 mt-1 uppercase font-semibold">
+        <span>{{ product.bookDetails?.pageCount }} {{ t('list_item.pages') }}</span>
+        <span class="hidden md:inline">•</span>
+        <span class="hidden md:inline">ISBN: {{ product.bookDetails?.isbn }}</span>
+      </div>
+    }
+
+    <!-- Row 4: Description (Truncated so it doesn't break max-height) -->
+    <p class="text-xs md:text-sm text-base-content/70 mt-2 line-clamp-3">
+      {{ product.description }}
+    </p>
+
+    <!-- Row 5: Price & Button (mt-auto pushes this to the absolute bottom) -->
+    <div class="mt-auto pt-3 flex flex-wrap items-end justify-between gap-2">
+
+      <!-- Price Details -->
+      <div class="flex flex-col gap-0.5">
+        @if (product.discount > 0) {
+          <span class="text-[10px] line-through opacity-40">
+            {{ product.price | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
+          </span>
+        }
+
+        <span class="text-xl font-extrabold text-primary leading-none">
+          {{ (product.price * (1 - product.discount)) | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
+        </span>
+
+        <span class="text-[10px] font-medium mt-0.5"
+              [class.text-success]="product.availableCount > 0"
+              [class.text-error]="product.availableCount === 0">
+          {{ product.availableCount > 0 ? t('list_item.stock', { items: product.availableCount }) : t('list_item.soldOut') }}
+        </span>
+      </div>
+
+      <!-- Button -->
+      @if (product.availableCount !== 0) {
+        <button
+          class="btn btn-sm"
+          [class.btn-error]="ux.isInCart()"
+          [class.btn-primary]="!ux.isInCart()"
+          (click)="$event.stopPropagation(); handleCartAction()"
+        >
+          @if (ux.isInCart()) {
+            <span>{{ t('cart.remove_from_cart') }}</span>
+          } @else {
+            <span>{{ t('cart.add_to_cart') }}</span>
+          }
+        </button>
+      } @else {
+        <div class="tooltip" [attr.data-tip]="t('common.sold_out_tooltip')">
+          <button class="btn btn-soft btn-sm" disabled>{{ t('common.sold_out') }}</button>
+        </div>
+      }
+    </div>
+
+  </div>
+</div>

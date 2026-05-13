@@ -1,0 +1,9 @@
+<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-2 w-full text-sm shadow-md"
+  [style.background]="gradientStyle()"
+  [ngClass]="textColorClass()">
+
+  <a routerLink="/blog"
+     class="font-bold tracking-wide flex items-center gap-1 hover:underline transition-all uppercase text-[14px]">
+    <span>{{ 'banner.title' | transloco }}</span>
+  </a>
+</div>

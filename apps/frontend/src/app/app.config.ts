@@ -1,0 +1,47 @@
+import {
+  isDevMode,
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  LOCALE_ID,
+} from '@angular/core';
+import { provideRouter, withViewTransitions } from '@angular/router';
+import { appRoutes } from './app.routes';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { provideTransloco } from '@jsverse/transloco';
+import { TranslocoHttpLoader } from './core/transloco-loader';
+import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
+import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+import { authInterceptor } from './core/auth.interceptor';
+import { provideNgHttpCaching } from 'ng-http-caching';
+import { ngHttpCachingConfig } from './core/cachingConfig';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(appRoutes, withViewTransitions()),
+    provideHttpClient(
+      withInterceptors([authInterceptor]),
+      withInterceptorsFromDi(),
+    ),
+    provideNgHttpCaching(ngHttpCachingConfig),
+    provideTransloco({
+      config: {
+        availableLangs: ['en', 'sk'],
+        defaultLang: 'sk',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
+    {
+      provide: EVENT_MANAGER_PLUGINS,
+      useClass: DebounceEventManagerPlugin,
+      multi: true,
+    },
+    { provide: LOCALE_ID, useValue: 'sk-SK' },
+  ],
+};

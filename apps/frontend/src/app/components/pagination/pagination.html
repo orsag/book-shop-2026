@@ -1,0 +1,70 @@
+<div class="flex flex-col items-center gap-6 mt-16 pb-12">
+
+  @if (store.isLoading()) {
+    <div class="flex flex-col items-center gap-3 animate-pulse">
+      <span class="loading loading-ring loading-lg text-primary"></span>
+      <p class="text-xs font-bold uppercase tracking-widest text-primary/60">Fetching library...</p>
+    </div>
+  } @else {
+
+    @if (store.hasMorePage()) {
+      <button
+        (click)="store.loadMore()"
+        class="group btn btn-primary btn-wide rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+      >
+        <div class="flex items-center gap-2">
+          <svg lucideChevronDown
+               size="18"
+               class="group-hover:translate-y-1 transition-transform duration-300">
+          </svg>
+          <span class="uppercase tracking-wider text-xs font-black">Load More Books</span>
+        </div>
+      </button>
+    }
+
+    <div class="flex items-center gap-2 p-1.5 bg-base-200/50 backdrop-blur-md rounded-full border border-base-300 shadow-xl">
+
+      <button (click)="store.setPage(1)"
+              [disabled]="store.filters.page() <= 1"
+              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+              title="First Page">
+        <svg lucideChevronsLeft size="18"></svg>
+      </button>
+
+      <button (click)="store.setPage(store.filters.page() - 1)"
+              [disabled]="store.filters.page() <= 1"
+              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all">
+        <svg lucideChevronLeft size="18"></svg>
+      </button>
+
+      <div class="px-4 flex flex-col items-center min-w-[100px]">
+        <span class="text-[10px] uppercase font-black opacity-40 leading-none mb-1">Page</span>
+        <div class="flex items-baseline gap-1">
+          <span class="text-sm font-black text-primary">{{ store.filters.page() }}</span>
+          <span class="text-[10px] opacity-30">/</span>
+          <span class="text-xs font-bold opacity-60">{{ store.totalPages() }}</span>
+        </div>
+      </div>
+
+      <button (click)="store.setPage(store.filters.page() + 1)"
+              [disabled]="!store.hasMorePage()"
+              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all">
+        <svg lucideChevronRight size="18"></svg>
+      </button>
+
+      <button (click)="store.setPage(store.totalPages())"
+              [disabled]="!store.hasMorePage()"
+              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+              title="Last Page">
+        <svg lucideChevronsRight size="18"></svg>
+      </button>
+    </div>
+
+    <div class="badge badge-outline border-base-content/10 py-3 px-4 gap-2 opacity-60">
+      <div class="size-1.5 rounded-full bg-success animate-pulse"></div>
+      <span class="text-[10px] font-bold uppercase tracking-tighter">
+        Showing {{ store.products().length }} of {{ store.totalProducts() }} Items
+      </span>
+    </div>
+  }
+</div>

@@ -1,0 +1,29 @@
+<div class="max-w-2xl mx-auto p-6">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-bold">Feature Management</h1>
+    <span class="hidden md:block badge badge-outline text-xs opacity-50 italic">Local Session Only</span>
+  </div>
+
+  <div class="bg-base-100 border border-base-300 rounded-2xl overflow-hidden shadow-sm">
+    <ul class="divide-y divide-base-300">
+      @for (flag of (configService.flags() | keyvalue); track flag.key) {
+        @let fName = asFeature(flag.key);
+        <li class="flex items-center justify-between p-4 hover:bg-base-200/50 transition-colors">
+          <div class="flex flex-col gap-0.5">
+            <span class="font-medium text-sm md:text-base">{{ features[fName].label }}</span>
+            <code class="text-[10px] text-primary uppercase tracking-wider">{{ fName }}</code>
+          </div>
+
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input type="checkbox"
+                     class="toggle toggle-primary"
+                     [checked]="flag.value"
+                     (change)="configService.toggleFlag(fName)" />
+            </label>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

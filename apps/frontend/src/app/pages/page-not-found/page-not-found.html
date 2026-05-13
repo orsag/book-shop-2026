@@ -1,0 +1,44 @@
+<main class="flex flex-col min-h-screen items-center justify-start bg-base-200 px-6 py-12" *transloco="let t">
+
+  <!-- TEXT AND BUTTONS CONTAINER (Constrained to ~576px for readability) -->
+  <div class="text-center max-w-xl">
+
+    <h1 class="text-3xl font-bold tracking-tight text-base-content sm:text-5xl">
+      {{ t('administration.not_found') }}
+    </h1>
+
+    <p class="mt-4 text-lg leading-7 text-base-content/70">
+      {{ t('administration.sorry') }}
+    </p>
+
+    <div class="mt-8 flex items-center justify-center gap-x-6">
+      <a routerLink="/" class="btn btn-primary shadow-sm">
+        {{ t('administration.back_home') }}
+      </a>
+
+      <a href="javascript:void(0)"
+         (click)="$event.preventDefault()"
+         class="btn btn-outline tooltip"
+         data-tip="Work in progress">
+        {{ t('administration.support') }} <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- IMAGE CONTAINER (Moved OUTSIDE the max-w-xl div!) -->
+  <!-- I gave it max-w-5xl (1024px) so it gets big, but doesn't look insane on 4k ultra-wide monitors -->
+  <div class="mt-12 w-full max-w-5xl">
+    @let source = "images/pepe.jpg";
+
+    <img
+      [ngSrc]="source"
+      width="1600"
+      height="900"
+      priority
+      alt="pepe"
+      class="w-full h-auto object-cover rounded-xl shadow-2xl"
+    >
+  </div>
+
+</main>

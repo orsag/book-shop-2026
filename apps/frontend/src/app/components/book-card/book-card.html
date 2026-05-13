@@ -1,0 +1,81 @@
+<div
+  *transloco="let t"
+  class="card h-[360px] w-full bg-base-100 border border-base-300 hover:-translate-y-1 transition-all duration-300 group"
+>
+  <figure class="px-2 pt-2 cursor-pointer" [routerLink]="['/product', product.id]">
+    <div
+      class="relative w-full h-56 rounded-xl flex items-center justify-center transition-colors">
+
+      <img [ngSrc]="product.coverUrl || 'images/placeholder.webp'"
+           width="110"
+           height="160"
+           class="h-52 w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105"
+           [alt]="`Book Cover ${product.name}`">
+
+      <span
+        class="absolute top-0 left-0 px-2 py-1 rounded-md bg-base-100/70 backdrop-blur-md border border-base-content/10 text-base-content text-[10px] uppercase tracking-widest font-bold shadow-sm z-10"
+        [class]="ux.isGradientClass()"
+      >
+        {{ ux.category() }}
+      </span>
+
+      <button
+        (click)="$event.stopPropagation(); toggleFavorite(product.id)"
+        class="favorite-btn absolute top-0 right-0 p-2 rounded-full bg-base-100/80 backdrop-blur-sm shadow-sm transition-all hover:scale-110 active:scale-95 z-10"
+        [class.fav]="ux.isFavorite()"
+        [class.text-error]="ux.isFavorite()"
+        [class.text-base-content]="!ux.isFavorite()">
+        <svg lucideHeart size="20" [attr.fill]="ux.isFavorite() ? 'currentColor' : 'none'"></svg>
+      </button>
+    </div>
+  </figure>
+
+  <div class="card-body p-2 flex flex-col overflow-hidden">
+    <div class="space-y-1 shrink-0">
+      <h2 class="card-title text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors leading-tight">
+        {{ product.name }}
+      </h2>
+      <p class="text-xs text-base-content/70 italic">by {{ ux.author() }}</p>
+    </div>
+
+    <div class="flex flex-col items-center mt-1 gap-y-1">
+      <div class="flex flex-row items-center gap-1">
+        @if (product.discount > 0) {
+          <span class="text-[10px] line-through opacity-40">
+            {{ product.price | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
+          </span>
+        }
+
+        <span class="text-xl font-extrabold text-primary leading-none">
+          {{ (product.price * (1 - product.discount)) | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
+        </span>
+
+<!--        <span class="text-[10px] font-medium mt-0.5"-->
+<!--              [class.text-success]="product.availableCount > 0"-->
+<!--              [class.text-error]="product.availableCount === 0">-->
+<!--          {{ product.availableCount > 0 ? 'Skladom (' + product.availableCount + ' ks)' : 'Vypredané' }}-->
+<!--        </span>-->
+      </div>
+
+      @if (product.availableCount !== 0) {
+        <button
+          (click)="$event.stopPropagation(); handleCartAction()"
+          class="btn btn-sm btn-outline transition-all duration-200 active:scale-95 w-full"
+          [class.text-base-content]="!ux.isInCart()"
+          [class.btn-error]="ux.isInCart()"
+        >
+          @if (ux.isInCart()) {
+            <span>{{ t('cart.remove_from_cart') }}</span>
+          } @else {
+            <span>{{ t('cart.add_to_cart') }}</span>
+          }
+        </button>
+      } @else {
+        <p class="text-md py-1 font-normal">{{ t('common.sold_out') }}</p>
+      }
+
+    </div>
+
+    <div class="flex-grow"></div>
+  </div>
+</div>

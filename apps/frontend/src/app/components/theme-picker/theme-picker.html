@@ -1,0 +1,73 @@
+<div class="block">
+  <label class="swap swap-rotate">
+    <!-- this hidden checkbox controls the state -->
+    <input type="checkbox" class="theme-controller" [checked]="currentTheme() === 'dark'"
+           (change)="toggleTheme()" />
+
+    <!-- sun icon -->
+    <svg class="swap-on fill-current" lucideSun />
+
+    <!-- moon icon -->
+    <svg class="swap-off fill-current" lucideMoon />
+  </label>
+</div>
+
+
+<!--<div title="Change Theme" class="dropdown dropdown-end block z-50">-->
+<!--  <div tabindex="0"-->
+<!--       role="button"-->
+<!--       appNoHoverButton-->
+<!--       class="btn btn-ghost uppercase text-white outline-none">-->
+
+<!--    <div class="flex items-center transition-transform duration-150 active:scale-90 will-change-transform">-->
+
+<!--      <div [attr.data-theme]="currentTheme()"-->
+<!--           class="grid shrink-0 grid-cols-2 gap-0.5 rounded-md p-1 shadow-sm bg-base-100">-->
+<!--        <div class="bg-base-content size-1 rounded-full"></div>-->
+<!--        <div class="bg-primary size-1 rounded-full"></div>-->
+<!--        <div class="bg-secondary size-1 rounded-full"></div>-->
+<!--        <div class="bg-accent size-1 rounded-full"></div>-->
+<!--      </div>-->
+
+<!--      <span class="hidden md:block pl-4">{{ currentTheme() }}</span>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div tabindex="0" class="dropdown-content bg-base-200 text-base-content rounded-box z-100 p-4 shadow-2xl border border-base-300 mt-4 w-96 max-sm:!w-[80vw]"-->
+<!--  >-->
+
+<!--    <div class="px-1 mb-3 text-[10px] font-bold uppercase tracking-widest opacity-50">-->
+<!--      Select Theme-->
+<!--    </div>-->
+
+<!--    <div class="grid gap-2 grid-cols-1">-->
+<!--      @for (theme of availableThemes(); track theme.name) {-->
+<!--        <button-->
+<!--          (click)="changeTheme(theme.name)"-->
+<!--          class="group flex items-center gap-1 px-3 py-0 transition-all rounded-xl text-left border border-transparent hover:bg-base-100"-->
+<!--          [class.bg-base-100]="currentTheme() === theme.name"-->
+<!--          [class.shadow-sm]="currentTheme() === theme.name"-->
+<!--          [class]="currentTheme() === theme.name ? 'border-base-content/10 bg-primary/15' : ''"-->
+<!--        >-->
+<!--          <div [attr.data-theme]="theme.name"-->
+<!--               class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md p-0.5 border border-base-content/5">-->
+<!--            <div class="bg-base-content size-1.5 rounded-full"></div>-->
+<!--            <div class="bg-primary size-1.5 rounded-full"></div>-->
+<!--            <div class="bg-secondary size-1.5 rounded-full"></div>-->
+<!--            <div class="bg-accent size-1.5 rounded-full"></div>-->
+<!--          </div>-->
+
+<!--          <span class="flex-1 truncate text-xs font-medium lowercase">-->
+<!--            {{ theme.label }}-->
+<!--          </span>-->
+
+<!--          @if (currentTheme() === theme.name) {-->
+<!--            <div class="flex items-center justify-center size-6 rounded-full text-primary animate-in zoom-in duration-300">-->
+<!--              <svg lucideCheck size="16" strokeWidth="3"></svg>-->
+<!--            </div>-->
+<!--          }-->
+<!--        </button>-->
+<!--      }-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
