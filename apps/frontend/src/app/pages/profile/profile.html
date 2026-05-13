@@ -9,10 +9,10 @@
   <section class="mb-12">
     <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
       Moje objednávky
-      <div class="badge badge-outline">{{ orders().length }}</div>
+      <div class="badge badge-outline">{{ store.orders().length }}</div>
     </h3>
 
-    @if (orders().length > 0) {
+    @if (store.orders().length > 0) {
       <div class="overflow-x-auto bg-base-100 rounded-xl border border-base-300 shadow-sm">
         <table class="table w-full table-fixed">
           <thead>
@@ -25,7 +25,7 @@
           </tr>
           </thead>
           <tbody>
-            @for (order of orders(); track order.id) {
+            @for (order of store.orders(); track order.id) {
               <tr class="hover:bg-base-200/50 transition-colors">
                 <td class="group">
                   <button
@@ -76,9 +76,9 @@
       <div class="badge badge-secondary badge-lg">{{ store.favoriteCount() }}</div>
     </h3>
 
-    @if (favoriteProducts().length > 0) {
+    @if (store.favoriteProducts().length > 0) {
       <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
-        @for (book of favoriteProducts(); track book.id) {
+        @for (book of store.favoriteProducts(); track book.id) {
           <app-card-small [product]="book"></app-card-small>
         }
       </div>

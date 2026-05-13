@@ -1,16 +1,12 @@
-import {
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
-import { AppState, AppStore } from '../../store/app-store';
-import { BookFilters, QuickFilterState } from '../../../types';
+import { Component, inject, signal } from '@angular/core';
+import { AppStore } from '../../store/app-store';
+import { BookFilters } from '../../../types';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-filter-bar',
-  imports: [TranslocoDirective],
+  imports: [TranslocoDirective, RouterLink],
   templateUrl: './filter-bar.html',
   styleUrl: './filter-bar.css',
 })
@@ -24,12 +20,6 @@ export class FilterBar {
     // isBestSeller: false,
     // isNewRelease: false,
     isDiscounted: false,
-  });
-
-  // 1. The Single Source of Truth
-  protected filterState = signal<QuickFilterState>({
-    mode: 'all',
-    sortBy: null,
   });
 
   updateFilter<K extends keyof BookFilters>(key: K, value: BookFilters[K]) {

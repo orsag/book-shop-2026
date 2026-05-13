@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product, OrderStatus } from '@store/shared-models';
+import { Product, OrderStatus, Order } from '@store/shared-models';
 import { Observable } from 'rxjs';
 
 export interface OrderItem {
@@ -71,7 +71,7 @@ export class OrderService {
   /**
    * Administration: Completely remove an order from the system
    */
-  deleteOrder(orderId: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/${orderId}`);
+  deleteOrder(orderId: string): Observable<Order> {
+    return this.http.delete<Order>(`${this.API_URL}/${orderId}`);
   }
 }

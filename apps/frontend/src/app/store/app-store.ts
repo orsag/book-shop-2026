@@ -8,12 +8,14 @@ import {
 } from '@ngrx/signals';
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import {
+  OrderStatus,
   PremiumStatus,
   ProductType,
   User,
   UserDetail,
   UserDetailSmall,
 } from '@store/shared-models';
+import { tapResponse } from '@ngrx/operators';
 import { Product as IProduct } from '@store/shared-models';
 import { AuthService } from '../services/auth-service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -28,6 +30,7 @@ import {
 } from '../core/error.handler';
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import localeSk from '@angular/common/locales/sk';
+import { CreatedOrder, OrderService } from '../services/order-service';
 
 registerLocaleData(localeSk);
 
@@ -45,6 +48,7 @@ export interface AppState {
   width: number;
   // --- 📚 Book State ---
   products: IProduct[];
+  orders: CreatedOrder[];
   favoriteProducts: IProduct[];
   totalProducts: number;
   isLoading: boolean;
@@ -72,6 +76,7 @@ const initialState: AppState = {
   premiumStatus: null,
   width: typeof window !== 'undefined' ? window.innerWidth : 1200,
   products: [],
+  orders: [],
   favoriteProducts: [],
   totalProducts: 0,
   isLoading: false,
@@ -119,6 +124,7 @@ export const AppStore = signalStore(
   withMethods(
     (
       store,
+      orderService = inject(OrderService),
       bookService = inject(BookService),
       authService = inject(AuthService),
       detailService = inject(DetailService),
@@ -454,6 +460,41 @@ export const AppStore = signalStore(
           return { searchHistory: newHistory };
         });
       },
+
+      updateOrderLocal(id: string, status: OrderStatus) {
+        patchState(store, {
+          orders: store
+            .orders()
+            .map((order) => (order.id === id ? { ...order, status } : order)),
+        });
+      },
+
+      removeOrderLocal(id: string) {
+        patchState(store, {
+          orders: store.orders().filter((order) => order.id !== id),
+        });
+      },
+
+      reloadOrders: rxMethod<{ userId: string }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ userId }) =>
+            orderService.getUserOrders(userId).pipe(
+              tapResponse({
+                next: (orders) => {
+                  patchState(store, {
+                    orders: orders,
+                    isLoading: false,
+                  });
+                },
+                error: (err) => {
+                  patchState(store, { isLoading: false });
+                },
+              }),
+            ),
+          ),
+        ),
+      ),
     }),
   ),
 
@@ -466,8 +507,8 @@ export const AppStore = signalStore(
       const savedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
 
       // Automatically react to user favorite ID changes
-      // const favoriteIds = computed(() => store.user()?.favorites || []);
-      // store._syncFavorites(favoriteIds);
+      const favoriteIds = computed(() => store.user()?.favorites || []);
+      store._syncFavorites(favoriteIds);
 
       if (savedUser && savedToken) {
         patchState(store, {

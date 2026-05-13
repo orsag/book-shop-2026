@@ -79,6 +79,7 @@
     "back_home": "Go back home",
     "not_found": "Book Not Found",
     "add_book": "Add book",
+    "add_product": "Add product",
     "delete_book": "Delete book?",
     "delete_book2": "Are you sure you want to delete the book",
     "delete_btn": "Delete",
@@ -154,6 +155,7 @@
     },
     "bar": {
       "all": "All",
+      "admin": "Admin",
       "bestsellers": "Bestsellers",
       "new_releases": "New releases",
       "most_expensive": "Most expensive",

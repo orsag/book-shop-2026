@@ -8,18 +8,14 @@ import {
 } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { form, FormField, required } from '@angular/forms/signals';
-import { UserWithoutId, UserDetailSmall, User } from '@store/shared-models';
+import {
+  UserWithoutId,
+  UserDetailSmall,
+  User,
+  OrderStatus,
+} from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
 import { FormsModule } from '@angular/forms';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import {
-  BehaviorSubject,
-  combineLatest,
-  distinctUntilChanged,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
 import {
   LucideLock,
   LucideCreditCard,
@@ -31,6 +27,7 @@ import { ToastService } from '../../services/toast-service';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { CardSmall } from '../../components/card-small/card-small';
 import { PremiumCard } from './premium-card';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -57,7 +54,6 @@ export class Profile {
   toast = inject(ToastService);
   private isFormInitialized = false;
   OrderStatus = OSEnum;
-  favoriteProducts = this.store.favoriteProducts;
 
   constructor() {
     effect(() => {
@@ -81,6 +77,21 @@ export class Profile {
         });
       }
     });
+  }
+
+  // 5. Update handleCancelOrder to use the new method
+  handleCancelOrder(orderId: string) {
+    this.store.updateOrderLocal(orderId, 'CANCELLED' as OrderStatus);
+
+    this.orderService
+      .cancelOrder(orderId)
+      .pipe(delay(500))
+      .subscribe({
+        next: () => {
+          this.toast.success('Status updated');
+          this.store.refreshUser();
+        },
+      });
   }
 
   userDetailModel = signal<UserDetailSmall>(
@@ -149,40 +160,12 @@ export class Profile {
     this.toast.success('Zmeny resetované');
   }
 
-  private refreshOrders$ = new BehaviorSubject<void>(undefined);
-
-  // New Signal for Order History
-  orders = toSignal(
-    combineLatest([
-      toObservable(computed(() => this.store.user())).pipe(
-        map((user) => user?.id),
-        distinctUntilChanged(),
-      ),
-      this.refreshOrders$, // 2. This will fire whenever we call .next()
-    ]).pipe(
-      switchMap(([userId]) =>
-        userId ? this.orderService.getUserOrders(userId) : of([]),
-      ),
-    ),
-    { initialValue: [] },
-  );
-
   // Logic to determine if an order can be cancelled (within 14 days)
   canCancel(createdAt: Date): boolean {
     const now = Date.now();
     const orderTime = new Date(createdAt).getTime();
     const fourteenDaysMs = 14 * 24 * 60 * 60 * 1000;
     return now - orderTime <= fourteenDaysMs;
-  }
-
-  handleCancelOrder(orderId: string) {
-    this.orderService.cancelOrder(orderId).subscribe({
-      next: () => {
-        this.refreshOrders$.next();
-        this.store.refreshUser();
-        this.toast.success('Objednávka zrušená do 14 dní.');
-      },
-    });
   }
 
   // 1. Extract the mapping logic to a reusable method

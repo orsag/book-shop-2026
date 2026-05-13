@@ -16,7 +16,7 @@
       <tr class="hover:bg-base-200/30 transition-colors group">
         <td><span class="font-bold">{{ i }}</span></td>
 
-        @if (store.filters().type === 'BOOK') {
+        @if (store.isBook()) {
           @let bookDetails = product.bookDetails;
           <td>
             <div class="font-bold text-sm"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></div>
@@ -32,7 +32,7 @@
           </td>
         }
 
-        @if (store.filters().type === 'GAME') {
+        @if (store.isGame()) {
           @let gameDetails = product.gameDetails;
           <td>
             <div class="font-bold text-sm"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></div>
@@ -44,6 +44,21 @@
           </td>
           <td>
             <div class="font-normal">{{ gameDetails?.category }}</div>
+          </td>
+        }
+
+        @if (store.isGastro()) {
+          @let gastroDetails = product.gastroDetails;
+          <td>
+            <div class="font-bold text-sm"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></div>
+            <div class="text-[10px] opacity-50 italic">
+              {{ gastroDetails?.brand }}</div>
+          </td>
+          <td>
+            <div class="font-bold text-sm">{{ gastroDetails?.producer }}</div>
+          </td>
+          <td>
+            <div class="font-normal">{{ gastroDetails?.category }}</div>
           </td>
         }
 

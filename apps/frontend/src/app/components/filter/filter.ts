@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { ConfigurationService } from '../../services/configuration-service';
 import { inject, computed } from '@angular/core';
 import { BookFilters } from '../../../types';
@@ -33,7 +33,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './filter.html',
   styleUrl: './filter.css',
 })
-export class Filter implements OnInit {
+export class Filter {
   store = inject(AppStore);
   router = inject(Router);
   config = inject(ConfigurationService);
@@ -56,21 +56,18 @@ export class Filter implements OnInit {
     type: 'BOOK',
     search: '',
     category: null,
-    // isAvailable: false,
-    // isBestSeller: false,
-    // isNewRelease: false,
     isDiscounted: false,
   });
 
-  ngOnInit() {
-    this.filters.set({
-      type: this.store.filters.type(),
-      search: this.store.filters.search(),
-      category: this.store.filters.category(),
-      // isAvailable: this.store.filters.isAvailable(),
-      // isBestSeller: this.store.filters.isBestSeller(),
-      // isNewRelease: this.store.filters.isNewRelease(),
-      isDiscounted: this.store.filters.isDiscounted(),
+  constructor() {
+    // Create a reactive link
+    effect(() => {
+      this.filters.set({
+        type: this.store.filters.type(),
+        search: this.store.filters.search(),
+        category: this.store.filters.category(),
+        isDiscounted: this.store.filters.isDiscounted(),
+      });
     });
   }
 

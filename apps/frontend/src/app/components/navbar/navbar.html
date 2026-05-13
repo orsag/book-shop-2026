@@ -1,7 +1,7 @@
 @let navBg = '/images/navbar2.svg';
 @let logo = '/images/logo.svg';
 
-<div class="navbar shadow-2xl h-18 relative bg-neutral text-white">
+<div class="navbar shadow-2xl h-18 relative bg-neutral text-white max-w-full">
 
   <div class="absolute inset-0 z-0 pointer-events-none opacity-50 overflow-hidden"
        [style.backgroundImage]="'url(' + navBg + ')'"
@@ -88,7 +88,7 @@
     </div>
 
     @if (isLoggedIn()) {
-      <div class="dropdown dropdown-end group">
+      <div class="dropdown dropdown-end group z-[9999]">
         <div tabindex="0" role="button"
              class="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
           <div class="indicator">

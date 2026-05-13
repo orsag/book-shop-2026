@@ -97,11 +97,22 @@ export class OrderService {
     return `This action updates a #${id} order`;
   }
 
-  remove(userId: string, id: string) {
-    return `This action removes a #${id} order`;
-  }
+  async remove(userId: string, id: string, isAdmin: boolean) {
+    return await this.prisma.client.$transaction(async (tx) => {
+      // 1. Delete all items associated with this order first
+      await tx.orderItem.deleteMany({
+        where: { orderId: id },
+      });
 
-  // backend/src/order/order.service.ts
+      // 2. Delete the order itself
+      return tx.order.delete({
+        where: {
+          id,
+          ...(isAdmin ? {} : { userId }),
+        },
+      });
+    });
+  }
 
   // Fetch all orders for a specific user with items and book details
   findAllByUser(userId: string) {

@@ -1,8 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { CreatedOrder, OrderService } from '../../services/order-service';
-import { OrderStatus } from '@store/shared-models';
+import { Component, inject } from '@angular/core';
+import { OrderService } from '../../services/order-service';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { ToastService } from '../../services/toast-service';
+import { AppStore } from '../../store/app-store';
+import { delay } from 'rxjs';
+import { OrderStatus } from '@store/libs';
 
 @Component({
   selector: 'app-order-table',
@@ -11,43 +14,51 @@ import { TranslocoDirective } from '@jsverse/transloco';
   styleUrl: './order-table.css',
 })
 export class OrderTable {
+  store = inject(AppStore);
   private orderService = inject(OrderService);
-
-  // Local state signals
-  orders = signal<CreatedOrder[]>([]);
-  isLoading = signal<boolean>(false);
-
-  ngOnInit() {
-    this.loadAllOrders();
-  }
-
-  loadAllOrders() {
-    this.isLoading.set(true);
-    this.orderService.getAllGlobalOrders().subscribe({
-      next: (data) => {
-        this.orders.set(data);
-        this.isLoading.set(false);
-      },
-      error: () => this.isLoading.set(false),
-    });
-  }
+  private toast = inject(ToastService);
 
   updateStatus(id: string, status: string) {
-    this.orderService.updateStatus(id, status).subscribe(() => {
-      // Optimistic or Refresh update
-      this.orders.update((prev) =>
-        prev.map((o) =>
-          o.id === id ? { ...o, status: status as OrderStatus } : o,
-        ),
-      );
-    });
+    const typedStatus = status as OrderStatus;
+    // 1. Update UI Immediately (Instant feedback)
+    this.store.updateOrderLocal(id, typedStatus);
+
+    this.orderService
+      .updateStatus(id, status)
+      .pipe(delay(500))
+      .subscribe({
+        next: () => {
+          this.toast.success('Status updated');
+        },
+        error: (err) => {
+          this.toast.alert('Update failed, not reloading.');
+        },
+      });
   }
 
-  removeOrder(id: string) {
+  removeOrder(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
     if (confirm('Are you sure you want to delete this order?')) {
-      this.orderService.deleteOrder(id).subscribe(() => {
-        this.orders.update((prev) => prev.filter((o) => o.id !== id));
-      });
+      // 1. Update UI Immediately (Instant feedback)
+      this.store.removeOrderLocal(id);
+
+      this.orderService
+        .deleteOrder(id)
+        .pipe(delay(500))
+        .subscribe({
+          next: () => {
+            this.toast.success('Status updated');
+          },
+          error: (err) => {
+            console.error('Delete failed:', err);
+            const message =
+              err.status === 500
+                ? 'Cannot delete order because server error.'
+                : 'Failed to delete order. Please try again.';
+            this.toast.alert(message);
+          },
+        });
     }
   }
 

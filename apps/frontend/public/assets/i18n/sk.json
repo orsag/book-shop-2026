@@ -79,6 +79,7 @@
     "back_home": "Vráť sa domov",
     "not_found": "Kniha sa nenašla",
     "add_book": "Pridať knihu",
+    "add_product": "Pridať produkt",
     "delete_book": "Odstrániť knihu?",
     "delete_book2": "Naozaj chcete vymazať knihu",
     "delete_btn": "Vymazať",
@@ -154,6 +155,7 @@
     },
     "bar": {
       "all": "Všetko",
+      "admin": "Admin",
       "bestsellers": "Bestsellery",
       "new_releases": "Najnovšie",
       "most_expensive": "Najdrahšie",

@@ -7,12 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
+  Request as Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import type { RequestWithUser } from '@store/libs';
 
 @Controller('order')
 export class OrderController {
@@ -20,9 +21,9 @@ export class OrderController {
 
   @Post()
   @UseGuards(JwtAuthGuard) // Ensure the user is logged in
-  create(@Request() req, @Body() createOrderDto: CreateOrderDto) {
-    // Use the ID from the JWT payload instead of the hardcoded one
-    return this.orderService.create(req.user.userId, createOrderDto);
+  create(@Req() req: RequestWithUser, @Body() createOrderDto: CreateOrderDto) {
+    const userId = req.user?.userId;
+    return this.orderService.create(userId, createOrderDto);
   }
 
   @Get('all')
@@ -43,7 +44,7 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
-    @Request() req,
+    @Req() req: RequestWithUser,
     @Param('id') id: string,
     @Body() updateOrderDto: UpdateOrderDto,
   ) {
@@ -58,19 +59,19 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Request() req, @Param('id') id: string) {
-    return this.orderService.remove(req.user.userId, id);
+  remove(@Req() req: RequestWithUser, @Param('id') id: string) {
+    return this.orderService.remove(req.user.userId, id, req.user.isAdmin);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('user/:userId')
-  findAllByUser(@Request() req) {
+  findAllByUser(@Req() req: RequestWithUser) {
     return this.orderService.findAllByUser(req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
-  cancelOrder(@Request() req, @Param('id') id: string) {
+  cancelOrder(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.orderService.cancel(req.user.userId, id);
   }
 }

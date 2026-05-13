@@ -27,7 +27,7 @@
     <li>
       <button (click)="updateFilter('type', 'CARDS')"
               class="menu-x bg-[#a08ac1] hover:brightness-90 transition-all">
-        <h2 class="menu-title-x">Cups</h2>
+        <h2 class="menu-title-x">Cards</h2>
       </button>
     </li>
     <li>
@@ -41,6 +41,14 @@
         <button routerLink="/profile"
                 class="menu-x bg-[#ff6666] hover:brightness-90 transition-all">
           <h2 class="menu-title-x">{{ t('filters.bar.profile') }}</h2>
+        </button>
+      </li>
+    }
+    @if (store.isAdmin()) {
+      <li>
+        <button routerLink="/administration"
+                class="menu-x bg-[#96bfff] hover:brightness-90 transition-all">
+          <h2 class="menu-title-x">{{ t('filters.bar.admin') }}</h2>
         </button>
       </li>
     }

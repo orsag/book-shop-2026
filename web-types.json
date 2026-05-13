@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "my-custom-angular-plugins",
+  "version": "1.0.0",
+  "contributions": {
+    "html": {
+      "attributes": [
+        {
+          "name": "input.debounce.500",
+          "description": "Custom debounce plugin for input events",
+          "value": {
+            "kind": "expression"
+          }
+        },
+        {
+          "name": "input.debounce.300",
+          "description": "Custom debounce plugin for input events"
+        }
+      ],
+      "elements": [
+        {
+          "name": "input",
+          "attributes": [
+            {
+              "pattern": "^\\(input\\.debounce\\.\\d+\\)$",
+              "description": "Matches any (input.debounce.MS) binding"
+            }
+          ]
+        },
+        {
+          "name": "input",
+          "attributes": [
+            {
+              "pattern": {
+                "regex": "\\(input\\.debounce\\.\\d+\\)",
+                "case-sensitive": false
+              },
+              "description": "Custom debounce event plugin for any millisecond value",
+              "value": {
+                "kind": "expression"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -9,7 +9,7 @@
   </tr>
   </thead>
   <tbody>
-    @for (order of orders(); track order.id) {
+    @for (order of store.orders(); track order.id) {
       <tr class="hover">
         <td>
           <div class="font-medium">{{ order.createdAt | date:'short' }}</div>
@@ -47,7 +47,7 @@
                       class="btn btn-warning btn-xs btn-outline">{{t('order_table.cancel')}}</button>
             }
 
-            <button (click)="removeOrder(order.id)"
+            <button (click)="removeOrder(order.id, $event)"
                     class="btn btn-error btn-xs btn-outline text-error">{{t('order_table.remove')}}</button>
           </div>
         </td>

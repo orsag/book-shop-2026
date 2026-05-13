@@ -1,3 +1,5 @@
+import type { Request } from 'express';
+
 export interface User {
   id: string;
   username: string;
@@ -29,6 +31,16 @@ export interface UserFix {
 }
 
 export type CreateUserDto = Omit<User, 'id'>;
+
+// Define the shape of your JWT payload
+export interface RequestWithUser extends Request {
+  user: {
+    userId: string;
+    username: string;
+    isAdmin: boolean;
+    // add other properties from your JWT payload here
+  };
+}
 
 export type UserWithoutId = Omit<
   User,

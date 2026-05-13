@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { BookTable } from '../../components/book-table/book-table';
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/shared-models';
@@ -8,7 +8,7 @@ import { OrderTable } from '../../components/order-table/order-table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
-import { LucidePlus } from '@lucide/angular';
+import { LucideFrown, LucidePlus } from '@lucide/angular';
 
 @Component({
   selector: 'app-administration',
@@ -21,6 +21,7 @@ import { LucidePlus } from '@lucide/angular';
     TranslocoDirective,
     CoverModalComponent,
     DeleteModalComponent,
+    LucideFrown,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',
@@ -32,6 +33,18 @@ export class Administration implements OnInit {
   isCoverModalOpen = signal<boolean>(false);
   isDeleteModalOpen = signal(false);
   isEditModalOpen = signal(false);
+
+  category = computed(() => {
+    if (this.store.isBook()) {
+      return 'Book';
+    } else if (this.store.isGame()) {
+      return 'Game';
+    } else if (this.store.isGastro()) {
+      return 'Gastro';
+    } else {
+      return 'Puzzle / Cups / Toys';
+    }
+  });
 
   ngOnInit() {
     if (this.store.totalProducts() === 0) {

@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -24,6 +24,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.0",
+    "@ngrx/operators": "^21.1.0",
     "@ngrx/signals": "^21.1.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
@@ -33,7 +34,6 @@
     "class-validator": "^0.15.1",
     "dotenv": "^17.4.2",
     "lucide": "^1.14.0",
-    "ng-http-caching": "^21.0.10",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "postcss": "^8.5.14",

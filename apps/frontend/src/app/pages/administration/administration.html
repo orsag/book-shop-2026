@@ -10,7 +10,7 @@
       class="btn btn-primary gap-2 shadow-md"
       (click)="openCreateModal()">
         <svg lucidePlus size="20"></svg>
-      {{ t('administration.add_book') }}
+      {{ t('administration.add_product') }}
     </button>
   </div>
 
@@ -61,13 +61,20 @@
     </div>
   }
 
-  <div class="w-full bg-base-100 shadow-sm">
-    <app-book-table
-      (edit)="openEditModal($event)"
-      (remove)="openDeleteConfirmation($event)"
-      (editCover)="openCoverModal($event)"
-    ></app-book-table>
-  </div>
+  @if (store.isEmpty()) {
+    <div class="flex flex-col items-center justify-center min-h-[40vh]">
+      <svg lucideFrown size="80" class="text-gray-400 dark:text-gray-800"></svg>
+      <h1 class="mt-4 text-3xl font-bold text-base-content/50">Nothing found in: {{ category() }}</h1>
+    </div>
+  } @else {
+    <div class="w-full bg-base-100 shadow-sm">
+      <app-book-table
+        (edit)="openEditModal($event)"
+        (remove)="openDeleteConfirmation($event)"
+        (editCover)="openCoverModal($event)"
+      ></app-book-table>
+    </div>
+  }
 
 </div>
 

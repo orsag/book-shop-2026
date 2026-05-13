@@ -8,7 +8,7 @@ import {
   LucideTrash2,
   LucidePencil,
   LucideImagePlus,
-  LucideChevronsRight,
+  LucideChevronsRight, LucideFrown,
 } from '@lucide/angular';
 
 @Component({
@@ -35,9 +35,7 @@ export class BookTable {
   products: Signal<Product[]> = this.store.products;
 
   dynamicColumns = computed(() => {
-    const productType = this.store.filters()?.type;
-
-    if (productType === 'BOOK') {
+    if (this.store.isBook()) {
       return {
         columnOne: 'book_table.publisher',
         columnTwo: 'book_table.isbn',

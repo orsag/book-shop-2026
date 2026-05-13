@@ -16,8 +16,6 @@ import { TranslocoHttpLoader } from './core/transloco-loader';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { authInterceptor } from './core/auth.interceptor';
-import { provideNgHttpCaching } from 'ng-http-caching';
-import { ngHttpCachingConfig } from './core/cachingConfig';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +25,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor]),
       withInterceptorsFromDi(),
     ),
-    provideNgHttpCaching(ngHttpCachingConfig),
     provideTransloco({
       config: {
         availableLangs: ['en', 'sk'],
