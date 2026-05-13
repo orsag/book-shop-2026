@@ -13,6 +13,7 @@ node_modules
 .project
 .classpath
 .c9/
+.zed/
 *.launch
 .settings/
 *.sublime-workspace
@@ -47,8 +48,9 @@ Thumbs.db
 
 vitest.config.*.timestamp*
 /generated/prisma
+prisma/*.db
+prisma/*.db-journal
+.env
 
-.angular/cache
-.nx/cache
-dist/
-stats.json
+__screenshots__/
+debug_books.json
