@@ -13,6 +13,7 @@ import {
   UserDetailSmall,
   User,
   OrderStatus,
+  UserDetail,
 } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
 import { FormsModule } from '@angular/forms';
@@ -169,7 +170,7 @@ export class Profile {
   }
 
   // 1. Extract the mapping logic to a reusable method
-  private mapToDetailModel(detail: any): UserDetailSmall {
+  private mapToDetailModel(detail: UserDetail | null): UserDetailSmall {
     return {
       displayName: detail?.displayName ?? '',
       bio: detail?.bio ?? '',

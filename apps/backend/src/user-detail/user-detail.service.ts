@@ -56,6 +56,7 @@ export class UserDetailService {
   }
 
   create(createUserDetailDto: CreateUserDetailDto) {
+    console.log(JSON.stringify(createUserDetailDto));
     return 'This action adds a new userDetail';
   }
 

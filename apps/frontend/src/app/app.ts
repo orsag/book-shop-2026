@@ -18,7 +18,7 @@ export class App {
   constructor() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
+      .subscribe(() => {
         this.scrollService.scrollToTop();
       });
   }

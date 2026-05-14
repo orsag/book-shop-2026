@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import {
+  CreateProductDto,
+} from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindAllParams } from './types';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { Prisma } from '../../../../generated/prisma/client';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ProductWhereInput } from '../../../../generated/prisma/models/Product';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   create(createProductDto: CreateProductDto) {
+    console.log(JSON.stringify(createProductDto));
     return 'This action adds a new product';
   }
 
@@ -24,7 +29,7 @@ export class ProductsService {
     isDiscounted,
   }: FindAllParams) {
     const skip = (page - 1) * limit;
-    const andConditions: any[] = [];
+    const andConditions: ProductWhereInput | ProductWhereInput[] = [];
 
     // 1. Search condition
     if (search) {
@@ -147,9 +152,12 @@ export class ProductsService {
       return `This action updates a #${id} product`;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { bookDetails, cardDetails, gameDetails, gastroDetails, ...restProps } = updateProduct;
+
     // Construct the update object matching Prisma's type requirements
-    const updateData: any = {
-      ...updateProduct,
+    const updateData: Prisma.ProductUpdateInput = {
+      ...restProps,
     };
 
     if (selectedProduct.productType === 'BOOK' && updateProduct.bookDetails) {

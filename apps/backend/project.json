@@ -44,6 +44,14 @@
         "buildTarget": "build"
       }
     },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/backend/**/*.ts"],
+        "tsconfig": "apps/backend/tsconfig.app.json"
+      }
+    },
     "prune": {
       "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
       "executor": "nx:noop"

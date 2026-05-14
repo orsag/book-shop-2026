@@ -8,7 +8,7 @@ import {
   LucideTrash2,
   LucidePencil,
   LucideImagePlus,
-  LucideChevronsRight, LucideFrown,
+  LucideChevronsRight,
 } from '@lucide/angular';
 
 @Component({

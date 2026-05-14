@@ -30,7 +30,7 @@ export class OrderTable {
         next: () => {
           this.toast.success('Status updated');
         },
-        error: (err) => {
+        error: () => {
           this.toast.alert('Update failed, not reloading.');
         },
       });

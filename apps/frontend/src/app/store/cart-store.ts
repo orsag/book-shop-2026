@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, effect, inject } from '@angular/core';
 import { Product } from '@store/shared-models';
 import {

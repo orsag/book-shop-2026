@@ -25,7 +25,7 @@ export class AuthService {
     });
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<object> {
     return this.http.get(`${this.apiUrl}/logout`);
   }
 

@@ -487,7 +487,7 @@ export const AppStore = signalStore(
                     isLoading: false,
                   });
                 },
-                error: (err) => {
+                error: () => {
                   patchState(store, { isLoading: false });
                 },
               }),

@@ -6,6 +6,8 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
+    "bl": "nx run backend:lint",
+    "fl": "nx run frontend:lint",
     "clean": "rm -rf dist .angular/cache .nx/cache"
   },
   "private": true,

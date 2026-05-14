@@ -421,7 +421,7 @@ export class EditModalComponent {
 
     if (id) {
       this.bookService.update(id, dataToSave).subscribe({
-        next: (updatedBook) => {
+        next: () => {
           this.errorService.handleSuccess(SuccessCodes.BOOK_UPDATE);
           this.store.loadBooks();
           this.handleClose();
@@ -433,7 +433,7 @@ export class EditModalComponent {
       });
     } else {
       this.bookService.create(dataToSave).subscribe({
-        next: (newBook) => {
+        next: () => {
           this.errorService.handleSuccess(SuccessCodes.BOOK_CREATE);
           this.store.loadBooks();
           this.handleClose();

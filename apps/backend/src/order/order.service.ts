@@ -8,6 +8,12 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { OrderStatus } from '@store/libs';
 
+type OrderItemDto = {
+  productId: string;
+  quantity: number;
+  price: number;
+};
+
 @Injectable()
 export class OrderService {
   constructor(private prisma: PrismaService) {}
@@ -18,9 +24,10 @@ export class OrderService {
     }
     // 🛡️ We use a transaction to ensure either everything succeeds or nothing does
     return this.prisma.client.$transaction(async (tx) => {
+
       let totalAmount = 0;
       const VAT_RATE = 0.05;
-      const orderItemsData: any = [];
+      const orderItemsData: OrderItemDto[] = [];
 
       for (const item of createOrderDto.items) {
         // 1. Fetch current price directly from DB (never trust frontend prices!)
@@ -94,6 +101,7 @@ export class OrderService {
   }
 
   update(userId: string, id: string, updateOrderDto: UpdateOrderDto) {
+    console.log(JSON.stringify(updateOrderDto));
     return `This action updates a #${id} order`;
   }
 
