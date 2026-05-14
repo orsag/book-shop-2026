@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { BookTable } from '../../components/book-table/book-table';
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/shared-models';
@@ -26,7 +26,7 @@ import { LucideFrown, LucidePlus } from '@lucide/angular';
   templateUrl: './administration.html',
   styleUrl: './administration.css',
 })
-export class Administration implements OnInit {
+export class Administration {
   store = inject(AppStore);
 
   selectedProduct = signal<Product | null>(null);
@@ -45,12 +45,6 @@ export class Administration implements OnInit {
       return 'Puzzle / Cups / Toys';
     }
   });
-
-  ngOnInit() {
-    if (this.store.totalProducts() === 0) {
-      this.store.loadBooks();
-    }
-  }
 
   openDeleteConfirmation(book: Product) {
     this.selectedProduct.set(book);

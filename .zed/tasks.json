@@ -22,6 +22,11 @@
     "use_new_terminal": true,
   },
   {
+    "label": "NX: Build Libs",
+    "command": "npx nx build libs",
+    "use_new_terminal": true,
+  },
+  {
     "label": "NX: Nuclear Reset",
     "command": "rm -rf .nx/cache && rm -rf .angular/cache && npx nx reset",
     "use_new_terminal": true,

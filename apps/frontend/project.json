@@ -11,6 +11,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/frontend",
+        "deleteOutputPath": false,
         "index": "apps/frontend/src/index.html",
         "main": "apps/frontend/src/main.ts",
         "tsConfig": "apps/frontend/tsconfig.app.json",
