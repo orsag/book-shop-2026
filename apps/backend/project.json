@@ -6,16 +6,11 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
       "options": {
-        "outputPath": "dist/apps/backend",
-        "compiler": "tsc",
-        "main": "apps/backend/src/main.ts",
-        "tsConfig": "apps/backend/tsconfig.app.json",
-        "webpackConfig": "apps/backend/webpack.config.js",
-        "target": "node",
-        "deleteOutputPath": false
+        "command": "webpack-cli build",
+        "args": ["--node-env=production"],
+        "cwd": "apps/backend"
       },
       "configurations": {
         "development": {
@@ -57,11 +52,11 @@
       "executor": "nx:noop"
     },
     "serve": {
-      "continuous": true,
       "executor": "@nx/js:node",
+      "continuous": true,
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
       "options": {
+        "watch": false,
         "buildTarget": "backend:build",
         "runBuildTargetDependencies": false
       },

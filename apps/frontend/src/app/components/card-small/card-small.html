@@ -18,7 +18,7 @@
       </span>
 
       <button
-        (click)="$event.stopPropagation(); toggleFavorite(product.id)"
+        (click.stop)="toggleFavorite(product.id)"
         class="favorite-btn absolute top-0 right-0 p-2 rounded-full bg-base-100/80 backdrop-blur-sm shadow-sm transition-all hover:scale-110 active:scale-95 z-10"
         [class.fav]="ux.isFavorite()"
         [class.text-error]="ux.isFavorite()"
@@ -60,7 +60,7 @@
 
       @if (product.isAvailable) {
         <button
-          (click)="$event.stopPropagation(); handleCartAction()"
+          (click.stop)="handleCartAction()"
           class="btn btn-sm btn-outline transition-all duration-200 active:scale-95 px-4"
           [class.text-base-content]="!ux.isInCart()"
           [class.btn-error]="ux.isInCart()"

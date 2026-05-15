@@ -16,6 +16,9 @@ import {
   LucideSearch,
 } from '@lucide/angular';
 import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
@@ -34,6 +37,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './filter.css',
 })
 export class Filter {
+  private breakpointObserver = inject(BreakpointObserver);
   store = inject(AppStore);
   router = inject(Router);
   config = inject(ConfigurationService);
@@ -70,6 +74,13 @@ export class Filter {
       });
     });
   }
+
+  isHandset = toSignal(
+    this.breakpointObserver
+      .observe(Breakpoints.Handset)
+      .pipe(map((result) => result.matches)),
+    { initialValue: false },
+  );
 
   // Update helper
   updateFilter<K extends keyof BookFilters>(key: K, value: BookFilters[K]) {
@@ -113,7 +124,7 @@ export class Filter {
       this.router.navigate(['/']);
     }
 
-    if (window.innerWidth < 768) {
+    if (this.isHandset()) {
       this.config.toggleFlag('SHOW_FILTER');
     }
   }

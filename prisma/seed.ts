@@ -1,67 +1,29 @@
 import { faker } from '@faker-js/faker';
 import { prisma } from './prisma';
 import { Prisma } from '../generated/prisma/client';
+import {
+  categories,
+  gatroCategory,
+  computerGames,
+  gastroBrands,
+  computerGameCategory,
+  computerGameBrands,
+  productTypeHelper,
+  DISCOUNT,
+  DEFAULT_AVATAR,
+  RATING_MAX,
+  RATING_MIN,
+  RATING,
+} from './seed.helper';
 
-const computerGames = [
-  "Baldur's Gate 3",
-  'Elden Ring Nightreign',
-  'Slay the Spire 2',
-  'Borderlands 4',
-  'Resident Evil Requiem',
-  'Cyberpunk 2077',
-  'Half-Life: Alyx',
-  'The Witcher 3: Wild Hunt',
-  'Doom Eternal',
-  'Hollow Knight',
-  'Minecraft',
-  'Red Dead Redemption 2',
-  'The Elder Scrolls V: Skyrim',
-  'Portal 2',
-  'Grand Theft Auto V',
-  'Hades',
-  'Disco Elysium',
-  'Dark Souls III',
-  'StarCraft II',
-  'Mass Effect 2',
-  'Civilization VI',
-  'Terraria',
-  'Stardew Valley',
-  'Hogwarts Legacy',
-  'Forza Horizon 5',
-  'God of War',
-  'Helldivers 2',
-  'Apex Legends',
-  'Counter-Strike 2',
-  'World of Warcraft',
-];
-
-const categories: string[] = [
-  'Fiction',
-  'Non-fiction',
-  'Fantasy',
-  'Sci-Fi',
-  'Romance',
-  'History',
-  'Biography',
-  'Self-help',
-  'Mystery',
-];
-
-const computerGameBrands: string[] = [
-  'GSC',
-  'GTA',
-  'Bethesda',
-  'Pearl Abyss',
-  'Electronic Arts (EA)',
-  'Ubisoft',
-  'Valve',
-  'Nintendo',
-  'Sony IE',
-  'Xbox Game Studios',
-  'Blizzard',
-];
-
-const DEFAULT_AVATAR = 'https://avatars.githubusercontent.com/u/971652350';
+const getName = (type: productTypeHelper) => {
+  const map: Record<productTypeHelper, string> = {
+    BOOK: faker.commerce.productName(),
+    GAME: faker.helpers.arrayElement(computerGames),
+    GASTRO: faker.food.dish(),
+  };
+  return map[type] ?? faker.commerce.productName();
+};
 
 async function main() {
   await prisma.gastro.deleteMany();
@@ -75,19 +37,11 @@ async function main() {
 
   for (let i = 0; i < 300; i++) {
     const type = faker.helpers.arrayElement(['BOOK', 'GAME', 'GASTRO']);
-
     const audioBook = Math.random() > 0.8;
-
     const availableCount = faker.number.int({ min: 0, max: 50 });
-
     const isAvailable = availableCount > 0;
-
     const condition = Math.random() < 0.9 ? 'new' : 'used';
-
-    const discount = faker.helpers.arrayElement([
-      0, 0, 0, 0, 0, 0.05, 0.1, 0.2,
-    ]);
-
+    const discount = faker.helpers.arrayElement(DISCOUNT);
     const price = parseFloat(
       faker.commerce.price({ min: 9, max: 300, dec: 2 }),
     );
@@ -95,12 +49,7 @@ async function main() {
     // 1. Create the Base Product
     const createInput: Prisma.ProductCreateInput = {
       sku: faker.string.alphanumeric(8).toUpperCase(),
-      name:
-        type === 'BOOK'
-          ? faker.commerce.productName()
-          : type === 'GAME'
-            ? faker.helpers.arrayElement(computerGames)
-            : faker.food.dish(),
+      name: getName(type),
       alternativeHeadline: faker.company.catchPhrase(),
       description: faker.commerce.productDescription(),
       discount: discount,
@@ -115,14 +64,10 @@ async function main() {
       // 2. Create the Rating as a child
       rating: {
         create: {
-          ratingValue: faker.number.float({
-            min: 1,
-            max: 5,
-            fractionDigits: 1,
-          }),
+          ratingValue: faker.number.float(RATING),
           ratingCount: faker.number.int({ min: 0, max: 1000 }),
-          bestRating: 5,
-          worstRating: 1,
+          bestRating: RATING_MAX,
+          worstRating: RATING_MIN,
         },
       },
     };
@@ -148,23 +93,13 @@ async function main() {
             'Slovak',
             'English',
             'German',
-            'French',
           ]),
         },
       };
     } else if (type === 'GAME') {
       createInput.gameDetails = {
         create: {
-          category: faker.helpers.arrayElement([
-            'Strategic',
-            'Shooter',
-            'RPG',
-            'Puzzle',
-            'Survival',
-            'Simulation',
-            'Platformer',
-            'Action-Adventure',
-          ]),
+          category: faker.helpers.arrayElement(computerGameCategory),
           brand: faker.helpers.arrayElement(computerGameBrands),
           playersMin: 2,
           playersMax: faker.number.int({ min: 3, max: 6 }),
@@ -176,26 +111,8 @@ async function main() {
       createInput.gastroDetails = {
         create: {
           producer: faker.company.name(),
-          category: faker.helpers.arrayElement([
-            'Chocolate',
-            'Candy',
-            'Puddings',
-            'Pastries',
-            'Coffee',
-          ]),
-          brand: faker.helpers.arrayElement([
-            'Ferrero',
-            'Lindt',
-            'Nestle',
-            'Mars',
-            'Trolli',
-            'Haribo',
-            'Twizzlers',
-            'Reese',
-            'Milka',
-            "Allen's",
-            'Skittles',
-          ]),
+          category: faker.helpers.arrayElement(gatroCategory),
+          brand: faker.helpers.arrayElement(gastroBrands),
           binding: 'box',
           edition: faker.number.int({ min: 1, max: 3 }),
           weight: faker.number.int({ min: 100, max: 1000 }),

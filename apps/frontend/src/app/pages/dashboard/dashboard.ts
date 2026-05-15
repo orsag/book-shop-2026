@@ -4,6 +4,7 @@ import { BookListItem } from '../../components/book-list-item/book-list-item';
 import { AppStore } from '../../store/app-store';
 import { LucideFrown } from '@lucide/angular';
 import { Pagination } from '../../components/pagination/pagination';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,11 +13,12 @@ import { Pagination } from '../../components/pagination/pagination';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  private breakpointObserver = inject(BreakpointObserver);
   store = inject(AppStore);
 
   ngOnInit() {
-    if (window.innerWidth < 768) {
-      this.store.setViewLayout('list');
-    }
+    this.breakpointObserver.observe(Breakpoints.Handset).subscribe((result) => {
+      if (result.matches) this.store.setViewLayout('list');
+    });
   }
 }

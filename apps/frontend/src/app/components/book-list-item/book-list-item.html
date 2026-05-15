@@ -73,7 +73,7 @@
           class="btn btn-sm"
           [class.btn-error]="ux.isInCart()"
           [class.btn-primary]="!ux.isInCart()"
-          (click)="$event.stopPropagation(); handleCartAction()"
+          (click.stop)="handleCartAction()"
         >
           @if (ux.isInCart()) {
             <span>{{ t('cart.remove_from_cart') }}</span>

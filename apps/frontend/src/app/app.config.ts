@@ -16,6 +16,7 @@ import { TranslocoHttpLoader } from './core/transloco-loader';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { authInterceptor } from './core/auth.interceptor';
+import { StopEventPlugin } from './plugins/stop-event.plugin';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,6 +38,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: EVENT_MANAGER_PLUGINS,
       useClass: DebounceEventManagerPlugin,
+      multi: true,
+    },
+    {
+      provide: EVENT_MANAGER_PLUGINS,
+      useClass: StopEventPlugin,
       multi: true,
     },
     { provide: LOCALE_ID, useValue: 'sk-SK' },

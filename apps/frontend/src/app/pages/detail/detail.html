@@ -46,7 +46,7 @@
 
             <div class="flex gap-3">
               <button
-                (click)="$event.stopPropagation(); handleCartAction()"
+                (click.stop)="handleCartAction()"
                 class="btn btn-sm md:btn-lg md:px-12 font-bold"
                 [class.btn-primary]="!ux.isInCart()"
                 [class.btn-error]="ux.isInCart()"

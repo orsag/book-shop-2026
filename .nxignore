@@ -1,0 +1,5 @@
+# .nxignore
+# Ignore dynamic Prisma client generation
+generated/
+generated/prisma/
+prisma/.client/
