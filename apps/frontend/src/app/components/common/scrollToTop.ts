@@ -1,6 +1,14 @@
-import { Component, signal, effect, computed, inject } from '@angular/core';
+import {
+  Component,
+  signal,
+  effect,
+  computed,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { LucideArrowBigUp } from '@lucide/angular';
 import { ConfigurationService } from '../../services/configuration-service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-scroll-btn',
@@ -23,9 +31,14 @@ export class ScrollBtnComponent {
   isVisible = signal(false);
   private config = inject(ConfigurationService);
   showFilter = computed(() => this.config.flags().SHOW_FILTER);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   constructor() {
     effect((onCleanup) => {
+      if (!this.isBrowser) {
+        return;
+      }
       // 1. Grab the new scrolling container by its ID
       const scrollArea = document.getElementById('main-scroll-area');
 

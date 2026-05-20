@@ -87,5 +87,11 @@
 }
 
 @if (isEditModalOpen()) {
-  <app-edit-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-modal>
+    @if(store.isBook()) {
+        <app-edit-book-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-book-modal>
+    } @else if(store.isGame()) {
+        <app-edit-game-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-game-modal>
+    } @else if (store.isGastro()) {
+        <app-edit-gastro-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-gastro-modal>
+    }
 }

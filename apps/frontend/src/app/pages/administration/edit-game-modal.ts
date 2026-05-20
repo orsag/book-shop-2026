@@ -15,14 +15,15 @@ import {
   required,
   maxLength,
   minLength,
+  max,
 } from '@angular/forms/signals';
 import {
   Product,
   UpdateProductDto,
-  EMPTY_BOOK,
-  BookDetails,
+  EMPTY_GAME,
+  GameDetails,
 } from '@store/libs';
-import { CATEGORIES } from '@store/shared-models';
+import { GAME_CATEGORIES } from '@store/shared-models';
 import { BookService } from '../../services/book-service';
 import {
   ErrorCodes,
@@ -32,15 +33,14 @@ import {
 import { AppStore } from '../../store/app-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '../../components/form-field/form-field';
-const BOOK_STORAGE_KEY = 'bookSaved';
 
-type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
-  bookDetails: NonNullable<UpdateProductDto['bookDetails']>;
+type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
+  gameDetails: NonNullable<UpdateProductDto['gameDetails']>;
 };
 
 @Component({
-  selector: 'app-edit-book-modal',
-  imports: [CommonModule, TranslocoDirective, FormFieldComponent],
+  selector: 'app-edit-game-modal',
+  imports: [CommonModule, FormFieldComponent, TranslocoDirective],
   template: `
     <dialog *transloco="let t" class="modal modal-open">
       <div class="modal-box max-w-2xl">
@@ -64,18 +64,11 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
             [label]="t('edit_modal.alternativeHeadline')"
           />
 
-          <!-- Author -->
+          <!-- Producer -->
           <app-form-field
-            [control]="editForm.bookDetails.author"
-            [inputId]="'author-' + idBook"
-            [label]="t('edit_modal.author')"
-          />
-
-          <!-- ISBN -->
-          <app-form-field
-            [control]="editForm.bookDetails.isbn"
-            [inputId]="'isbn-' + idBook"
-            label="ISBN"
+            [control]="editForm.gameDetails.producer"
+            [inputId]="'producer-' + idBook"
+            [label]="t('edit_modal.producer')"
           />
 
           <!-- Price -->
@@ -97,14 +90,14 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
           <!-- Category -->
           <app-form-field
             type="select"
-            [control]="editForm.bookDetails.category"
+            [control]="editForm.gameDetails.category"
             [inputId]="'category-' + idBook"
             [label]="t('edit_modal.category')"
           >
             <option value="" disabled selected>
               {{ t('edit_modal.pick_category') }}
             </option>
-            @for (cat of bookCategories; track cat) {
+            @for (cat of productCategories; track cat) {
               <option [value]="cat">{{ cat }}</option>
             }
           </app-form-field>
@@ -118,44 +111,31 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
             [label]="t('edit_modal.discount')"
           />
 
-          <!-- PageCount -->
+          <!-- playersMin -->
           <app-form-field
             type="number"
-            [control]="editForm.bookDetails.pageCount"
-            [inputId]="'pageCount-' + idBook"
-            [label]="t('edit_modal.pageCount')"
+            step="1"
+            [control]="editForm.gameDetails.playersMin"
+            [inputId]="'playersMin-' + idBook"
+            [label]="t('edit_modal.playersMin')"
           />
 
-          <!-- Publisher -->
-          <app-form-field
-            [control]="editForm.bookDetails.publisher"
-            [inputId]="'publisher-' + idBook"
-            [label]="t('edit_modal.publisher')"
-          />
-
-          <!-- publishedDate -->
-          <app-form-field
-            type="date"
-            [control]="editForm.bookDetails.publishedDate"
-            [inputId]="'publishedDate-' + idBook"
-            [label]="t('edit_modal.publishedDate')"
-          />
-
-          <!-- audioBook -->
-          <app-form-field
-            type="checkbox"
-            [control]="editForm.bookDetails.audioBook"
-            [inputId]="'audioBook-' + idBook"
-            [label]="t('edit_modal.audioBook')"
-          />
-
-          <!-- audioBook -->
+          <!-- playersMax -->
           <app-form-field
             type="number"
-            step="5"
-            [control]="editForm.bookDetails.audioLength"
-            [inputId]="'audioLength-' + idBook"
-            [label]="t('edit_modal.audioLength')"
+            step="1"
+            [control]="editForm.gameDetails.playersMax"
+            [inputId]="'playersMax-' + idBook"
+            [label]="t('edit_modal.playersMax')"
+          />
+
+          <!-- playTimeMinutes -->
+          <app-form-field
+            type="number"
+            step="1"
+            [control]="editForm.gameDetails.playTimeMinutes"
+            [inputId]="'playTimeMinutes-' + idBook"
+            [label]="t('edit_modal.playTimeMinutes')"
           />
 
           <!-- FULL WIDTH: Description -->
@@ -201,7 +181,7 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
   `,
   styles: [],
 })
-export class EditBookModalComponent {
+export class EditGameModalComponent {
   closeModal = output<void>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
@@ -209,11 +189,11 @@ export class EditBookModalComponent {
   errorService = inject(ErrorHandlerService);
 
   editModel = signal<UpdateProductDtoFrontend>({
-    ...(EMPTY_BOOK as UpdateProductDtoFrontend),
+    ...(EMPTY_GAME as UpdateProductDtoFrontend),
   });
   readonly idBook = computed(() => this.selectedBook()?.id);
 
-  bookCategories = CATEGORIES;
+  productCategories = GAME_CATEGORIES;
   private hasOpened = false;
 
   constructor() {
@@ -228,9 +208,9 @@ export class EditBookModalComponent {
         untracked(() => {
           const descriptor = book.description ? book.description : '';
           const quality = book.product_quality ? book.product_quality : 'new';
-          const details = book.bookDetails
-            ? book.bookDetails
-            : (EMPTY_BOOK.bookDetails as BookDetails);
+          const details = book.gameDetails
+            ? book.gameDetails
+            : (EMPTY_GAME.gameDetails as GameDetails);
 
           this.editModel.set({
             name: book.name,
@@ -243,7 +223,7 @@ export class EditBookModalComponent {
             productType: book.productType,
             description: descriptor,
             product_quality: quality,
-            bookDetails: { ...details },
+            gameDetails: { ...details },
           });
         });
       }
@@ -254,20 +234,17 @@ export class EditBookModalComponent {
     required(schemaPath.name, {
       message: 'Title is required',
     });
-    required(schemaPath.bookDetails.author, {
-      message: 'Author is required',
+    max(schemaPath.gameDetails.playersMax, 10, {
+      message: 'Maximal 10 player',
+    });
+    min(schemaPath.gameDetails.playersMin, 1, {
+      message: 'Minimal 1 player',
     });
     minLength(schemaPath.name, 3, {
       message: 'Title must be min 3 chars',
     });
     maxLength(schemaPath.name, 50, {
       message: 'Title must be max 50 chars',
-    });
-    maxLength(schemaPath.bookDetails.isbn, 20, {
-      message: 'ISBN must be max 20 chars',
-    });
-    min(schemaPath.bookDetails.pageCount, 1, {
-      message: 'Page count must be min 1 pages',
     });
     min(schemaPath.availableCount, 0, {
       message: 'Available count must be min 0',
@@ -283,18 +260,21 @@ export class EditBookModalComponent {
   }
 
   handleSaveLocalStorage() {
-    const formData: Partial<Product> = this.editForm().value();
-    const newBook = {
-      id: this.idBook() ?? null,
-      ...formData,
-    };
-    localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(newBook));
-    this.errorService.handleSuccess(SuccessCodes.BOOK_SAVE);
+    // const formData: Partial<Product> = this.editForm().value();
+    // const newBook = {
+    //   id: this.idBook() ?? null,
+    //   ...formData,
+    // };
+    // localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(newBook));
+    // this.errorService.handleSuccess(SuccessCodes.BOOK_SAVE);
   }
 
   handleSave() {
     if (this.editForm().invalid()) return;
+
     const id = this.idBook();
+
+    // In your Angular Dialog
     const dataToSave = this.editForm().value();
 
     if (id) {
@@ -304,7 +284,10 @@ export class EditBookModalComponent {
           this.store.loadBooks();
           this.handleClose();
         },
-        error: (err) => this.handleError(err, ErrorCodes.PRODUCT_UPDATE),
+        error: (err) => {
+          this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE);
+          console.error(err);
+        },
       });
     } else {
       this.bookService.create(dataToSave).subscribe({
@@ -313,17 +296,15 @@ export class EditBookModalComponent {
           this.store.loadBooks();
           this.handleClose();
         },
-        error: (err) => this.handleError(err, ErrorCodes.PRODUCT_CREATE),
+        error: (err) => {
+          this.errorService.handleError(ErrorCodes.PRODUCT_CREATE);
+          console.error(err);
+        },
       });
     }
   }
 
   handleClose() {
     this.closeModal.emit();
-  }
-
-  handleError(err: any, code: string) {
-    this.errorService.handleError(code);
-    console.error(err);
   }
 }

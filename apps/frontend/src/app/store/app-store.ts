@@ -74,7 +74,7 @@ const initialState: AppState = {
   userDetail: null,
   token: null,
   premiumStatus: null,
-  width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+  width: 1200,
   products: [],
   orders: [],
   favoriteProducts: [],
@@ -110,11 +110,10 @@ export const AppStore = signalStore(
     isLoggedIn: computed(() => !!user()),
     isAdmin: computed(() => user()?.isAdmin ?? false),
     isEmpty: computed(() => products().length == 0),
+    currentType: computed(() => filters().type.toString()),
     favoriteCount: computed(() => user()?.favorites?.length ?? 0),
     cartCount: computed(() => user()?.cartItems?.length ?? 0),
     totalPages: computed(() => Math.ceil(totalProducts() / filters().limit)),
-
-    // FIX: Compare current page against the corrected totalPages calculation
     hasMorePage: computed(
       () => filters.page() < Math.ceil(totalProducts() / filters().limit),
     ),
@@ -139,31 +138,42 @@ export const AppStore = signalStore(
       },
 
       // Explicitly call this ONLY when needed
-      loadBooks(append = false) {
-        patchState(store, { isLoading: true });
-        // const productType: ProductType = store.filters().type;
+      loadBooks: rxMethod<{ append?: boolean } | void>(
+        pipe(
+          // Map the input argument (or default to empty object if called without arguments)
+          map((args) => args || { append: false }),
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ append }) => {
+            const params: Partial<AppState['filters']> = store.filters();
 
-        const params: Partial<AppState['filters']> = store.filters();
-        bookService.fetchProducts(params).subscribe({
-          next: (res) =>
-            patchState(store, {
-              // If append is true, concat the arrays. Otherwise, replace.
-              products: append ? [...store.products(), ...res.data] : res.data,
-              totalProducts: res.meta.total,
-              isLoading: false,
-            }),
-          error: () => {
-            patchState(store, { isLoading: false });
-            errorService.handleError(ErrorCodes.FETCH_BOOKS);
-          },
-        });
-      },
+            return bookService.fetchProducts(params).pipe(
+              tap({
+                next: (res) => {
+                  patchState(store, {
+                    products: append
+                      ? [...store.products(), ...res.data]
+                      : res.data,
+                    totalProducts: res.meta.total,
+                    isLoading: false,
+                  });
+                },
+                error: () => {
+                  patchState(store, { isLoading: false });
+                  errorService.handleError(ErrorCodes.FETCH_BOOKS);
+                },
+              }),
+              // Catch the error internally so the main rxMethod stream doesn't die permanently
+              catchError(() => EMPTY),
+            );
+          }),
+        ),
+      ),
 
       loadMore() {
         patchState(store, (state) => ({
           filters: { ...state.filters, page: state.filters.page + 1 },
         }));
-        this.loadBooks(true);
+        this.loadBooks({ append: true });
       },
 
       setPage(page: number) {
@@ -500,63 +510,63 @@ export const AppStore = signalStore(
 
   // 3. Automated Lifecycle & Persistence
   withHooks({
-    onInit(store) {
-      const savedUser = localStorage.getItem(USER_STORAGE_KEY);
-      const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
-      const savedDetail = localStorage.getItem(DETAIL_STORAGE_KEY);
-      const savedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
+    onInit(store, platformId = inject(PLATFORM_ID)) {
+      const isBrowser = isPlatformBrowser(platformId);
 
-      // Automatically react to user favorite ID changes
-      const favoriteIds = computed(() => store.user()?.favorites || []);
-      store._syncFavorites(favoriteIds);
+      if (isBrowser) {
+        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+        const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+        const savedDetail = localStorage.getItem(DETAIL_STORAGE_KEY);
+        const savedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
 
-      if (savedUser && savedToken) {
-        patchState(store, {
-          user: JSON.parse(savedUser),
-          token: savedToken,
-        });
-      }
+        // Automatically react to user favorite ID changes
+        const favoriteIds = computed(() => store.user()?.favorites || []);
+        store._syncFavorites(favoriteIds);
 
-      if (savedDetail) {
-        patchState(store, {
-          premiumStatus: JSON.parse(savedDetail),
-        });
-      }
+        if (savedUser && savedToken) {
+          patchState(store, {
+            user: JSON.parse(savedUser),
+            token: savedToken,
+          });
+        }
 
-      // history
-      if (savedHistory) {
-        patchState(store, { searchHistory: JSON.parse(savedHistory) });
-      }
+        if (savedDetail) {
+          patchState(store, {
+            premiumStatus: JSON.parse(savedDetail),
+          });
+        }
 
-      const platformId = inject(PLATFORM_ID);
+        // history
+        if (savedHistory) {
+          patchState(store, { searchHistory: JSON.parse(savedHistory) });
+        }
 
-      // Only run in the browser to avoid SSR errors
-      if (isPlatformBrowser(platformId)) {
+        // Only run in the browser to avoid SSR errors
         window.addEventListener('resize', () => {
           // Update the state
           patchState(store, { width: window.innerWidth });
         });
-      }
 
-      effect(() => {
-        const { user, token, userDetail } = store;
-        if (userDetail()) {
-          localStorage.setItem(
-            DETAIL_STORAGE_KEY,
-            JSON.stringify(userDetail()),
-          );
-        } else {
-          localStorage.removeItem(DETAIL_STORAGE_KEY);
-        }
-        const _token = token();
-        if (user() && _token) {
-          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
-          localStorage.setItem(TOKEN_STORAGE_KEY, _token);
-        } else {
-          localStorage.removeItem(USER_STORAGE_KEY);
-          localStorage.removeItem(TOKEN_STORAGE_KEY);
-        }
-      });
+        effect(() => {
+          const { user, token, userDetail } = store;
+          if (userDetail()) {
+            localStorage.setItem(
+              DETAIL_STORAGE_KEY,
+              JSON.stringify(userDetail()),
+            );
+          } else {
+            localStorage.removeItem(DETAIL_STORAGE_KEY);
+          }
+          const _token = token();
+          if (user() && _token) {
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
+            localStorage.setItem(TOKEN_STORAGE_KEY, _token);
+          } else {
+            localStorage.removeItem(USER_STORAGE_KEY);
+            localStorage.removeItem(TOKEN_STORAGE_KEY);
+          }
+        });
+      }
     },
   }),
 );

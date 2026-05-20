@@ -60,9 +60,9 @@ export class DeleteModalComponent {
     if (bookId) {
       this.bookService.delete(bookId).subscribe((res: ActionResponse) => {
         if (res.warning) {
-          this.errorService.handleError(ErrorCodes.BOOK_DELETE);
+          this.errorService.handleError(ErrorCodes.PRODUCT_DELETE);
         } else {
-          this.errorService.handleSuccess(SuccessCodes.BOOK_DELETE);
+          this.errorService.handleSuccess(SuccessCodes.PRODUCT_DELETE);
           this.store.loadBooks();
         }
       });

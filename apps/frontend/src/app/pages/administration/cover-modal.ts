@@ -164,10 +164,10 @@ export class CoverModalComponent {
             console.log('Book updated successfully:', updatedBook);
             this.handleClose();
           },
-          error: () => this.errorService.handleError(ErrorCodes.BOOK_UPDATE),
+          error: () => this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE),
         });
       },
-      error: () => this.errorService.handleError(ErrorCodes.BOOK_UPDATE),
+      error: () => this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE),
     });
   }
 }

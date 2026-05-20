@@ -161,17 +161,26 @@ export class ProductsService {
     };
 
     if (selectedProduct.productType === 'BOOK' && updateProduct.bookDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const bookUpdateData = (({ id, productId, ...rest }) => rest)(
+        updateProduct.bookDetails,
+      );
+
       updateData.bookDetails = {
         update: {
-          ...updateProduct.bookDetails, // Modify properties nested under the relation
+          ...bookUpdateData, // Modify properties nested under the relation
         },
       };
     }
 
     if (selectedProduct.productType === 'GAME' && updateProduct.gameDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const gameUpdateData = (({ id, productId, ...rest }) => rest)(
+        updateProduct.gameDetails,
+      );
       updateData.gameDetails = {
         update: {
-          ...updateProduct.gameDetails,
+          ...gameUpdateData,
         },
       };
     }
@@ -180,9 +189,13 @@ export class ProductsService {
       selectedProduct.productType === 'GASTRO' &&
       updateProduct.gastroDetails
     ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const gastroUpdateData = (({ id, productId, ...rest }) => rest)(
+        updateProduct.gastroDetails,
+      );
       updateData.gastroDetails = {
         update: {
-          ...updateProduct.gastroDetails,
+          ...gastroUpdateData,
         },
       };
     }
@@ -215,7 +228,7 @@ export class ProductsService {
 
     return {
       success: true,
-      message: 'Produkt bola úspešne odstránený.',
+      message: 'Produkt bol konecne 222 úspešne odstránený.',
     };
   }
 }

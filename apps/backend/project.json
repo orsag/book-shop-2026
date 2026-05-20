@@ -56,7 +56,6 @@
       "continuous": true,
       "defaultConfiguration": "development",
       "options": {
-        "watch": false,
         "buildTarget": "backend:build",
         "runBuildTargetDependencies": false
       },

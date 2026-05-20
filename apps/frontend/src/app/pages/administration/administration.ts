@@ -1,9 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { BookTable } from '../../components/book-table/book-table';
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
-import { EditModalComponent } from './edit-book-modal';
+import { EditBookModalComponent } from './edit-book-modal';
+import { EditGameModalComponent } from './edit-game-modal';
+import { EditGastroModalComponent } from './edit-gastro-modal';
 import { OrderTable } from '../../components/order-table/order-table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
@@ -16,7 +18,9 @@ import { LucideFrown, LucidePlus } from '@lucide/angular';
     BookTable,
     LucidePlus,
     CommonModule,
-    EditModalComponent,
+    EditGameModalComponent,
+    EditBookModalComponent,
+    EditGastroModalComponent,
     OrderTable,
     TranslocoDirective,
     CoverModalComponent,
@@ -26,13 +30,25 @@ import { LucideFrown, LucidePlus } from '@lucide/angular';
   templateUrl: './administration.html',
   styleUrl: './administration.css',
 })
-export class Administration {
+export class Administration implements OnInit {
   store = inject(AppStore);
 
   selectedProduct = signal<Product | null>(null);
   isCoverModalOpen = signal<boolean>(false);
   isDeleteModalOpen = signal(false);
   isEditModalOpen = signal(false);
+
+  ngOnInit() {
+    if (this.store.totalProducts() === 0) {
+      this.store.loadBooks();
+    }
+    if (this.store.isAdmin()) {
+      const userId = this.store.user()?.id;
+      if (userId) {
+        this.store.reloadOrders({ userId });
+      }
+    }
+  }
 
   category = computed(() => {
     if (this.store.isBook()) {
@@ -46,13 +62,13 @@ export class Administration {
     }
   });
 
-  openDeleteConfirmation(book: Product) {
-    this.selectedProduct.set(book);
+  openDeleteConfirmation(product: Product) {
+    this.selectedProduct.set(product);
     this.isDeleteModalOpen.set(true);
   }
 
-  openCoverModal(book: Product) {
-    this.selectedProduct.set(book);
+  openCoverModal(product: Product) {
+    this.selectedProduct.set(product);
     this.isCoverModalOpen.set(true);
   }
 
@@ -68,10 +84,8 @@ export class Administration {
     this.isEditModalOpen.set(true);
   }
 
-  openEditModal(book: Product) {
-    if (this.selectedProduct()?.productType === 'BOOK') {
-      this.selectedProduct.set(book);
-      this.isEditModalOpen.set(true);
-    }
+  openEditModal(product: Product) {
+    this.selectedProduct.set(product);
+    this.isEditModalOpen.set(true);
   }
 }

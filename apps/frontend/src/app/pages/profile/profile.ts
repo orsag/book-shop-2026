@@ -3,6 +3,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   signal,
   untracked,
 } from '@angular/core';
@@ -48,13 +49,21 @@ import { delay } from 'rxjs';
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
-export class Profile {
+export class Profile implements OnInit {
   store = inject(AppStore);
   orderService = inject(OrderService);
   favorites = this.store.user()?.favorites;
   toast = inject(ToastService);
   private isFormInitialized = false;
   OrderStatus = OSEnum;
+
+  ngOnInit() {
+    const userId = this.store.user()?.id;
+    if (userId) {
+      this.store.loadUserDetail({ userId });
+      this.store.reloadOrders({ userId });
+    }
+  }
 
   constructor() {
     effect(() => {

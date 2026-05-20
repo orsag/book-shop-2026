@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { computed, effect, inject } from '@angular/core';
+import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { Product } from '@store/shared-models';
 import {
   signalStore,
@@ -10,6 +10,7 @@ import {
   withHooks,
 } from '@ngrx/signals';
 import { BookService } from '../services/book-service';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface CartItem {
   product: Product;
@@ -160,17 +161,25 @@ export const CartStore = signalStore(
   // 3. Storage Sync Logic
   withHooks({
     onInit(store) {
+      const platformId = inject(PLATFORM_ID);
+      const isBrowser = isPlatformBrowser(platformId);
       // Load from LocalStorage
-      const savedState = localStorage.getItem(CART_STORAGE_KEY);
-      if (savedState) {
-        patchState(store, JSON.parse(savedState));
-      }
+      if (isBrowser) {
+        const savedState = localStorage.getItem(CART_STORAGE_KEY);
+        if (savedState) {
+          try {
+            patchState(store, JSON.parse(savedState));
+          } catch (e) {
+            console.error('Failed to parse cart storage state', e);
+          }
 
-      // Sync to LocalStorage on every change
-      effect(() => {
-        const state = { itemsMap: store.itemsMap() };
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
-      });
+          // Sync to LocalStorage on every change
+          effect(() => {
+            const state = { itemsMap: store.itemsMap() };
+            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+          });
+        }
+      }
     },
   }),
 );

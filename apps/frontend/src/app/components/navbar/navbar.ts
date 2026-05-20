@@ -1,6 +1,16 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import {
+  CommonModule,
+  NgOptimizedImage,
+  isPlatformBrowser,
+} from '@angular/common';
 import { ThemePicker } from '../theme-picker/theme-picker';
 import { ConfigurationService } from '../../services/configuration-service';
 import { AppStore } from '../../store/app-store';
@@ -44,6 +54,8 @@ export class Navbar {
   private router = inject(Router);
   private store = inject(AppStore);
   cartStore = inject(CartStore);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   modelUsername = '';
   // Existing signals
@@ -106,7 +118,9 @@ export class Navbar {
       el.blur();
     } else {
       // Or more aggressively:
-      (document.activeElement as HTMLElement)?.blur();
+      if (this.isBrowser) {
+        (document.activeElement as HTMLElement)?.blur();
+      }
     }
   }
 

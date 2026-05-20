@@ -13,9 +13,6 @@ import { adminGuard } from './core/admin.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { LoginPage } from './pages/login/login';
-import { DashboardResolver } from './resolvers/dashboard.resolver';
-import { AdministrationResolver } from './resolvers/administration.resolver';
-import { ProfileResolver } from './resolvers/profile.resolver';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
@@ -27,7 +24,6 @@ export const appRoutes: Route[] = [
       {
         path: '',
         component: Dashboard,
-        resolve: { initialData: DashboardResolver },
       },
       {
         path: 'home',
@@ -38,7 +34,6 @@ export const appRoutes: Route[] = [
         path: 'administration',
         component: Administration,
         canActivate: [adminGuard],
-        resolve: { initialData: AdministrationResolver },
       },
     ],
   },
@@ -52,7 +47,6 @@ export const appRoutes: Route[] = [
         path: 'profile',
         component: Profile,
         canActivate: [authGuard],
-        resolve: { initialData: ProfileResolver },
       },
       { path: 'features', component: Features, canActivate: [authGuard] },
       { path: 'shopping', component: Shopping },

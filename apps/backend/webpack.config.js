@@ -26,9 +26,9 @@ module.exports = {
     aggregateTimeout: 600,
     ignored: [
       join(__dirname, '../../dist/**'),
-      join(__dirname, '../../generated/**'),
-      join(__dirname, '../../libs/**'),
-      join(__dirname, '../../prisma/**'),
+      // join(__dirname, '../../generated/**'),
+      // join(__dirname, '../../libs/**'),
+      // join(__dirname, '../../prisma/**'),
       join(__dirname, '../../node_modules/**'),
       '**/node_modules/**',
       '**/workspace_modules/**',
