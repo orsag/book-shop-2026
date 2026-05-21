@@ -4,9 +4,10 @@ import { ConfigurationService } from './services/configuration-service';
 import { filter } from 'rxjs';
 import { ScrollService } from './services/scroll-service';
 import { isPlatformBrowser } from '@angular/common';
+import { GradientBgComponent } from './components/common/gradient-bg.component';
 
 @Component({
-  imports: [RouterModule],
+  imports: [RouterModule, GradientBgComponent],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',

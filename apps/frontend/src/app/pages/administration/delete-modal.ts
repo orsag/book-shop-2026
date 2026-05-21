@@ -2,11 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ActionResponse, Product } from '@store/libs';
-import {
-  ErrorCodes,
-  ErrorHandlerService,
-  SuccessCodes,
-} from '../../core/error.handler';
+import { ErrorCodes, ErrorService, SuccessCodes, } from '../../core/error.handler';
 import { BookService } from '../../services/book-service';
 import { AppStore } from '../../store/app-store';
 
@@ -52,7 +48,7 @@ export class DeleteModalComponent {
 
   store = inject(AppStore);
   bookService = inject(BookService);
-  errorService = inject(ErrorHandlerService);
+  errorService = inject(ErrorService);
 
   confirmDelete() {
     const bookId = this.selectedBook()?.id;

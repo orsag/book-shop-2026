@@ -8,7 +8,6 @@ import { ScrollBtnComponent } from '../../components/common/scrollToTop';
 import { ToastComponent } from '../../components/common/toastComponent';
 import { ConfigurationService } from '../../services/configuration-service';
 import { CommonModule } from '@angular/common';
-import { FilterBar } from '../../components/filter-bar/filter-bar';
 
 @Component({
   selector: 'app-main-layout',
@@ -21,7 +20,6 @@ import { FilterBar } from '../../components/filter-bar/filter-bar';
     ScrollBtnComponent,
     ToastComponent,
     CommonModule,
-    FilterBar,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',

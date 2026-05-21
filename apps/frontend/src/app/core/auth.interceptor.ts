@@ -4,13 +4,13 @@ import { inject } from '@angular/core';
 import { AppStore } from '../store/app-store';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { ErrorCodes, ErrorHandlerService } from './error.handler';
+import { ErrorCodes, ErrorService } from './error.handler';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
   const token = store.token();
   const router = inject(Router);
-  const errorService = inject(ErrorHandlerService);
+  const errorService = inject(ErrorService);
 
   let authReq = req;
   if (token) {

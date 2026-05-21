@@ -192,11 +192,11 @@
     </section>
   }
 
-  <div class="sticky bottom-0 bg-base-100 pt-4 pb-2 border-t border-base-200">
+  <div class="sticky">
     <button
       (click)="onSubmit()"
       [disabled]="isCoolingDown()"
-      class="btn btn-success btn-block shadow-lg"
+      class="btn rounded-full btn-success btn-block shadow-lg"
     >
       @if (isCoolingDown()) {
         <div>

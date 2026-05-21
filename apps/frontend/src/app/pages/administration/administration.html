@@ -9,7 +9,7 @@
       type="button"
       class="btn btn-primary gap-2 shadow-md"
       (click)="openCreateModal()">
-        <svg lucidePlus size="20"></svg>
+      <svg lucidePlus size="20"></svg>
       {{ t('administration.add_product') }}
     </button>
   </div>
@@ -87,11 +87,22 @@
 }
 
 @if (isEditModalOpen()) {
-    @if(store.isBook()) {
-        <app-edit-book-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-book-modal>
-    } @else if(store.isGame()) {
-        <app-edit-game-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-game-modal>
-    } @else if (store.isGastro()) {
-        <app-edit-gastro-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-edit-gastro-modal>
-    }
+  @if (store.isBook()) {
+    <app-edit-book-modal
+      [selectedBook]="selectedProduct()"
+      (closeModal)="closeModals()"
+      (commonSave)="handleProductSave($event)" />
+
+  } @else if (store.isGame()) {
+    <app-edit-game-modal
+      [selectedBook]=" selectedProduct()"
+      (closeModal)="closeModals()"
+      (commonSave)="handleProductSave($event)" />
+
+  } @else if (store.isGastro()) {
+    <app-edit-gastro-modal
+      [selectedBook]="selectedProduct()"
+      (closeModal)="closeModals()"
+      (commonSave)="handleProductSave($event)" />
+  }
 }

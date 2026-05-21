@@ -1,5 +1,5 @@
 <footer *transloco="let t"
-        class="bg-base-100 border-t border-base-300 text-base-content pt-12 pb-16 px-4 md:px-8 shadow-inner mt-auto w-full max-w-full overflow-hidden">
+  class="bg-black/10 backdrop-blur-sm shadow-[0_-15px_30px_rgba(0,0,0,0.25)] border-t border-base-300 text-base-content pt-12 pb-16 px-4 md:px-8 mt-auto w-full max-w-full overflow-hidden">
   <div class="max-w-[1200px] mx-auto">
 
     <!-- ================= TOP SECTION: ICONS ================= -->
@@ -78,75 +78,35 @@
     <hr class="border-base-300 my-10" />
 
     <!-- ================= BOTTOM SECTION: COLUMNS ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-x-6 gap-y-2">
+    <div class="flex flex-col gap-y-4 text-[13px] text-base-content/80">
 
-      <!-- COL 1: Services -->
-      <div class="lg:col-span-2 collapse" [class.collapse]="true">
-        <input type="checkbox" class="peer" />
-
-        <h3 class="collapse-title p-0 lg:p-0 font-bold text-sm mb-4 uppercase tracking-wider min-h-0 h-auto">
-          {{ t('footer.services.services') }}
-        </h3>
-
-        <div class="collapse-content p-0 lg:p-0">
-          <ul class="flex flex-col gap-3 text-[13px] text-base-content/80">
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.services.affiliate_program') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary leading-tight">{{ t('footer.services.publisher_author_guidelines') }}
-              <br>Guidelines</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.services.bulk_order_discounts') }}</a></li>
-            <li><a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.mobile_apps') }}</a>
-            </li>
-            <li><a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.membership') }}</a>
-            </li>
-            <li><a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.bookfairs') }}</a>
-            </li>
-          </ul>
-        </div>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.about_us.about_us') }}:</span>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.about_bookshop') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.careers_at_bookshop') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_inc') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_kitchen') }}</a>
       </div>
 
-      <!-- COL 2: About Us -->
-      <div class="lg:col-span-2 collapse" [class.collapse]="true">
-        <input type="checkbox" class="peer" />
-        <h3 class="collapse-title p-0 lg:p-0 font-bold text-sm mb-4 uppercase tracking-wider">{{ t('footer.about_us.about_us') }}</h3>
-        <div class="collapse-content p-0 lg:p-0">
-          <ul class="flex flex-col gap-3 text-[13px] text-base-content/80">
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.about_us.about_bookshop') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.about_us.careers_at_bookshop') }}</a></li>
-            <li><a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_inc') }}</a>
-            </li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_kitchen') }}</a></li>
-          </ul>
-        </div>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.services.services') }}:</span>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.affiliate_program') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.publisher_author_guidelines') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.bulk_order_discounts') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.mobile_apps') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.membership') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.bookfairs') }}</a>
       </div>
 
-      <!-- COL 3: Quick Help -->
-      <div class="lg:col-span-2 collapse" [class.collapse]="true">
-        <input type="checkbox" class="peer" />
-        <h3 class="collapse-title p-0 lg:p-0 font-bold text-sm mb-4 uppercase tracking-wider">{{ t('footer.quick_help.quick_help') }}</h3>
-        <div class="collapse-content p-0 lg:p-0">
-          <ul class="flex flex-col gap-3 text-[13px] text-base-content/80">
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.help_center') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.shipping_returns') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.store_pickup') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.order_status') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.product_recalls') }}</a></li>
-            <li><a routerLink="wip"
-                   class="hover:underline hover:text-primary">{{ t('footer.quick_help.corrections_updates') }}</a></li>
-            <li><a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.gift_cards') }}</a>
-            </li>
-          </ul>
-        </div>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.quick_help.quick_help') }}:</span>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.help_center') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.shipping_returns') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.store_pickup') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.order_status') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.product_recalls') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.corrections_updates') }}</a>
+        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.gift_cards') }}</a>
       </div>
 
     </div>

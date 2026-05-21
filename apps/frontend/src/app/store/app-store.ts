@@ -7,14 +7,8 @@ import {
   withHooks,
 } from '@ngrx/signals';
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
-import {
-  OrderStatus,
-  PremiumStatus,
-  ProductType,
-  User,
-  UserDetail,
-  UserDetailSmall,
-} from '@store/shared-models';
+import { OrderStatus, PremiumStatus, ProductType } from '@store/shared-models';
+import { User, UserDetail, UserDetailSmall } from '@store/shared-models';
 import { tapResponse } from '@ngrx/operators';
 import { Product as IProduct } from '@store/shared-models';
 import { AuthService } from '../services/auth-service';
@@ -23,16 +17,9 @@ import { tap, map, filter, of, distinctUntilChanged } from 'rxjs';
 import { pipe, switchMap, catchError, finalize, EMPTY } from 'rxjs';
 import { BookService } from '../services/book-service';
 import { DetailService } from '../services/detail-service';
-import {
-  ErrorCodes,
-  ErrorHandlerService,
-  SuccessCodes,
-} from '../core/error.handler';
-import { isPlatformBrowser, registerLocaleData } from '@angular/common';
-import localeSk from '@angular/common/locales/sk';
+import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
+import { isPlatformBrowser } from '@angular/common';
 import { CreatedOrder, OrderService } from '../services/order-service';
-
-registerLocaleData(localeSk);
 
 // Key for LocalStorage
 const USER_STORAGE_KEY = 'currentUser';
@@ -62,9 +49,6 @@ export interface AppState {
     search: string;
     category: string | null;
     sortBy: string | null;
-    // isAvailable: boolean;
-    // isBestSeller: boolean;
-    // isNewRelease: boolean;
     isDiscounted: boolean;
   };
 }
@@ -89,9 +73,6 @@ const initialState: AppState = {
     search: '',
     category: null,
     sortBy: null,
-    // isAvailable: false,
-    // isBestSeller: false,
-    // isNewRelease: false,
     isDiscounted: false,
   },
 };
@@ -127,7 +108,7 @@ export const AppStore = signalStore(
       bookService = inject(BookService),
       authService = inject(AuthService),
       detailService = inject(DetailService),
-      errorService = inject(ErrorHandlerService),
+      errorService = inject(ErrorService),
     ) => ({
       // Update filters without triggering a fetch automatically
       updateFilters(newFilters: Partial<AppState['filters']>) {
@@ -312,14 +293,6 @@ export const AppStore = signalStore(
           ),
         ),
       ),
-
-      setUser(user: User) {
-        patchState(store, { user });
-      },
-
-      clearUser() {
-        patchState(store, { user: null });
-      },
 
       toggleFavorite: rxMethod<string>(
         pipe(

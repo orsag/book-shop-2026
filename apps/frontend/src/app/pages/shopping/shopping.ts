@@ -5,7 +5,7 @@ import { CurrencyPipe } from '@angular/common';
 import { OrderService, CreatedOrder } from '../../services/order-service';
 import {
   ErrorCodes,
-  ErrorHandlerService,
+  ErrorService,
   SuccessCodes,
 } from '../../core/error.handler';
 import { LucideTrash2 } from '@lucide/angular';
@@ -19,7 +19,7 @@ import { LucideTrash2 } from '@lucide/angular';
 export class Shopping implements OnInit {
   protected cartStore = inject(CartStore);
   private orderService = inject(OrderService);
-  private errorService = inject(ErrorHandlerService);
+  private errorService = inject(ErrorService);
   private router = inject(Router);
 
   items: Signal<CartItem[]> = this.cartStore.items;

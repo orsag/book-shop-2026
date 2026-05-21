@@ -7,10 +7,11 @@ import { Pagination } from '../../components/pagination/pagination';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { isPlatformBrowser } from '@angular/common';
 import { CartStore } from '../../store/cart-store';
+import { FilterBar } from '../../components/filter-bar/filter-bar';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [BookCard, BookListItem, Pagination, LucideFrown],
+  imports: [BookCard, BookListItem, Pagination, LucideFrown, FilterBar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

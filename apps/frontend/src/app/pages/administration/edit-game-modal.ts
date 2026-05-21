@@ -9,14 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  form,
-  min,
-  required,
-  maxLength,
-  minLength,
-  max,
-} from '@angular/forms/signals';
+import { form, min, max } from '@angular/forms/signals';
 import {
   Product,
   UpdateProductDto,
@@ -24,15 +17,10 @@ import {
   GameDetails,
 } from '@store/libs';
 import { GAME_CATEGORIES } from '@store/shared-models';
-import { BookService } from '../../services/book-service';
-import {
-  ErrorCodes,
-  ErrorHandlerService,
-  SuccessCodes,
-} from '../../core/error.handler';
 import { AppStore } from '../../store/app-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '../../components/form-field/form-field';
+import { applyCommonProductRules } from './form-rules.shared';
 
 type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
   gameDetails: NonNullable<UpdateProductDto['gameDetails']>;
@@ -152,9 +140,6 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
           <button class="btn btn-ghost" (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
-          <button class="btn btn-ghost" (click)="handleSaveLocalStorage()">
-            {{ t('edit_modal.local_save') }}
-          </button>
           <button
             class="btn btn-primary px-10"
             [disabled]="editForm().invalid()"
@@ -183,10 +168,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
 })
 export class EditGameModalComponent {
   closeModal = output<void>();
+  commonSave = output<{ id: string | undefined; dataToSave: Partial<Product> }>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
-  bookService = inject(BookService);
-  errorService = inject(ErrorHandlerService);
 
   editModel = signal<UpdateProductDtoFrontend>({
     ...(EMPTY_GAME as UpdateProductDtoFrontend),
@@ -231,77 +215,26 @@ export class EditGameModalComponent {
   }
 
   editForm = form(this.editModel, (schemaPath) => {
-    required(schemaPath.name, {
-      message: 'Title is required',
-    });
+    // Common rules
+    applyCommonProductRules(schemaPath);
+
     max(schemaPath.gameDetails.playersMax, 10, {
       message: 'Maximal 10 player',
     });
     min(schemaPath.gameDetails.playersMin, 1, {
       message: 'Minimal 1 player',
     });
-    minLength(schemaPath.name, 3, {
-      message: 'Title must be min 3 chars',
-    });
-    maxLength(schemaPath.name, 50, {
-      message: 'Title must be max 50 chars',
-    });
-    min(schemaPath.availableCount, 0, {
-      message: 'Available count must be min 0',
+    min(schemaPath.gameDetails.playTimeMinutes, 10, {
+      message: 'Minimal playTimeMinutes 10',
     });
   });
 
-  clampDiscount(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = parseFloat(input.value);
-
-    if (value > 1) input.value = '1';
-    if (value < 0) input.value = '0';
-  }
-
-  handleSaveLocalStorage() {
-    // const formData: Partial<Product> = this.editForm().value();
-    // const newBook = {
-    //   id: this.idBook() ?? null,
-    //   ...formData,
-    // };
-    // localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(newBook));
-    // this.errorService.handleSuccess(SuccessCodes.BOOK_SAVE);
-  }
-
   handleSave() {
     if (this.editForm().invalid()) return;
-
-    const id = this.idBook();
-
-    // In your Angular Dialog
-    const dataToSave = this.editForm().value();
-
-    if (id) {
-      this.bookService.update(id, dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
-          this.store.loadBooks();
-          this.handleClose();
-        },
-        error: (err) => {
-          this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE);
-          console.error(err);
-        },
-      });
-    } else {
-      this.bookService.create(dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
-          this.store.loadBooks();
-          this.handleClose();
-        },
-        error: (err) => {
-          this.errorService.handleError(ErrorCodes.PRODUCT_CREATE);
-          console.error(err);
-        },
-      });
-    }
+    this.commonSave.emit({
+      id: this.idBook(),
+      dataToSave: this.editForm().value(),
+    });
   }
 
   handleClose() {

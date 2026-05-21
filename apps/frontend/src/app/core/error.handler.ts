@@ -68,7 +68,7 @@ const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 const DEFAULT_SUCCESS_MESSAGE = 'Successfully received a response.';
 
 @Injectable({ providedIn: 'root' })
-export class ErrorHandlerService {
+export class ErrorService {
   private toast = inject(ToastService);
 
   handleError(errorCode: string | null | undefined): void {

@@ -3,21 +3,19 @@
   <app-navbar class="z-50 shrink-0 w-full max-w-full"></app-navbar>
 
   <div id="main-scroll-area"
-       class="flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain flex flex-col bg-base-200 min-w-0">
+       class="flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain flex flex-col min-w-0">
 
     @if (showBanner()) {
       <app-banner></app-banner>
     }
 
-    <app-filter-bar></app-filter-bar>
-
     <div class="flex flex-col md:flex-row flex-grow relative">
 
       <aside
-        class="border-base-300 bg-base-100 sticky top-0 shrink-0 z-30 transition-all duration-300 ease-in-out"
+        class="border-base-300 sticky top-0 shrink-0 z-30 transition-all duration-300 ease-in-out"
         [ngClass]="showFilter()
-        ? 'w-full md:w-72 h-[calc(100vh-64px)] p-6 border-r'
-        : 'w-0 h-0 md:h-[calc(100vh-64px)] p-0 opacity-0 pointer-events-none'"
+        ? 'w-full md:w-72 h-[calc(100vh-64px)] p-6 border-r bg-base-100/60 backdrop-blur-md'
+        : 'w-0 h-0 md:h-[calc(100vh-64px)] p-0 opacity-0 pointer-events-none bg-base-100/0'"
       >
         <app-filter></app-filter>
       </aside>

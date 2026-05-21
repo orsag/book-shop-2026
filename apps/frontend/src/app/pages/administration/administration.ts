@@ -11,6 +11,12 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFrown, LucidePlus } from '@lucide/angular';
+import {
+  ErrorCodes,
+  ErrorService,
+  SuccessCodes,
+} from '../../core/error.handler';
+import { BookService } from '../../services/book-service';
 
 @Component({
   selector: 'app-administration',
@@ -32,6 +38,8 @@ import { LucideFrown, LucidePlus } from '@lucide/angular';
 })
 export class Administration implements OnInit {
   store = inject(AppStore);
+  bookService = inject(BookService);
+  errorService = inject(ErrorService);
 
   selectedProduct = signal<Product | null>(null);
   isCoverModalOpen = signal<boolean>(false);
@@ -87,5 +95,39 @@ export class Administration implements OnInit {
   openEditModal(product: Product) {
     this.selectedProduct.set(product);
     this.isEditModalOpen.set(true);
+  }
+
+  handleProductSave(event: {
+    id: string | null | undefined;
+    dataToSave: Partial<Product>;
+  }) {
+    const id = event.id;
+    const dataToSave = event.dataToSave;
+
+    if (id) {
+      this.bookService.update(id, dataToSave).subscribe({
+        next: () => {
+          this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
+          this.store.loadBooks();
+          this.closeModals();
+        },
+        error: (err) => {
+          this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE);
+          console.error(err);
+        },
+      });
+    } else {
+      this.bookService.create(dataToSave).subscribe({
+        next: () => {
+          this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
+          this.store.loadBooks();
+          this.closeModals();
+        },
+        error: (err) => {
+          this.errorService.handleError(ErrorCodes.PRODUCT_CREATE);
+          console.error(err);
+        },
+      });
+    }
   }
 }

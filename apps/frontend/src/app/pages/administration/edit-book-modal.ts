@@ -9,13 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  form,
-  min,
-  required,
-  maxLength,
-  minLength,
-} from '@angular/forms/signals';
+import { form, min, required, maxLength } from '@angular/forms/signals';
 import {
   Product,
   UpdateProductDto,
@@ -23,16 +17,10 @@ import {
   BookDetails,
 } from '@store/libs';
 import { CATEGORIES } from '@store/shared-models';
-import { BookService } from '../../services/book-service';
-import {
-  ErrorCodes,
-  ErrorHandlerService,
-  SuccessCodes,
-} from '../../core/error.handler';
 import { AppStore } from '../../store/app-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '../../components/form-field/form-field';
-const BOOK_STORAGE_KEY = 'bookSaved';
+import { applyCommonProductRules } from './form-rules.shared';
 
 type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
   bookDetails: NonNullable<UpdateProductDto['bookDetails']>;
@@ -172,9 +160,6 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
           <button class="btn btn-ghost" (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
-          <button class="btn btn-ghost" (click)="handleSaveLocalStorage()">
-            {{ t('edit_modal.local_save') }}
-          </button>
           <button
             class="btn btn-primary px-10"
             [disabled]="editForm().invalid()"
@@ -203,10 +188,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
 })
 export class EditBookModalComponent {
   closeModal = output<void>();
+  commonSave = output<{ id: string | undefined; dataToSave: any }>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
-  bookService = inject(BookService);
-  errorService = inject(ErrorHandlerService);
 
   editModel = signal<UpdateProductDtoFrontend>({
     ...(EMPTY_BOOK as UpdateProductDtoFrontend),
@@ -251,17 +235,11 @@ export class EditBookModalComponent {
   }
 
   editForm = form(this.editModel, (schemaPath) => {
-    required(schemaPath.name, {
-      message: 'Title is required',
-    });
+    // Common rules
+    applyCommonProductRules(schemaPath);
+
     required(schemaPath.bookDetails.author, {
       message: 'Author is required',
-    });
-    minLength(schemaPath.name, 3, {
-      message: 'Title must be min 3 chars',
-    });
-    maxLength(schemaPath.name, 50, {
-      message: 'Title must be max 50 chars',
     });
     maxLength(schemaPath.bookDetails.isbn, 20, {
       message: 'ISBN must be max 20 chars',
@@ -269,61 +247,17 @@ export class EditBookModalComponent {
     min(schemaPath.bookDetails.pageCount, 1, {
       message: 'Page count must be min 1 pages',
     });
-    min(schemaPath.availableCount, 0, {
-      message: 'Available count must be min 0',
-    });
   });
-
-  clampDiscount(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = parseFloat(input.value);
-
-    if (value > 1) input.value = '1';
-    if (value < 0) input.value = '0';
-  }
-
-  handleSaveLocalStorage() {
-    const formData: Partial<Product> = this.editForm().value();
-    const newBook = {
-      id: this.idBook() ?? null,
-      ...formData,
-    };
-    localStorage.setItem(BOOK_STORAGE_KEY, JSON.stringify(newBook));
-    this.errorService.handleSuccess(SuccessCodes.BOOK_SAVE);
-  }
 
   handleSave() {
     if (this.editForm().invalid()) return;
-    const id = this.idBook();
-    const dataToSave = this.editForm().value();
-
-    if (id) {
-      this.bookService.update(id, dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
-          this.store.loadBooks();
-          this.handleClose();
-        },
-        error: (err) => this.handleError(err, ErrorCodes.PRODUCT_UPDATE),
-      });
-    } else {
-      this.bookService.create(dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
-          this.store.loadBooks();
-          this.handleClose();
-        },
-        error: (err) => this.handleError(err, ErrorCodes.PRODUCT_CREATE),
-      });
-    }
+    this.commonSave.emit({
+      id: this.idBook(),
+      dataToSave: this.editForm().value(),
+    });
   }
 
   handleClose() {
     this.closeModal.emit();
-  }
-
-  handleError(err: any, code: string) {
-    this.errorService.handleError(code);
-    console.error(err);
   }
 }
