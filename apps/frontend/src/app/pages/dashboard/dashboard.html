@@ -7,9 +7,16 @@
       <p class="mt-4 text-base-content/60 font-medium">Fetching your books...</p>
     </div>
   } @else if (store.isEmpty()) {
-    <div class="flex flex-col items-center justify-center min-h-[40vh]">
-      <svg lucideFrown size="80" class="text-gray-400 dark:text-gray-800"></svg>
-      <h1 class="mt-4 text-3xl font-bold text-base-content/50">Nothing found in our shop</h1>
+    <div class="flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
+
+      <div class="text-error mb-4 bg-error/10 p-4 rounded-full">
+        <svg lucideSearchX size="48" strokeWidth="1.5"></svg>
+      </div>
+
+      <h3 class="text-xl font-bold mb-2">Nothing found in our shop</h3>
+      <p class="text-sm text-base-content/60 max-w-xs">
+        We couldn't find any products matching your current filters. Try adjusting your search or category selection.
+      </p>
     </div>
   } @else {
     <!-- Render Grid or List -->

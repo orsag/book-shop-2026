@@ -15,6 +15,7 @@ import {
   UpdateProductDto,
   EMPTY_GAME,
   GameDetails,
+  CATEGORIES,
 } from '@store/libs';
 import { GAME_CATEGORIES } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
@@ -81,14 +82,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
             [control]="editForm.gameDetails.category"
             [inputId]="'category-' + idBook"
             [label]="t('edit_modal.category')"
-          >
-            <option value="" disabled selected>
-              {{ t('edit_modal.pick_category') }}
-            </option>
-            @for (cat of productCategories; track cat) {
-              <option [value]="cat">{{ cat }}</option>
-            }
-          </app-form-field>
+            [items]="productCategories"
+            [placeholder]="t('edit_modal.pick_category')"
+          />
 
           <!-- Discount -->
           <app-form-field
@@ -168,7 +164,10 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
 })
 export class EditGameModalComponent {
   closeModal = output<void>();
-  commonSave = output<{ id: string | undefined; dataToSave: Partial<Product> }>();
+  commonSave = output<{
+    id: string | undefined;
+    dataToSave: Partial<Product>;
+  }>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
 
@@ -240,4 +239,6 @@ export class EditGameModalComponent {
   handleClose() {
     this.closeModal.emit();
   }
+
+  protected readonly bookCategories = CATEGORIES;
 }

@@ -1,11 +1,13 @@
 <div *transloco="let t" class="max-w-6xl mx-auto min-h-screen">
   @if (book() === null) {
     <div class="flex flex-col items-center justify-center min-h-[40vh]">
-      <svg lucideSearchAlert size="80" class="text-gray-400 dark:text-gray-800"></svg>
+      <div class="text-error mb-4 bg-error/10 p-4 rounded-full">
+        <svg lucideSearchX size="48" strokeWidth="1.5"></svg>
+      </div>
       <h1 class="mt-4 text-3xl font-bold text-base-content/50">Not found products</h1>
     </div>
   } @else if (book(); as data) {
-    <div class="flex flex-col md:flex-row gap-12 mt-8">
+    <div class="max-w-6xl md:p-6 flex flex-col md:flex-row gap-12">
       <div class="md:w-1/3">
         <div
           class="sticky md:top-24 rounded-3xl md:p-8 flex justify-center"
@@ -73,56 +75,96 @@
       </div>
     </div>
 
-    <div class="flex justify-center w-full">
-      <div
-        class="stats stats-vertical lg:stats-horizontal shadow-md border border-base-300 w-full bg-base-100 md:mx-12 max-w-[1100px]">
-        @if (ux.isBook()) {
-          <div class="stat p-8 flex flex-row items-center">
-            <div class="flex flex-col gap-1 min-w-0">
-              <div class="stat-title text-xs uppercase font-bold tracking-widest opacity-60">
-                Vydavateľ
-              </div>
-              <div class="stat-value text-[16px] font-black truncate">
-                {{ data.bookDetails?.publisher }}
-              </div>
+    @if (ux.isBook()) {
+      <div class="flex justify-center w-full md:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1100px] p-2 bg-base-200/30 rounded-[2.5rem] border border-base-300/40">
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center min-w-0 min-h-[112px] relative overflow-hidden group">
+            <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-b from-primary to-secondary opacity-70"></div>
+
+            <div class="flex flex-col justify-center min-w-0 pl-2">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-1">Vydavateľstvo</span>
+              <span class="text-lg font-extrabold text-base-content/80 tracking-tight leading-snug break-words">
+              {{ data.bookDetails?.publisher }}
+              </span>
             </div>
           </div>
-          <div class="stat p-8 flex flex-row items-center">
-            <div class="p-4 rounded-2xl bg-secondary/10 text-secondary">
-              <svg lucideBookOpenText size="28"></svg>
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center gap-4 min-h-[112px]">
+            <div class="p-3.5 rounded-2xl bg-secondary/10 text-secondary shrink-0">
+              <svg lucideBookOpenText size="24" strokeWidth="2"></svg>
             </div>
-            <div class="flex flex-col gap-3">
-              <div class="stat-title text-xs uppercase font-bold tracking-widest opacity-60">
-                Počet strán
-              </div>
-              <div class="stat-value text-2xl font-black leading-none">
-                {{ data.bookDetails?.pageCount }}
-              </div>
-              <div class="stat-desc font-semibold text-secondary">
-                ~ {{ ux.readingHours() }} hodín čítania
-              </div>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-0.5">Rozsah</span>
+              <span class="text-xl font-black text-base-content/90 leading-none mb-1">{{ data.bookDetails?.pageCount }} strán</span>
+              <span class="text-xs font-bold text-secondary">~ {{ ux.readingHours() }}h čítania</span>
             </div>
           </div>
-          <div
-            class="stat p-8 flex flex-row items-center"
-          >
-            <div class="p-4 rounded-2xl bg-accent/10 text-accent">
-              <svg lucideCalendarDays size="28"></svg>
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center gap-4 min-h-[112px]">
+            <div class="p-3.5 rounded-2xl bg-accent/10 text-accent shrink-0">
+              <svg lucideCalendarDays size="24" strokeWidth="2"></svg>
             </div>
-            <div class="flex flex-col gap-4">
-              <div
-                class="stat-title text-xs uppercase font-bold tracking-widest opacity-60"
-              >
-                Vydané
-              </div>
-              <div class="stat-value text-2xl font-black leading-none">
-                {{ data.bookDetails?.publishedDate | date:'yyyy' }}
-              </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-0.5">Rok vydania</span>
+              <span class="text-xl font-black text-base-content/90 leading-none">{{ data.bookDetails?.publishedDate | date:'yyyy' }}</span>
             </div>
           </div>
-        }
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center gap-4 min-h-[112px] transition-all duration-300"
+               [ngClass]="data.bookDetails?.audioBook ? 'ring-2 ring-success/20 border-success/30' : ''">
+
+            <div class="p-3.5 rounded-2xl shrink-0 relative"
+                 [ngClass]="data.bookDetails?.audioBook ? 'bg-success/10 text-success' : 'bg-base-200 text-base-content/30'">
+              <svg lucideHeadphones height="10" width="10"></svg>
+              @if (data.bookDetails?.audioBook) {
+                <span class="absolute top-0 right-0 flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                </span>
+              }
+            </div>
+
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-0.5">Formát Audio</span>
+              <span class="text-md font-black tracking-tight transition-colors"
+                              [ngClass]="data.bookDetails?.audioBook ? 'text-success' : 'text-base-content/50'">
+                  {{ data.bookDetails?.audioBook ? 'Dostupná nahrávka' : 'Iba tlačená verzia' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center gap-4 min-h-[112px]">
+            <div class="p-3.5 rounded-2xl bg-primary/10 text-primary shrink-0">
+              <svg lucideClock height="10" width="10" strokeWidth="2"></svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-0.5">Dĺžka počúvania</span>
+              <span class="text-xl font-black text-base-content/90 leading-none">
+                @if (data.bookDetails?.audioBook && data.bookDetails?.audioLength) {
+                  {{ data.bookDetails?.audioLength }} <span class="text-xs font-semibold text-base-content/50">min</span>
+                } @else {
+                  —
+                }
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center gap-4 min-h-[112px]">
+            <div class="p-3.5 rounded-2xl bg-info/10 text-info shrink-0">
+              <svg lucideLanguages height="10" width="10" strokeWidth="2"></svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[10px] uppercase font-black tracking-widest text-base-content/40 mb-0.5">Jazyk hovoreného slova</span>
+              <span class="text-xl font-black text-base-content/90 uppercase tracking-wide leading-none">
+                {{ data.bookDetails?.audioBook ? data.bookDetails?.audioLanguage : '—' }}
+              </span>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
+    }
 
   } @else {
     <div class="flex flex-col items-center justify-center h-96 gap-4">

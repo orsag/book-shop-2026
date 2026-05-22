@@ -22,6 +22,7 @@ import {
   LucideLock,
   LucideCreditCard,
   LucideClipboardCopy,
+  LucideShoppingBag
 } from '@lucide/angular';
 import { OrderService } from '../../services/order-service';
 import { OrderStatus as OSEnum } from '@store/shared-models';
@@ -45,6 +46,7 @@ import { delay } from 'rxjs';
     NoFocusJumpDirective,
     CurrencyPipe,
     PremiumCard,
+    LucideShoppingBag,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',

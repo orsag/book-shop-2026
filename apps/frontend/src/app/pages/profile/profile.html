@@ -1,5 +1,5 @@
-<div class="max-w-6xl mx-auto p-6">
-  <header class="mb-8 flex border-b border-base-300 pb-4">
+<div class="max-w-6xl mx-auto md:p-6">
+  <header class="mb-8 flex items-center justify-center md:justify-start border-b border-base-300 pb-4">
     <div>
       <h1 class="text-3xl font-bold">Editácia profilu</h1>
       <p class="text-base-content/60">Spravujte svoje osobné údaje a obľúbené knihy</p>
@@ -64,30 +64,36 @@
         </table>
       </div>
     } @else {
-      <div class="alert bg-base-100 border border-base-300 italic text-base-content/50">
-        Zatiaľ ste nevytvorili žiadne objednávky.
+      <div class="flex flex-col items-center justify-center p-10 max-w-xl mx-auto rounded-[2rem] border-2 border-dashed border-base-300 bg-base-100/40 backdrop-blur-sm text-center group hover:border-primary/30 transition-colors duration-300">
+
+        <div class="text-base-content/30 group-hover:text-primary/60 transition-colors duration-300 mb-4 bg-base-200 p-4 rounded-2xl">
+          <svg lucideShoppingBag size="32" strokeWidth="1.5"></svg>
+        </div>
+
+        <p class="text-md font-medium text-base-content/70 not-italic tracking-wide">
+          Zatiaľ ste nevytvorili žiadne objednávky.
+        </p>
+
+        <p class="text-xs text-base-content/40 mt-1 max-w-xs">
+          Akonáhle si niečo vyberiete z nášho obchodu, vaša história nákupov sa zobrazí tu.
+        </p>
       </div>
     }
   </section>
 
-  <section class="mb-12">
-    <h3 class="font-bold mb-4 text-xl flex items-center gap-2">
-      Moje obľúbené
-      <div class="badge badge-secondary badge-lg">{{ store.favoriteCount() }}</div>
-    </h3>
-
-    @if (store.favoriteProducts().length > 0) {
+  @if (store.favoriteProducts().length > 0) {
+    <section class="mb-12">
+      <h3 class="font-bold mb-4 text-xl flex items-center gap-2">
+        Moje obľúbené
+        <div class="badge badge-secondary badge-lg">{{ store.favoriteCount() }}</div>
+      </h3>
       <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
         @for (book of store.favoriteProducts(); track book.id) {
           <app-card-small [product]="book"></app-card-small>
         }
       </div>
-    } @else {
-      <div class="bg-base-200/50 rounded-xl p-12 text-center border-2 border-dashed border-base-300">
-        <p class="text-base-content/40 italic">Zatiaľ nemáte žiadne obľúbené knihy.</p>
-      </div>
-    }
-  </section>
+    </section>
+  }
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
     <div class="lg:col-span-8 space-y-8">
@@ -174,36 +180,9 @@
     </div>
 
     <aside class="lg:col-span-4 space-y-6">
-
       @if (isPremium()) {
         <app-premium-card [daysLeft]="daysLeft()"></app-premium-card>
       }
-
-      <div class="card bg-base-100 border border-base-300 shadow-sm mt-6">
-        <div class="card-body p-6">
-          <h3 class="font-bold text-sm uppercase opacity-50 mb-4 tracking-widest">Nastavenia systému</h3>
-
-          <div class="form-control w-full mb-6">
-            <label for="theme" class="label"><span class="label-text-alt font-bold">Farebná téma</span></label>
-            <select appNoFocusJump [formField]="userForm.theme" class="select select-sm select-bordered w-full">
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex justify-between text-xs border-b border-base-200 pb-2">
-              <span class="opacity-60">Jazyk:</span>
-              <span class="font-bold uppercase">{{ userDetailModel().preferredLanguage }}</span>
-            </div>
-            <div class="flex flex-col gap-1 text-xs">
-              <span class="opacity-60">Posledná aktivita:</span>
-              <span
-                class="font-mono opacity-80 bg-base-200 px-2 py-1 rounded">{{ userDetailModel().lastActiveAt | date:'medium' }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </aside>
   </div>
 </div>

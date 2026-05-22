@@ -13,7 +13,7 @@ import { tapResponse } from '@ngrx/operators';
 import { Product as IProduct } from '@store/shared-models';
 import { AuthService } from '../services/auth-service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tap, map, filter, of, distinctUntilChanged } from 'rxjs';
+import { tap, map, filter, of, distinctUntilChanged, exhaustMap } from 'rxjs';
 import { pipe, switchMap, catchError, finalize, EMPTY } from 'rxjs';
 import { BookService } from '../services/book-service';
 import { DetailService } from '../services/detail-service';
@@ -197,17 +197,16 @@ export const AppStore = signalStore(
         ),
       ),
 
-      login: rxMethod<{ username: string; onSuccess?: () => void }>(
+      login: rxMethod<{ username: string }>(
         pipe(
           tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ username, onSuccess }) =>
+          switchMap(({ username }) =>
             authService.login(username).pipe(
               // Chain the premium status call
               switchMap(({ user, access_token }) =>
                 detailService.findPremiumStatus(user.id).pipe(
                   tap((premiumStatus) => {
                     errorService.handleSuccess(SuccessCodes.LOGIN);
-                    if (onSuccess) onSuccess();
                     // Update state with everything at once
                     patchState(store, {
                       user,
@@ -242,32 +241,38 @@ export const AppStore = signalStore(
 
       logout: rxMethod<void>(
         pipe(
+          // 1. Immediately drop the request if another logout execution is already active
+          filter(() => !store.isLoading()),
           map(() => store.token()),
           filter((token): token is string => !!token),
 
-          switchMap(() =>
-            authService.logout().pipe(
+          // 2. exhaustMap blocks any subsequent clicks until the inner stream completes
+          exhaustMap(() => {
+            // Set a local loading guard state flag (Optional, but excellent UX)
+            patchState(store, { isLoading: true });
+
+            return authService.logout().pipe(
               tap(() => {
                 errorService.handleSuccess(SuccessCodes.LOGOUT);
               }),
               catchError(() => {
                 errorService.handleError(ErrorCodes.LOGOUT);
-                // Even if backend fails, we proceed with local cleanup
-                return of(null); // Use 'of' instead of EMPTY to ensure finalize runs
+                return of(null);
               }),
               finalize(() => {
-                // 2. ALWAYS wipe the local state and storage
+                // 3. ALWAYS clean local disk footprint and turn off execution guard
                 patchState(store, {
                   user: null,
                   premiumStatus: null,
                   token: null,
+                  isLoading: false, // Reset your guard block
                 });
                 localStorage.removeItem(DETAIL_STORAGE_KEY);
                 localStorage.removeItem(USER_STORAGE_KEY);
                 localStorage.removeItem(TOKEN_STORAGE_KEY);
               }),
-            ),
-          ),
+            );
+          }),
         ),
       ),
 

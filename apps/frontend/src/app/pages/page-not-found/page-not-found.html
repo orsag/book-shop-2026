@@ -1,4 +1,4 @@
-<main class="flex flex-col min-h-screen items-center justify-start bg-base-200 px-6 py-12" *transloco="let t">
+<main class="flex flex-col items-center justify-start py-6" *transloco="let t">
 
   <!-- TEXT AND BUTTONS CONTAINER (Constrained to ~576px for readability) -->
   <div class="text-center max-w-xl">
@@ -28,16 +28,13 @@
 
   <!-- IMAGE CONTAINER (Moved OUTSIDE the max-w-xl div!) -->
   <!-- I gave it max-w-5xl (1024px) so it gets big, but doesn't look insane on 4k ultra-wide monitors -->
-  <div class="mt-12 w-full max-w-5xl">
-    @let source = "images/pepe.jpg";
-
+  <div class="mt-12 w-full flex items-center justify-center">
     <img
-      [ngSrc]="source"
-      width="1600"
-      height="900"
-      priority
+      src="images/pepe.jpg"
+      width="600"
+      height="250"
       alt="pepe"
-      class="w-full h-auto object-cover rounded-xl shadow-2xl"
+      class="w-[600px] h-[300px] object-cover rounded-xl shadow-2xl opacity-50"
     >
   </div>
 

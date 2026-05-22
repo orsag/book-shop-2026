@@ -88,14 +88,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
             [control]="editForm.bookDetails.category"
             [inputId]="'category-' + idBook"
             [label]="t('edit_modal.category')"
-          >
-            <option value="" disabled selected>
-              {{ t('edit_modal.pick_category') }}
-            </option>
-            @for (cat of bookCategories; track cat) {
-              <option [value]="cat">{{ cat }}</option>
-            }
-          </app-form-field>
+            [items]="bookCategories"
+            [placeholder]="t('edit_modal.pick_category')"
+          />
 
           <!-- Discount -->
           <app-form-field

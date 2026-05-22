@@ -6,27 +6,28 @@
     "html": {
       "attributes": [
         {
-          "name": "input.debounce.500",
-          "description": "Custom debounce plugin for input events",
+          "name": "click.stop",
+          "description": "Angular event modifier to automatically call event.stopPropagation()",
           "value": {
             "kind": "expression"
           }
         },
         {
           "name": "input.debounce.300",
-          "description": "Custom debounce plugin for input events"
+          "description": "Custom debounce event plugin for 300ms delay",
+          "value": {
+            "kind": "expression"
+          }
+        },
+        {
+          "name": "input.debounce.500",
+          "description": "Custom debounce event plugin for 500ms delay",
+          "value": {
+            "kind": "expression"
+          }
         }
       ],
       "elements": [
-        {
-          "name": "input",
-          "attributes": [
-            {
-              "pattern": "^\\(input\\.debounce\\.\\d+\\)$",
-              "description": "Matches any (input.debounce.MS) binding"
-            }
-          ]
-        },
         {
           "name": "input",
           "attributes": [
@@ -35,7 +36,19 @@
                 "regex": "\\(input\\.debounce\\.\\d+\\)",
                 "case-sensitive": false
               },
-              "description": "Custom debounce event plugin for any millisecond value",
+              "description": "Custom debounce event modifier for any millisecond value",
+              "value": {
+                "kind": "expression"
+              }
+            }
+          ]
+        },
+        {
+          "name": "button",
+          "attributes": [
+            {
+              "name": "click.stop",
+              "description": "Prevents event bubbling on click actions",
               "value": {
                 "kind": "expression"
               }

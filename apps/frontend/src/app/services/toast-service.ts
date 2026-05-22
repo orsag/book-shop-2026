@@ -6,6 +6,7 @@ interface Toast {
   id: number;
   text: string;
   type: ToastType;
+  duration?: number;
 }
 
 @Injectable({
@@ -18,28 +19,27 @@ export class ToastService {
   // Public readonly signal for components to consume
   public toasts = this.toastsSignal.asReadonly();
 
-  show(text: string, type: ToastType = 'info') {
+  show(text: string, type: ToastType = 'info', duration = 3000) {
     const id = Date.now();
 
     // Add new common to the list
     this.toastsSignal.update((all) => [...all, { id, text, type }]);
 
-    // Auto-remove after 3000ms
     setTimeout(() => {
       this.remove(id);
-    }, 3000);
+    }, duration);
   }
 
-  success(text: string) {
-    this.show(text, 'success');
+  success(text: string, duration?: number) {
+    this.show(text, 'success', duration);
   }
 
-  alert(text: string) {
-    this.show(text, 'alert');
+  alert(text: string, duration?: number) {
+    this.show(text, 'alert', duration);
   }
 
-  info(text: string) {
-    this.show(text, 'info');
+  info(text: string, duration?: number) {
+    this.show(text, 'info', duration);
   }
 
   private remove(id: number) {

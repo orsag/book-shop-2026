@@ -163,8 +163,9 @@ export const CartStore = signalStore(
     onInit(store) {
       const platformId = inject(PLATFORM_ID);
       const isBrowser = isPlatformBrowser(platformId);
-      // Load from LocalStorage
+
       if (isBrowser) {
+        // 1. Unconditionally attempt to load existing data on initialization
         const savedState = localStorage.getItem(CART_STORAGE_KEY);
         if (savedState) {
           try {
@@ -172,13 +173,14 @@ export const CartStore = signalStore(
           } catch (e) {
             console.error('Failed to parse cart storage state', e);
           }
-
-          // Sync to LocalStorage on every change
-          effect(() => {
-            const state = { itemsMap: store.itemsMap() };
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
-          });
         }
+
+        // 2. Unconditionally register the state listener effect.
+        // This will now catch the initial load and ALL subsequent mutations!
+        effect(() => {
+          const state = { itemsMap: store.itemsMap() };
+          localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+        });
       }
     },
   }),

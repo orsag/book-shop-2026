@@ -1,14 +1,22 @@
 import { Component, inject, effect } from '@angular/core';
-import { CommonModule, NgOptimizedImage, CurrencyPipe } from '@angular/common';
+import {
+  CommonModule,
+  NgOptimizedImage,
+  CurrencyPipe,
+  DatePipe,
+} from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
 import { BookService } from '../../services/book-service';
 import { AppStore } from '../../store/app-store';
 import {
+  LucideClock,
+  LucideLanguages,
+  LucideHeadphones,
   LucideBookOpenText,
   LucideCalendarDays,
-  LucideSearchAlert,
+  LucideSearchX,
 } from '@lucide/angular';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -20,10 +28,14 @@ import { UXService } from '../../services/ux-service';
     CommonModule,
     NgOptimizedImage,
     CurrencyPipe,
+    DatePipe,
     LucideBookOpenText,
     LucideCalendarDays,
     TranslocoDirective,
-    LucideSearchAlert,
+    LucideSearchX,
+    LucideHeadphones,
+    LucideClock,
+    LucideLanguages,
   ],
   templateUrl: './detail.html',
   providers: [UXService],

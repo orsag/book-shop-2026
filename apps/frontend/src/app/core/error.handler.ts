@@ -73,7 +73,7 @@ export class ErrorService {
 
   handleError(errorCode: string | null | undefined): void {
     const message = ErrorMessages[errorCode ?? ''] || DEFAULT_ERROR_MESSAGE;
-    this.toast.alert(message);
+    this.toast.alert(message, 6000);
   }
 
   handleSuccess(successCode: string | null | undefined): void {

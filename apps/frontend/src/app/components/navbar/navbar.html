@@ -3,7 +3,7 @@
 
 <div class="navbar shadow-2xl h-18 relative bg-neutral text-white max-w-full">
 
-  <div class="absolute inset-0 z-0 pointer-events-none opacity-50 overflow-hidden"
+  <div class="absolute inset-0 z-0 pointer-events-none opacity-30 overflow-hidden"
        [style.backgroundImage]="'url(' + navBg + ')'"
        style="background-position: bottom; background-repeat: no-repeat; background-size: cover;">
   </div>
@@ -20,7 +20,7 @@
     </button>
 
     <a routerLink="/"
-       class="ribeye-regular text-xl inline-block md:text-3xl px-4 py-2 font-bold transition-all duration-300"
+       class="ribeye-regular text-md inline-block md:text-3xl px-4 py-2 font-bold transition-all duration-300"
        [class.text-magic]="isRotating()"
     >
       Happy Book Store
@@ -54,15 +54,17 @@
       </div>
     </button>
 
-    @if (!isLoggedIn()) {
-      <button (click)="handleLogin()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
-        <svg lucideLogIn></svg>
-      </button>
-    } @else {
-      <button (click)="handleLogout()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
-        <svg lucideLogOut></svg>
-      </button>
-    }
+    <div class="hidden md:block">
+      @if (!isLoggedIn()) {
+        <button (click)="handleLogin()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
+          <svg lucideLogIn></svg>
+        </button>
+      } @else {
+        <button (click)="handleLogout()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
+          <svg lucideLogOut></svg>
+        </button>
+      }
+    </div>
 
     <button
       appNoHoverButton
@@ -83,7 +85,7 @@
       </div>
     </button>
 
-    <div class="transition-transform duration-300 hover:scale-110">
+    <div class="hidden md:block transition-transform duration-300 hover:scale-110">
       <app-theme-picker></app-theme-picker>
     </div>
 

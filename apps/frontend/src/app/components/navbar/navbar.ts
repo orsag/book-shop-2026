@@ -3,6 +3,7 @@ import {
   computed,
   inject,
   signal,
+  effect,
   PLATFORM_ID,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -68,6 +69,14 @@ export class Navbar {
   searchQuery = signal('');
   protected showLoginModal = signal(false);
   showSearchbar = computed(() => this.config.flags().SHOW_SEARCHBAR_HEADER);
+
+  constructor() {
+    effect(() => {
+      if (this.store.isLoggedIn()) {
+        this.showLoginModal.set(false);
+      }
+    });
+  }
 
   // Convert the lang changes to a signal
   activeLang = toSignal(this.translocoService.langChanges$, {
@@ -138,10 +147,7 @@ export class Navbar {
     event.preventDefault();
     // Logic for auth goes here...
     if (this.modelUsername.trim() !== '') {
-      this.store.login({
-        username: this.modelUsername,
-        onSuccess: () => this.showLoginModal.set(false),
-      });
+      this.store.login({ username: this.modelUsername });
     }
   }
 

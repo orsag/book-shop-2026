@@ -77,7 +77,7 @@
     "catalog": "Catalog",
     "support": "Contact support",
     "back_home": "Go back home",
-    "not_found": "Book Not Found",
+    "not_found": "Page not found",
     "add_book": "Add book",
     "add_product": "Add product",
     "delete_book": "Delete book?",
@@ -200,7 +200,8 @@
     "publishedDate": "Published date",
     "btn_edit": "Save changes",
     "btn_create": "Create book",
-    "local_save": "Save LC",
+    "audioBook": "Audio book",
+    "audioLength": "Length audio",
     "close": "Close window",
     "cancel": "Cancel"
   },
