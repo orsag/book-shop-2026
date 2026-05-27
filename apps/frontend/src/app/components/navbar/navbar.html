@@ -90,37 +90,91 @@
     </div>
 
     @if (isLoggedIn()) {
-      <div class="dropdown dropdown-end group z-[9999]">
-        <div tabindex="0" role="button"
-             class="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-          <div class="indicator">
-            @if (isPremium()) {
-              <span
-                class="indicator-item badge badge-xs py-2 px-1.5 text-[9px] font-black border-none z-20 -translate-x-2 translate-y-0 bg-gradient-to-tr from-[#BF953F] via-[#FCF6BA] to-[#B38728] text-black shadow-[0_2px_5px_rgba(0,0,0,0.3)] uppercase tracking-widest cursor-pointer">
-                VIP
-              </span>
-            }
-            <div class="rounded-full p-0.5 cursor-pointer"
-                 [class.premium-glow]="isPremium()"
-                 [class.ring]="isPremium()"
-                 [class.ring-warning]="isPremium()">
-              <div class="w-10 h-10 rounded-full overflow-hidden">
-                <img priority alt="User Avatar" width="40" height="40" class="object-cover w-full h-full"
-                     [ngSrc]="userAvatar() ?? 'images/user.png'" />
-              </div>
+      <div class="relative group z-[9999]">
+        <button
+          type="button"
+          (click)="showProfileModal.set(!showProfileModal())"
+          [ngClass]="showProfileModal() ? 'bg-error' : 'bg-base-100/10'"
+        [class.bg-error]="showProfileModal()"
+        class="relative flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none border border-white/10 shadow-md text-white group"
+        [aria-label]="showProfileModal() ? 'Close profile menu' : 'Open profile menu'"
+        >
+        @if (showProfileModal()) {
+          <svg lucideX class="w-5 h-5 transition-transform duration-200 rotate-0 hover:rotate-90"></svg>
+        } @else {
+          <svg lucideMenu class="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity"></svg>
+        }
+        </button>
+
+        @if (showProfileModal()) {
+          <div class="absolute right-0 mt-3 w-72 bg-base-100 rounded-2xl shadow-2xl border border-base-200 text-base-content p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+
+            <div class="flex flex-col items-center text-center pb-3 border-b border-base-200">
+              <span class="font-bold text-lg text-base-content">{{ userName()?.username }}</span>
+              <span class="text-xs opacity-60 mt-0.5">{{ store.user()?.email }}</span>
+
+              @if (isAdmin()) {
+                <span class="badge badge-error badge-sm font-bold uppercase tracking-wider text-[10px] text-white mt-2">
+              Administrator
+            </span>
+              }
             </div>
+
+            <div class="py-3 flex flex-col gap-2.5 border-b border-base-200 text-xs">
+              <div class="flex justify-between items-center">
+                <span class="opacity-50 font-medium">Phone:</span>
+                <span class="font-semibold">{{ store.user()?.phoneNumber || 'Not provided' }}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="opacity-50 font-medium">Theme Style:</span>
+                <span class="font-semibold capitalize badge badge-ghost badge-sm">{{ store.user()?.theme }}</span>
+              </div>
+              @if (store.user()?.lastLogin) {
+                <div class="flex flex-col gap-1 pt-1">
+                  <span class="opacity-50 font-medium">Last Login:</span>
+                  <span class="font-mono text-[11px] bg-base-200/50 rounded p-1 text-center">
+                {{ store.user()?.lastLogin | date:'medium' }}
+              </span>
+                </div>
+              }
+            </div>
+
+            <ul class="menu menu-sm px-0 pt-2 gap-1">
+              @if (isAdmin()) {
+                <li>
+                  <a routerLink="administration" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                    <svg lucideLayoutDashboard size="16" class="opacity-70"></svg> Administration
+                  </a>
+                </li>
+              }
+              <li>
+                <a routerLink="/profile" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                  <svg lucideUser size="16" class="opacity-70"></svg> Edit Profile
+                </a>
+              </li>
+              <li>
+                <a routerLink="/features" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                  <svg lucideSparkles size="16" class="opacity-70"></svg> Features
+                </a>
+              </li>
+              <li class="mt-1 border-t border-base-100 pt-1">
+                <a (click)="logoutMenuItem($event); showProfileModal.set(false)" role="button" tabindex="0" class="rounded-lg text-error hover:bg-error/10 font-semibold">
+                  <svg lucideLogOut size="16"></svg> Logout
+                </a>
+              </li>
+            </ul>
           </div>
-        </div>
-        <ul tabindex="-1"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-base-content">
-          @if (isAdmin()) {
-            <li><a routerLink="administration" (click)="closeDropdown($event)">Administration</a></li>
-          }
-          <li><a routerLink="/profile" class="justify-between" (click)="closeDropdown($event)">Profile <span
-            class="badge text-sm">{{ userName()?.username }}</span></a></li>
-          <li><a (click)="logoutMenuItem($event)" role="button" tabindex="0">Logout</a></li>
-          <li><a routerLink="/features" (click)="closeDropdown($event)">Features</a></li>
-        </ul>
+
+          <div
+            class="modal-backdrop fixed inset-0 z-[-1]"
+            role="button"
+            tabindex="0"
+            attr.aria-label="Close"
+            (click)="showProfileModal.set(false)"
+            (keydown.enter)="showProfileModal.set(false)"
+            (keydown.space)="showProfileModal.set(false)"
+          ></div>
+        }
       </div>
     }
   </div>

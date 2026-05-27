@@ -13,6 +13,7 @@ import {
   LucideArrowUpWideNarrow,
   LucideGrid3x3,
   LucideList,
+  LucidePercent,
   LucideSearch,
 } from '@lucide/angular';
 import { CommonModule } from '@angular/common';
@@ -32,6 +33,7 @@ import { map } from 'rxjs';
     LucideList,
     LucideArrowDownNarrowWide,
     LucideArrowUpWideNarrow,
+    LucidePercent,
   ],
   templateUrl: './filter.html',
   styleUrl: './filter.css',
@@ -48,12 +50,7 @@ export class Filter {
   isCoolingDown = signal(false);
   showHistory = signal(false);
   activeIndex = signal(-1); // For keyboard navigation
-  toggles = [
-    //   { key: 'isAvailable', label: 'available' },
-    //   { key: 'isNewRelease', label: 'newReleases' },
-    { key: 'isDiscounted', label: 'discounted' },
-    //   { key: 'isBestSeller', label: 'bestsellers' },
-  ] as const;
+  toggles = { key: 'isDiscounted', label: 'discounted' };
 
   // Initialize from store instead of hardcoded defaults
   filters = signal<BookFilters>({
@@ -85,7 +82,7 @@ export class Filter {
   // Update helper
   updateFilter<K extends keyof BookFilters>(key: K, value: BookFilters[K]) {
     this.filters.update((f) => ({ ...f, [key]: value }));
-    if (key === 'type') {
+    if (key === 'type' || key === 'isDiscounted') {
       this.onSubmit();
     }
   }

@@ -32,7 +32,7 @@ import { LucideFrown } from '@lucide/angular';
           appNoFocusJump
           [id]="inputId()"
           [formField]="control()"
-          class="textarea textarea-bordered w-full h-28"
+          class="textarea textarea-bordered validator w-full h-28"
         ></textarea>
       } @else if (this.type() === 'checkbox') {
         <div class="flex items-center h-12">
@@ -53,7 +53,7 @@ import { LucideFrown } from '@lucide/angular';
           [type]="type()"
           [id]="inputId()"
           [formField]="control()"
-          class="input input-bordered w-full"
+          class="input input-bordered validator w-full"
           [class.input-error]="inputError()"
           [attr.step]="step()"
           (input)="handleInput.emit($event)"
@@ -64,7 +64,7 @@ import { LucideFrown } from '@lucide/angular';
         <div class="mt-1">
           <ul class="space-y-1">
             @for (error of formState()?.errors() ?? []; track error.message) {
-              <li class="flex items-center gap-1 text-xs text-error">
+              <li class="flex items-center gap-1 validator-hint">
                 <svg lucideFrown height="10" width="10"></svg>
                 <span>{{ error.message }}</span>
               </li>
@@ -80,7 +80,7 @@ export class FormFieldComponent {
   control = input.required<any>();
   inputId = input.required<string>();
   label = input.required<string>();
-  items = input<any[]>([]);
+  items = input<string[]>([]);
   type = input('text');
   step = input<string | undefined>(undefined);
   error = input(false);

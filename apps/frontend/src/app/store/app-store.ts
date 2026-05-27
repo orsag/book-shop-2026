@@ -426,7 +426,11 @@ export const AppStore = signalStore(
         let next: string | null = null;
 
         if (type === 'price') {
-          next = current === 'price_asc' ? 'price_desc' : 'price_asc';
+          if (current === 'price_desc') {
+            next = null;
+          } else {
+            next = current === 'price_asc' ? 'price_desc' : 'price_asc';
+          }
         } else {
           next = null;
         }

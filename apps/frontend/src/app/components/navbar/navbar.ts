@@ -23,7 +23,7 @@ import {
   LucideLogIn,
   LucideLogOut,
   LucideLanguages,
-  LucideShoppingBasket,
+  LucideShoppingBasket, LucideSparkles, LucideUser, LucideLayoutDashboard, LucideX, LucideMenu,
 } from '@lucide/angular';
 import { NoBtnHoverDirective } from '../../core/no-btn-hover.directive';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
@@ -44,6 +44,11 @@ import { ScrollService } from '../../services/scroll-service';
     LucideShoppingBasket,
     NoBtnHoverDirective,
     NoFocusJumpDirective,
+    LucideSparkles,
+    LucideUser,
+    LucideX,
+    LucideMenu,
+    LucideLayoutDashboard,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
@@ -52,11 +57,12 @@ export class Navbar {
   private translocoService = inject(TranslocoService);
   config = inject(ConfigurationService);
   scroller = inject(ScrollService);
-  private router = inject(Router);
-  private store = inject(AppStore);
+  router = inject(Router);
+  store = inject(AppStore);
   cartStore = inject(CartStore);
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
+  showProfileModal = signal(false);
 
   modelUsername = '';
   // Existing signals

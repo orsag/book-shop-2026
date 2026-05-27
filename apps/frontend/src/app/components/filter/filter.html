@@ -90,30 +90,9 @@
     </div>
   </section>
 
-  <section class="border-base-200">
-    <div class="flex flex-col gap-3">
-      @for (item of toggles; track item.key) {
-        <label class="flex items-center justify-between cursor-pointer group">
-          <span class="label-text text-sm font-semibold capitalize">
-            {{ t(`filters.status_types.${item.label}`) }}
-          </span>
-          <input
-            type="checkbox"
-            class="toggle toggle-sm"
-            [class.toggle-success]="item.key === 'isDiscounted'"
-            [checked]="$any(filters())[item.key]"
-            (change)="updateFilter($any(item.key), $any($event.target).checked)"
-          />
-        </label>
-      }
-    </div>
-  </section>
-
   <section>
     <div class="flex justify-between items-center mb-3">
-      <h3
-        class="text-xs font-bold uppercase tracking-widest text-base-content/40"
-      >
+      <h3 class="text-xs font-bold uppercase tracking-widest text-base-content/40">
         {{ t('filters.sections.sort') }}
       </h3>
       <button
@@ -124,7 +103,9 @@
         {{ t('filters.actions.clear') }}
       </button>
     </div>
-    <div class="flex flex-row justify-around gap-2">
+
+    <div class="flex flex-row justify-around items-center gap-2">
+      <!-- 1. Layout Toggle -->
       <button
         (click)="store.setViewLayout(store.viewLayout() === 'grid' ? 'list' : 'grid')"
         class="btn btn-circle btn-ghost swap swap-rotate"
@@ -132,9 +113,10 @@
         [title]="store.viewLayout() === 'grid' ? 'Switch to List' : 'Switch to Grid'"
       >
         <svg lucideList class="swap-on" size="20"></svg>
-
         <svg lucideGrid class="swap-off" size="20"></svg>
       </button>
+
+      <!-- 2. Price Sort Toggle -->
       <button
         (click)="store.toggleSort('price')"
         class="btn btn-circle btn-ghost swap swap-rotate"
@@ -142,8 +124,20 @@
         [class.swap-active]="store.filters.sortBy() === 'price_desc'"
       >
         <svg lucideArrowDownNarrowWide class="swap-on text-primary" size="20"></svg>
-
         <svg lucideArrowUpWideNarrow class="swap-off" size="20"></svg>
+      </button>
+
+      <!-- 3. Discount Toggle (Merged Design) -->
+      <button
+        (click)="updateFilter('isDiscounted', !filters().isDiscounted)"
+        class="btn btn-circle btn-ghost swap swap-rotate"
+        [class.btn-active]="filters().isDiscounted"
+        [class.swap-active]="filters().isDiscounted"
+      >
+        <!-- Icon when discounted is active -->
+        <svg lucidePercent class="swap-on text-success" size="20"></svg>
+        <!-- Icon when discounted is inactive -->
+        <svg lucidePercent class="swap-off" size="20"></svg>
       </button>
     </div>
   </section>
@@ -167,24 +161,24 @@
           {{ 'filters.actions.clear' | transloco }}
         </button>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="flex flex-col">
         @for (cat of bookCategories; track cat) {
           <label
-            class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-base-200 cursor-pointer group transition-colors"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl over:border-base-300 hover:bg-base-200 cursor-pointer group transition-colors"
           >
             <input
               type="radio"
               name="bookCategory"
-              class="radio radio-sm radio-success"
+              class="radio radio-sm radio-info"
               [checked]="filters().category === cat"
               (change)="updateFilter('category', cat)"
             />
             <div class="flex items-center gap-2">
-              <span
-                class="text-sm font-medium text-base-content/70 group-hover:text-base-content"
-              >
-                {{ cat }}
-              </span>
+            <span
+              class="text-md font-medium text-base-content/70 group-hover:text-[#85c0ee] transition-colors"
+            >
+              {{ cat }}
+            </span>
             </div>
           </label>
         }

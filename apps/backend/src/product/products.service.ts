@@ -33,8 +33,17 @@ export class ProductsService {
 
     // 1. Search condition
     if (search) {
+      // 1. Fetch IDs that match the fuzzy threshold (e.g., 0.3 similarity)
+      const fuzzyMatches = await this.prisma.client.$queryRaw<{ id: string }[]>`
+        SELECT id FROM "Product" 
+        WHERE similarity(name, ${search}) > 0.3
+      `;
+
+      const matchedIds = fuzzyMatches.map((m) => m.id);
+
+      // 2. Push into your existing conditions array
       andConditions.push({
-        OR: [{ name: { contains: search, mode: 'insensitive' } }],
+        id: { in: matchedIds },
       });
     }
 
