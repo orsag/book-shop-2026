@@ -33,15 +33,28 @@ export class ProductsService {
 
     // 1. Search condition
     if (search) {
-      // 1. Fetch IDs that match the fuzzy threshold (e.g., 0.3 similarity)
+      const cleanedSearch = search.trim().toLowerCase();
+
+      // Create a percentage wrap for substring matching (e.g., "frozing" -> "%froz%")
+      // We take the first 4 letters of the word to catch the core root of the typo
+      const rootWord =
+        cleanedSearch.length > 4
+          ? cleanedSearch.substring(0, 4)
+          : cleanedSearch;
+      const percentageSearch = `%${rootWord}%`;
+
       const fuzzyMatches = await this.prisma.client.$queryRaw<{ id: string }[]>`
         SELECT id FROM "Product" 
-        WHERE similarity(name, ${search}) > 0.3
+        WHERE 
+          -- 1. Catch substring variations (e.g., "froz" matches "Frozen")
+          name ILIKE ${percentageSearch}
+          OR
+      -- 2. Catch overall typo closeness (Highly forgiving threshold)
+      similarity(name, ${cleanedSearch}) > 0.18
       `;
 
       const matchedIds = fuzzyMatches.map((m) => m.id);
 
-      // 2. Push into your existing conditions array
       andConditions.push({
         id: { in: matchedIds },
       });
