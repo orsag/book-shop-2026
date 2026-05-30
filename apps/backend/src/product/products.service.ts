@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
-  CreateProductDto,
+  CreateProductPayloadDto,
 } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindAllParams } from './types';
@@ -13,11 +13,6 @@ import { ProductWhereInput } from '../../../../generated/prisma/models/Product';
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
-
-  create(createProductDto: CreateProductDto) {
-    console.log(JSON.stringify(createProductDto));
-    return 'This action adds a new product';
-  }
 
   async findAll({
     type = 'BOOK',
@@ -144,15 +139,15 @@ export class ProductsService {
     };
   }
 
-  findOne(id: string) {
+  findOne(id: string, type = 'BOOK') {
     return this.prisma.client.product.findUnique({
       where: { id },
       include: {
         rating: true,
-        bookDetails: true,
-        gameDetails: true,
-        gastroDetails: true,
-        cardDetails: true,
+        bookDetails: type === 'BOOK',
+        gameDetails: type === 'GAME',
+        gastroDetails: type === 'GASTRO',
+        cardDetails: type === 'GIFT_CARD',
       },
     });
   }
@@ -175,7 +170,13 @@ export class ProductsService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { bookDetails, cardDetails, gameDetails, gastroDetails, ...restProps } = updateProduct;
+    const {
+      bookDetails,
+      cardDetails,
+      gameDetails,
+      gastroDetails,
+      ...restProps
+    } = updateProduct;
 
     // Construct the update object matching Prisma's type requirements
     const updateData: Prisma.ProductUpdateInput = {
@@ -250,7 +251,83 @@ export class ProductsService {
 
     return {
       success: true,
-      message: 'Produkt bol konecne 222 úspešne odstránený.',
+      message: 'Produkt bol úspešne odstránený.',
     };
+  }
+
+  // 1. Helper function to generate an internal alphanumeric SKU matching your format
+  private generateInternalSku(): string {
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
+  create(createProductDto: CreateProductPayloadDto) {
+    // 1. Separate nested relations from the core product properties
+    const {
+      rating,
+      bookDetails,
+      gameDetails,
+      gastroDetails,
+      cardDetails,
+      ...productData
+    } = createProductDto;
+
+    // 2. Build the Prisma configuration for nested creation
+    const createData: any = {
+      ...productData,
+      sku: this.generateInternalSku(),
+      rating: {
+        create: {
+          ratingValue: 0,
+          ratingCount: 0,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      },
+    };
+
+    if (createProductDto.productType === 'BOOK' && bookDetails) {
+      const { id, productId, ...bookData } = bookDetails;
+      createData.bookDetails = {
+        create: bookData,
+      };
+    }
+
+    if (createProductDto.productType === 'GAME' && gameDetails) {
+      const { id, productId, ...gameData } = gameDetails;
+      createData.gameDetails = {
+        create: gameData,
+      };
+    }
+
+    if (createProductDto.productType === 'GASTRO' && gastroDetails) {
+      const { id, productId, ...gastroData } = gastroDetails;
+      createData.gastroDetails = {
+        create: gastroData,
+      };
+    }
+
+    if (createProductDto.productType === 'GIFT_CARD' && cardDetails) {
+      const { id, productId, ...cardData } = cardDetails;
+      createData.cardDetails = {
+        create: cardData,
+      };
+    }
+
+    // 4. Save to database and return the newly created product with its relation included
+    return this.prisma.client.product.create({
+      data: createData,
+      include: {
+        rating: true,
+        bookDetails: createProductDto.productType === 'BOOK',
+        gameDetails: createProductDto.productType === 'GAME',
+        gastroDetails: createProductDto.productType === 'GASTRO',
+        cardDetails: createProductDto.productType === 'GIFT_CARD',
+      },
+    });
   }
 }

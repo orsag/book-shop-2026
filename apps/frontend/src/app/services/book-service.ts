@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ActionResponse, Product as IProduct } from '@store/libs';
+import { ActionResponse, Product as IProduct, ProductType } from '@store/libs';
 import { Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '../store/app-store';
@@ -25,8 +25,8 @@ export class BookService {
     return this.http.get<PaginatedProducts>(this.apiUrl, { params });
   }
 
-  getOne(id: string): Observable<IProduct> {
-    return this.http.get<IProduct>(`${this.apiUrl}/${id}`);
+  getOne(id: string, type: ProductType): Observable<IProduct> {
+    return this.http.get<IProduct>(`${this.apiUrl}/${id}`, { params: { type } });
   }
 
   create(product: Partial<IProduct>): Observable<IProduct> {

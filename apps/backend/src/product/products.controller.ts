@@ -46,8 +46,8 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(id);
+  findOne(@Param('id') id: string, @Query('type') type: ProductType) {
+    return this.productsService.findOne(id, type);
   }
 
   @Post('list')

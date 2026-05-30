@@ -2,15 +2,14 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AppStore } from '../store/app-store';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, finalize } from 'rxjs';
 import { Router } from '@angular/router';
-import { ErrorCodes, ErrorService } from './error.handler';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
   const token = store.token();
   const router = inject(Router);
-  const errorService = inject(ErrorService);
+  let isError401 = false;
 
   let authReq = req;
   if (token) {
@@ -22,6 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
+        isError401 = true;
         // 1. Check if the failed request was actually the login attempt itself
         const isLoginRequest = authReq.url.includes('/login'); // Adjust this path to match your actual API route
 
@@ -33,15 +33,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           // --- 🚨 TOKEN EXPIRED OR INVALID (Session expired) ---
           console.warn('Session expired. Logging out...');
 
-          // Wipe the store and LocalStorage
-          store.logout();
-
           // Send them back to login
-          router.navigate(['/login']);
+          router.navigateByUrl('/login');
         }
       }
 
       return throwError(() => error);
+    }),
+    finalize(() => {
+      if (isError401) {
+        // Wipe the store and LocalStorage
+        store.logout();
+      }
     }),
   );
 };

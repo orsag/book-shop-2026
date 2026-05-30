@@ -7,7 +7,9 @@ import {
   IsOptional,
   Max,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class AggregateRatingDto {
   @IsString()
@@ -44,13 +46,15 @@ export class BookDto {
   binding!: string;
   @IsString()
   publishedDate!: Date;
+  @IsOptional()
   @IsBoolean()
   audioBook!: boolean;
+  @IsOptional()
   @IsNumber()
   audioLength!: number;
   @IsOptional()
   @IsString()
-  audioLanguage?: string | null;
+  audioLanguage?: string;
 }
 
 export class GameDto {
@@ -106,7 +110,7 @@ export class CreateProductDto implements Product {
   @IsString()
   id!: string;
   @IsString()
-  sku!: string;
+  sku!: string; // 27Z6SGMY
   @IsString()
   name!: string;
   @IsString()
@@ -140,13 +144,40 @@ export class CreateProductDto implements Product {
   productType!: ProductType;
 
   // Relations (optional for partial DTOs or loaded relations)
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AggregateRatingDto)
   rating?: AggregateRatingDto | null;
-  bookDetails?: BookDetails | null;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BookDto)
+  bookDetails?: BookDto | null;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => GameDto)
   gameDetails?: GameDto | null;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => GastroDto)
   gastroDetails?: GastroDto | null;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => GiftCardDto)
   cardDetails?: GiftCardDto | null;
   @IsString()
   createdAt!: Date;
   @IsString()
   updatedAt!: Date;
 }
+
+import { OmitType } from '@nestjs/mapped-types'; // or '@nestjs/swagger' if using swagger
+export class CreateProductPayloadDto extends OmitType(CreateProductDto, [
+  'id',
+  'sku',
+  'createdAt',
+  'updatedAt',
+] as const) {}

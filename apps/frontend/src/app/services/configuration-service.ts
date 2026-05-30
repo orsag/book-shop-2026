@@ -82,4 +82,8 @@ export class ConfigurationService {
   setTheme(newTheme: string) {
     this.theme.set(newTheme);
   }
+
+  getFilterValue() {
+    return this.flags().SHOW_FILTER;
+  }
 }

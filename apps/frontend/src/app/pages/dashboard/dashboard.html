@@ -22,14 +22,21 @@
     <!-- Render Grid or List -->
     @switch (store.viewLayout()) {
       @case ('grid') {
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 md:gap-1 sm:gap-1">
+        <div class="grid grid-cols-1 lg:gap-1 sm:gap-1"
+             [class.md:grid-cols-2]="isOpenedFilter()"
+             [class.lg:grid-cols-4]="isOpenedFilter()"
+             [class.md:grid-cols-4]="!isOpenedFilter()"
+             [class.lg:grid-cols-6]="!isOpenedFilter()">
           @for (book of store.products(); track book.id) {
             <app-book-card [product]="book"></app-book-card>
           }
         </div>
       }
       @case ('list') {
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 md:gap-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8 gap-y-2 lg:gap-y-4"
+             [class.md:grid-cols-1]="isOpenedFilter()"
+             [class.md:grid-cols-2]="!isOpenedFilter()"
+        >
           @for (book of store.products(); track book.id; let i = $index) {
             <app-book-list-item [product]="book"></app-book-list-item>
 

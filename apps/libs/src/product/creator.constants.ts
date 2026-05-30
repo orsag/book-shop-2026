@@ -1,5 +1,13 @@
-export type productTypeHelper = 'BOOK' | 'GAME' | 'GASTRO';
+export type productTypeHelper =
+  | 'BOOK'
+  | 'GAME'
+  | 'GASTRO'
+  | 'GIFT_CARD'
+  | 'PUZZLE'
+  | 'CARDS'
+  | 'TOYS';
 
+export const DEFAULT_EMAIL = 'martin.orsag108@gmail.com';
 export const DISCOUNT = [0, 0, 0, 0, 0, 0.05, 0.1, 0.2];
 export const RATING_MAX = 5;
 export const RATING_MIN = 1;

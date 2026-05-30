@@ -3,7 +3,8 @@ import { ToastService } from '../services/toast-service';
 
 // Define your error codes as a const object for better type inference
 export const ErrorCodes = {
-  FETCH_BOOKS: 'AUTH_001',
+  FETCH_PRODUCTS: 'AUTH_001',
+  FETCH_PRODUCT: 'FETCH_PRODUCT',
   PREMIUM: 'PREMIUM',
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
@@ -35,7 +36,8 @@ export const SuccessCodes = {
 
 // Map the codes to user-friendly messages
 const ErrorMessages: Record<string, string> = {
-  [ErrorCodes.FETCH_BOOKS]: 'Failed to load books',
+  [ErrorCodes.FETCH_PRODUCTS]: 'Failed to load product',
+  [ErrorCodes.FETCH_PRODUCT]: 'Failed to load detail',
   [ErrorCodes.PREMIUM]: 'Premium check failed',
   [ErrorCodes.LOGIN]: 'Login failed',
   [ErrorCodes.LOGOUT]: 'Logout failed',

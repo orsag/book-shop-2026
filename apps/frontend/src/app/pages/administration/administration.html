@@ -87,6 +87,7 @@
 }
 
 @if (isEditModalOpen()) {
+  <app-create-product-btn (newProduct)="handleCreateProduct()" />
   @if (store.isBook()) {
     <app-edit-book-modal
       [selectedBook]="selectedProduct()"

@@ -20,6 +20,8 @@ import { DetailService } from '../services/detail-service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
 import { isPlatformBrowser } from '@angular/common';
 import { CreatedOrder, OrderService } from '../services/order-service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Key for LocalStorage
 const USER_STORAGE_KEY = 'currentUser';
@@ -32,7 +34,9 @@ export interface AppState {
   userDetail: UserDetail | null;
   token: string | null;
   premiumStatus: PremiumStatus | null;
-  width: number;
+  temporaryProduct: any;
+  _isMobile: boolean;
+  _isTablet: boolean;
   // --- 📚 Book State ---
   products: IProduct[];
   orders: CreatedOrder[];
@@ -54,11 +58,13 @@ export interface AppState {
 }
 
 const initialState: AppState = {
+  _isMobile: false,
+  _isTablet: false,
   user: null,
   userDetail: null,
   token: null,
   premiumStatus: null,
-  width: 1200,
+  temporaryProduct: null,
   products: [],
   orders: [],
   favoriteProducts: [],
@@ -82,23 +88,28 @@ export const AppStore = signalStore(
   withState(initialState),
 
   // 1. Computed Values (Like Selectors)
-  withComputed(({ user, totalProducts, products, filters, width }) => ({
-    isMobile: computed(() => width() < 768),
-    isTablet: computed(() => width() >= 768 && width() < 1024),
-    isBook: computed(() => filters().type === 'BOOK'),
-    isGame: computed(() => filters().type === 'GAME'),
-    isGastro: computed(() => filters().type === 'GASTRO'),
-    isLoggedIn: computed(() => !!user()),
-    isAdmin: computed(() => user()?.isAdmin ?? false),
-    isEmpty: computed(() => products().length == 0),
-    currentType: computed(() => filters().type.toString()),
-    favoriteCount: computed(() => user()?.favorites?.length ?? 0),
-    cartCount: computed(() => user()?.cartItems?.length ?? 0),
-    totalPages: computed(() => Math.ceil(totalProducts() / filters().limit)),
-    hasMorePage: computed(
-      () => filters.page() < Math.ceil(totalProducts() / filters().limit),
-    ),
-  })),
+  withComputed(
+    ({ user, totalProducts, products, filters, _isMobile, _isTablet }) => {
+      const totalPages = Math.ceil(totalProducts() / filters().limit);
+      const hasMore = filters.page() < Math.ceil(totalProducts() / filters().limit);
+      return {
+        isMobile: computed(() => _isMobile()),
+        isTablet: computed(() => _isTablet()),
+        isDesktop: computed(() => !_isMobile() && !_isTablet()),
+        isBook: computed(() => filters().type === 'BOOK'),
+        isGame: computed(() => filters().type === 'GAME'),
+        isGastro: computed(() => filters().type === 'GASTRO'),
+        isLoggedIn: computed(() => !!user()),
+        isAdmin: computed(() => user()?.isAdmin ?? false),
+        isEmpty: computed(() => products().length == 0),
+        currentType: computed(() => filters().type as ProductType),
+        favoriteCount: computed(() => user()?.favorites?.length ?? 0),
+        cartCount: computed(() => user()?.cartItems?.length ?? 0),
+        totalPages: computed(() => totalPages),
+        hasMorePage: computed(() => hasMore),
+      };
+    },
+  ),
 
   // 2. Methods (Like Actions/Reducers)
   withMethods(
@@ -140,7 +151,7 @@ export const AppStore = signalStore(
                 },
                 error: () => {
                   patchState(store, { isLoading: false });
-                  errorService.handleError(ErrorCodes.FETCH_BOOKS);
+                  errorService.handleError(ErrorCodes.FETCH_PRODUCTS);
                 },
               }),
               // Catch the error internally so the main rxMethod stream doesn't die permanently
@@ -467,6 +478,10 @@ export const AppStore = signalStore(
         });
       },
 
+      setTemporaryProduct(product: any) {
+        patchState(store, { temporaryProduct: product });
+      },
+
       reloadOrders: rxMethod<{ userId: string }>(
         pipe(
           tap(() => patchState(store, { isLoading: true })),
@@ -523,11 +538,25 @@ export const AppStore = signalStore(
           patchState(store, { searchHistory: JSON.parse(savedHistory) });
         }
 
-        // Only run in the browser to avoid SSR errors
-        window.addEventListener('resize', () => {
-          // Update the state
-          patchState(store, { width: window.innerWidth });
-        });
+        const breakpointObserver = inject(BreakpointObserver);
+
+        breakpointObserver
+          .observe([Breakpoints.XSmall, Breakpoints.Small, Breakpoints.Medium])
+          .pipe(takeUntilDestroyed())
+          .subscribe((result) => {
+            // XSmall is standard mobile viewports (max-width: 599.98px)
+            const isMobileView = result.breakpoints[Breakpoints.XSmall];
+
+            // Small & Medium capture typical vertical/horizontal tablet boundaries (600px - 1279.98px)
+            const isTabletView =
+              result.breakpoints[Breakpoints.Small] ||
+              result.breakpoints[Breakpoints.Medium];
+
+            patchState(store, {
+              _isMobile: !!isMobileView,
+              _isTablet: !!isTabletView,
+            });
+          });
 
         effect(() => {
           const { user, token, userDetail } = store;

@@ -21,6 +21,8 @@ import {
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '../../services/ux-service';
+import { ErrorCodes, ErrorService } from '../../core/error.handler';
+import { ErrorCode } from '@angular/compiler-cli';
 
 @Component({
   selector: 'app-detail',
@@ -42,18 +44,18 @@ import { UXService } from '../../services/ux-service';
 })
 export class Detail {
   private route = inject(ActivatedRoute);
-  private bookService = inject(BookService);
+  private product = inject(BookService);
   private cartStore = inject(CartStore);
+  errorService = inject(ErrorService);
   readonly store = inject(AppStore);
   ux = inject(UXService);
 
-  // 1. Reactively fetch the book based on the URL ID
   book = toSignal(
     this.route.params.pipe(
       switchMap((params) =>
-        this.bookService.getOne(params['id']).pipe(
-          catchError((error) => {
-            console.error('Book fetch failed:', error);
+        this.product.getOne(params['id'], this.store.currentType()).pipe(
+          catchError(() => {
+            this.errorService.handleError(ErrorCodes.FETCH_PRODUCT);
             return of(null); // Return null so the UI can show an error state
           }),
         ),

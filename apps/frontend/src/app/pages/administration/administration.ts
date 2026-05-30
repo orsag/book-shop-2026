@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { BookTable } from '../../components/book-table/book-table';
 import { CommonModule } from '@angular/common';
-import { Product } from '@store/shared-models';
+import { createProduct, Product } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
 import { EditBookModalComponent } from './edit-book-modal';
 import { EditGameModalComponent } from './edit-game-modal';
@@ -17,6 +17,7 @@ import {
   SuccessCodes,
 } from '../../core/error.handler';
 import { BookService } from '../../services/book-service';
+import { CreateProductButton } from '../../components/common/create-product-float-button';
 
 @Component({
   selector: 'app-administration',
@@ -32,6 +33,7 @@ import { BookService } from '../../services/book-service';
     CoverModalComponent,
     DeleteModalComponent,
     LucideFrown,
+    CreateProductButton,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',
@@ -97,6 +99,12 @@ export class Administration implements OnInit {
     this.isEditModalOpen.set(true);
   }
 
+  handleCreateProduct() {
+    const currentType = this.store.currentType();
+    const createInput = createProduct(currentType);
+    this.store.setTemporaryProduct(createInput);
+  }
+
   handleProductSave(event: {
     id: string | null | undefined;
     dataToSave: Partial<Product>;
@@ -108,6 +116,7 @@ export class Administration implements OnInit {
       this.bookService.update(id, dataToSave).subscribe({
         next: () => {
           this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
+          this.store.setTemporaryProduct(null);
           this.store.loadBooks();
           this.closeModals();
         },
@@ -120,6 +129,7 @@ export class Administration implements OnInit {
       this.bookService.create(dataToSave).subscribe({
         next: () => {
           this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
+          this.store.setTemporaryProduct(null);
           this.store.loadBooks();
           this.closeModals();
         },

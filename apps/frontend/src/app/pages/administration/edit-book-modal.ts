@@ -34,6 +34,7 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
       <div class="modal-box max-w-2xl">
         <h3 class="font-bold text-xl mb-4 text-primary">
           {{ selectedBook() ? t('edit_modal.edit') : t('edit_modal.create') }}
+          
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
