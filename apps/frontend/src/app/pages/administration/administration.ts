@@ -1,11 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { BookTable } from '../../components/book-table/book-table';
 import { CommonModule } from '@angular/common';
-import { createProduct, Product } from '@store/shared-models';
+import { Product } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
 import { EditBookModalComponent } from './edit-book-modal';
-import { EditGameModalComponent } from './edit-game-modal';
-import { EditGastroModalComponent } from './edit-gastro-modal';
 import { OrderTable } from '../../components/order-table/order-table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
@@ -17,7 +15,6 @@ import {
   SuccessCodes,
 } from '../../core/error.handler';
 import { BookService } from '../../services/book-service';
-import { CreateProductButton } from '../../components/common/create-product-float-button';
 
 @Component({
   selector: 'app-administration',
@@ -25,15 +22,12 @@ import { CreateProductButton } from '../../components/common/create-product-floa
     BookTable,
     LucidePlus,
     CommonModule,
-    EditGameModalComponent,
     EditBookModalComponent,
-    EditGastroModalComponent,
     OrderTable,
     TranslocoDirective,
     CoverModalComponent,
     DeleteModalComponent,
     LucideFrown,
-    CreateProductButton,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',
@@ -97,12 +91,6 @@ export class Administration implements OnInit {
   openEditModal(product: Product) {
     this.selectedProduct.set(product);
     this.isEditModalOpen.set(true);
-  }
-
-  handleCreateProduct() {
-    const currentType = this.store.currentType();
-    const createInput = createProduct(currentType);
-    this.store.setTemporaryProduct(createInput);
   }
 
   handleProductSave(event: {

@@ -1,7 +1,13 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const { join } = require('path');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
+  resolve: {
+    plugins: [
+      new TsconfigPathsPlugin({ configFile: './tsconfig.app.json' }),
+    ],
+  },
   output: {
     path: join(__dirname, '../../dist/apps/backend'),
     clean: true,

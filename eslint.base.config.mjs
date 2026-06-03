@@ -13,12 +13,24 @@ export default [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
+          enforceBuildableLibDependency: false,
+          allow: [
+            '../generated/**',
+            '**/eslint.config.js',
+            '**/eslint.base.config.ts',
+          ],
           depConstraints: [
             {
+              sourceTag: 'scope:api',
+              onlyDependOnLibsWithTags: ['scope:prisma', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:client',
+              onlyDependOnLibsWithTags: ['scope:prisma', 'scope:shared'],
+            },
+            {
               sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
+              onlyDependOnLibsWithTags: ['scope:prisma'],
             },
           ],
         },

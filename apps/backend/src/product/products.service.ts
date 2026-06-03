@@ -5,10 +5,8 @@ import {
 } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindAllParams } from './types';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { Prisma } from '../../../../generated/prisma/client';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { ProductWhereInput } from '../../../../generated/prisma/models/Product';
+import { Prisma } from '@prismalib';
+import { ProductWhereInput } from '@prismalib';
 
 @Injectable()
 export class ProductsService {

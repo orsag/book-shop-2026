@@ -87,23 +87,23 @@
 }
 
 @if (isEditModalOpen()) {
-  <app-create-product-btn (newProduct)="handleCreateProduct()" />
   @if (store.isBook()) {
     <app-edit-book-modal
       [selectedBook]="selectedProduct()"
       (closeModal)="closeModals()"
       (commonSave)="handleProductSave($event)" />
 
-  } @else if (store.isGame()) {
-    <app-edit-game-modal
-      [selectedBook]=" selectedProduct()"
-      (closeModal)="closeModals()"
-      (commonSave)="handleProductSave($event)" />
-
-  } @else if (store.isGastro()) {
-    <app-edit-gastro-modal
-      [selectedBook]="selectedProduct()"
-      (closeModal)="closeModals()"
-      (commonSave)="handleProductSave($event)" />
   }
+<!--  @else if (store.isGame()) {-->
+<!--    <app-edit-game-modal-->
+<!--      [selectedBook]=" selectedProduct()"-->
+<!--      (closeModal)="closeModals()"-->
+<!--      (commonSave)="handleProductSave($event)" />-->
+
+<!--  } @else if (store.isGastro()) {-->
+<!--    <app-edit-gastro-modal-->
+<!--      [selectedBook]="selectedProduct()"-->
+<!--      (closeModal)="closeModals()"-->
+<!--      (commonSave)="handleProductSave($event)" />-->
+<!--  }-->
 }

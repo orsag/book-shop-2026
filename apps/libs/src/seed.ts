@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from './prisma';
-import { Prisma } from '../generated/prisma/client';
-import { createProduct, createAdmin } from '@store/libs';
+import { prisma, Prisma } from '@prismalib';
+import { createProduct, createAdmin } from './product/creator';
 
 async function main() {
   await prisma.gastro.deleteMany();
@@ -21,7 +20,6 @@ async function main() {
     await prisma.product.create({ data: createInput });
   }
   console.log(' ✅ Seeded 300 products...');
-
 
   const freshAdmin = createAdmin();
   await prisma.user.upsert(freshAdmin);

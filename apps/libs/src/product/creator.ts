@@ -13,9 +13,8 @@ import {
   RATING_MIN,
   DEFAULT_EMAIL,
   DEFAULT_AVATAR,
+  ProductCreateInput,
 } from './creator.constants';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { Prisma, ProductType } from '../../../../generated/prisma/client';
 
 export function createAdmin() {
   return {
@@ -31,8 +30,8 @@ export function createAdmin() {
       phoneNumber: '+421900000000',
       avatarUrl: DEFAULT_AVATAR,
       theme: 'light',
-      favorites: [],
-      cartItems: [],
+      favorites: [] as string[],
+      cartItems: [] as any[],
     },
   };
 }
@@ -50,17 +49,15 @@ export function getName (type: productTypeHelper) {
   return map[type] ?? faker.commerce.productName();
 };
 
-export function createProduct(type: ProductType) {
+export function createProduct(type: productTypeHelper) {
   const audioBook = Math.random() > 0.8;
   const availableCount = faker.number.int({ min: 0, max: 50 });
   const isAvailable = availableCount > 0;
   const condition = Math.random() < 0.9 ? 'new' : 'used';
   const discount = faker.helpers.arrayElement(DISCOUNT);
-  const price = parseFloat(
-    faker.commerce.price({ min: 9, max: 300, dec: 2 }),
-  );
+  const price = parseFloat(faker.commerce.price({ min: 9, max: 300, dec: 2 }));
 
-  const createInput: Prisma.ProductCreateInput = {
+  const createInput: ProductCreateInput = {
     sku: faker.string.alphanumeric(8).toUpperCase(),
     name: getName(type),
     alternativeHeadline: faker.company.catchPhrase(),

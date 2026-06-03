@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/libs/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:shared"],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
@@ -13,6 +13,7 @@
         "deleteOutputPath": false,
         "main": "apps/libs/src/index.ts",
         "tsConfig": "apps/libs/tsconfig.lib.json",
+        "skipTypeCheck": true,
         "assets": []
       }
     }

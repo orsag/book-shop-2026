@@ -1,3 +1,6 @@
+import { Prisma } from '@prismalib';
+
+export type ProductCreateInput = Prisma.ProductCreateInput;
 export type productTypeHelper =
   | 'BOOK'
   | 'GAME'

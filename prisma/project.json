@@ -1,0 +1,5 @@
+{
+  "name": "prisma",
+  "projectType": "library",
+  "tags": ["type:config", "scope:prisma"]
+}

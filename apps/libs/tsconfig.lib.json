@@ -3,7 +3,7 @@
   "compilerOptions": {
     "composite": false,
     "declaration": false,
-    "rootDir": "src",
+    "rootDir": "../../",
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
   },

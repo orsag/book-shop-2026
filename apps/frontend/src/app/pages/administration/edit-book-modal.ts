@@ -15,6 +15,7 @@ import {
   UpdateProductDto,
   EMPTY_BOOK,
   BookDetails,
+  createProduct,
 } from '@store/libs';
 import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
@@ -34,7 +35,6 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
       <div class="modal-box max-w-2xl">
         <h3 class="font-bold text-xl mb-4 text-primary">
           {{ selectedBook() ? t('edit_modal.edit') : t('edit_modal.create') }}
-          
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -153,6 +153,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
         </div>
 
         <div class="modal-action">
+          <button class="btn btn-primary" (click)="handleAddProduct()">
+            Add product
+          </button>
           <button class="btn btn-ghost" (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
@@ -251,6 +254,12 @@ export class EditBookModalComponent {
       id: this.idBook(),
       dataToSave: this.editForm().value(),
     });
+  }
+
+  handleAddProduct() {
+    const currentType = this.store.currentType();
+    const createInput = createProduct(currentType);
+    this.store.setTemporaryProduct(createInput);
   }
 
   handleClose() {

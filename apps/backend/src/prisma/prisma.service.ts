@@ -1,8 +1,7 @@
 /* eslint-disable */
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 // Import from your specific generated path
-import { PrismaClient } from '@PrismaClient';
-import { prisma } from '../../../../prisma/prisma';
+import { prisma, PrismaClient } from '@prismalib';
 
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
