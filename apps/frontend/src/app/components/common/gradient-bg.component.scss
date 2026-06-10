@@ -76,7 +76,7 @@
   }
 
   &.is-dark-theme {
-    background: unquote('oklch(var(--b1))') !important;
+    background: OKLCH(var(--b1)) !important;
 
     .gradients-container {
       display: none !important;

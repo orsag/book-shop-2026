@@ -23,7 +23,12 @@ import {
   LucideLogIn,
   LucideLogOut,
   LucideLanguages,
-  LucideShoppingBasket, LucideSparkles, LucideUser, LucideLayoutDashboard, LucideX, LucideMenu,
+  LucideShoppingBasket,
+  LucideSparkles,
+  LucideUser,
+  LucideLayoutDashboard,
+  LucideX,
+  LucideMenu,
 } from '@lucide/angular';
 import { NoBtnHoverDirective } from '../../core/no-btn-hover.directive';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
@@ -63,6 +68,13 @@ export class Navbar {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
   showProfileModal = signal(false);
+  currentTheme = this.config.theme;
+
+  currentNavbarBackground = computed(() =>
+    this.config.theme() === 'dark'
+      ? '/images/navbarDark.svg'
+      : '/images/navbar6.svg',
+  );
 
   modelUsername = '';
   // Existing signals

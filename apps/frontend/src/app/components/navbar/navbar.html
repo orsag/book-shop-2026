@@ -1,69 +1,85 @@
-@let navBg = '/images/navbar2.svg';
 @let logo = '/images/logo.svg';
 
-<div class="navbar shadow-2xl h-18 relative bg-neutral text-white max-w-full">
+<div class="navbar shadow-2xl h-[100px] relative bg-neutral text-white max-w-full">
 
-  <div class="absolute inset-0 z-0 pointer-events-none opacity-30 overflow-hidden"
-       [style.backgroundImage]="'url(' + navBg + ')'"
+  <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden"
+       [style.backgroundImage]="'url(' + currentNavbarBackground() + ')'"
        style="background-position: bottom; background-repeat: no-repeat; background-size: cover;">
   </div>
 
-  <div class="flex-1 flex items-center gap-2 md:pl-4 z-10">
-    <button type="button"
-            class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
-            (click)="handleButtonClick(false)">
-      <img [ngSrc]="logo"
-           width="50" height="50"
-           class="object-cover logo-base"
-           [class.logo-spin]="isRotating()"
-           alt="Bookshop logo">
-    </button>
+    @if (currentTheme() === 'dark') {
+        <div class="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+          <div class="shooting-star-html absolute left-[-150px] top-[15px] w-[120px] h-[2px] rounded-full"></div>
+        </div>
+      }
 
-    <a routerLink="/"
-       class="ribeye-regular text-md inline-block md:text-3xl px-4 py-2 font-bold transition-all duration-300"
-       [class.text-magic]="isRotating()"
-    >
-      Happy Book Store
-    </a>
-  </div>
+    <div class="flex-1 gap-1 z-10">
+        <div class="absolute top-2 left-4 flex gap-2">
+            <button type="button"
+                    class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
+                    (click)="handleButtonClick(false)">
+            <img [ngSrc]="logo"
+                width="40" height="40"
+                class="object-cover logo-base"
+                [class.logo-spin]="isRotating()"
+                alt="Bookshop logo">
+            </button>
 
-  <div class="flex items-center gap-4 z-10 pr-4">
+            <a routerLink="/"
+               class="ribeye-regular text-md inline-block md:text-3xl font-bold transition-all duration-300"
+               [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-[#143B22]'"
+            >
+                Book Store
+            </a>
+        </div>
+    </div>
+
+  <div class="flex items-center mb-10 gap-4 z-10 pr-4">
 
     @if (showSearchbar()) {
-      <div class="hidden md:block relative group" *transloco="let t">
+        <div class="hidden md:block relative group" *transloco="let t">
         <input type="text" [value]="searchQuery()" (input.debounce.500)="onSearchChange($event)"
-               [placeholder]="t('filters.placeholders.search')"
-               class="input input-sm w-34 md:w-auto transition-all bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40 focus:outline-none" />
+                [placeholder]="t('filters.placeholders.search')"
+                class="input input-sm w-34 md:w-auto transition-all focus:outline-none"
+                [ngClass]="currentTheme() === 'dark'
+                ? 'bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40'
+                : 'bg-black/5 border-black/10 text-neutral-800 placeholder:text-neutral-500/70 focus:bg-black/10 focus:border-black/20'" />
 
         @if (searchQuery()) {
-          <button (click)="onClearSearchbar()"
-                  class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs btn-circle text-white transition-transform hover:scale-125">
+            <button (click)="onClearSearchbar()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs btn-circle transition-transform hover:scale-125"
+                    [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
             ✕
-          </button>
+            </button>
         }
-      </div>
+        </div>
     }
 
     <button (click)="toggleLang()" appNoHoverButton
-            class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold text-white group"
+            class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold group"
+            [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
             [title]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'">
-      <div
+        <div
         class="flex items-center gap-2 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 will-change-transform">
         <svg lucideLanguages></svg>
         <span class="uppercase text-xs">{{ activeLang() === 'en' ? 'SK' : 'EN' }}</span>
-      </div>
+        </div>
     </button>
 
     <div class="hidden md:block">
-      @if (!isLoggedIn()) {
-        <button (click)="handleLogin()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
-          <svg lucideLogIn></svg>
+        @if (!isLoggedIn()) {
+        <button (click)="handleLogin()" appNoHoverButton
+                class="btn btn-ghost btn-sm btn-square"
+                [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
+            <svg lucideLogIn></svg>
         </button>
-      } @else {
-        <button (click)="handleLogout()" appNoHoverButton class="btn btn-ghost btn-sm btn-square text-white">
-          <svg lucideLogOut></svg>
+        } @else {
+        <button (click)="handleLogout()" appNoHoverButton
+                class="btn btn-ghost btn-sm btn-square"
+                [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
+            <svg lucideLogOut></svg>
         </button>
-      }
+        }
     </div>
 
     <button
@@ -71,7 +87,7 @@
       [disabled]="cartStore.itemCount() === 0"
       [class.opacity-50]="cartStore.itemCount() === 0"
       [routerLink]="cartStore.itemCount() > 0 ? '/shopping' : null"
-      class="btn btn-ghost btn-sm btn-square relative group text-white"
+      class="btn btn-ghost btn-sm btn-square relative group text-neutral-800"
       aria-label="View Shopping Cart">
       <div
         class="indicator transition-transform duration-300 group-hover:scale-110 group-active:scale-95 group-hover:-rotate-12">
@@ -91,14 +107,15 @@
 
     @if (isLoggedIn()) {
       <div class="relative group z-[9999]">
-        <button
-          type="button"
-          (click)="showProfileModal.set(!showProfileModal())"
-          [ngClass]="showProfileModal() ? 'bg-error' : 'bg-base-100/10'"
-        [class.bg-error]="showProfileModal()"
-        class="relative flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none border border-white/10 shadow-md text-white group"
-        [aria-label]="showProfileModal() ? 'Close profile menu' : 'Open profile menu'"
-        >
+          <button
+            type="button"
+            (click)="showProfileModal.set(!showProfileModal())"
+            [ngClass]="showProfileModal()
+              ? 'bg-error text-white'
+              : (currentTheme() === 'dark' ? 'bg-white/10 text-white border-white/10' : 'bg-black/5 text-neutral-800 border-black/10')"
+            class="relative flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none border shadow-md group"
+            [aria-label]="showProfileModal() ? 'Close profile menu' : 'Open profile menu'"
+          >
         @if (showProfileModal()) {
           <svg lucideX class="w-5 h-5 transition-transform duration-200 rotate-0 hover:rotate-90"></svg>
         } @else {

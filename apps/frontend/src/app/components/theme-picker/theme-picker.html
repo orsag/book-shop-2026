@@ -1,17 +1,16 @@
 <div class="block">
-  <label class="swap swap-rotate">
+  <label class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors">
     <!-- this hidden checkbox controls the state -->
     <input type="checkbox" class="theme-controller" [checked]="currentTheme() === 'dark'"
            (change)="toggleTheme()" />
 
     <!-- sun icon -->
-    <svg class="swap-on fill-current" lucideSun />
+    <svg class="swap-on fill-current text-yellow-500" lucideSun />
 
     <!-- moon icon -->
-    <svg class="swap-off fill-current" lucideMoon />
+    <svg class="swap-off fill-current text-neutral-800" lucideMoon />
   </label>
 </div>
-
 
 <!--<div title="Change Theme" class="dropdown dropdown-end block z-50">-->
 <!--  <div tabindex="0"-->
