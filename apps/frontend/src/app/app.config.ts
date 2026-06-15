@@ -17,13 +17,14 @@ import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { authInterceptor } from './core/auth.interceptor';
 import { StopEventPlugin } from './plugins/stop-event.plugin';
+import { duplicateRequestInterceptor } from './core/duplicate.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(
-      withInterceptors([authInterceptor]),
+      withInterceptors([authInterceptor, duplicateRequestInterceptor]),
       withInterceptorsFromDi(),
     ),
     provideTransloco({
