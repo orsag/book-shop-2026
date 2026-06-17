@@ -91,7 +91,8 @@ export const AppStore = signalStore(
   withComputed(
     ({ user, totalProducts, products, filters, _isMobile, _isTablet }) => {
       const totalPages = Math.ceil(totalProducts() / filters().limit);
-      const hasMore = filters.page() < Math.ceil(totalProducts() / filters().limit);
+      const hasMore =
+        filters.page() < Math.ceil(totalProducts() / filters().limit);
       return {
         isMobile: computed(() => _isMobile()),
         isTablet: computed(() => _isTablet()),
@@ -210,36 +211,37 @@ export const AppStore = signalStore(
 
       login: rxMethod<{ username: string }>(
         pipe(
+          // 1. Set loading state immediately
           tap(() => patchState(store, { isLoading: true })),
+
           switchMap(({ username }) =>
             authService.login(username).pipe(
-              // Chain the premium status call
-              switchMap(({ user, access_token }) =>
-                detailService.findPremiumStatus(user.id).pipe(
+              switchMap(({ user, access_token }) => {
+                // 2. Patch store with auth data FIRST so interceptors/state are ready
+                patchState(store, {
+                  user,
+                  token: access_token,
+                });
+
+                // 3. Now safely call the premium status
+                return detailService.findPremiumStatus(user.id).pipe(
                   tap((premiumStatus) => {
                     errorService.handleSuccess(SuccessCodes.LOGIN);
-                    // Update state with everything at once
+                    // Update premium status and turn off loading
                     patchState(store, {
-                      user,
-                      token: access_token,
-                      premiumStatus: premiumStatus, // Make sure this exists in your state
+                      premiumStatus: premiumStatus,
                       isLoading: false,
                     });
                   }),
-                  // Catch error for premium status specifically if you want
-                  // the user to still be logged in even if premium check fails
                   catchError(() => {
                     errorService.handleError(ErrorCodes.PREMIUM);
-                    // Still log the user in, just without premium status
-                    patchState(store, {
-                      user,
-                      token: access_token,
-                      isLoading: false,
-                    });
+                    // Turn off loading (user stays logged in thanks to step 2)
+                    patchState(store, { isLoading: false });
                     return of(null);
                   }),
-                ),
-              ),
+                );
+              }),
+              // Catch block for main login failure
               catchError(() => {
                 errorService.handleError(ErrorCodes.LOGIN);
                 patchState(store, { isLoading: false });

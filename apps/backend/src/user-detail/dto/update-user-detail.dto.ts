@@ -24,7 +24,7 @@ export class UpdateUserDetailDto {
 
   @IsOptional()
   @IsString()
-  preferredLanguage: string;
+  preferredLanguage?: string;
 
   @IsOptional()
   @IsString()

@@ -13,6 +13,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import type { RequestWithUser } from '@store/libs';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +28,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard) // Protects this specific route
   @Get('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Request() req) {
+  async logout(@Request() req: RequestWithUser) {
     // req.user is now available thanks to the guard
     return this.authService.logout(req.user.username);
   }
@@ -39,14 +40,17 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('favorites')
-  async updateFavorites(@Request() req, @Body() body: { favorites: string[] }) {
+  async updateFavorites(
+    @Request() req: RequestWithUser,
+    @Body() body: { favorites: string[] },
+  ) {
     return this.authService.updateFavorites(req.user.username, body.favorites);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('update')
   async updateProfile(
-    @Request() req, // Get the verified user from the token
+    @Request() req: RequestWithUser,
     @Body()
     body: {
       updates: {

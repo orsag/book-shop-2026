@@ -14,26 +14,23 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { RequestWithUser } from '@store/libs';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('order')
+@UseGuards(JwtAuthGuard)
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard) // Ensure the user is logged in
   create(@Req() req: RequestWithUser, @Body() createOrderDto: CreateOrderDto) {
     const userId = req.user?.userId;
     return this.orderService.create(userId, createOrderDto);
   }
 
   @Get('all')
+  @UseGuards(AdminGuard)
   findAllGlobal() {
     return this.orderService.findAll(); // Assuming this returns everything
-  }
-
-  @Get()
-  findAll() {
-    return this.orderService.findAll();
   }
 
   @Get(':id')
@@ -41,7 +38,6 @@ export class OrderController {
     return this.orderService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Req() req: RequestWithUser,
@@ -57,19 +53,16 @@ export class OrderController {
     return this.orderService.updateStatus(id, status);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.orderService.remove(req.user.userId, id, req.user.isAdmin);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('user/:userId')
   findAllByUser(@Req() req: RequestWithUser) {
     return this.orderService.findAllByUser(req.user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
   cancelOrder(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.orderService.cancel(req.user.userId, id);

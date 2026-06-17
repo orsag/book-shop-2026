@@ -64,7 +64,9 @@ export type UserDetailSmall = Omit<
   | 'isPremium'
   | 'membershipStart'
   | 'membershipEnd'
+  | 'lastActiveAt'
 > & {
+  preferredLanguage: string;
   displayName: string;
   city: string;
   bio: string;

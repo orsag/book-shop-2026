@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserDetailService } from './user-detail.service';
 import { CreateUserDetailDto } from './dto/create-user-detail.dto';
 import { UpdateUserDetailDto } from './dto/update-user-detail.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserOwnershipGuard } from '../guards/user-ownership.guard';
 
 @Controller('user-detail')
+@UseGuards(JwtAuthGuard, UserOwnershipGuard)
 export class UserDetailController {
   constructor(private readonly userDetailService: UserDetailService) {}
 
@@ -38,13 +42,8 @@ export class UserDetailController {
     return this.userDetailService.create(createUserDetailDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userDetailService.findAll();
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userDetailService.remove(+id);
+  @Delete(':userId')
+  remove(@Param('userId') userId: string) {
+    return this.userDetailService.remove(userId);
   }
 }

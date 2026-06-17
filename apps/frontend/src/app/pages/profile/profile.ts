@@ -190,7 +190,6 @@ export class Profile implements OnInit {
       countryCode: detail?.countryCode ?? 'SK',
       preferredLanguage: detail?.preferredLanguage ?? 'en',
       addressLine1: detail?.addressLine1 ?? '',
-      lastActiveAt: detail?.lastActiveAt ?? new Date(),
       addressLine2: detail?.addressLine2 ?? '',
       postalCode: detail?.postalCode ?? '',
       iban: detail?.iban ?? '',

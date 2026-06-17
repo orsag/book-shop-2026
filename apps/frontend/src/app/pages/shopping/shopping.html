@@ -27,7 +27,9 @@
               @for (item of items(); track item.product.id) {
                 <div class="flex items-center justify-between gap-2 bg-base-100">
                   <div class="flex-grow min-w-0">
-                    <p class="font-semibold truncate text-sm">{{ item.product.name }}</p>
+                    <a [routerLink]="['/product', item.product.id]"
+                       class="font-semibold truncate text-sm hover:underline hover:text-blue-600">
+                      {{ item.product.name }}</a>
 
                     <div class="flex items-center gap-2">
                       <p class="text-xs font-bold text-primary">
