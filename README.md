@@ -8,6 +8,11 @@
 
 ## Run tasks
 
+To serve both apps together:
+```sh
+npx nx run-many -t serve --projects=frontend,backend
+```
+
 To run the dev server for your app, use:
 
 ```sh
