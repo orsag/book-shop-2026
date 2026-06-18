@@ -221,8 +221,6 @@ export class EditBookModalComponent {
             price: book.price,
             discount: book.discount,
             availableCount: book.availableCount,
-            availability: book.availability,
-            deliveryLeadTime: book.deliveryLeadTime,
             productType: book.productType,
             description: descriptor,
             product_quality: quality,

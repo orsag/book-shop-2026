@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // Adjust path
 import { LoginDto } from './dto/login.dto';
-import { UserFix } from '@store/libs';
+import { User } from '@store/libs';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const username = loginDto.username.toLowerCase();
-    const user: UserFix | null = await this.prisma.client.user.findUnique({
+    const user: User | null = await this.prisma.client.user.findUnique({
       where: { username },
     });
 
@@ -62,6 +62,13 @@ export class AuthService {
     }
 
     // Optional: You could update a field like `lastActive` here
+    this.prisma.client.user.update({
+      where: { username: username.toLowerCase() },
+      data: {
+        lastLogin: new Date(),
+      }
+    });
+
     return {
       message: `User ${username} logged out successfully`,
       timestamp: new Date(),

@@ -12,14 +12,12 @@ export interface Product {
   sku: string;
   name: string;
   alternativeHeadline: string;
-  description?: string | null;
+  description: string;
   price: number;
   discount: number; // default: 0
   availableCount: number; // default: 0
   isAvailable: boolean; // default: true
-  availability: string;
-  deliveryLeadTime: number;
-  product_quality?: string | null;
+  product_quality: string;
   coverUrl?: string | null;
 
   // Type discriminator
@@ -104,8 +102,6 @@ export interface UpdateProductDto {
   price: number;
   discount: number;
   availableCount: number;
-  availability: string;
-  deliveryLeadTime: number;
   product_quality: string;
   productType: ProductType;
   bookDetails?: BookDetails;

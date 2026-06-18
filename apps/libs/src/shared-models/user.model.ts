@@ -9,28 +9,11 @@ export interface User {
   phoneNumber: string;
   theme: string;
   favorites: string[];
-  lastLogin?: Date;
+  lastLogin: Date;
   cartItems: string[];
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface UserFix {
-  id: string;
-  email: string;
-  username: string;
-  isAdmin: boolean;
-  phoneNumber: string | null;
-  theme: string;
-  favorites: string[];
-  cartItems: string[];
-  lastLogin: Date | null;
-  avatarUrl: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export type CreateUserDto = Omit<User, 'id'>;
 
 // Define the shape of your JWT payload
 export interface RequestWithUser extends Request {
@@ -118,11 +101,3 @@ export interface PremiumStatus {
   membershipStart: Date | null;
   membershipEnd: Date | null;
 }
-
-// Initialisation
-export const EMPTY_USER: UserWithoutId = {
-  username: '',
-  email: '',
-  phoneNumber: '',
-  theme: 'light',
-};

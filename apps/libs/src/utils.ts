@@ -8,8 +8,6 @@ export const EMPTY_BOOK: UpdateProductDto = {
   price: 0,
   discount: 0,
   availableCount: 0,
-  availability: 'InStock',
-  deliveryLeadTime: 3,
   product_quality: 'new',
   productType: 'BOOK',
   bookDetails: {
@@ -36,8 +34,6 @@ export const EMPTY_GAME: UpdateProductDto = {
   price: 0,
   discount: 0,
   availableCount: 0,
-  availability: 'InStock',
-  deliveryLeadTime: 3,
   product_quality: 'new',
   productType: 'GAME',
   gameDetails: {
@@ -60,8 +56,6 @@ export const EMPTY_GASTRO: UpdateProductDto = {
   price: 0,
   discount: 0,
   availableCount: 0,
-  availability: 'In stock',
-  deliveryLeadTime: 3,
   product_quality: 'new',
   productType: 'GASTRO',
   gastroDetails: {

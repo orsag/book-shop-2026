@@ -12,12 +12,12 @@ model User {
   email       String      @unique
   username    String      @unique
   isAdmin     Boolean     @default(false)
-  phoneNumber String?     @default("")
+  phoneNumber String      @default("")
   theme       String      @default("light")
   favorites   String[]    @default([])
   cartItems   String[]    @default([])
-  lastLogin   DateTime?
-  avatarUrl   String?
+  lastLogin   DateTime    @default(now())
+  avatarUrl   String      @default("")
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   orders      Order[]
@@ -27,16 +27,14 @@ model User {
 model Product {
   id                  String  @id @default(uuid())
   sku                 String  @unique
-  name                String // Generic name (Title for books, Name for tea)
+  name                String
   alternativeHeadline String
-  description         String?
-  price               Float
+  description         String  @default("")
+  price               Float   @default(0)
   discount            Float   @default(0)
   availableCount      Int     @default(0)
   isAvailable         Boolean @default(true)
-  availability        String
-  deliveryLeadTime    Int
-  product_quality     String?
+  product_quality     String  @default("new")
   coverUrl            String?
 
   // The "Type" discriminator

@@ -65,11 +65,9 @@ export function createProduct(type: productTypeHelper) {
     discount: discount,
     price: price,
     productType: type,
-    availability: isAvailable ? 'InStock' : 'OutStock',
     isAvailable: isAvailable,
     availableCount: availableCount,
     product_quality: condition,
-    deliveryLeadTime: faker.number.int({ min: 1, max: 7 }),
     coverUrl: `https://picsum.photos/seed/${faker.string.uuid()}/400/600`,
     // 2. Create the Rating as a child
     rating: {

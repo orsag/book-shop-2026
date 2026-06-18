@@ -22,10 +22,6 @@ export class UpdateProductDto implements UpdateProductDto {
   @IsNumber()
   availableCount: number;
   @IsString()
-  availability: string;
-  @IsNumber()
-  deliveryLeadTime: number;
-  @IsString()
   product_quality: string;
   @IsString()
   productType: ProductType;

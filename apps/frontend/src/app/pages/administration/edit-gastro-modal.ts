@@ -193,8 +193,6 @@ export class EditGastroModalComponent {
             price: product.price,
             discount: product.discount,
             availableCount: product.availableCount,
-            availability: product.availability,
-            deliveryLeadTime: product.deliveryLeadTime,
             productType: product.productType,
             description: descriptor,
             product_quality: quality,

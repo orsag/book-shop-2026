@@ -1,4 +1,4 @@
-import type { BookDetails, Product, ProductType } from '@store/libs';
+import type { Product, ProductType } from '@store/libs';
 import {
   IsString,
   IsNumber,
@@ -115,9 +115,8 @@ export class CreateProductDto implements Product {
   name!: string;
   @IsString()
   alternativeHeadline!: string;
-  @IsOptional()
   @IsString()
-  description?: string | null;
+  description: string;
   @IsNumber()
   price!: number;
   @IsNumber()
@@ -129,11 +128,7 @@ export class CreateProductDto implements Product {
   @IsBoolean()
   isAvailable!: boolean;
   @IsString()
-  availability!: string;
-  @IsNumber()
-  deliveryLeadTime!: number;
-  @IsString()
-  product_quality?: string | null;
+  product_quality: string;
   @IsOptional()
   @IsString()
   coverUrl?: string | null;
