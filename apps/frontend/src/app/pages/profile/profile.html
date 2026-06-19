@@ -1,4 +1,4 @@
-<div class="max-w-6xl mx-auto md:p-6">
+<div class="max-w-4xl mx-auto md:p-6">
   <header class="mb-8 flex items-center justify-center md:justify-start border-b border-base-300 pb-4">
     <div>
       <h1 class="text-3xl font-bold">Editácia profilu</h1>
@@ -35,7 +35,6 @@
                     data-tip="Kliknutím skopírujete"
                   >
                     <span>{{ order.id }}</span>
-
                     <svg lucideClipboardCopy size="20"></svg>
                   </button>
                 </td>
@@ -65,15 +64,12 @@
       </div>
     } @else {
       <div class="flex flex-col items-center justify-center p-10 max-w-xl mx-auto rounded-[2rem] border-2 border-dashed border-base-300 bg-base-100/40 backdrop-blur-sm text-center group hover:border-primary/30 transition-colors duration-300">
-
         <div class="text-base-content/30 group-hover:text-primary/60 transition-colors duration-300 mb-4 bg-base-200 p-4 rounded-2xl">
           <svg lucideShoppingBag size="32" strokeWidth="1.5"></svg>
         </div>
-
         <p class="text-md font-medium text-base-content/70 not-italic tracking-wide">
           Zatiaľ ste nevytvorili žiadne objednávky.
         </p>
-
         <p class="text-xs text-base-content/40 mt-1 max-w-xs">
           Akonáhle si niečo vyberiete z nášho obchodu, vaša história nákupov sa zobrazí tu.
         </p>
@@ -95,94 +91,75 @@
     </section>
   }
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-8 space-y-8">
+  <div class="flex flex-col items-center w-full">
+    <section class="card bg-base-100 shadow-sm border border-base-300 p-6 w-full">
+      <h3 class="font-bold mb-6 text-xl border-b pb-2">Osobné údaje</h3>
 
-      <section class="card bg-base-100 shadow-sm border border-base-300 p-6">
-        <h3 class="font-bold mb-6 text-xl border-b pb-2">Osobné údaje</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="form-control w-full">
-            <label for="username" class="label"><span class="label-text">Používateľské meno</span></label>
-            <div
-              class="flex items-center justify-between h-10 px-4 rounded-sm bg-base-200 text-base-content/50 border border-base-300 cursor-not-allowed">
-              <span class="font-medium text-sm">{{ store.user()?.username }}</span>
-              <svg lucideLock size="20"></svg>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="form-control w-full">
+          <label for="username" class="label"><span class="label-text">Používateľské meno</span></label>
+          <div class="flex items-center justify-between h-10 px-4 rounded-sm bg-base-200 text-base-content/50 border border-base-300 cursor-not-allowed">
+            <span class="font-medium text-sm">{{ store.user()?.username }}</span>
+            <svg lucideLock size="20"></svg>
           </div>
-
-          <div class="form-control w-full">
-            <label for="displayname" class="label"><span class="label-text">Zobrazované meno</span></label>
-            <input appNoFocusJump id="displayname" type="text" [formField]="detailForm.displayName"
-                   class="input input-bordered w-full" />
-          </div>
-
-          <div class="form-control w-full">
-            <label for="email" class="label"><span class="label-text">Email</span></label>
-            <input appNoFocusJump id="email" type="email" [formField]="userForm.email" class="input input-bordered w-full" />
-          </div>
-
-          <div class="form-control w-full">
-            <label for="phone" class="label"><span class="label-text">Telefón</span></label>
-            <input appNoFocusJump id="phone" type="text" [formField]="userForm.phoneNumber" class="input input-bordered w-full" />
-          </div>
-
-          <div class="form-control md:col-span-2">
-            <label for="user-bio" class="label"><span class="label-text font-bold">O mne</span></label>
-            <textarea appNoFocusJump id="user-bio" [formField]="detailForm.bio" class="textarea textarea-bordered h-24 w-full"
-                      placeholder="Povedzte nám niečo o sebe..."></textarea>
-          </div>
-
-          <div class="form-control">
-            <label for="city" class="label"><span class="label-text">Mesto</span></label>
-            <input appNoFocusJump id="city" type="text" [formField]="detailForm.city" class="input input-bordered w-full" />
-          </div>
-
-          <div class="form-control">
-            <label for="addressLine1" class="label"><span class="label-text">Ulica</span></label>
-            <input appNoFocusJump id="addressLine1" type="text" [formField]="detailForm.addressLine1"
-                   class="input input-bordered w-full" />
-          </div>
-
-          <div class="md:col-span-2 mt-4 p-5 bg-base-200/40 rounded-xl border border-base-300">
-            <h4 class="text-xs font-bold uppercase tracking-wider mb-4 opacity-60 flex items-center gap-2">
-              <svg lucideCreditCard></svg>
-              Fakturačné údaje
-            </h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="form-control md:col-span-2">
-                <label for="iban" class="label text-xs uppercase">
-                  IBAN
-                </label>
-                <input
-                  appNoFocusJump
-                  type="text"
-                  [formField]="detailForm.iban"
-                  class="input input-sm input-bordered font-mono w-full"
-                  placeholder="SK..." />
-              </div>
-              <div class="form-control">
-                <label for="taxId" class="label text-xs">DIČ (Tax ID)</label>
-                <input appNoFocusJump type="text" [formField]="detailForm.taxId" class="input input-sm input-bordered" />
-              </div>
-              <div class="form-control">
-                <label for="dateOfBirth" class="label text-xs">Dátum narodenia</label>
-                <input appNoFocusJump type="date" [formField]="detailForm.dateOfBirth" class="input input-sm input-bordered" />
-              </div>
-            </div>
-          </div>
-          <div class="md:col-span-2 flex justify-end gap-2">
-              <button (click)="handleCancel()" class="btn btn-ghost">Zrušiť</button>
-              <button (click)="handleSave()" class="btn btn-primary px-8">Uložiť</button>
-            </div>
         </div>
-      </section>
-    </div>
 
-    <aside class="lg:col-span-4 space-y-6">
-      @if (isPremium()) {
-        <app-premium-card [daysLeft]="daysLeft()"></app-premium-card>
-      }
-    </aside>
+        <div class="form-control w-full">
+          <label for="displayname" class="label"><span class="label-text">Zobrazované meno</span></label>
+          <input appNoFocusJump id="displayname" type="text" [formField]="detailForm.displayName" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control w-full">
+          <label for="email" class="label"><span class="label-text">Email</span></label>
+          <input appNoFocusJump id="email" type="email" [formField]="userForm.email" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control w-full">
+          <label for="phone" class="label"><span class="label-text">Telefón</span></label>
+          <input appNoFocusJump id="phone" type="text" [formField]="userForm.phoneNumber" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control md:col-span-2">
+          <label for="user-bio" class="label"><span class="label-text font-bold">O mne</span></label>
+          <textarea appNoFocusJump id="user-bio" [formField]="detailForm.bio" class="textarea textarea-bordered h-24 w-full" placeholder="Povedzte nám niečo o sebe..."></textarea>
+        </div>
+
+        <div class="form-control">
+          <label for="city" class="label"><span class="label-text">Mesto</span></label>
+          <input appNoFocusJump id="city" type="text" [formField]="detailForm.city" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control">
+          <label for="addressLine1" class="label"><span class="label-text">Ulica</span></label>
+          <input appNoFocusJump id="addressLine1" type="text" [formField]="detailForm.addressLine1" class="input input-bordered w-full" />
+        </div>
+
+        <div class="md:col-span-2 mt-4 p-5 bg-base-200/40 rounded-xl border border-base-300">
+          <h4 class="text-xs font-bold uppercase tracking-wider mb-4 opacity-60 flex items-center gap-2">
+            <svg lucideCreditCard></svg>
+            Fakturačné údaje
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control md:col-span-2">
+              <label for="iban" class="label text-xs uppercase">IBAN</label>
+              <input appNoFocusJump type="text" [formField]="detailForm.iban" class="input input-sm input-bordered font-mono w-full" placeholder="SK..." />
+            </div>
+            <div class="form-control">
+              <label for="taxId" class="label text-xs">DIČ (Tax ID)</label>
+              <input appNoFocusJump type="text" [formField]="detailForm.taxId" class="input input-sm input-bordered" />
+            </div>
+            <div class="form-control">
+              <label for="dateOfBirth" class="label text-xs">Dátum narodenia</label>
+              <input appNoFocusJump type="date" [formField]="detailForm.dateOfBirth" class="input input-sm input-bordered" />
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-2">
+          <button (click)="handleCancel()" class="btn btn-ghost">Zrušiť</button>
+          <button (click)="handleSave()" class="btn btn-primary px-8">Uložiť</button>
+        </div>
+      </div>
+    </section>
   </div>
 </div>

@@ -1,11 +1,12 @@
 <main class="container mx-auto">
   <app-filter-bar></app-filter-bar>
   <!-- Main Loading Spinner: Only shows on initial load or fresh searches -->
-  @if (store.isLoading() && store.isEmpty()) {
-    <div class="flex flex-col items-center justify-center min-h-[40vh]">
-      <span class="loading loading-ring loading-lg text-primary"></span>
-      <p class="mt-4 text-base-content/60 font-medium">Fetching your books...</p>
-    </div>
+  @if (store.isLoading()) {
+    @if (store.viewLayout() === 'list') {
+      <ng-container *ngTemplateOutlet="listSkeleton"></ng-container>
+    } @else {
+      <ng-container *ngTemplateOutlet="gridSkeleton"></ng-container>
+    }
   } @else if (store.isEmpty()) {
     <div class="flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
 
@@ -28,7 +29,11 @@
              [class.md:grid-cols-4]="!isOpenedFilter()"
              [class.lg:grid-cols-6]="!isOpenedFilter()">
           @for (book of store.products(); track book.id) {
-            <app-book-card [product]="book"></app-book-card>
+            @defer (when !store.isLoading()) {
+              <app-book-card [product]="book"></app-book-card>
+            } @placeholder {
+              <div class="skeleton h-60 w-full rounded-xl"></div>
+            }
           }
         </div>
       }
@@ -38,7 +43,11 @@
              [class.md:grid-cols-2]="!isOpenedFilter()"
         >
           @for (book of store.products(); track book.id; let i = $index) {
-            <app-book-list-item [product]="book"></app-book-list-item>
+            @defer (when !store.isLoading()) {
+              <app-book-list-item [product]="book"></app-book-list-item>
+            } @placeholder {
+              <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>
+            }
 
             @if (i !== store.products().length - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>
@@ -54,3 +63,32 @@
     <app-pagination />
   }
 </main>
+
+<ng-template #listItemSkeleton>
+  <div class="flex items-center gap-4 p-4 w-full">
+    <div class="skeleton h-36 w-24 shrink-0 rounded-md"></div>
+    <div class="flex flex-col gap-3 w-full">
+      <div class="skeleton h-5 w-3/4"></div>
+      <div class="skeleton h-4 w-1/2"></div>
+      <div class="skeleton h-4 w-full mt-2"></div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #listSkeleton>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8 gap-y-4"
+       [class.md:grid-cols-1]="isOpenedFilter()"
+       [class.md:grid-cols-2]="!isOpenedFilter()">
+    @for (item of [1,2,3,4,5,6]; track $index) {
+      <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>
+    }
+  </div>
+</ng-template>
+
+<ng-template #gridSkeleton>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
+      <div class="skeleton h-64 w-full rounded-xl"></div>
+    }
+  </div>
+</ng-template>

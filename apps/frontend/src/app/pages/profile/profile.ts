@@ -29,7 +29,6 @@ import { OrderStatus as OSEnum } from '@store/shared-models';
 import { ToastService } from '../../services/toast-service';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { CardSmall } from '../../components/card-small/card-small';
-import { PremiumCard } from './premium-card';
 import { delay } from 'rxjs';
 
 @Component({
@@ -45,7 +44,6 @@ import { delay } from 'rxjs';
     LucideClipboardCopy,
     NoFocusJumpDirective,
     CurrencyPipe,
-    PremiumCard,
     LucideShoppingBag,
   ],
   templateUrl: './profile.html',

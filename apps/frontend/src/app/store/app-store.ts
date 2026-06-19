@@ -13,7 +13,15 @@ import { tapResponse } from '@ngrx/operators';
 import { Product as IProduct } from '@store/shared-models';
 import { AuthService } from '../services/auth-service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tap, map, filter, of, distinctUntilChanged, exhaustMap } from 'rxjs';
+import {
+  tap,
+  map,
+  filter,
+  of,
+  distinctUntilChanged,
+  exhaustMap,
+  delay,
+} from 'rxjs';
 import { pipe, switchMap, catchError, finalize, EMPTY } from 'rxjs';
 import { BookService } from '../services/book-service';
 import { DetailService } from '../services/detail-service';
@@ -90,9 +98,6 @@ export const AppStore = signalStore(
   // 1. Computed Values (Like Selectors)
   withComputed(
     ({ user, totalProducts, products, filters, _isMobile, _isTablet }) => {
-      const totalPages = Math.ceil(totalProducts() / filters().limit);
-      const hasMore =
-        filters.page() < Math.ceil(totalProducts() / filters().limit);
       return {
         isMobile: computed(() => _isMobile()),
         isTablet: computed(() => _isTablet()),
@@ -106,8 +111,13 @@ export const AppStore = signalStore(
         currentType: computed(() => filters().type as ProductType),
         favoriteCount: computed(() => user()?.favorites?.length ?? 0),
         cartCount: computed(() => user()?.cartItems?.length ?? 0),
-        totalPages: computed(() => totalPages),
-        hasMorePage: computed(() => hasMore),
+        // MOVE calculations inside the responsive signal body here:
+        totalPages: computed(() =>
+          Math.ceil(totalProducts() / filters().limit),
+        ),
+        hasMorePage: computed(
+          () => filters.page() < Math.ceil(totalProducts() / filters().limit),
+        ),
       };
     },
   ),
@@ -140,6 +150,7 @@ export const AppStore = signalStore(
             const params: Partial<AppState['filters']> = store.filters();
 
             return bookService.fetchProducts(params).pipe(
+              delay(1000),
               tap({
                 next: (res) => {
                   patchState(store, {
