@@ -10,11 +10,17 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   UseGuards,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import type { ProductType } from '@store/libs';
+import {
+  DEFAULT_TYPE,
+  DEFAULT_PAGE,
+  DEFAULT_MAX_LIMIT,
+  ProductType,
+} from '@store/libs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../guards/admin.guard';
 
@@ -29,13 +35,16 @@ export class ProductsController {
 
   @Get('')
   findAll(
-    @Query('type') type: ProductType,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit: number,
+    @Query('type', new DefaultValuePipe(DEFAULT_TYPE)) type: ProductType,
+    @Query('page', new DefaultValuePipe(DEFAULT_PAGE), ParseIntPipe)
+    page: number,
+    @Query('limit', new DefaultValuePipe(DEFAULT_MAX_LIMIT), ParseIntPipe)
+    limit: number,
+    @Query('isDiscounted', new DefaultValuePipe(false), ParseBoolPipe)
+    isDiscounted: boolean,
     @Query('search') search?: string,
     @Query('category') category?: string,
     @Query('sortBy') sortBy?: 'price_asc' | 'price_desc',
-    @Query('isDiscounted') isDiscounted?: boolean,
   ) {
     return this.productsService.findAll({
       type,

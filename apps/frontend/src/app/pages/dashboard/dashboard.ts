@@ -8,6 +8,7 @@ import { CartStore } from '../../store/cart-store';
 import { FilterBar } from '../../components/filter-bar/filter-bar';
 import { LucideSearchX } from '@lucide/angular';
 import { ConfigurationService } from '../../services/configuration-service';
+import { VIEW_LAYOUTS } from '@store/libs';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,4 +38,5 @@ export class Dashboard implements OnInit {
   }
 
   isOpenedFilter = computed<boolean>(() => this.config.getFilterValue());
+  protected readonly VIEW_LAYOUTS = VIEW_LAYOUTS;
 }

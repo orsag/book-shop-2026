@@ -22,27 +22,6 @@
       </button>
     </li>
 
-    <li>
-      <button (click)="updateFilter('type','PUZZLE')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#ffa64d] border-[#ffa64d] hover:bg-[#ffa64d] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
-        Puzzle
-      </button>
-    </li>
-
-    <li>
-      <button (click)="updateFilter('type', 'CARDS')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#a08ac1] border-[#a08ac1] hover:bg-[#a08ac1] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
-        Cards
-      </button>
-    </li>
-
-    <li>
-      <button (click)="updateFilter('type', 'TOYS')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#bc9076] border-[#bc9076] hover:bg-[#bc9076] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
-        Toys
-      </button>
-    </li>
-
     @if (store.isLoggedIn()) {
       <li>
         <button routerLink="/profile"

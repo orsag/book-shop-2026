@@ -8,10 +8,11 @@ import { ScrollBtnComponent } from '../../components/common/scrollToTop';
 import { ToastComponent } from '../../components/common/toastComponent';
 import { ConfigurationService } from '../../services/configuration-service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { timer, switchMap, of, delay } from 'rxjs';
+import { switchMap, of, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppStore } from '../../store/app-store';
 import { ProgressComponent } from '../../components/common/progress.component';
+import { DEFAULT_LOADER_DELAY } from '@store/libs';
 
 @Component({
   selector: 'app-main-layout',
@@ -39,7 +40,7 @@ export class MainLayoutComponent {
         if (isLoading) {
           return of(true);
         } else {
-          return of(false).pipe(delay(1000)); // 1s
+          return of(false).pipe(delay(DEFAULT_LOADER_DELAY));
         }
       }),
     ),

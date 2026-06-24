@@ -62,7 +62,7 @@ export class Administration implements OnInit {
     } else if (this.store.isGastro()) {
       return 'Gastro';
     } else {
-      return 'Puzzle / Cups / Toys';
+      return 'Nothing found';
     }
   });
 

@@ -30,6 +30,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { CreatedOrder, OrderService } from '../services/order-service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  ViewLayout,
+  VIEW_LAYOUTS,
+  DEFAULT_TYPE,
+  DEFAULT_PAGE,
+  DEFAULT_MAX_LIMIT,
+  DEFAULT_SEARCH,
+} from '@store/libs';
 
 // Key for LocalStorage
 const USER_STORAGE_KEY = 'currentUser';
@@ -51,7 +59,7 @@ export interface AppState {
   favoriteProducts: IProduct[];
   totalProducts: number;
   isLoading: boolean;
-  viewLayout: 'grid' | 'list';
+  viewLayout: ViewLayout;
   searchHistory: string[];
   // --- 🔍 Filter State ---
   filters: {
@@ -78,13 +86,13 @@ const initialState: AppState = {
   favoriteProducts: [],
   totalProducts: 0,
   isLoading: false,
-  viewLayout: 'list' as 'grid' | 'list',
+  viewLayout: VIEW_LAYOUTS[1],
   searchHistory: [],
   filters: {
-    type: 'BOOK' as ProductType,
-    page: 1,
-    limit: 18,
-    search: '',
+    type: DEFAULT_TYPE,
+    page: DEFAULT_PAGE,
+    limit: DEFAULT_MAX_LIMIT,
+    search: DEFAULT_SEARCH,
     category: null,
     sortBy: null,
     isDiscounted: false,

@@ -9,12 +9,7 @@ const productGradients: Record<ProductType, string> = {
   GASTRO:
     'bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100 text-emerald-900',
   GIFT_CARD:
-    'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900',
-  PUZZLE:
-    'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900',
-  TOYS: 'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900',
-  CARDS:
-    'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900',
+    'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900'
 };
 
 @Injectable()

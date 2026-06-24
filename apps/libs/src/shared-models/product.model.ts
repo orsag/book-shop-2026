@@ -2,10 +2,7 @@ export type ProductType =
   | 'BOOK'
   | 'GAME'
   | 'GASTRO'
-  | 'GIFT_CARD'
-  | 'PUZZLE'
-  | 'CARDS'
-  | 'TOYS';
+  | 'GIFT_CARD';
 
 export interface Product {
   id: string;

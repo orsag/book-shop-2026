@@ -73,13 +73,12 @@ export class Navbar {
   currentNavbarBackground = computed(() =>
     this.config.theme() === 'dark'
       ? '/images/navbarDark.svg'
-      : '/images/navbar6.svg',
+      : '/images/navbarLight.svg',
   );
 
   modelUsername = '';
   // Existing signals
   isPremium = computed(() => this.store.premiumStatus()?.isPremium ?? true);
-  userAvatar = computed(() => this.store.user()?.avatarUrl);
   isLoggedIn = computed(() => this.store.isLoggedIn());
 
   userName = this.store.user;

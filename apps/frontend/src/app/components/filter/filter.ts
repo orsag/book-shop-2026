@@ -3,7 +3,7 @@ import { ConfigurationService } from '../../services/configuration-service';
 import { inject, computed } from '@angular/core';
 import { BookFilters } from '../../../types';
 import { AppStore } from '../../store/app-store';
-import { CATEGORIES } from '@store/shared-models';
+import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { ScrollService } from '../../services/scroll-service';
@@ -114,4 +114,6 @@ export class Filter {
       this.config.toggleFlag('SHOW_FILTER');
     }
   }
+
+  protected readonly VIEW_LAYOUTS = VIEW_LAYOUTS;
 }

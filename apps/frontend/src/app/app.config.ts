@@ -12,7 +12,7 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideTransloco } from '@jsverse/transloco';
-import { TranslocoHttpLoader } from './core/transloco-loader';
+import { TranslationsHttpLoader } from './core/transloco-loader';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { authInterceptor } from './core/auth.interceptor';
@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
       },
-      loader: TranslocoHttpLoader,
+      loader: TranslationsHttpLoader,
     }),
     {
       provide: EVENT_MANAGER_PLUGINS,

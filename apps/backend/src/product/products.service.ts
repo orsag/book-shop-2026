@@ -7,15 +7,16 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { FindAllParams } from './types';
 import { Prisma } from '@prismalib';
 import { ProductWhereInput } from '@prismalib';
+import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
 
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll({
-    type = 'BOOK',
-    page = 1,
-    limit = 10,
+    type = DEFAULT_TYPE,
+    page = DEFAULT_PAGE,
+    limit = DEFAULT_MAX_LIMIT,
     search,
     category,
     sortBy,
@@ -24,8 +25,10 @@ export class ProductsService {
     const skip = (page - 1) * limit;
     const andConditions: ProductWhereInput | ProductWhereInput[] = [];
 
+    console.log((type), (page), (limit), search);
+
     // 1. Search condition
-    if (search) {
+    if (search && search.trim().length > 0) {
       const cleanedSearch = search.trim().toLowerCase();
 
       // Create a percentage wrap for substring matching (e.g., "frozing" -> "%froz%")
@@ -71,21 +74,18 @@ export class ProductsService {
         andConditions.push({
           bookDetails: {
             category: { equals: category },
-            author: { contains: search, mode: 'insensitive' },
           },
         });
       } else if (type === 'GAME') {
         andConditions.push({
           gameDetails: {
             category: { equals: category },
-            brand: { contains: search, mode: 'insensitive' },
           },
         });
       } else if (type === 'GASTRO') {
         andConditions.push({
           gastroDetails: {
             category: { equals: category },
-            producer: { contains: search, mode: 'insensitive' },
           },
         });
       }

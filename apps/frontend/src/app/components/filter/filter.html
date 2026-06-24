@@ -107,10 +107,10 @@
     <div class="flex flex-row justify-around items-center gap-2">
       <!-- 1. Layout Toggle -->
       <button
-        (click)="store.setViewLayout(store.viewLayout() === 'grid' ? 'list' : 'grid')"
+        (click)="store.setViewLayout(store.viewLayout() === VIEW_LAYOUTS[0] ? VIEW_LAYOUTS[1] : VIEW_LAYOUTS[0])"
         class="btn btn-circle btn-ghost swap swap-rotate"
-        [class.swap-active]="store.viewLayout() === 'list'"
-        [title]="store.viewLayout() === 'grid' ? 'Switch to List' : 'Switch to Grid'"
+        [class.swap-active]="store.viewLayout() === VIEW_LAYOUTS[1]"
+        [title]="store.viewLayout() === VIEW_LAYOUTS[0] ? 'Switch to List' : 'Switch to Grid'"
       >
         <svg lucideList class="swap-on" size="20"></svg>
         <svg lucideGrid class="swap-off" size="20"></svg>
