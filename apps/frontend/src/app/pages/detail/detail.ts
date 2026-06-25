@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   CommonModule,
   NgOptimizedImage,
@@ -22,7 +22,6 @@ import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '../../services/ux-service';
 import { ErrorCodes, ErrorService } from '../../core/error.handler';
-import { ErrorCode } from '@angular/compiler-cli';
 
 @Component({
   selector: 'app-detail',
@@ -40,11 +39,10 @@ import { ErrorCode } from '@angular/compiler-cli';
     LucideLanguages,
   ],
   templateUrl: './detail.html',
-  providers: [UXService],
 })
 export class Detail {
   private route = inject(ActivatedRoute);
-  private product = inject(BookService);
+  private bookService = inject(BookService);
   private cartStore = inject(CartStore);
   errorService = inject(ErrorService);
   readonly store = inject(AppStore);
@@ -53,7 +51,7 @@ export class Detail {
   book = toSignal(
     this.route.params.pipe(
       switchMap((params) =>
-        this.product.getOne(params['id'], this.store.currentType()).pipe(
+        this.bookService.getOne(params['id'], this.store.currentType()).pipe(
           catchError(() => {
             this.errorService.handleError(ErrorCodes.FETCH_PRODUCT);
             return of(null); // Return null so the UI can show an error state
@@ -63,22 +61,10 @@ export class Detail {
     ),
   );
 
-  // 2. Initialize your effect
-  constructor() {
-    effect(() => {
-      const currentBook = this.book();
-
-      // Check if the book data is loaded
-      if (currentBook) {
-        this.ux.setProduct(currentBook);
-      }
-    });
-  }
-
   handleCartAction() {
     const currentBook = this.book();
     if (currentBook) {
-      if (this.ux.isInCart()) {
+      if (this.ux.isInCart(currentBook)) {
         this.cartStore.removeItem(currentBook.id);
       } else {
         this.cartStore.addToCart(currentBook);

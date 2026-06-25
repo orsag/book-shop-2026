@@ -5,6 +5,8 @@ import {
   signal,
   effect,
   PLATFORM_ID,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -68,6 +70,7 @@ export class Navbar {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
   showProfileModal = signal(false);
+  @ViewChild('myInput') inputElement!: ElementRef<HTMLInputElement>;
   currentTheme = this.config.theme;
 
   currentNavbarBackground = computed(() =>
@@ -81,6 +84,7 @@ export class Navbar {
   isPremium = computed(() => this.store.premiumStatus()?.isPremium ?? true);
   isLoggedIn = computed(() => this.store.isLoggedIn());
 
+
   userName = this.store.user;
   isAdmin = this.store.isAdmin;
   searchQuery = signal('');
@@ -91,6 +95,11 @@ export class Navbar {
     effect(() => {
       if (this.store.isLoggedIn()) {
         this.showLoginModal.set(false);
+      }
+    });
+    effect(() => {
+      if (this.showLoginModal()) {
+        this.inputElement.nativeElement.focus();
       }
     });
   }

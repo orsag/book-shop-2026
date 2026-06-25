@@ -1,5 +1,5 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { Product, ProductType } from '@store/shared-models';
+import { inject, Injectable } from '@angular/core';
+import { DEFAULT_TYPE, Product, ProductType } from '@store/shared-models';
 import { AppStore } from '../store/app-store';
 import { CartStore } from '../store/cart-store';
 
@@ -12,89 +12,73 @@ const productGradients: Record<ProductType, string> = {
     'bg-gradient-to-br from-gray-100 via-slate-200 to-zinc-200 text-zinc-900'
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UXService {
   store = inject(AppStore);
   cart = inject(CartStore);
-  readonly product = signal<Product | null>(null);
 
-  setProduct = (product: Product): void => {
-    this.product.set(product);
-  };
-
-  isBook = computed(() => Boolean(this.product()?.bookDetails));
-  isGame = computed(() => Boolean(this.product()?.gameDetails));
-  isGastro = computed(() => Boolean(this.product()?.gastroDetails));
-  isCard = computed(() => Boolean(this.product()?.cardDetails));
-
-  isGradientClass = computed(() => {
-    const productType = this.product()?.productType;
+  isGradientClass(product: Product) {
+    const productType = product.productType;
     if (productType) {
       return productGradients[productType];
     } else {
       return productGradients['GIFT_CARD'];
     }
-  });
+  };
 
-  isFavorite = computed(() => {
-    const id = this.product()?.id;
+  isFavorite(product: Product) {
+    const id = product.id;
     if (id) {
       return this.store.user()?.favorites?.includes(id);
     } else {
       return false;
     }
-  });
+  };
 
-  isInCart = computed(() => {
-    const id = this.product()?.id;
+  isInCart(product: Product) {
+    const id = product.id;
     if (id) {
       return !!this.cart.itemsMap()[id];
     } else {
       return false;
     }
-  });
+  }
 
-  readingHours = computed(() => {
-    if (this.product()?.productType === 'BOOK') {
-      const pages = this.product()?.bookDetails?.pageCount || 0;
+  readingHours (product: Product) {
+    if (product.productType === DEFAULT_TYPE) {
+      const pages = product.bookDetails?.pageCount || 0;
       if (pages === 0) return 0;
       return Math.round((pages / 30) * 10) / 10;
     } else {
       return 0;
     }
-  });
+  };
 
-  category = computed(() => {
-    const product = this.product();
-    if (product) {
-      switch (product.productType) {
-        case 'BOOK':
-          return product.bookDetails?.category;
-        case 'GAME':
-          return product.gameDetails?.category;
-        case 'GASTRO':
-          return product.gastroDetails?.category;
-        default:
-          return '';
-      }
+  category(product: Product) {
+    switch (product.productType) {
+      case 'BOOK':
+        return product.bookDetails?.category;
+      case 'GAME':
+        return product.gameDetails?.category;
+      case 'GASTRO':
+        return product.gastroDetails?.category;
+      default:
+        return '';
     }
-    return '';
-  });
+  };
 
-  author = computed(() => {
-    const product = this.product();
-    if (product) {
-      switch (product.productType) {
-        case 'BOOK':
-          return product.bookDetails?.author;
-        case 'GAME':
-          return product.gameDetails?.producer;
-        case 'GASTRO':
-          return product.gastroDetails?.brand;
-        default:
-          return '';
-      }
+  author(product: Product) {
+    switch (product.productType) {
+      case 'BOOK':
+        return product.bookDetails?.author;
+      case 'GAME':
+        return product.gameDetails?.producer;
+      case 'GASTRO':
+        return product.gastroDetails?.brand;
+      default:
+        return '';
     }
-    return '';
-  });
+  };
 }

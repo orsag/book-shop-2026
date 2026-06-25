@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
@@ -21,17 +21,12 @@ import { UXService } from '../../services/ux-service';
   ],
   templateUrl: './book-card.html',
   styleUrl: './book-card.css',
-  providers: [UXService],
 })
-export class BookCard implements OnInit {
+export class BookCard {
   @Input({ required: true }) product!: Product;
   private readonly cartStore = inject(CartStore);
   readonly store = inject(AppStore);
   ux = inject(UXService);
-
-  ngOnInit() {
-    this.ux.setProduct(this.product);
-  }
 
   toggleFavorite(productId: string) {
     if (!this.store.isLoggedIn()) {
@@ -43,7 +38,7 @@ export class BookCard implements OnInit {
   }
 
   handleCartAction() {
-    if (this.ux.isInCart()) {
+    if (this.ux.isInCart(this.product)) {
       // If it's there, remove it
       this.cartStore.removeItem(this.product.id);
     } else {

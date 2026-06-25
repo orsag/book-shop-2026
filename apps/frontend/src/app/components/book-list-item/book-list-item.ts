@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,19 +11,14 @@ import { UXService } from '../../services/ux-service';
   imports: [NgOptimizedImage, RouterLink, CurrencyPipe, TranslocoDirective],
   templateUrl: './book-list-item.html',
   styleUrl: './book-list-item.css',
-  providers: [UXService],
 })
-export class BookListItem implements OnInit {
+export class BookListItem {
   cartStore = inject(CartStore);
   ux = inject(UXService);
   @Input({ required: true }) product!: Product;
 
-  ngOnInit() {
-    this.ux.setProduct(this.product);
-  }
-
   handleCartAction() {
-    if (this.ux.isInCart()) {
+    if (this.ux.isInCart(this.product)) {
       // If it's there, remove it
       this.cartStore.removeItem(this.product.id);
     } else if (this.product.availableCount > 0) {

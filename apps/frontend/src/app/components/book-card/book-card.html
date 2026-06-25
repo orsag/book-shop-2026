@@ -14,18 +14,18 @@
 
       <span
         class="absolute top-0 left-0 px-2 py-1 rounded-md bg-base-100/70 backdrop-blur-md border border-base-content/10 text-base-content text-[10px] uppercase tracking-widest font-bold shadow-sm z-10"
-        [class]="ux.isGradientClass()"
+        [class]="ux.isGradientClass(product)"
       >
-        {{ ux.category() }}
+        {{ ux.category(product) }}
       </span>
 
       <button
         (click.stop)="toggleFavorite(product.id)"
         class="favorite-btn absolute top-0 right-0 p-2 rounded-full bg-base-100/80 backdrop-blur-sm shadow-sm transition-all hover:scale-110 active:scale-95 z-10"
-        [class.fav]="ux.isFavorite()"
-        [class.text-error]="ux.isFavorite()"
-        [class.text-base-content]="!ux.isFavorite()">
-        <svg lucideHeart size="20" [attr.fill]="ux.isFavorite() ? 'currentColor' : 'none'"></svg>
+        [class.fav]="ux.isFavorite(product)"
+        [class.text-error]="ux.isFavorite(product)"
+        [class.text-base-content]="!ux.isFavorite(product)">
+        <svg lucideHeart size="20" [attr.fill]="ux.isFavorite(product) ? 'currentColor' : 'none'"></svg>
       </button>
     </div>
   </figure>
@@ -35,7 +35,7 @@
       <h2 class="card-title text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors leading-tight">
         {{ product.name }}
       </h2>
-      <p class="text-xs text-base-content/70 italic">by {{ ux.author() }}</p>
+      <p class="text-xs text-base-content/70 italic">by {{ ux.author(product) }}</p>
     </div>
 
     <div class="flex flex-col items-center mt-1 gap-y-1">
@@ -61,10 +61,10 @@
         <button
           (click.stop)="handleCartAction()"
           class="btn btn-sm btn-soft transition-all duration-200 active:scale-95 w-full"
-          [class.btn-primary]="!ux.isInCart()"
-          [class.btn-error]="ux.isInCart()"
+          [class.btn-primary]="!ux.isInCart(product)"
+          [class.btn-error]="ux.isInCart(product)"
         >
-          @if (ux.isInCart()) {
+          @if (ux.isInCart(product)) {
             <span>{{ t('cart.remove_from_cart') }}</span>
           } @else {
             <span>{{ t('cart.add_to_cart') }}</span>

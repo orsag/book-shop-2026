@@ -44,7 +44,7 @@
         >
           @for (book of store.products(); track book.id; let i = $index) {
             @defer (when !store.isLoading()) {
-              <app-book-list-item [product]="book"></app-book-list-item>
+              <app-book-list-item #listItem [product]="book"></app-book-list-item>
             } @placeholder {
               <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>
             }

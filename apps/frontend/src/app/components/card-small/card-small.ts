@@ -19,17 +19,12 @@ import { UXService } from '../../services/ux-service';
   ],
   templateUrl: './card-small.html',
   styleUrl: './card-small.css',
-  providers: [UXService],
 })
 export class CardSmall {
   @Input({ required: true }) product!: Product;
   private readonly cartStore = inject(CartStore);
   readonly store = inject(AppStore);
   ux = inject(UXService);
-
-  constructor() {
-    this.ux.setProduct(this.product);
-  }
 
   toggleFavorite(productId: string) {
     if (!this.store.isLoggedIn()) {
@@ -41,7 +36,7 @@ export class CardSmall {
   }
 
   handleCartAction() {
-    if (this.ux.isInCart()) {
+    if (this.ux.isInCart(this.product)) {
       // If it's there, remove it
       this.cartStore.removeItem(this.product.id);
     } else {

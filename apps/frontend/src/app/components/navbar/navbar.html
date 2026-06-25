@@ -211,7 +211,8 @@
       <form (submit)="onLoginSubmit($event)" class="space-y-4">
         <div class="form-control">
           <label for="loginModalName" class="label"><span class="label-text">Name</span></label>
-          <input id="loginModalName"
+          <input #myInput
+                 id="loginModalName"
                  type="text"
                  placeholder="Login name"
                  appNoFocusJump

@@ -1,4 +1,13 @@
-import { Component, computed, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { BookCard } from '../../components/book-card/book-card';
 import { BookListItem } from '../../components/book-list-item/book-list-item';
 import { AppStore } from '../../store/app-store';
@@ -23,7 +32,9 @@ import { VIEW_LAYOUTS } from '@store/libs';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, AfterViewInit {
+  // Grabs ALL elements marked with #listItem as a QueryList
+  @ViewChildren('listItem') listElements!: QueryList<BookListItem>;
   store = inject(AppStore);
   cart = inject(CartStore);
   platformId = inject(PLATFORM_ID);
@@ -35,6 +46,13 @@ export class Dashboard implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.cart.syncCartWithServer();
     }
+  }
+
+  ngAfterViewInit() {
+    // You can subscribe to changes if the array is dynamic
+    this.listElements.changes.subscribe((elements) => {
+      console.log('List updated, new count:', elements.length);
+    });
   }
 
   isOpenedFilter = computed<boolean>(() => this.config.getFilterValue());
