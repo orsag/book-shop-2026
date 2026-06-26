@@ -12,18 +12,20 @@ export interface CreateOrderDto {
   items: OrderItem[];
 }
 
+export interface CreatedOrderItem {
+  productId: string;
+  quantity: number;
+  price: number;
+  product: Product;
+}
+
 export interface CreatedOrder {
   id: string;
   userId: string;
   totalAmount: number;
   status: OrderStatus;
   createdAt: Date;
-  items: {
-    productId: string;
-    quantity: number;
-    price: number; // The price locked at purchase
-    product: Product; // Full book details included via relation
-  }[];
+  items: CreatedOrderItem[];
 }
 
 @Injectable({

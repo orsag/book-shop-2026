@@ -20,7 +20,7 @@
             <div class="card-body">
               <h2 class="card-title mb-4">Položky objednávky</h2>
               <div class="divide-y divide-base-200">
-                @for (item of details.items; track item.productId) {
+                @for (item of orderItems(); track item.productId) {
                   <div class="py-4 flex items-center gap-4">
                     <div class="avatar">
                       <div class="w-16 rounded">
@@ -29,10 +29,12 @@
                     </div>
                     <div class="flex-1">
                       <h3 class="font-bold">{{ item.product.name }}</h3>
-                      <p class="text-sm opacity-50">{{ item.quantity }}x {{ item.price | currency:'EUR' }}</p>
+                      <p class="text-sm opacity-50">
+                        {{ item.quantity }}x {{ item | singlePrice | currency:'EUR' }}
+                      </p>
                     </div>
                     <div class="font-semibold">
-                      {{ (item.quantity * item.price) | currency:'EUR' }}
+                      {{ item | totalPrice | currency:'EUR' }}
                     </div>
                   </div>
                 }

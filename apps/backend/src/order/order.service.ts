@@ -44,7 +44,7 @@ export class OrderService {
           );
         }
 
-        const priceWithVat = book.price * (1 + VAT_RATE);
+        const priceWithVat = book.price * (1 - book.discount) * (1 + VAT_RATE);
         const itemTotal = priceWithVat * item.quantity;
 
         totalAmount += itemTotal;
