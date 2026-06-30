@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SimpleLayout } from './simple-layout';
+import {
+  SimpleLayoutComponent as SimpleLayout,
+} from './simple-layout';
+import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { provideRouter } from '@angular/router';
 
 describe('SimpleLayout', () => {
   let component: SimpleLayout;
@@ -7,7 +11,8 @@ describe('SimpleLayout', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SimpleLayout],
+      imports: [SimpleLayout, getTranslocoModule()],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimpleLayout);

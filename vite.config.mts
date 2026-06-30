@@ -1,13 +1,24 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import angular from '@analogjs/vite-plugin-angular';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: './node_modules/.vite/book-store-2026',
-  plugins: [angular(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+  plugins: [
+    angular(),
+    tsconfigPaths(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: '*.md',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
   // Uncomment this if you are using workers.
   // worker: {
   //   plugins: () => [ nxViteTsPaths() ],
@@ -17,8 +28,13 @@ export default defineConfig(() => ({
     watch: false,
     globals: true,
     environment: 'jsdom',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    setupFiles: ['src/test-setup.ts'],
+    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      'apps/backend/**',
+      'apps/backend-e2e/**',
+    ],
     reporters: ['default'],
     coverage: {
       reportsDirectory: './coverage/book-store-2026',

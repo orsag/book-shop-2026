@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Administration } from './administration';
+import { getTranslocoModule } from '../../core/transloco-testing.module';
 
 describe('Administration', () => {
   let component: Administration;
@@ -7,7 +8,7 @@ describe('Administration', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Administration],
+      imports: [Administration, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Administration);

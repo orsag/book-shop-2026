@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OrderTable } from './order-table';
+import { getTranslocoModule } from '../../core/transloco-testing.module';
 
 describe('OrderTable', () => {
   let component: OrderTable;
@@ -7,7 +8,7 @@ describe('OrderTable', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OrderTable],
+      imports: [OrderTable, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrderTable);

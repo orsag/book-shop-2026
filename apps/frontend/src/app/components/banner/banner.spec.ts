@@ -1,16 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Banner } from './banner';
+import { BannerComponent } from './banner';
+import { provideRouter } from '@angular/router';
+import { getTranslocoModule } from '../../core/transloco-testing.module';
 
 describe('Banner', () => {
-  let component: Banner;
-  let fixture: ComponentFixture<Banner>;
+  let component: BannerComponent;
+  let fixture: ComponentFixture<BannerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Banner],
+      imports: [BannerComponent, getTranslocoModule()],
+      providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Banner);
+    fixture = TestBed.createComponent(BannerComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

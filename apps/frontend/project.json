@@ -79,6 +79,7 @@
       "executor": "@nx/vitest:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
+        "config": "apps/frontend/vite.config.mts",
         "reportsDirectory": "coverage/apps/frontend"
       }
     },

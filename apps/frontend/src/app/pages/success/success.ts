@@ -5,7 +5,7 @@ import {
   CreatedOrderItem,
   OrderService,
 } from '../../services/order-service';
-import { CommonModule, CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import {
   LucideChessQueen,
   LucideFrown,
@@ -14,7 +14,6 @@ import {
 } from '@lucide/angular';
 import { TotalPricePipe } from '../../core/totalPrice.pipe';
 import { SinglePricePipe } from '../../core/singlePrice.pipe';
-import { CastPipe } from '../../core/cast.pipe';
 
 @Component({
   selector: 'app-success',
@@ -28,8 +27,6 @@ import { CastPipe } from '../../core/cast.pipe';
     CurrencyPipe,
     TotalPricePipe,
     SinglePricePipe,
-    CastPipe,
-    NgOptimizedImage,
   ],
   templateUrl: './success.html',
   styleUrl: './success.css',
