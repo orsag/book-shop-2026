@@ -59,11 +59,12 @@ export class Filter {
   constructor() {
     // Create a reactive link
     effect(() => {
+      const filter = this.store.filters();
       this.filters.set({
-        type: this.store.filters.type(),
-        search: this.store.filters.search(),
-        category: this.store.filters.category(),
-        isDiscounted: this.store.filters.isDiscounted(),
+        type: filter.type,
+        search: filter.search,
+        category: filter.category,
+        isDiscounted: filter.isDiscounted,
       });
     });
   }

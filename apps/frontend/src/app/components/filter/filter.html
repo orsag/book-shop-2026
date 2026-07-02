@@ -120,8 +120,8 @@
       <button
         (click)="store.toggleSort('price')"
         class="btn btn-circle btn-ghost swap swap-rotate"
-        [class.btn-active]="store.filters.sortBy()?.startsWith('price')"
-        [class.swap-active]="store.filters.sortBy() === 'price_desc'"
+        [class.btn-active]="store.filters().sortBy?.startsWith('price')"
+        [class.swap-active]="store.filters().sortBy === 'price_desc'"
       >
         <svg lucideArrowDownNarrowWide class="swap-on text-primary" size="20"></svg>
         <svg lucideArrowUpWideNarrow class="swap-off" size="20"></svg>
