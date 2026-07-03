@@ -16,6 +16,20 @@ setup('Authenticate and save storage state', async ({ page }) => {
   const dashboardElementGrid = page.getByTestId('main-layout-list');
   await expect(dashboardElementGrid).toBeVisible({ timeout: 20000 });
 
+  // Fetch the raw text content from the target node
+  const languageSpan = page.locator('span[title="language"]');
+  const currentLang = (await languageSpan.innerText()).trim();
+
+  // Execute conditional interaction steps based on the string value
+  if (currentLang === 'EN') {
+    const languageBtn = page.getByTestId('language-btn');
+    await languageBtn.click();
+    await expect(languageSpan).toHaveText('SK');
+  } else {
+    // If languageSpan contains 'SK', do nothing and verify it stays matching
+    await expect(languageSpan).toHaveText('SK');
+  }
+
   // Save Authentication State
   await page.context().storageState({ path: PATH });
 });

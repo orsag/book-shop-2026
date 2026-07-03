@@ -5,72 +5,23 @@
     <!-- ================= TOP SECTION: ICONS ================= -->
     <div class="grid grid-cols-3 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between gap-y-10 gap-x-2 md:gap-x-4 items-start text-center mb-12">
 
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/ereader.png" fill alt="Ereader" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.apps') }}</span>
-      </a>
+      @for (item of footerItems; track item.translationKey) {
+        <a (click)="openWipModal(item)" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
+          <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
+            <img [ngSrc]="item.image" fill [alt]="item.alt" class="object-contain transition-transform group-hover:scale-105" />
+          </div>
 
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/audiobook.png" fill alt="Audiobooks" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.audiobooks') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/blog.png" fill alt="blog" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.blog') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/podcast.png" fill alt="podcast" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.podcast') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/membership.png" fill alt="membership" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.membership') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/box.png" fill alt="pickup" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">
-          @for (line of t('footer.pickup').split('|'); track $index) {
-            <span class="block">{{ line }}</span>
-          }
-        </span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/gift-card.png" fill alt="gift-card" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.gift') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/shop.png" fill alt="stores" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.stores') }}</span>
-      </a>
-
-      <a routerLink="wip" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-        <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-          <img ngSrc="/images/mastercard.png" fill alt="mastercard" class="object-contain transition-transform group-hover:scale-105" />
-        </div>
-        <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">{{ t('footer.mastercard') }}</span>
-      </a>
+          <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">
+            @if (item.isSplit) {
+              @for (line of t(item.translationKey).split('|'); track $index) {
+                <span class="block">{{ line }}</span>
+              }
+            } @else {
+              {{ t(item.translationKey) }}
+            }
+          </span>
+        </a>
+      }
 
     </div>
 
@@ -112,3 +63,36 @@
     </div>
   </div>
 </footer>
+
+<dialog #wipModal class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box" *transloco="let t">
+    @if (selectedItem(); as activeItem) {
+      <div class="flex items-center justify-between gap-4 border-b border-base-200 pb-4 mb-4">
+        <h3 class="text-xl font-bold text-left">
+          {{ t(activeItem.translationKey).replace('|', ' ') }}
+        </h3>
+
+        <div class="relative w-14 h-14 bg-base-200 p-2 rounded-2xl flex-shrink-0">
+          <img [ngSrc]="activeItem.image" fill [alt]="activeItem.alt" class="object-contain" />
+        </div>
+      </div>
+    } @else {
+      <h3 class="text-lg font-bold">Funkcia je v príprave!</h3>
+    }
+
+    <p class="py-4 text-sm text-base-content/70">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- daisyUI automatically handles closing the native dialog here -->
+        <button class="btn btn-sm btn-ghost rounded-full">Zatvoriť</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Click outside overlay to close modal automatically -->
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
