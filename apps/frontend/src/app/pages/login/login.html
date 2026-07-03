@@ -23,7 +23,7 @@
             <input
               type="text"
               class="grow"
-              placeholder="user name"
+              placeholder="User name"
               [(ngModel)]="username"
               name="username"
               required
@@ -36,6 +36,7 @@
         <div class="card-actions mt-8">
           <button
             type="submit"
+            name="login"
             class="btn btn-primary btn-block text-white"
             [disabled]="!username() || store.isLoading()"
           >

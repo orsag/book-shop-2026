@@ -55,3 +55,4 @@ prisma/*.db-journal
 
 __screenshots__/
 debug_books.json
+/apps/frontend/e2e/.auth.json
