@@ -142,15 +142,15 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="form-control md:col-span-2">
               <label for="iban" class="label text-xs uppercase">IBAN</label>
-              <input appNoFocusJump type="text" [formField]="detailForm.iban" class="input input-sm input-bordered font-mono w-full" placeholder="SK..." />
+              <input appNoFocusJump id="iban" type="text" [formField]="detailForm.iban" class="input input-sm input-bordered font-mono w-full" placeholder="SK..." />
             </div>
             <div class="form-control">
               <label for="taxId" class="label text-xs">DIČ (Tax ID)</label>
-              <input appNoFocusJump type="text" [formField]="detailForm.taxId" class="input input-sm input-bordered" />
+              <input appNoFocusJump id="taxId" type="text" [formField]="detailForm.taxId" class="input input-sm input-bordered" />
             </div>
             <div class="form-control">
               <label for="dateOfBirth" class="label text-xs">Dátum narodenia</label>
-              <input appNoFocusJump type="date" [formField]="detailForm.dateOfBirth" class="input input-sm input-bordered" />
+              <input appNoFocusJump id="dateOfBirth" type="date" [formField]="detailForm.dateOfBirth" class="input input-sm input-bordered" />
             </div>
           </div>
         </div>

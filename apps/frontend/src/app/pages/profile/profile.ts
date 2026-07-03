@@ -151,8 +151,6 @@ export class Profile implements OnInit {
       const updatedData: Partial<User> = {
         ...this.userModel(),
       };
-
-      this.store.updateUserProfile({ updates: updatedData });
     }
     if (this.detailForm().valid()) {
       const userId = this.store.user()?.id;

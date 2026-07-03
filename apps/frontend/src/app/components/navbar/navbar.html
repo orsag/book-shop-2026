@@ -16,6 +16,7 @@
   <div class="flex-1 gap-1 z-10">
     <div class="absolute top-2 left-4 flex gap-2">
       <button type="button"
+              data-testid="logo-btn"
               class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
               (click)="handleButtonClick(false)">
         <img [ngSrc]="logo"
@@ -56,13 +57,14 @@
     }
 
     <button (click)="toggleLang()" appNoHoverButton
+            data-testid="language-btn"
             class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold group"
             [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
             [title]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'">
       <div
         class="flex items-center gap-2 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 will-change-transform">
         <svg lucideLanguages></svg>
-        <span class="uppercase text-xs">{{ activeLang() === 'en' ? 'SK' : 'EN' }}</span>
+        <span title="language" class="uppercase text-xs">{{ activeLang() === 'en' ? 'SK' : 'EN' }}</span>
       </div>
     </button>
 
@@ -109,6 +111,7 @@
       <div class="relative group z-[9999]">
         <button
           type="button"
+          data-testid="profile-btn"
           (click)="showProfileModal.set(!showProfileModal())"
           [ngClass]="showProfileModal()
               ? 'bg-error text-white'
@@ -125,6 +128,7 @@
 
         @if (showProfileModal()) {
           <div
+            data-testid="profile-modal"
             class="absolute right-0 mt-3 w-72 bg-base-100 rounded-2xl shadow-2xl border border-base-200 text-base-content p-4 animate-in fade-in slide-in-from-top-2 duration-200">
 
             <div class="flex flex-col items-center text-center pb-3 border-b border-base-200">
@@ -132,7 +136,7 @@
               <span class="text-xs opacity-60 mt-0.5">{{ store.user()?.email }}</span>
 
               @if (isAdmin()) {
-                <span class="badge badge-error badge-sm font-bold uppercase tracking-wider text-[10px] text-white mt-2">
+                <span title="admin" class="badge badge-error badge-sm font-bold uppercase tracking-wider text-[10px] text-white mt-2">
               Administrator
             </span>
               }
@@ -145,7 +149,7 @@
               </div>
               <div class="flex justify-between items-center">
                 <span class="opacity-50 font-medium">Theme Style:</span>
-                <span class="font-semibold capitalize badge badge-ghost badge-sm">{{ store.user()?.theme }}</span>
+                <span title="theme" class="font-semibold capitalize badge badge-ghost badge-sm">{{ store.user()?.theme }}</span>
               </div>
               @if (store.user()?.lastLogin) {
                 <div class="flex flex-col gap-1 pt-1">

@@ -13,7 +13,7 @@ setup('Authenticate and save storage state', async ({ page }) => {
 
   // Wait for Successful Login & Page Ready
   await page.waitForURL('/', { timeout: 10000 });
-  const dashboardElementGrid = page.getByTestId('main-layout');
+  const dashboardElementGrid = page.getByTestId('main-layout-list');
   await expect(dashboardElementGrid).toBeVisible({ timeout: 20000 });
 
   // Save Authentication State

@@ -51,12 +51,12 @@
       <!-- Price Details -->
       <div class="flex flex-col gap-0.5">
         @if (product.discount > 0) {
-          <span class="text-[10px] line-through opacity-40">
+          <span title="discount" class="text-[10px] line-through opacity-40">
             {{ product.price | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
           </span>
         }
 
-        <span class="text-xl font-extrabold text-primary leading-none">
+        <span title="pricing" class="text-xl font-extrabold text-primary leading-none">
           {{ (product.price * (1 - product.discount)) | currency:'EUR':'symbol':'1.2-2':'sk-SK' }}
         </span>
 
@@ -70,6 +70,7 @@
       <!-- Button -->
       @if (product.availableCount !== 0) {
         <button
+          data-testid="add-to-cart"
           class="btn btn-sm"
           [class.btn-error]="ux.isInCart(product)"
           [class.btn-primary]="!ux.isInCart(product)"

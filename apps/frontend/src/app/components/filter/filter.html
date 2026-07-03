@@ -1,5 +1,6 @@
 <div
   *transloco="let t;"
+  data-testid="filter-component"
   class="min-w-60 flex flex-col h-full gap-6 overflow-y-auto no-scrollbar"
   [class.hidden]="!showFilter()"
 >
@@ -107,6 +108,7 @@
     <div class="flex flex-row justify-around items-center gap-2">
       <!-- 1. Layout Toggle -->
       <button
+        data-testid="layout-btn"
         (click)="store.setViewLayout(store.viewLayout() === VIEW_LAYOUTS[0] ? VIEW_LAYOUTS[1] : VIEW_LAYOUTS[0])"
         class="btn btn-circle btn-ghost swap swap-rotate"
         [class.swap-active]="store.viewLayout() === VIEW_LAYOUTS[1]"
@@ -118,6 +120,7 @@
 
       <!-- 2. Price Sort Toggle -->
       <button
+        data-testid="price-btn"
         (click)="store.toggleSort('price')"
         class="btn btn-circle btn-ghost swap swap-rotate"
         [class.btn-active]="store.filters().sortBy?.startsWith('price')"
@@ -129,6 +132,7 @@
 
       <!-- 3. Discount Toggle (Merged Design) -->
       <button
+        data-testid="discount-btn"
         (click)="updateFilter('isDiscounted', !filters().isDiscounted)"
         class="btn btn-circle btn-ghost swap swap-rotate"
         [class.btn-active]="filters().isDiscounted"

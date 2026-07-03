@@ -9,6 +9,7 @@
 
     @if (store.hasMorePage()) {
       <button
+        data-testid="load-more"
         (click)="store.loadMore()"
         class="group btn btn-primary btn-wide rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
       >
