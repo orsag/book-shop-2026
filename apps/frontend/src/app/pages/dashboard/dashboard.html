@@ -30,11 +30,12 @@
              [class.md:grid-cols-4]="!isOpenedFilter()"
              [class.lg:grid-cols-6]="!isOpenedFilter()">
           @for (book of store.products(); track book.id) {
-            @defer (when !store.isLoading()) {
-              <app-book-card [product]="book"></app-book-card>
-            } @placeholder {
-              <div class="skeleton h-60 w-full rounded-xl"></div>
-            }
+            <app-book-card [product]="book"></app-book-card>
+<!--            @defer (when !store.isLoading()) {-->
+<!--              <app-book-card [product]="book"></app-book-card>-->
+<!--            } @placeholder {-->
+<!--              <div class="skeleton h-60 w-full rounded-xl"></div>-->
+<!--            }-->
           }
         </div>
       }
@@ -45,11 +46,12 @@
              [class.md:grid-cols-2]="!isOpenedFilter()"
         >
           @for (book of store.products(); track book.id; let i = $index) {
-            @defer (when !store.isLoading()) {
-              <app-book-list-item #listItem [product]="book"></app-book-list-item>
-            } @placeholder {
-              <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>
-            }
+            <app-book-list-item #listItem [product]="book"></app-book-list-item>
+<!--            @defer (when !store.isLoading()) {-->
+<!--              <app-book-list-item #listItem [product]="book"></app-book-list-item>-->
+<!--            } @placeholder {-->
+<!--              <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>-->
+<!--            }-->
 
             @if (i !== store.products().length - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>
