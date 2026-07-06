@@ -6,7 +6,7 @@ import { CartStore } from '../../store/cart-store';
 import { UXService } from '../../services/ux-service';
 import { AppStore } from '../../store/app-store';
 import { provideRouter } from '@angular/router';
-import { MOCKED_PRODUCT } from '../../../mocked';
+import { MOCKED_PRODUCT } from '@store/libs';
 
 describe('BookCard', () => {
   let component: CardSmall;

@@ -1,4 +1,4 @@
-import { Product } from '@store/libs';
+import { Product } from './index';
 
 const BOOK_GRADIENT =
   'bg-gradient-to-br from-red-100 via-pink-100 to-purple-100 text-purple-900';

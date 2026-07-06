@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { MockComponent } from 'ng-mocks';
 import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS } from '@store/libs';
 import { provideRouter } from '@angular/router';
-import { BOOK_GRADIENT } from '../../../mocked';
+import { BOOK_GRADIENT } from '../../../../../libs/src/mocked';
 import { UXService } from '../../services/ux-service';
 
 describe('Dashboard Component', () => {

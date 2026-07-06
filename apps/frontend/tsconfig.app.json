@@ -6,6 +6,10 @@
   },
   "include": ["src/**/*.ts"],
   "exclude": [
+    "public/**/*",
+    "src/app/pages/administration/edit-gastro-modal.ts",
+    "src/app/pages/administration/edit-game-modal.ts",
+    "src/app/core/transloco-testing.module.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "vite.config.ts",

@@ -3,7 +3,7 @@ import { BookListItem } from './book-list-item';
 import { getTranslocoModule } from '../../core/transloco-testing.module';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { MOCKED_PRODUCT, BOOK_GRADIENT } from '../../../mocked';
+import { MOCKED_PRODUCT, BOOK_GRADIENT } from '@store/libs';
 import { CartStore } from '../../store/cart-store';
 import { UXService } from '../../services/ux-service';
 

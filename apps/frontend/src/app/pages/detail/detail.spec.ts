@@ -8,7 +8,7 @@ import { UXService } from '../../services/ux-service';
 import { CartStore } from '../../store/cart-store';
 import { BookService } from '../../services/book-service';
 import { ErrorService } from '../../core/error.handler';
-import { MOCKED_PRODUCT } from '../../../mocked';
+import { MOCKED_PRODUCT } from '../../../../../libs/src/mocked';
 
 describe('Detail', () => {
   const routeParams$ = new BehaviorSubject({ id: '123' });
