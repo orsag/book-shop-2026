@@ -75,6 +75,26 @@ describe('Filter', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render all categories', async () => {
+    // 1. Ensure the component property matches the template's property loop
+    component.bookCategories = MOCK_CATEGORIES;
+
+    // 2. Trigger change detection to update the template
+    fixture.detectChanges();
+
+    // 3. Query all labels or text spans within the category loop
+    const categoryElements =
+      fixture.nativeElement.querySelectorAll('span.category');
+
+    // 4. Assert that the rendered count matches the array length
+    expect(categoryElements.length).toBe(MOCK_CATEGORIES.length);
+
+    // 5. Verify that each category string is actually rendered in order
+    MOCK_CATEGORIES.forEach((category, index) => {
+      expect(categoryElements[index].textContent.trim()).toBe(category);
+    });
+  });
 });
 
 const MOCK_CATEGORIES = [

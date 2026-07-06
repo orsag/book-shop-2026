@@ -13,7 +13,7 @@ import { LucideMoon, LucideSun } from '@lucide/angular';
 export class ThemePicker {
   config = inject(ConfigurationService);
 
-  currentTheme = this.config.theme;
+  isChecked = computed(() => this.config.theme() === 'dark');
 
   availableThemes = computed(() => {
     return this.config.flags().INFINITE_COLOR_THEMES
@@ -31,7 +31,7 @@ export class ThemePicker {
   }
 
   toggleTheme() {
-    const newTheme = this.currentTheme() === 'dark' ? 'light' : 'dark';
+    const newTheme = this.config.theme() === 'dark' ? 'light' : 'dark';
 
     // 1. Update the state (or Signal)
     this.config.setTheme(newTheme);

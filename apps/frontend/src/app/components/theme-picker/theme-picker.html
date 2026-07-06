@@ -1,7 +1,7 @@
 <div class="block">
   <label class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors">
     <!-- this hidden checkbox controls the state -->
-    <input type="checkbox" class="theme-controller" [checked]="currentTheme() === 'dark'"
+    <input type="checkbox" class="theme-controller" [checked]="isChecked()"
            (change)="toggleTheme()" />
 
     <!-- sun icon -->
