@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 export type ToastType = 'info' | 'success' | 'alert';
 
 interface Toast {
-  id: number;
+  id: string;
   text: string;
   type: ToastType;
   duration?: number;
@@ -20,7 +20,7 @@ export class ToastService {
   public toasts = this.toastsSignal.asReadonly();
 
   show(text: string, type: ToastType = 'info', duration = 3000) {
-    const id = Date.now();
+    const id = crypto.randomUUID();
 
     // Add new common to the list
     this.toastsSignal.update((all) => [...all, { id, text, type }]);
@@ -42,7 +42,7 @@ export class ToastService {
     this.show(text, 'info', duration);
   }
 
-  private remove(id: number) {
+  private remove(id: string) {
     this.toastsSignal.update((all) => all.filter((t) => t.id !== id));
   }
 }

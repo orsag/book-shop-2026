@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { prisma, Prisma } from '@prismalib';
-import { createProduct, createAdmin } from './product/creator';
+import { createProduct, createAdmin } from './product';
 
 async function main() {
   await prisma.gastro.deleteMany();

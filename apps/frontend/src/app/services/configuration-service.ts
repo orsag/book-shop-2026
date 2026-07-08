@@ -1,4 +1,10 @@
-import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Injectable,
+  effect,
+  inject,
+  PLATFORM_ID,
+  linkedSignal,
+} from '@angular/core';
 import { FeatureName, FEATURES } from '@store/shared-models';
 import { isPlatformBrowser } from '@angular/common';
 type FeatureFlags = Record<FeatureName, boolean>;
@@ -13,10 +19,19 @@ export class ConfigurationService {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
 
-  readonly flags = signal<FeatureFlags>(this.loadFlags());
-  readonly theme = signal<string>(
-    this.isBrowser ? localStorage.getItem(this.THEME_KEY) || 'light' : 'light',
-  );
+  // 1. Core storage-linked signals using linkedSignal!
+  readonly flags = linkedSignal<boolean, FeatureFlags>({
+    source: () => this.isBrowser, // Whenever browser state or base evaluation triggers
+    computation: () => this.loadFlags(),
+  });
+
+  readonly theme = linkedSignal<boolean, string>({
+    source: () => this.isBrowser,
+    computation: () =>
+      this.isBrowser
+        ? localStorage.getItem(this.THEME_KEY) || 'light'
+        : 'light',
+  });
 
   constructor() {
     // Automatically persist to localStorage whenever flags change
