@@ -1,15 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPage } from './login';
 import { provideRouter } from '@angular/router';
+import { signal } from '@angular/core';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
+import { AppStore } from '../../store/app-store';
 
 describe('Login', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
+  let mockAppStore: any;
 
   beforeEach(async () => {
+    mockAppStore = {
+      isLoggedIn: signal(false),
+      isLoading: signal(false),
+      login: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [LoginPage],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: AppStore, useValue: mockAppStore },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginPage);
@@ -19,5 +32,82 @@ describe('Login', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should be disalbled if no user name is entered', () => {
+    component.username.set('');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const submitBtn = compiled.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+
+    expect(submitBtn.disabled).toBe(true);
+  });
+
+  it('should be enabled if user name is filled', () => {
+    component.username.set('testuser');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const submitBtn = compiled.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+
+    expect(submitBtn.disabled).toBe(false);
+  });
+
+  it('should be disabled if store.isLoading() is active', () => {
+    component.username.set('testuser');
+    mockAppStore.isLoading.set(true);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const submitBtn = compiled.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    const spinner = compiled.querySelector('.loading-spinner');
+
+    expect(submitBtn.disabled).toBe(true);
+    expect(spinner).toBeTruthy();
+  });
+
+  it('should be called login when name is filled', async () => {
+    component.username.set('knihomol123');
+    fixture.detectChanges();
+
+    // Vyvolanie odoslania formulára
+    await component.onLogin();
+
+    expect(mockAppStore.login).toHaveBeenCalledWith({
+      username: 'knihomol123',
+    });
+  });
+
+  it('should not call store.login(), if name is empty string with spaces', async () => {
+    component.username.set('   ');
+    fixture.detectChanges();
+
+    await component.onLogin();
+
+    expect(mockAppStore.login).not.toHaveBeenCalled();
+  });
+
+  it('should call login after submit btn clicked', () => {
+    component.username.set('martin_orsag');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const submitBtn = compiled.querySelector(
+      'button[title="submit-login-btn"]',
+    ) as HTMLButtonElement;
+
+    if (submitBtn) {
+      submitBtn.click();
+      expect(mockAppStore.login).toHaveBeenCalledWith({
+        username: 'martin_orsag',
+      });
+    }
   });
 });

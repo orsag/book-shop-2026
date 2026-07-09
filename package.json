@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.1.5",
+  "version": "2.1.7",
   "license": "MIT",
   "scripts": {
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",
@@ -88,7 +88,7 @@
     "@vitest/coverage-v8": "4.1.9",
     "@vitest/ui": "4.1.9",
     "angular-eslint": "^21.2.0",
-    "daisyui": "5.6.13",
+    "daisyui": "5.6.16",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-playwright": "^1.6.2",

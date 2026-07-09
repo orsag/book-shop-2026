@@ -30,6 +30,7 @@
                 <td class="group">
                   <button
                     type="button"
+                    title="copy-id-btn"
                     (click)="copyToClipboard(order.id)"
                     class="flex items-center gap-3 font-mono text-xs opacity-70 hover:opacity-100 hover:text-primary transition-all focus:outline-none focus:text-primary cursor-pointer tooltip tooltip-right"
                     data-tip="Kliknutím skopírujete"
@@ -51,6 +52,7 @@
                   <div class="flex justify-end items-center">
                     @if (order.status !== OrderStatus.CANCELLED && canCancel(order.createdAt)) {
                       <button (click)="handleCancelOrder(order.id)"
+                              title="cancel-order-btn"
                               class="btn btn-ghost btn-xs text-error">
                         Zrušiť do 14 dní
                       </button>
@@ -156,8 +158,8 @@
         </div>
 
         <div class="md:col-span-2 flex justify-end gap-2">
-          <button (click)="handleCancel()" class="btn btn-ghost">Zrušiť</button>
-          <button (click)="handleSave()" class="btn btn-primary px-8">Uložiť</button>
+          <button (click)="handleCancel()" title="cancel-profile-btn" class="btn btn-ghost">Zrušiť</button>
+          <button (click)="handleSave()" title="save-profile-btn" class="btn btn-primary px-8">Uložiť</button>
         </div>
       </div>
     </section>
