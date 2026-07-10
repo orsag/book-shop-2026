@@ -1,20 +1,28 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '../../services/ux-service';
+import { OverlayComponent } from '../common/overlay.component';
 
 @Component({
   selector: 'app-book-list-item',
-  imports: [NgOptimizedImage, RouterLink, CurrencyPipe, TranslocoDirective],
+  imports: [
+    NgOptimizedImage,
+    RouterLink,
+    CurrencyPipe,
+    TranslocoDirective,
+    OverlayComponent,
+  ],
   templateUrl: './book-list-item.html',
   styleUrl: './book-list-item.css',
 })
 export class BookListItem {
   cartStore = inject(CartStore);
   ux = inject(UXService);
+  isHovered = signal(false);
   @Input({ required: true }) product!: Product;
 
   handleCartAction() {

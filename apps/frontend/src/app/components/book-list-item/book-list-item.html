@@ -1,14 +1,25 @@
 <div *transloco="let t"
-     class="flex items-stretch gap-5 group max-h-[400px] py-1">
+     class="meteor-card relative flex items-stretch gap-5 group max-h-[400px]">
 
-  <!-- LEFT: Bigger Picture (120x175 instead of 80x110) -->
-  <div class="shrink-0 cursor-pointer overflow-hidden rounded-md" [routerLink]="['/product', product.id]">
+  <div
+    class="relative shrink-0 cursor-pointer rounded-xl overflow-hidden h-[188px] w-[120px] isolate"
+    [routerLink]="['/product', product.id]"
+    (mouseenter)="isHovered.set(true)"
+    (mouseleave)="isHovered.set(false)"
+  >
     <img [ngSrc]="product.coverUrl || 'images/placeholder.webp'"
-         width="120" height="175"
-         class="object-cover shadow-sm transition-all duration-300 ease-in-out
-              hover:shadow-xl hover:scale-105 hover:contrast-105"
+         width="120" height="188"
+         class="w-full h-full object-cover block"
          [alt]="t('list_item.cover', { title: product.name })">
+
+    @if (isHovered()) {
+      <div class="absolute inset-0 z-10 pointer-events-none rounded-xl overflow-hidden bg-transparent">
+        <app-overlay [product]="product" />
+      </div>
+    }
   </div>
+  <!-- LEFT: Bigger Picture (120x175 instead of 80x110) -->
+
 
   <!-- RIGHT: All elements in a flex column -->
   <div class="flex-1 flex flex-col min-w-0">

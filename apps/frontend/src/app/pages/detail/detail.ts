@@ -1,10 +1,5 @@
-import { Component, inject } from '@angular/core';
-import {
-  CommonModule,
-  NgOptimizedImage,
-  CurrencyPipe,
-  DatePipe,
-} from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
@@ -22,12 +17,12 @@ import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '../../services/ux-service';
 import { ErrorCodes, ErrorService } from '../../core/error.handler';
+import { OverlayComponent } from '../../components/common/overlay.component';
 
 @Component({
   selector: 'app-detail',
   imports: [
     CommonModule,
-    NgOptimizedImage,
     CurrencyPipe,
     DatePipe,
     LucideBookOpenText,
@@ -37,6 +32,7 @@ import { ErrorCodes, ErrorService } from '../../core/error.handler';
     LucideHeadphones,
     LucideClock,
     LucideLanguages,
+    OverlayComponent,
   ],
   templateUrl: './detail.html',
 })
@@ -47,6 +43,7 @@ export class Detail {
   errorService = inject(ErrorService);
   readonly store = inject(AppStore);
   ux = inject(UXService);
+  isHovered = signal(false);
 
   book = toSignal(
     this.route.params.pipe(

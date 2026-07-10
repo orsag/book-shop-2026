@@ -1,0 +1,28 @@
+<div class="w-full h-full p-2 bg-base-100/95 text-base-content backdrop-blur-xs flex flex-col justify-between text-[11px] leading-tight select-none border border-base-200 shadow-inner">
+
+  <div class="flex flex-col text-base-content/60">
+    <span class="truncate font-mono tracking-tighter text-[10px]">SKU: {{ product.sku }}</span>
+    <span class="truncate font-mono tracking-tighter text-[10px]">PD: {{ product.bookDetails?.publishedDate | date }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">P: {{ product.price }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">D: {{ product.discount * 10 }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">AC: {{ product.availableCount }}</span>
+    <span class="truncate font-mono tracking-tighter text-[10px]">A: {{ product.bookDetails?.author }}</span>
+    <span class="font-mono tracking-tighter text-[8px]">I: {{ product.bookDetails?.isbn }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">C: {{ product.bookDetails?.category }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">P: {{ product.bookDetails?.publisher }}</span>
+    <span class="font-mono tracking-tighter text-[10px]">Pages: {{ product.bookDetails?.pageCount }}</span>
+
+    <div class="flex gap-2">
+      <span class="capitalize font-mono text-[10px] bg-base-300 text-base-content rounded">{{ product.product_quality }}</span>
+      @if (product.isAvailable) {
+        <span class="bg-success/20 rounded text-[10px] text-base-content/60">Active</span>
+      } @else {
+        <span class="bg-error/20 rounded text-[10px] text-base-content/60">Inactive</span>
+      }
+    </div>
+
+    <span>
+      T: <span class="font-mono tracking-tighter text-[10px] capitalize">{{ product.productType }}</span>
+    </span>
+  </div>
+</div>

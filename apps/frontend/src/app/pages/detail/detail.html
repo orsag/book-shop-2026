@@ -10,15 +10,21 @@
     <div class="max-w-6xl md:p-6 flex flex-col md:flex-row gap-12">
       <div class="md:w-1/3">
         <div
-          class="sticky md:top-24 rounded-3xl md:p-8 flex justify-center"
+          class="sticky md:top-24 rounded-3xl flex justify-center overflow-hidden"
+          (mouseenter)="isHovered.set(true)"
+          (mouseleave)="isHovered.set(false)"
         >
           <img
-            [ngSrc]="data.coverUrl || 'images/placeholder.webp'"
+            [src]="data.coverUrl || 'images/placeholder.webp'"
             [alt]="data.name"
-            width="80"
-            height="160"
-            class="w-full h-auto max-w-[300px] object-contain drop-shadow-2xl rounded-sm"
+            class="w-full h-auto object-contain drop-shadow-2xl rounded-sm"
           />
+
+          @if (isHovered()) {
+            <div class="absolute inset-0 z-10 rounded-3xl pointer-events-none overflow-hidden">
+              <app-overlay [product]="data" />
+            </div>
+          }
         </div>
       </div>
 

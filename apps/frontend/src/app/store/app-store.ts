@@ -99,6 +99,9 @@ const initialState: AppState = {
   },
 };
 
+// Stringified cache tracker to safely evaluate deep filter object changes
+let lastFetchedType = '';
+
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
@@ -148,19 +151,38 @@ export const AppStore = signalStore(
         this.loadBooks();
       },
 
-      // Explicitly call this ONLY when needed
       loadBooks: rxMethod<{ append?: boolean } | void>(
         pipe(
-          // Map the input argument (or default to empty object if called without arguments)
           map((args) => args || { append: false }),
+          // OPTIMIZATION: Bypasses network request on back-navigation if the product type matches
+          filter(({ append }) => {
+            const currentType = store.filters().type;
+
+            // Skip the API call if we aren't appending pagination, already have items,
+            // and the category type hasn't changed from the last successful fetch.
+            if (
+              !append &&
+              store.products().length > 0 &&
+              currentType === lastFetchedType
+            ) {
+              return false;
+            }
+            return true;
+          }),
           tap(() => patchState(store, { isLoading: true })),
           switchMap(({ append }) => {
             const params: Partial<AppState['filters']> = store.filters();
+            const currentType = params.type || '';
 
             return bookService.fetchProducts(params).pipe(
               delay(1000),
               tap({
                 next: (res) => {
+                  // Update the active type cache only on a fresh successful fetch
+                  if (!append) {
+                    lastFetchedType = currentType;
+                  }
+
                   patchState(store, {
                     products: append
                       ? [...store.products(), ...res.data]
@@ -174,7 +196,6 @@ export const AppStore = signalStore(
                   errorService.handleError(ErrorCodes.FETCH_PRODUCTS);
                 },
               }),
-              // Catch the error internally so the main rxMethod stream doesn't die permanently
               catchError(() => EMPTY),
             );
           }),
