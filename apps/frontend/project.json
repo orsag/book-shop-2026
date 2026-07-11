@@ -7,13 +7,15 @@
   "tags": ["scope:client"],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath.base}"],
+      "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/frontend",
+        "outputPath": {
+          "base": "dist/apps/frontend"
+        },
         "deleteOutputPath": false,
         "index": "apps/frontend/src/index.html",
-        "main": "apps/frontend/src/main.ts",
         "tsConfig": "apps/frontend/tsconfig.app.json",
         "assets": [
           {
@@ -21,7 +23,8 @@
             "input": "apps/frontend/public"
           }
         ],
-        "styles": ["apps/frontend/src/styles.css"]
+        "styles": ["apps/frontend/src/styles.css"],
+        "browser": "apps/frontend/src/main.ts"
       },
       "configurations": {
         "production": {
@@ -40,19 +43,20 @@
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
           "sourceMap": true,
           "namedChunks": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
       "continuous": true,
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/frontend/proxy.conf.json"
+      },
       "configurations": {
         "production": {
           "buildTarget": "frontend:build:production"
@@ -60,14 +64,10 @@
         "development": {
           "buildTarget": "frontend:build:development"
         }
-      },
-      "options": {
-        "proxyConfig": "apps/frontend/proxy.conf.json"
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "@angular/build:extract-i18n",
       "options": {
         "buildTarget": "frontend:build"
       }
