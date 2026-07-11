@@ -1,6 +1,6 @@
 import '@angular/compiler';
-import '@analogjs/vite-plugin-angular/setup-vitest';
-import '@analogjs/vitest-angular/setup-snapshots';
+import 'zone.js';
+import 'zone.js/testing';
 
 import { TestBed } from '@angular/core/testing';
 // Import from the non-deprecated /platform-browser package
@@ -45,4 +45,3 @@ try {
 } catch {
   // Prevent double-initialization errors if Vitest hot-reloads
 }
-

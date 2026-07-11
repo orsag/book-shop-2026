@@ -1,6 +1,5 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
-import angular from '@analogjs/vite-plugin-angular';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -8,7 +7,6 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: './node_modules/.vite/book-store-2026',
   plugins: [
-    angular(),
     tsconfigPaths(),
     viteStaticCopy({
       targets: [

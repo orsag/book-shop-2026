@@ -76,11 +76,10 @@
       "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nx/vitest:test",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "config": "apps/frontend/vite.config.mts",
-        "reportsDirectory": "coverage/apps/frontend"
+        "runnerConfig": "apps/frontend/vite.config.mts"
       }
     },
     "serve-static": {

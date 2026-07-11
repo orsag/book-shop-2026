@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "baseUrl": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "bundler",
@@ -23,7 +22,7 @@
       "@book-store-2026/libs": ["./apps/libs/src/index.ts"],
       "@store/shared-models": ["./apps/libs/src/index.ts"],
       "@store/libs": ["./apps/libs/src/index.ts"],
-      "@prisma-client": ["generated/prisma-entry.ts"],
+      "@prisma-client": ["./generated/prisma-entry.ts"],
       "@prismalib": ["./prisma/prisma.ts"],
     },
   },
