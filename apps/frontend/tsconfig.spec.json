@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [
+      "@playwright/test",
       "vitest/globals",
       "vitest/importMeta",
       "vite/client",

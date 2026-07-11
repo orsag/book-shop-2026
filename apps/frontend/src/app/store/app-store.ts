@@ -100,7 +100,7 @@ const initialState: AppState = {
 };
 
 // Stringified cache tracker to safely evaluate deep filter object changes
-let lastFetchedType = '';
+let lastFetchedFiltersKey = '';
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
@@ -156,14 +156,16 @@ export const AppStore = signalStore(
           map((args) => args || { append: false }),
           // OPTIMIZATION: Bypasses network request on back-navigation if the product type matches
           filter(({ append }) => {
-            const currentType = store.filters().type;
+            // Strip out pagination fields to compare pure query filters
+            const { page, limit, ...pureFilters } = store.filters();
+            const currentKey = JSON.stringify(pureFilters);
 
             // Skip the API call if we aren't appending pagination, already have items,
-            // and the category type hasn't changed from the last successful fetch.
+            // and no core filter criteria has changed since the last fetch.
             if (
               !append &&
               store.products().length > 0 &&
-              currentType === lastFetchedType
+              currentKey === lastFetchedFiltersKey
             ) {
               return false;
             }
@@ -180,7 +182,8 @@ export const AppStore = signalStore(
                 next: (res) => {
                   // Update the active type cache only on a fresh successful fetch
                   if (!append) {
-                    lastFetchedType = currentType;
+                    const { page, limit, ...pureFilters } = params;
+                    lastFetchedFiltersKey = JSON.stringify(pureFilters);
                   }
 
                   patchState(store, {
