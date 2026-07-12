@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { AppStore } from '../../store/app-store';
 import { ProgressComponent } from '../../components/common/progress.component';
 import { DEFAULT_LOADER_DELAY } from '@store/libs';
+import { LucideListCollapse } from '@lucide/angular';
 
 @Component({
   selector: 'app-main-layout',
@@ -26,13 +27,14 @@ import { DEFAULT_LOADER_DELAY } from '@store/libs';
     ProgressComponent,
     ToastComponent,
     CommonModule,
+    LucideListCollapse,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })
 export class MainLayoutComponent {
   store = inject(AppStore);
-  private config = inject(ConfigurationService);
+  config = inject(ConfigurationService);
 
   readonly showLoader = toSignal(
     toObservable(this.store.isLoading).pipe(

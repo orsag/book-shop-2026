@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, Input, signal } from '@angular/core';
 import { ConfigurationService } from '../../services/configuration-service';
 import { inject, computed } from '@angular/core';
 import { BookFilters } from '../../../types';
@@ -45,6 +45,7 @@ export class Filter {
   showFilter = computed(() => this.config.flags().SHOW_FILTER);
   isCoolingDown = signal(false);
   showHistory = signal(false);
+  @Input() isCollapsed = false;
   activeIndex = signal(-1); // For keyboard navigation
   toggles = { key: 'isDiscounted', label: 'discounted' };
 
