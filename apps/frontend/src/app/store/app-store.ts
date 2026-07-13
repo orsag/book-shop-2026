@@ -50,7 +50,6 @@ export interface AppState {
   userDetail: UserDetail | null;
   token: string | null;
   premiumStatus: PremiumStatus | null;
-  temporaryProduct: any;
   _isMobile: boolean;
   _isTablet: boolean;
   // --- 📚 Book State ---
@@ -80,7 +79,6 @@ const initialState: AppState = {
   userDetail: null,
   token: null,
   premiumStatus: null,
-  temporaryProduct: null,
   products: [],
   orders: [],
   favoriteProducts: [],
@@ -153,15 +151,21 @@ export const AppStore = signalStore(
 
       loadBooks: rxMethod<{ append?: boolean } | void>(
         pipe(
+          // 1. Fallback for void arguments
           map((args) => args || { append: false }),
-          // OPTIMIZATION: Bypasses network request on back-navigation if the product type matches
-          filter(({ append }) => {
-            // Strip out pagination fields to compare pure query filters
-            const { page, limit, ...pureFilters } = store.filters();
-            const currentKey = JSON.stringify(pureFilters);
+          // 2. Combine the trigger argument with the absolute latest filters state
+          map((args) => {
+            // Include whole filters object
+            const pureFilters = store.filters();
+            return {
+              append: args.append,
+              pureFilters,
+              currentKey: JSON.stringify(pureFilters),
+            };
+          }),
 
-            // Skip the API call if we aren't appending pagination, already have items,
-            // and no core filter criteria has changed since the last fetch.
+          // 3. Now the filtering logic relies on captured stream data, not race-condition signals
+          filter(({ append, currentKey }) => {
             if (
               !append &&
               store.products().length > 0 &&
@@ -171,18 +175,17 @@ export const AppStore = signalStore(
             }
             return true;
           }),
+
           tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ append }) => {
+
+          switchMap(({ append, pureFilters }) => {
             const params: Partial<AppState['filters']> = store.filters();
-            const currentType = params.type || '';
 
             return bookService.fetchProducts(params).pipe(
               delay(1000),
               tap({
                 next: (res) => {
-                  // Update the active type cache only on a fresh successful fetch
                   if (!append) {
-                    const { page, limit, ...pureFilters } = params;
                     lastFetchedFiltersKey = JSON.stringify(pureFilters);
                   }
 
@@ -521,10 +524,6 @@ export const AppStore = signalStore(
         patchState(store, {
           orders: store.orders().filter((order) => order.id !== id),
         });
-      },
-
-      setTemporaryProduct(product: any) {
-        patchState(store, { temporaryProduct: product });
       },
 
       reloadOrders: rxMethod<{ userId: string }>(

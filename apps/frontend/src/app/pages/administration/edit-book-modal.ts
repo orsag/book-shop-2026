@@ -16,6 +16,7 @@ import {
   EMPTY_BOOK,
   BookDetails,
   createProduct,
+  ProductType,
 } from '@store/libs';
 import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '../../store/app-store';
@@ -153,14 +154,14 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
         </div>
 
         <div class="modal-action">
-          <button class="btn btn-primary" (click)="handleAddProduct()">
-            Add product
-          </button>
           <button class="btn btn-ghost" (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
+          <button class="btn btn-info" (click)="handleGenerateFields()">
+            {{ t('edit_modal.generate') }}
+          </button>
           <button
-            class="btn btn-primary px-10"
+            class="btn btn-primary"
             [disabled]="editForm().invalid()"
             (click)="handleSave()"
           >
@@ -220,6 +221,7 @@ export class EditBookModalComponent {
             alternativeHeadline: book.alternativeHeadline,
             price: book.price,
             discount: book.discount,
+            isAvailable: book.isAvailable,
             availableCount: book.availableCount,
             productType: book.productType,
             description: descriptor,
@@ -254,10 +256,33 @@ export class EditBookModalComponent {
     });
   }
 
-  handleAddProduct() {
+  handleGenerateFields() {
+    const FAKE_ID = crypto.randomUUID();
     const currentType = this.store.currentType();
-    const createInput = createProduct(currentType);
-    this.store.setTemporaryProduct(createInput);
+    const tempProduct = createProduct(currentType);
+    const descriptor = tempProduct.description ? tempProduct.description : '';
+    const quality = tempProduct.product_quality
+      ? tempProduct.product_quality
+      : 'new';
+    const details = tempProduct.bookDetails
+      ? { ...tempProduct.bookDetails.create }
+      : (EMPTY_BOOK.bookDetails as BookDetails);
+    this.editModel.set({
+      name: tempProduct.name,
+      alternativeHeadline: tempProduct.alternativeHeadline,
+      price: tempProduct.price ?? 100,
+      discount: tempProduct.discount ?? 0,
+      isAvailable: true,
+      availableCount: tempProduct.availableCount ?? 0,
+      productType: tempProduct.productType as ProductType,
+      description: descriptor,
+      product_quality: quality,
+      bookDetails: {
+        ...(details as NonNullable<UpdateProductDto['bookDetails']>),
+        id: FAKE_ID,
+        productId: FAKE_ID,
+      },
+    });
   }
 
   handleClose() {

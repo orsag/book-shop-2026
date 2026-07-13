@@ -1,5 +1,5 @@
 // Initialisation
-import { UpdateProductDto } from './shared-models/product.model';
+import { UpdateProductDto } from './shared-models';
 
 export const EMPTY_BOOK: UpdateProductDto = {
   name: '',
@@ -7,6 +7,7 @@ export const EMPTY_BOOK: UpdateProductDto = {
   description: '',
   price: 0,
   discount: 0,
+  isAvailable: false,
   availableCount: 0,
   product_quality: 'new',
   productType: 'BOOK',
@@ -33,6 +34,7 @@ export const EMPTY_GAME: UpdateProductDto = {
   description: '',
   price: 0,
   discount: 0,
+  isAvailable: false,
   availableCount: 0,
   product_quality: 'new',
   productType: 'GAME',
@@ -55,6 +57,7 @@ export const EMPTY_GASTRO: UpdateProductDto = {
   description: '',
   price: 0,
   discount: 0,
+  isAvailable: false,
   availableCount: 0,
   product_quality: 'new',
   productType: 'GASTRO',

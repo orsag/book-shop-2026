@@ -98,6 +98,7 @@ export interface UpdateProductDto {
   description: string;
   price: number;
   discount: number;
+  isAvailable: boolean;
   availableCount: number;
   product_quality: string;
   productType: ProductType;

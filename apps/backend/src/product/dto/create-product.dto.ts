@@ -11,20 +11,20 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class AggregateRatingDto {
-  @IsString()
-  id: string;
-  @IsNumber()
-  ratingValue: number;
-  @IsNumber()
-  ratingCount: number;
-  @IsNumber()
-  bestRating: number;
-  @IsNumber()
-  worstRating: number;
-  @IsString()
-  productId: string;
-}
+// export class AggregateRatingDto {
+//   @IsString()
+//   id: string;
+//   @IsNumber()
+//   ratingValue: number;
+//   @IsNumber()
+//   ratingCount: number;
+//   @IsNumber()
+//   bestRating: number;
+//   @IsNumber()
+//   worstRating: number;
+//   @IsString()
+//   productId: string;
+// }
 
 export class BookDto {
   @IsString()
@@ -37,6 +37,7 @@ export class BookDto {
   isbn!: string;
   @IsString()
   publisher!: string;
+  @IsNumber()
   pageCount!: number;
   @IsString()
   bookFormat!: string;
@@ -108,15 +109,15 @@ export class GiftCardDto {
 
 export class CreateProductDto implements Product {
   @IsString()
-  id!: string;
+  id: string = 'default-id-123';
   @IsString()
-  sku!: string; // 27Z6SGMY
+  sku: string = '27Z6SGMY';
   @IsString()
   name!: string;
   @IsString()
   alternativeHeadline!: string;
   @IsString()
-  description: string;
+  description!: string;
   @IsNumber()
   price!: number;
   @IsNumber()
@@ -128,7 +129,7 @@ export class CreateProductDto implements Product {
   @IsBoolean()
   isAvailable!: boolean;
   @IsString()
-  product_quality: string;
+  product_quality!: string;
   @IsOptional()
   @IsString()
   coverUrl?: string | null;
@@ -139,10 +140,10 @@ export class CreateProductDto implements Product {
   productType!: ProductType;
 
   // Relations (optional for partial DTOs or loaded relations)
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => AggregateRatingDto)
-  rating?: AggregateRatingDto | null;
+  // @IsOptional()
+  // @ValidateNested()
+  // @Type(() => AggregateRatingDto)
+  // rating?: AggregateRatingDto | null;
 
   @IsOptional()
   @ValidateNested()
@@ -164,15 +165,7 @@ export class CreateProductDto implements Product {
   @Type(() => GiftCardDto)
   cardDetails?: GiftCardDto | null;
   @IsString()
-  createdAt!: Date;
+  createdAt: Date = new Date();
   @IsString()
-  updatedAt!: Date;
+  updatedAt: Date = new Date();
 }
-
-import { OmitType } from '@nestjs/mapped-types'; // or '@nestjs/swagger' if using swagger
-export class CreateProductPayloadDto extends OmitType(CreateProductDto, [
-  'id',
-  'sku',
-  'createdAt',
-  'updatedAt',
-] as const) {}

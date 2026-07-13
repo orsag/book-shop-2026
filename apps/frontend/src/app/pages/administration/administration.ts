@@ -99,12 +99,13 @@ export class Administration implements OnInit {
   }) {
     const id = event.id;
     const dataToSave = event.dataToSave;
+    dataToSave.createdAt = dataToSave.createdAt ?? new Date().toISOString();
+    dataToSave.updatedAt = dataToSave.updatedAt ?? new Date().toISOString();
 
     if (id) {
       this.bookService.update(id, dataToSave).subscribe({
         next: () => {
           this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
-          this.store.setTemporaryProduct(null);
           this.store.loadBooks();
           this.closeModals();
         },
@@ -117,7 +118,6 @@ export class Administration implements OnInit {
       this.bookService.create(dataToSave).subscribe({
         next: () => {
           this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
-          this.store.setTemporaryProduct(null);
           this.store.loadBooks();
           this.closeModals();
         },

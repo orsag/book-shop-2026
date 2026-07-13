@@ -98,7 +98,7 @@ export class Navbar {
       }
     });
     effect(() => {
-      if (this.showLoginModal()) {
+      if (this.showLoginModal() && this.inputElement?.nativeElement) {
         this.inputElement.nativeElement.focus();
       }
     });

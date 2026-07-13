@@ -181,6 +181,7 @@
   "edit_modal": {
     "edit": "Edit book",
     "create": "Create new book",
+    "generate": "Generate book",
     "name": "Name",
     "name_min": "Name has at least 3 characters",
     "alternativeHeadline": "Subheader",

@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "license": "MIT",
   "scripts": {
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",

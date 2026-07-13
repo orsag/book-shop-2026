@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  CreateProductPayloadDto,
-} from './dto/create-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FindAllParams } from './types';
 import { Prisma } from '@prismalib';
@@ -24,8 +22,6 @@ export class ProductsService {
   }: FindAllParams) {
     const skip = (page - 1) * limit;
     const andConditions: ProductWhereInput | ProductWhereInput[] = [];
-
-    console.log((type), (page), (limit), search);
 
     // 1. Search condition
     if (search && search.trim().length > 0) {
@@ -263,10 +259,9 @@ export class ProductsService {
     return result;
   }
 
-  create(createProductDto: CreateProductPayloadDto) {
+  create(createProductDto: CreateProductDto) {
     // 1. Separate nested relations from the core product properties
     const {
-      rating,
       bookDetails,
       gameDetails,
       gastroDetails,

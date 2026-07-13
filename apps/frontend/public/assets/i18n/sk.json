@@ -180,6 +180,7 @@
   },
   "edit_modal": {
     "edit": "Upraviť knihu",
+    "generate": "Generuj knihu",
     "create": "Pridať novú knihu",
     "name": "Názov",
     "name_min": "Názov musí mať aspoň 3 znaky",

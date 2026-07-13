@@ -3,7 +3,6 @@ import {
   categories,
   computerGameBrands,
   computerGameCategory,
-  productTypeHelper,
   DISCOUNT,
   gastroBrands,
   gatroCategory,
@@ -15,6 +14,7 @@ import {
   DEFAULT_AVATAR,
   ProductCreateInput,
 } from './creator.constants';
+import { ProductType } from '../shared-models';
 
 export function createAdmin() {
   return {
@@ -36,21 +36,17 @@ export function createAdmin() {
   };
 }
 
-export function getName (type: productTypeHelper) {
-  const map: Record<productTypeHelper, string> = {
+export function getName(type: ProductType) {
+  const map: Record<ProductType, string> = {
     BOOK: faker.commerce.productName(),
     GAME: faker.helpers.arrayElement(computerGames),
     GASTRO: faker.food.dish(),
     GIFT_CARD: faker.commerce.productName(),
-    PUZZLE: faker.commerce.productName(),
-    CARDS: faker.commerce.productName(),
-    TOYS: faker.commerce.productName(),
   };
   return map[type] ?? faker.commerce.productName();
 };
 
-export function createProduct(type: productTypeHelper) {
-  const audioBook = Math.random() > 0.8;
+export function createProduct(type: ProductType) {
   const availableCount = faker.number.int({ min: 0, max: 50 });
   const isAvailable = availableCount > 0;
   const condition = Math.random() < 0.9 ? 'new' : 'used';
@@ -95,7 +91,7 @@ export function createProduct(type: productTypeHelper) {
           'flexibound',
         ]),
         publishedDate: faker.date.past(),
-        audioBook: audioBook,
+        audioBook: true,
         audioLength: faker.number.int({ min: 100, max: 400 }),
         audioLanguage: faker.helpers.arrayElement([
           'Slovak',

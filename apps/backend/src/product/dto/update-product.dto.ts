@@ -10,21 +10,21 @@ import { Type } from 'class-transformer';
 
 export class UpdateProductDto implements UpdateProductDto {
   @IsString()
-  name: string;
+  name!: string;
   @IsString()
-  alternativeHeadline: string;
+  alternativeHeadline!: string;
   @IsString()
-  description: string;
+  description!: string;
   @IsNumber()
-  price: number;
+  price!: number;
   @IsNumber()
-  discount: number;
+  discount!: number;
   @IsNumber()
-  availableCount: number;
+  availableCount!: number;
   @IsString()
-  product_quality: string;
+  product_quality!: string;
   @IsString()
-  productType: ProductType;
+  productType!: ProductType;
 
   @IsOptional()
   @ValidateNested()
