@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "files": [],
+  "include": [
+    "../../libs/src/**/*.ts",
+    "../../generated/prisma/client.ts",
+    "../../prisma/prisma.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
+}

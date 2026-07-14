@@ -1,0 +1,87 @@
+{
+  "name": "hono-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/hono-backend/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/hono-backend",
+        "format": ["esm"],
+        "bundle": true,
+        "thirdParty": false,
+        "main": "apps/hono-backend/src/main.ts",
+        "tsConfig": "apps/hono-backend/tsconfig.app.json",
+        "assets": ["apps/hono-backend/src/assets"],
+        "generatePackageJson": false,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "mainFields": ["module", "main"],
+          "outExtension": {
+            ".js": ".mjs"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/hono-backend/package.json",
+        "{workspaceRoot}/dist/apps/hono-backend/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "copy-workspace-modules": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/apps/hono-backend/workspace_modules"],
+      "executor": "@nx/js:copy-workspace-modules",
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "prune": {
+      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "executor": "nx:noop"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "hono-backend:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "hono-backend:build:development"
+        },
+        "production": {
+          "buildTarget": "hono-backend:build:production"
+        }
+      }
+    }
+  }
+}
