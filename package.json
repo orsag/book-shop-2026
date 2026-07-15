@@ -1,10 +1,12 @@
 {
   "name": "book-store-2026",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "license": "MIT",
   "scripts": {
+    "rm": "rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml bun.lockb",
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",
     "build": "nx build",
+    "gol": "npx nx serve go-backend",
     "test": "npx nx test frontend",
     "pwr": "npx nx e2e frontend",
     "bl": "nx run backend:lint",
@@ -60,6 +62,7 @@
     "@faker-js/faker": "^10.4.0",
     "@nestjs/schematics": "^11.1.0",
     "@nestjs/testing": "^11.1.0",
+    "@nx-go/nx-go": "^4.1.1",
     "@nx/angular": "23.0.0",
     "@nx/devkit": "23.0.0",
     "@nx/esbuild": "23.0.0",
@@ -113,5 +116,14 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "overrides": {
+    "@ngrx/signals": {
+      "@angular/common": "$@angular/common",
+      "@angular/core": "$@angular/core"
+    },
+    "@nx/angular": {
+      "@angular/build": "22.0.6"
+    }
   }
 }
