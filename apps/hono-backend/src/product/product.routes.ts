@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, Context } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { db } from '../prisma/prisma.service'; // Our global Prisma client
@@ -7,8 +7,30 @@ import { adminMiddleware } from '../guards/admin.middleware';
 import { jwtAuthMiddleware } from '../guards/auth.middleware';
 import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
 import { Prisma } from '@prismalib';
+import { rateLimiter } from 'hono-rate-limiter';
+import { securityLogger } from '../guards/logger.middleware';
 
 const productApp = new Hono<HonoEnv>();
+
+const adminLimiter = rateLimiter({
+  windowMs: 60 * 1000,
+  limit: 5,
+  // Use the UserID if they are logged in, otherwise fallback to IP
+  keyGenerator: (c: Context<HonoEnv>) => {
+    const user = c.get('user');
+    return user ? user.userId : c.req.header('x-forwarded-for') || '127.0.0.1';
+  },
+  handler: (c) => {
+    securityLogger.warn(
+      {
+        event: 'ADMIN_RATE_LIMIT',
+        path: c.req.path,
+      },
+      'Admin rate limit triggered',
+    );
+    return c.json({ error: 'Too many admin requests' }, 429);
+  },
+});
 
 // Helper to generate a unique internal SKU
 const generateInternalSku = (): string => {
@@ -166,7 +188,7 @@ productApp.post('/list', zValidator('json', getIdsBodySchema), async (c) => {
 });
 
 // 4. CREATE PRODUCT (Admin Route)
-productApp.post('/', jwtAuthMiddleware, adminMiddleware, async (c) => {
+productApp.post('/', jwtAuthMiddleware, adminMiddleware, adminLimiter, async (c) => {
   const body = await c.req.json();
   const {
     bookDetails,
@@ -224,7 +246,7 @@ productApp.post('/', jwtAuthMiddleware, adminMiddleware, async (c) => {
 });
 
 // 5. UPDATE PRODUCT (Admin Route)
-productApp.patch('/:id', jwtAuthMiddleware, adminMiddleware, async (c) => {
+productApp.patch('/:id', jwtAuthMiddleware, adminMiddleware, adminLimiter, async (c) => {
   const id = c.req.param('id');
   const updateProductDto = await c.req.json();
 

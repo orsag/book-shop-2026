@@ -1,16 +1,24 @@
 import { MiddlewareHandler } from 'hono';
 import { verify } from 'hono/jwt';
 import { HTTPException } from 'hono/http-exception';
-import { JwtPayload, AuthenticatedUser, HonoEnv } from './types'; // Import your types.ts
+import { JwtPayload, AuthenticatedUser, HonoEnv } from './types';
+import { securityLogger } from './logger.middleware';
 
 // --- JWT AUTH MIDDLEWARE (Replaces JwtStrategy & JwtAuthGuard) ---
 export const jwtAuthMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
   const authHeader = c.req.header('Authorization');
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new HTTPException(401, {
-      message: 'Unauthorized: Missing or invalid token format',
-    });
+    securityLogger.warn(
+      {
+        event: 'UNAUTHORIZED_ACCESS',
+        method: c.req.method,
+        path: c.req.path,
+      },
+      'Missing or invalid token format',
+    );
+
+    throw new HTTPException(401, { message: 'Unauthorized' });
   }
 
   const token = authHeader.split(' ')[1];
@@ -38,6 +46,15 @@ export const jwtAuthMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => 
 
     await next();
   } catch (err) {
-    throw new HTTPException(401, { message: 'Unauthorized: Invalid token' });
+    securityLogger.warn(
+      {
+        event: 'INVALID_TOKEN',
+        path: c.req.path,
+        error: err instanceof Error ? err.message : 'Unknown',
+      },
+      'Token verification failed',
+    );
+
+    throw new HTTPException(401, { message: 'Invalid token' });
   }
 };
