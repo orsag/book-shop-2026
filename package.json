@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -42,12 +42,16 @@
     "@prisma/client": "^7.8.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@types/multer": "^2.2.0",
+    "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
+    "express": "^5.1.0",
     "hono": "^4.12.30",
     "hono-rate-limiter": "^0.5.3",
+    "jsonwebtoken": "^9.0.3",
     "lucide": "^1.24.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -76,6 +80,7 @@
     "@nx/devkit": "23.0.0",
     "@nx/eslint": "23.0.0",
     "@nx/eslint-plugin": "23.0.0",
+    "@nx/express": "^23.0.0",
     "@nx/js": "23.0.0",
     "@nx/nest": "23.0.0",
     "@nx/node": "23.0.0",
@@ -86,12 +91,18 @@
     "@nx/webpack": "23.0.0",
     "@nx/workspace": "23.0.0",
     "@playwright/test": "^1.37.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@schematics/angular": "~22.0.6",
+    "@svgr/webpack": "^8.0.1",
     "@swc-node/register": "~1.11.1",
     "@swc/cli": "~0.8.0",
     "@swc/core": "~1.15.5",
     "@swc/helpers": "~0.5.18",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.19.41",
     "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.20.0",
@@ -111,6 +122,7 @@
     "nx": "23.0.0",
     "prettier": "~3.8.4",
     "prisma": "^7.8.0",
+    "react-refresh": "^0.10.0",
     "tslib": "^2.3.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.40.0",
@@ -125,5 +137,15 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "overrides": {
+    "@nx/angular": {
+      "@angular-devkit/core": "^22.0.0",
+      "@angular/build": "^22.0.0",
+      "@schematics/angular": "^22.0.0"
+    },
+    "@ngrx/signals": {
+      "@angular/core": "^22.0.0"
+    }
   }
 }

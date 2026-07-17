@@ -7,7 +7,6 @@ import { securityLogger } from './logger.middleware';
 export const adminMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
   const user = c.get('user');
 
-  // Mimic your NestJS AdminGuard logic
   if (!user || !user.isAdmin) {
     securityLogger.error(
       {

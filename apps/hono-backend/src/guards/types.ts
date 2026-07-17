@@ -4,6 +4,7 @@ export interface JwtPayload {
   isAdmin: boolean;
   iat?: number; // Issued at
   exp?: number; // Expiration
+  [key: string]: any;
 }
 
 export interface AuthenticatedUser {

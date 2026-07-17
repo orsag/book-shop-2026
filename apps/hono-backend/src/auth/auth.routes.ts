@@ -4,10 +4,10 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { HTTPException } from 'hono/http-exception';
 import { jwtAuthMiddleware } from '../guards/auth.middleware';
-import { HonoEnv } from '../guards/types';
+import { HonoEnv, JwtPayload } from '../guards/types';
 import { eq } from 'drizzle-orm';
 import { db } from '../db'; // Import your new Drizzle client
-import { user } from '../schema'; // Import schema table definition
+import { user } from '../schema';
 
 const authApp = new Hono<HonoEnv>();
 
@@ -50,8 +50,8 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
     throw new Error('JWT_SECRET is not defined in environment variables');
   }
 
-  // Create JWT Payload matching your original types.ts
-  const payload = {
+  // Create JWT Payload matching your original token
+  const payload: JwtPayload = {
     sub: userData.id,
     username: userData.username,
     isAdmin: userData.isAdmin, // Standard property from your user schema
