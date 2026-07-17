@@ -14,7 +14,7 @@ export const updateUserDetailSchema = z.object({
   countryCode: z.string(),
   iban: z.string().optional(),
   bic: z.string().optional(),
-  dateOfBirth: z.string().datetime().optional(), // Expected as ISO String from request
+  dateOfBirth: z.coerce.date().nullable().optional(),
   taxId: z.string().optional(),
 });
 

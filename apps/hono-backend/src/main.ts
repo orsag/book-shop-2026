@@ -1,9 +1,6 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import * as dotenv from 'dotenv';
-import { join } from 'path';
-import { connectDb } from './prisma/prisma.service';
 import {
   logger as pinoLogger,
   securityLogger,
@@ -16,9 +13,6 @@ import orderApp from './order/order.routes';
 import userDetailApp from './user-detail/user-detail.routes';
 import uploadsApp from './uploads/uploads.routes';
 import { rateLimiter } from 'hono-rate-limiter';
-
-// Load .env from the root of the monorepo
-dotenv.config({ path: join(__dirname, '../../.env') });
 
 const app = new Hono();
 
@@ -46,15 +40,7 @@ app.use(
 // --- PINO LOGGING MIDDLEWARE ---
 app.use('*', async (c, next) => {
   const start = Date.now();
-
-  // Log the incoming request
-  pinoLogger.info({
-    method: c.req.method,
-    url: c.req.url
-  }, 'Incoming request');
-
   await next();
-
   // Log the response time
   const ms = Date.now() - start;
   pinoLogger.info({
@@ -85,14 +71,12 @@ app.route('/api/user-detail', userDetailApp);
 app.route('/api/uploads', uploadsApp);
 
 // 4. Start the Node Server
-connectDb().then(() => {
-  const port = Number(process.env['PORT']) || 3000;
-  console.log(`Server is running on http://localhost:${port}`);
+const port = Number(process.env['PORT']) || 3000;
+console.log(`Server is running on http://localhost:${port}`);
 
-  serve({
-    fetch: app.fetch,
-    port,
-  });
+serve({
+  fetch: app.fetch,
+  port,
 });
 
 // 5. Export the Type for your Angular app (Hono RPC feature)

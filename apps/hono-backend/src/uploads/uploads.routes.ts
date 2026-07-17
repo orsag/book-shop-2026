@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { db } from '../prisma/prisma.service'; // Shared global prisma client
+import { db } from '../db'; // Adjust path to your Drizzle db instance
+import { imageRecord } from '../schema';
 
 const uploadsApp = new Hono();
 
@@ -47,14 +48,15 @@ uploadsApp.post('/image', async (c) => {
 
     // 6. Save data to database via Prisma (Mirrors your legacy UploadsService logic)
     const publicUrl = `/assets/${finalFilename}`;
-    const imageRecord = await db.imageRecord.create({
-      data: {
+    const [newImageRecord] = await db
+      .insert(imageRecord)
+      .values({
         url: publicUrl,
         filename: finalFilename,
-      },
-    });
+      })
+      .returning();
 
-    return c.json(imageRecord, 201);
+    return c.json(newImageRecord, 201);
   } catch (error) {
     throw new HTTPException(500, {
       message: 'Failed to complete image streaming update to disk or database',

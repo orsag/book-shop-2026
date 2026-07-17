@@ -3,9 +3,11 @@ import { sign } from 'hono/jwt';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { HTTPException } from 'hono/http-exception';
-import { db } from '../prisma/prisma.service'; // Adjust path to your Prisma client
 import { jwtAuthMiddleware } from '../guards/auth.middleware';
 import { HonoEnv } from '../guards/types';
+import { eq } from 'drizzle-orm';
+import { db } from '../db'; // Import your new Drizzle client
+import { user } from '../schema'; // Import schema table definition
 
 const authApp = new Hono<HonoEnv>();
 
@@ -33,11 +35,13 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
   const { username } = c.req.valid('json');
   const normalizedUsername = username.toLowerCase();
 
-  const user = await db.user.findUnique({
-    where: { username: normalizedUsername },
-  });
+  const [userData] = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, normalizedUsername))
+    .limit(1);
 
-  if (!user) {
+  if (!userData) {
     throw new HTTPException(401, { message: 'Invalid credentials' });
   }
 
@@ -48,19 +52,19 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
 
   // Create JWT Payload matching your original types.ts
   const payload = {
-    sub: user.id,
-    username: user.username,
-    isAdmin: user.isAdmin, // Standard property from your user schema
+    sub: userData.id,
+    username: userData.username,
+    isAdmin: userData.isAdmin, // Standard property from your user schema
     exp: Math.floor(Date.now() / 1000) + 3600, // Token expires in 1 hour
   };
 
   const accessToken = await sign(payload, secret, 'HS256');
 
-  // Update last login
-  const updatedUser = await db.user.update({
-    where: { id: user.id },
-    data: { lastLogin: new Date() },
-  });
+  const [updatedUser] = await db
+    .update(user)
+    .set({ lastLogin: new Date().toISOString() })
+    .where(eq(user.id, userData.id))
+    .returning();
 
   return c.json({
     user: updatedUser,
@@ -71,21 +75,23 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
 // 2. GET /logout (Replaces AuthController.logout)
 authApp.get('/logout', jwtAuthMiddleware, async (c) => {
   const authenticatedUser = c.get('user'); // Pulled from the token by jwtAuthMiddleware
-  const username = authenticatedUser.username.toLowerCase();
+  const normalizedUsername = authenticatedUser.username.toLowerCase();
 
-  const user = await db.user.findUnique({
-    where: { username },
-  });
+  const [userData] = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, normalizedUsername))
+    .limit(1);
 
-  if (!user) {
+  if (!userData) {
     throw new HTTPException(404, { message: 'User not found' });
   }
 
   // Update last login / active timestamp
-  await db.user.update({
-    where: { username },
-    data: { lastLogin: new Date() },
-  });
+  await db
+    .update(user)
+    .set({ lastLogin: new Date().toISOString() })
+    .where(eq(user.id, userData.id));
 
   return c.json({
     message: `User ${authenticatedUser.username} logged out successfully`,
@@ -103,15 +109,17 @@ authApp.get('/', async (c) => {
     });
   }
 
-  const user = await db.user.findUnique({
-    where: { username: username.toLowerCase() },
-  });
+  const [userData] = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, username.toLowerCase()))
+    .limit(1);
 
-  if (!user) {
+  if (!userData) {
     throw new HTTPException(404, { message: `User ${username} not found` });
   }
 
-  return c.json(user);
+  return c.json(userData);
 });
 
 // 4. PATCH /favorites (Replaces AuthController.updateFavorites)
@@ -123,10 +131,11 @@ authApp.patch(
     const authenticatedUser = c.get('user');
     const { favorites } = c.req.valid('json');
 
-    const updatedUser = await db.user.update({
-      where: { username: authenticatedUser.username.toLowerCase() },
-      data: { favorites },
-    });
+    const [updatedUser] = await db
+      .update(user)
+      .set({ favorites })
+      .where(eq(user.username, authenticatedUser.username.toLowerCase()))
+      .returning();
 
     return c.json(updatedUser);
   },
@@ -141,14 +150,15 @@ authApp.patch(
     const authenticatedUser = c.get('user');
     const { updates } = c.req.valid('json');
 
-    const updatedUser = await db.user.update({
-      where: { username: authenticatedUser.username.toLowerCase() },
-      data: {
-        email: updates.email,
-        phoneNumber: updates.phoneNumber,
-        theme: updates.theme,
-      },
-    });
+    const [updatedUser] = await db
+      .update(user)
+      .set({
+        ...(updates.email && { email: updates.email }),
+        ...(updates.phoneNumber && { phoneNumber: updates.phoneNumber }),
+        ...(updates.theme && { theme: updates.theme }),
+      })
+      .where(eq(user.username, authenticatedUser.username.toLowerCase()))
+      .returning();
 
     return c.json(updatedUser);
   },

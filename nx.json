@@ -13,6 +13,14 @@
     "sharedGlobals": ["{workspaceRoot}/tsconfig.json"]
   },
   "targetDefaults": {
+    "build": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "serve": {
+      "cache": false
+    },
     "@angular/build:application": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -37,18 +45,6 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
-    },
-    "@nx/esbuild:esbuild": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": [
-        "production",
-        "^production",
-        {
-          "json": "{workspaceRoot}/tsconfig.json",
-          "fields": ["extends", "files", "include"]
-        }
-      ]
     }
   },
   "generators": {

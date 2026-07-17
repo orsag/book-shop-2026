@@ -1,14 +1,24 @@
 import { Hono, Context } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { db } from '../prisma/prisma.service'; // Our global Prisma client
 import { HonoEnv } from '../guards/types';
 import { adminMiddleware } from '../guards/admin.middleware';
 import { jwtAuthMiddleware } from '../guards/auth.middleware';
 import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
-import { Prisma } from '@prismalib';
 import { rateLimiter } from 'hono-rate-limiter';
 import { securityLogger } from '../guards/logger.middleware';
+import { eq, asc, desc, count, inArray, gt, and, ilike, sql } from 'drizzle-orm';
+import { db } from '../db';
+import {
+  product,
+  book,
+  game,
+  gastro,
+  aggregateRating,
+  giftCard,
+  orderItem,
+} from '../schema';
+import { HTTPException } from 'hono/http-exception';
 
 const productApp = new Hono<HonoEnv>();
 
@@ -66,77 +76,73 @@ const getIdsBodySchema = z.object({
 productApp.get('/', zValidator('query', findAllQuerySchema), async (c) => {
   const { type, page, limit, isDiscounted, search, category, sortBy } =
     c.req.valid('query');
+  const offset = (page - 1) * limit;
 
-  const skip = (page - 1) * limit;
-  const andConditions: Prisma.ProductWhereInput[] = [];
+  // 1. Handle Sorting
+  const order =
+    sortBy === 'price_asc'
+      ? asc(product.price)
+      : sortBy === 'price_desc'
+        ? desc(product.price)
+        : asc(product.id);
 
-  // Fuzzy Search Implementation using Raw SQL
+  // 1. Prepare base filters array dynamically
+  const filters = [eq(product.productType, type)];
+
   if (search && search.trim().length > 0) {
-    const cleanedSearch = search.trim().toLowerCase();
-    const rootWord =
-      cleanedSearch.length > 4 ? cleanedSearch.substring(0, 4) : cleanedSearch;
-    const percentageSearch = `%${rootWord}%`;
-
-    const fuzzyMatches = await db.$queryRaw<{ id: string }[]>`
-      SELECT id FROM "Product" 
-      WHERE 
-        name ILIKE ${percentageSearch}
-        OR
-        similarity(name, ${cleanedSearch}) > 0.18
-    `;
-
-    const matchedIds = fuzzyMatches.map((m) => m.id);
-    andConditions.push({ id: { in: matchedIds } });
+    filters.push(ilike(product.name, `%${search}%`));
   }
-
   if (isDiscounted) {
-    andConditions.push({
-      discount: { gt: 0 },
-    });
+    filters.push(gt(product.discount, 0));
   }
 
   if (category) {
     if (type === 'BOOK') {
-      andConditions.push({ bookDetails: { category: { equals: category } } });
+      filters.push(eq(book.category, category));
     } else if (type === 'GAME') {
-      andConditions.push({ gameDetails: { category: { equals: category } } });
+      filters.push(eq(game.category, category));
     } else if (type === 'GASTRO') {
-      andConditions.push({ gastroDetails: { category: { equals: category } } });
+      filters.push(eq(gastro.category, category));
     }
   }
 
-  const where: Prisma.ProductWhereInput = {
-    productType: type,
-    AND: andConditions.length > 0 ? andConditions : undefined,
-  };
+  // 2. Fetch data & total count in ONE query using a window function
+  const rawResults = await db
+    .select({
+      Product: product,
+      Book: book,
+      Game: game,
+      Gastro: gastro,
+      Rating: aggregateRating,
+      // This calculates the count matching the where clause BEFORE limit/offset is applied
+      totalCount: sql<number>`count(*) over()`.mapWith(Number),
+    })
+    .from(product)
+    .leftJoin(book, eq(product.id, book.productId))
+    .leftJoin(game, eq(product.id, game.productId))
+    .leftJoin(gastro, eq(product.id, gastro.productId))
+    .leftJoin(aggregateRating, eq(product.id, aggregateRating.productId))
+    .where(and(...filters))
+    .limit(limit)
+    .offset(offset)
+    .orderBy(order, asc(product.id));
 
-  const orderBy: Prisma.ProductOrderByWithRelationInput[] = [];
-  if (sortBy === 'price_asc') orderBy.push({ price: 'asc' });
-  else if (sortBy === 'price_desc') orderBy.push({ price: 'desc' });
-  orderBy.push({ id: 'asc' });
+  // 3. Extract the total count from the first returned row (if any results exist)
+  const total = rawResults[0]?.totalCount ?? 0;
 
-  const includeRelations: Prisma.ProductInclude = {
-    rating: true,
-  };
+  // 4. Format the final JSON output
+  const formattedData = rawResults.map((row) => {
+    const item = { ...row.Product } as any;
 
-  if (type === 'BOOK') includeRelations.bookDetails = true;
-  if (type === 'GAME') includeRelations.gameDetails = true;
-  if (type === 'GASTRO') includeRelations.gastroDetails = true;
-  if (type === 'GIFT_CARD') includeRelations.cardDetails = true;
+    if (type === 'BOOK' && row.Book) item.bookDetails = row.Book;
+    if (type === 'GAME' && row.Game) item.gameDetails = row.Game;
+    if (type === 'GASTRO' && row.Gastro) item.gastroDetails = row.Gastro;
 
-  const [data, total] = await Promise.all([
-    db.product.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy,
-      include: includeRelations,
-    }),
-    db.product.count({ where }),
-  ]);
+    return item;
+  });
 
   return c.json({
-    data,
+    data: formattedData,
     meta: {
       total,
       page,
@@ -151,25 +157,45 @@ productApp.get('/:id', async (c) => {
   const id = c.req.param('id');
   const type = c.req.query('type') || 'BOOK';
 
-  const includeRelations: Prisma.ProductInclude = {
-    rating: true,
-  };
+  // Query product and all possible relation tables in one single JOIN query
+  const [row] = await db
+    .select({
+      Product: product,
+      Rating: aggregateRating,
+      Book: book,
+      Game: game,
+      Gastro: gastro,
+      GiftCard: giftCard,
+    })
+    .from(product)
+    .leftJoin(aggregateRating, eq(product.id, aggregateRating.productId))
+    .leftJoin(book, eq(product.id, book.productId))
+    .leftJoin(game, eq(product.id, game.productId))
+    .leftJoin(gastro, eq(product.id, gastro.productId))
+    .leftJoin(giftCard, eq(product.id, giftCard.productId))
+    .where(eq(product.id, id))
+    .limit(1);
 
-  if (type === 'BOOK') includeRelations.bookDetails = true;
-  if (type === 'GAME') includeRelations.gameDetails = true;
-  if (type === 'GASTRO') includeRelations.gastroDetails = true;
-  if (type === 'GIFT_CARD') includeRelations.cardDetails = true;
-
-  const product = await db.product.findUnique({
-    where: { id },
-    include: includeRelations,
-  });
-
-  if (!product) {
+  // If the product doesn't exist, return 404
+  if (!row || !row.Product) {
     return c.json({ error: 'Product not found' }, 404);
   }
 
-  return c.json(product);
+  // Flatten the response so it looks exactly like the Prisma object structure
+  const formattedProduct = {
+    ...row.Product,
+    rating: row.Rating || null, // rating is included by default
+  } as any;
+
+  // Conditionally append the details matching the type parameter
+  if (type === 'BOOK' && row.Book) formattedProduct.bookDetails = row.Book;
+  if (type === 'GAME' && row.Game) formattedProduct.gameDetails = row.Game;
+  if (type === 'GASTRO' && row.Gastro)
+    formattedProduct.gastroDetails = row.Gastro;
+  if (type === 'GIFT_CARD' && row.GiftCard)
+    formattedProduct.cardDetails = row.GiftCard;
+
+  return c.json(formattedProduct);
 });
 
 // 3. POST /LIST (Get many products by ID array)
@@ -180,116 +206,250 @@ productApp.post('/list', zValidator('json', getIdsBodySchema), async (c) => {
     return c.json([]);
   }
 
-  const products = await db.product.findMany({
-    where: { id: { in: ids } },
-  });
+  // Fetch all matching products in a single batch query
+  const products = await db
+    .select()
+    .from(product)
+    .where(inArray(product.id, ids));
 
   return c.json(products);
 });
 
 // 4. CREATE PRODUCT (Admin Route)
-productApp.post('/', jwtAuthMiddleware, adminMiddleware, adminLimiter, async (c) => {
-  const body = await c.req.json();
-  const {
-    bookDetails,
-    gameDetails,
-    gastroDetails,
-    cardDetails,
-    ...productData
-  } = body;
+productApp.post(
+  '/',
+  jwtAuthMiddleware,
+  adminMiddleware,
+  adminLimiter,
+  async (c) => {
+    const body = await c.req.json();
+    const {
+      bookDetails,
+      gameDetails,
+      gastroDetails,
+      cardDetails,
+      ...productData
+    } = body;
 
-  const createData: Prisma.ProductCreateInput = {
-    ...productData,
-    sku: generateInternalSku(),
-    rating: {
-      create: {
-        ratingValue: 0,
-        ratingCount: 0,
-        bestRating: 5,
-        worstRating: 1,
-      },
-    },
-  };
+    // Generate a random, unique ID for the new product
+    const productId = crypto.randomUUID();
+    const sku = generateInternalSku();
 
-  if (body.productType === 'BOOK' && bookDetails) {
-    const { id, productId, ...bookData } = bookDetails;
-    createData.bookDetails = { create: bookData };
-  }
-  if (body.productType === 'GAME' && gameDetails) {
-    const { id, productId, ...gameData } = gameDetails;
-    createData.gameDetails = { create: gameData };
-  }
-  if (body.productType === 'GASTRO' && gastroDetails) {
-    const { id, productId, ...gastroData } = gastroDetails;
-    createData.gastroDetails = { create: gastroData };
-  }
-  if (body.productType === 'GIFT_CARD' && cardDetails) {
-    const { id, productId, ...cardData } = cardDetails;
-    createData.cardDetails = { create: cardData };
-  }
+    // Run everything inside a transaction
+    const result = await db.transaction(async (tx) => {
+      // 1. Create parent Product
+      const [newProduct] = await tx
+        .insert(product)
+        .values({
+          id: productId,
+          sku,
+          ...productData,
+          updatedAt: new Date().toISOString(), // Ensure you set updatedAt to match schema requirements
+        })
+        .returning();
 
-  // 🛡️ FIX: Built purely dynamically here too!
-  const includeRelations: Prisma.ProductInclude = {
-    rating: true,
-  };
-  if (body.productType === 'BOOK') includeRelations.bookDetails = true;
-  if (body.productType === 'GAME') includeRelations.gameDetails = true;
-  if (body.productType === 'GASTRO') includeRelations.gastroDetails = true;
-  if (body.productType === 'GIFT_CARD') includeRelations.cardDetails = true;
+      // 2. Create the empty starting Rating
+      const [ratingRecord] = await tx
+        .insert(aggregateRating)
+        .values({
+          id: crypto.randomUUID(),
+          productId: newProduct.id,
+          ratingValue: 0,
+          ratingCount: 0,
+          bestRating: 5,
+          worstRating: 1,
+        })
+        .returning();
 
-  const newProduct = await db.product.create({
-    data: createData,
-    include: includeRelations,
-  });
+      // 3. Create conditional type details
+      let bookRecord = null;
+      let gameRecord = null;
+      let gastroRecord = null;
+      let cardRecord = null;
 
-  return c.json(newProduct, 201);
-});
+      if (body.productType === 'BOOK' && bookDetails) {
+        const { id, productId: _, ...bookData } = bookDetails;
+        const [inserted] = await tx
+          .insert(book)
+          .values({
+            id: crypto.randomUUID(),
+            productId: newProduct.id,
+            ...bookData,
+          })
+          .returning();
+        bookRecord = inserted;
+      }
+
+      if (body.productType === 'GAME' && gameDetails) {
+        const { id, productId: _, ...gameData } = gameDetails;
+        const [inserted] = await tx
+          .insert(game)
+          .values({
+            id: crypto.randomUUID(),
+            productId: newProduct.id,
+            ...gameData,
+          })
+          .returning();
+        gameRecord = inserted;
+      }
+
+      if (body.productType === 'GASTRO' && gastroDetails) {
+        const { id, productId: _, ...gastroData } = gastroDetails;
+        const [inserted] = await tx
+          .insert(gastro)
+          .values({
+            id: crypto.randomUUID(),
+            productId: newProduct.id,
+            ...gastroData,
+          })
+          .returning();
+        gastroRecord = inserted;
+      }
+
+      if (body.productType === 'GIFT_CARD' && cardDetails) {
+        const { id, productId: _, ...cardData } = cardDetails;
+        const [inserted] = await tx
+          .insert(giftCard)
+          .values({
+            id: crypto.randomUUID(),
+            productId: newProduct.id,
+            ...cardData,
+          })
+          .returning();
+        cardRecord = inserted;
+      }
+
+      // 4. Construct response payload that exactly matches what Prisma returned
+      return {
+        ...newProduct,
+        rating: ratingRecord,
+        ...(body.productType === 'BOOK' && { bookDetails: bookRecord }),
+        ...(body.productType === 'GAME' && { gameDetails: gameRecord }),
+        ...(body.productType === 'GASTRO' && { gastroDetails: gastroRecord }),
+        ...(body.productType === 'GIFT_CARD' && { cardDetails: cardRecord }),
+      };
+    });
+
+    return c.json(result, 201);
+  },
+);
 
 // 5. UPDATE PRODUCT (Admin Route)
-productApp.patch('/:id', jwtAuthMiddleware, adminMiddleware, adminLimiter, async (c) => {
-  const id = c.req.param('id');
-  const updateProductDto = await c.req.json();
+productApp.patch(
+  '/:id',
+  jwtAuthMiddleware,
+  adminMiddleware,
+  adminLimiter,
+  async (c) => {
+    const id = c.req.param('id');
+    const updateProductDto = await c.req.json();
 
-  const selectedProduct = await db.product.findUnique({
-    where: { id },
-  });
+    if (!id) {
+      throw new HTTPException(400, { message: 'Invalid product ID' });
+    }
 
-  if (!selectedProduct) {
-    return c.json({ error: `Product with ID ${id} not found` }, 404);
-  }
+    // 1. Fetch the product to determine its type
+    const [selectedProduct] = await db
+      .select()
+      .from(product)
+      .where(eq(product.id, id))
+      .limit(1);
 
-  const { bookDetails, cardDetails, gameDetails, gastroDetails, ...restProps } =
-    updateProductDto;
-  const updateData: Prisma.ProductUpdateInput = { ...restProps };
+    if (!selectedProduct) {
+      return c.json({ error: `Product with ID ${id} not found` }, 404);
+    }
 
-  if (selectedProduct.productType === 'BOOK' && bookDetails) {
-    const { id: _, productId: __, ...bookUpdateData } = bookDetails;
-    updateData.bookDetails = { update: bookUpdateData };
-  }
-  if (selectedProduct.productType === 'GAME' && gameDetails) {
-    const { id: _, productId: __, ...gameUpdateData } = gameDetails;
-    updateData.gameDetails = { update: gameUpdateData };
-  }
-  if (selectedProduct.productType === 'GASTRO' && gastroDetails) {
-    const { id: _, productId: __, ...gastroUpdateData } = gastroDetails;
-    updateData.gastroDetails = { update: gastroUpdateData };
-  }
+    const {
+      bookDetails,
+      cardDetails,
+      gameDetails,
+      gastroDetails,
+      ...restProps
+    } = updateProductDto;
 
-  const updatedProduct = await db.product.update({
-    where: { id },
-    data: updateData,
-  });
+    // 2. Perform updates atomically inside a transaction
+    const updatedProduct = await db.transaction(async (tx) => {
+      let parentProduct = selectedProduct;
 
-  return c.json(updatedProduct);
-});
+      // A. Update parent Product table if fields are provided
+      if (Object.keys(restProps).length > 0) {
+        const [updated] = await tx
+          .update(product)
+          .set({
+            ...restProps,
+            updatedAt: new Date().toISOString(), // Always update timestamp
+          })
+          .where(eq(product.id, id))
+          .returning();
+
+        parentProduct = updated;
+      }
+
+      // B. Conditionally update specific details based on type
+      if (selectedProduct.productType === 'BOOK' && bookDetails) {
+        const { id: _, productId: __, ...bookUpdateData } = bookDetails;
+        if (Object.keys(bookUpdateData).length > 0) {
+          await tx
+            .update(book)
+            .set(bookUpdateData)
+            .where(eq(book.productId, id));
+        }
+      }
+
+      if (selectedProduct.productType === 'GAME' && gameDetails) {
+        const { id: _, productId: __, ...gameUpdateData } = gameDetails;
+        if (Object.keys(gameUpdateData).length > 0) {
+          await tx
+            .update(game)
+            .set(gameUpdateData)
+            .where(eq(game.productId, id));
+        }
+      }
+
+      if (selectedProduct.productType === 'GASTRO' && gastroDetails) {
+        const { id: _, productId: __, ...gastroUpdateData } = gastroDetails;
+        if (Object.keys(gastroUpdateData).length > 0) {
+          await tx
+            .update(gastro)
+            .set(gastroUpdateData)
+            .where(eq(gastro.productId, id));
+        }
+      }
+
+      // Note: Added support for GIFT_CARD updates (which was missing in the original Prisma code!)
+      if (selectedProduct.productType === 'GIFT_CARD' && cardDetails) {
+        const { id: _, productId: __, ...cardUpdateData } = cardDetails;
+        if (Object.keys(cardUpdateData).length > 0) {
+          await tx
+            .update(giftCard)
+            .set(cardUpdateData)
+            .where(eq(giftCard.productId, id));
+        }
+      }
+
+      return parentProduct;
+    });
+
+    return c.json(updatedProduct);
+  },
+);
 
 // 6. DELETE PRODUCT (Admin Route with constraints check)
 productApp.delete('/:id', jwtAuthMiddleware, adminMiddleware, async (c) => {
   const id = c.req.param('id');
 
-  const orderCount = await db.orderItem.count({
-    where: { productId: id },
-  });
+  // WebStorm type safety check
+  if (!id) {
+    throw new HTTPException(400, { message: 'Invalid product ID' });
+  }
+
+  // 1. Check if the product is in any orders
+  const [orderCountResult] = await db
+    .select({ count: count() })
+    .from(orderItem)
+    .where(eq(orderItem.productId, id));
+
+  const orderCount = orderCountResult?.count ?? 0;
 
   if (orderCount > 0) {
     return c.json(
@@ -302,9 +462,16 @@ productApp.delete('/:id', jwtAuthMiddleware, adminMiddleware, async (c) => {
     );
   }
 
-  // Proceed with standard deletion on the nested table
-  await db.book.delete({
-    where: { id },
+  // 2. Safely remove sub-table details and parent product in a transaction
+  await db.transaction(async (tx) => {
+    // Delete from child tables first to avoid foreign key constraint violations
+    await tx.delete(book).where(eq(book.productId, id));
+    await tx.delete(game).where(eq(game.productId, id));
+    await tx.delete(gastro).where(eq(gastro.productId, id));
+    await tx.delete(giftCard).where(eq(giftCard.productId, id));
+
+    // Finally, delete the parent product
+    await tx.delete(product).where(eq(product.id, id));
   });
 
   return c.json({

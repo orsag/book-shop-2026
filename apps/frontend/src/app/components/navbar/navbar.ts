@@ -111,7 +111,6 @@ export class Navbar {
 
   // Toggle function
   toggleLang() {
-    console.log(this.isPremium());
     const newLang = this.activeLang() === 'en' ? 'sk' : 'en';
     this.translocoService.setActiveLang(newLang);
   }
