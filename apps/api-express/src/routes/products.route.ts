@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { ProductsService } from '../services/products.service';
 import { jwtAuthMiddleware } from '../middleware/auth.middleware';
 import { adminMiddleware } from '../middleware/admin.middleware';
-import { getRequiredParam } from '../utils/params';
+import { getRequiredParam, getSingleQueryParam } from '../utils/params';
 import {
   DEFAULT_TYPE,
   DEFAULT_PAGE,
@@ -12,12 +12,6 @@ import {
 
 const router = Router();
 const productsService = new ProductsService();
-
-// Utility for parsing query parameters with safety fallback layers (Option 3 style)
-function getSingleQueryParam(param: any): string | undefined {
-  if (!param) return undefined;
-  return Array.isArray(param) ? (param[0] as string) : (param as string);
-}
 
 // 1. GET /products - Find All with pagination, filters, and full typo tolerance matching
 router.get('/', async (req: Request, res: Response) => {

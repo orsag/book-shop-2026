@@ -5,3 +5,9 @@ export function getRequiredParam(param: string | string[] | undefined): string {
   }
   return Array.isArray(param) ? param[0] : param;
 }
+
+// Utility for parsing query parameters with safety fallback layers (Option 3 style)
+export function getSingleQueryParam(param: any): string | undefined {
+  if (!param) return undefined;
+  return Array.isArray(param) ? (param[0] as string) : (param as string);
+}

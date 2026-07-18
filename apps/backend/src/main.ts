@@ -4,6 +4,7 @@ import { AppModule } from './app/app.module';
 import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { sanitizeObject } from './utils';
 
 // Load .env from the root of the monorepo
 dotenv.config({ path: join(__dirname, '../../.env') });
@@ -29,6 +30,13 @@ async function bootstrap() {
 
   app.useStaticAssets(uploadPath, {
     prefix: '/assets/',
+  });
+
+  app.use((req, res, next) => {
+    if (req.body) {
+      req.body = sanitizeObject(req.body);
+    }
+    next();
   });
 
   app.useGlobalPipes(
