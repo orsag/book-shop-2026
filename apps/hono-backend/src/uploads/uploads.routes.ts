@@ -3,7 +3,7 @@ import { HTTPException } from 'hono/http-exception';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { db } from '../db'; // Adjust path to your Drizzle db instance
-import { imageRecord } from '../schema';
+import { imageRecord } from '../../drizzle/schema';
 
 const uploadsApp = new Hono();
 

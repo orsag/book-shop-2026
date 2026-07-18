@@ -22,6 +22,13 @@ app.set('strict routing', false);
 
 app.use(loggingMiddleware);
 
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  }),
+);
+
 // Enable CORS
 app.use(
   cors({
@@ -57,13 +64,6 @@ app.use('/api', apiRouter);
 app.get(/.*/, (req, res) => {
   res.status(404).json({ message: 'Not Found on Express Root' });
 });
-
-app.use(
-  helmet({
-    contentSecurityPolicy: false, // Turn off CSP because we aren't serving HTML webpages
-    crossOriginEmbedderPolicy: false,
-  }),
-);
 
 app.use(errorHandler);
 

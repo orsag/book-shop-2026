@@ -33,6 +33,7 @@ export class AuthController {
     return this.authService.logout(req.user.username);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getUser(@Query('username') username: string) {
     return this.authService.findByUsername(username);

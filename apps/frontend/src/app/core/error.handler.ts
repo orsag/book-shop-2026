@@ -6,6 +6,7 @@ export const ErrorCodes = {
   FETCH_PRODUCTS: 'AUTH_001',
   FETCH_PRODUCT: 'FETCH_PRODUCT',
   PREMIUM: 'PREMIUM',
+  REGISTER: 'REGISTER',
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
   REFRESH: 'REFRESH',
@@ -21,6 +22,7 @@ export const ErrorCodes = {
 } as const;
 
 export const SuccessCodes = {
+  REGISTER: 'REGISTER',
   PREMIUM: 'PREMIUM',
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
@@ -36,6 +38,7 @@ export const SuccessCodes = {
 
 // Map the codes to user-friendly messages
 const ErrorMessages: Record<string, string> = {
+  [ErrorCodes.REGISTER]: 'Failed to register new user',
   [ErrorCodes.FETCH_PRODUCTS]: 'Failed to load product',
   [ErrorCodes.FETCH_PRODUCT]: 'Failed to load detail',
   [ErrorCodes.PREMIUM]: 'Premium check failed',
@@ -54,6 +57,7 @@ const ErrorMessages: Record<string, string> = {
 };
 
 const SuccessMessages: Record<string, string> = {
+  [SuccessCodes.REGISTER]: 'Register successful',
   [SuccessCodes.LOGIN]: 'Login successful',
   [SuccessCodes.LOGOUT]: 'Logout successful',
   [SuccessCodes.REFRESH]: 'Refresh successful',

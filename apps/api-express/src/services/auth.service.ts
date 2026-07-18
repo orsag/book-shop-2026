@@ -1,7 +1,9 @@
 // src/services/auth.service.ts
 import jwt from 'jsonwebtoken';
-import { prisma } from '@prismalib'; // Direct import from your library[cite: 4]
-import { LoginDto } from '../dto/login.dto'; // Ensure this matches your project relative paths
+import { prisma } from '@prismalib';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import * as bcrypt from 'bcryptjs';
 
 export class AuthService {
   private readonly jwtSecret: string;
@@ -14,30 +16,42 @@ export class AuthService {
     this.jwtSecret = secret;
   }
 
-  async login(loginDto: LoginDto) {
-    const username = loginDto.username.toLowerCase();
+  async register(dto: RegisterDto) {
+    const hash = await bcrypt.hash(dto.password, 10);
+    try {
+      const user = await prisma.user.create({
+        data: { email: dto.email, username: dto.username, password: hash },
+      });
+      const { password, ...result } = user;
+      return result;
+    } catch (err) {
+      throw new Error('Username or email already exists');
+    }
+  }
+
+  async login(dto: LoginDto) {
+    const username = dto.username.toLowerCase();
 
     const user = await prisma.user.findUnique({
       where: { username },
     });
 
     if (!user) {
-      // Throwing standard errors we can catch in a global handler or controller
       throw new Error('Invalid credentials');
     }
 
-    // Create JWT Payload matching your AuthenticatedUser configuration[cite: 11, 12]
+    const isMatch = await bcrypt.compare(dto.password, user.password);
+    if (!isMatch) {
+      throw new Error('Invalid credentials');
+    }
+
+    // Create JWT Payload
     const payload = {
       sub: user.id,
+      email: user.email,
       username: user.username,
-      isAdmin: user.isAdmin // Ensure matches your JwtPayload specification[cite: 11, 12]
+      isAdmin: user.isAdmin,
     };
-
-    // Update last login[cite: 11]
-    const updatedUser = await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLogin: new Date() },
-    });
 
     // Sign the token using standard jsonwebtoken library
     const token = jwt.sign(payload, this.jwtSecret, {
@@ -45,8 +59,10 @@ export class AuthService {
       expiresIn: '1d', // Or configure as desired
     });
 
+    const { password, ...result } = user;
+
     return {
-      user: updatedUser,
+      user: result,
       access_token: token,
     };
   }
@@ -59,7 +75,8 @@ export class AuthService {
     if (!user) {
       throw new Error(`User ${username} not found`);
     }
-    return user;
+    const { password, ...result } = user;
+    return result;
   }
 
   async logout(username: string) {
@@ -71,7 +88,6 @@ export class AuthService {
       throw new Error('User not found');
     }
 
-    // Optional fire-and-forget: update last login on logout[cite: 11]
     await prisma.user.update({
       where: { username: username.toLowerCase() },
       data: {
@@ -86,17 +102,19 @@ export class AuthService {
   }
 
   async updateFavorites(username: string, favorites: string[]) {
-    return prisma.user.update({
+    const updatedUser: any = prisma.user.update({
       where: { username: username.toLowerCase() },
       data: { favorites: favorites },
     });
+    const { password, ...result } = updatedUser;
+    return result;
   }
 
   async updateProfile(
     username: string,
     updates: { email?: string; phoneNumber?: string; theme?: string },
   ) {
-    return prisma.user.update({
+    const updatedUser:any = prisma.user.update({
       where: { username: username.toLowerCase() },
       data: {
         email: updates.email,
@@ -104,5 +122,7 @@ export class AuthService {
         theme: updates.theme,
       },
     });
+    const { password, ...result } = updatedUser;
+    return result;
   }
 }

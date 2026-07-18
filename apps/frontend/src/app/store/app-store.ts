@@ -255,13 +255,49 @@ export const AppStore = signalStore(
         ),
       ),
 
-      login: rxMethod<{ username: string }>(
+      register: rxMethod<{
+        username: string;
+        password: string;
+        email: string;
+      }>(
+        pipe(
+          // 1. Set the loading state when the action is triggered
+          tap(() => patchState(store, { isLoading: true })),
+
+          // 2. Cancel previous requests if a user spams clicks
+          switchMap((credentials) =>
+            authService.register(credentials).pipe(
+              tapResponse({
+                next: ({ user }) => {
+                  if (user) {
+                    errorService.handleSuccess(SuccessCodes.REGISTER);
+                    patchState(store, {
+                      user,
+                      isLoading: false,
+                    });
+                  } else {
+                    errorService.handleError(ErrorCodes.REGISTER);
+                    patchState(store, { isLoading: false });
+                  }
+                },
+                error: (error: any) => {
+                  errorService.handleError(ErrorCodes.REGISTER);
+                  patchState(store, { isLoading: false });
+                  return EMPTY;
+                }
+              }),
+            ),
+          ),
+        ),
+      ),
+
+      login: rxMethod<{ username: string; password: string }>(
         pipe(
           // 1. Set loading state immediately
           tap(() => patchState(store, { isLoading: true })),
 
-          switchMap(({ username }) =>
-            authService.login(username).pipe(
+          switchMap(({ username, password }) =>
+            authService.login(username, password).pipe(
               switchMap(({ user, access_token }) => {
                 // 2. Patch store with auth data FIRST so interceptors/state are ready
                 patchState(store, {

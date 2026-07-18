@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { HTTPException } from 'hono/http-exception';
 import { eq } from 'drizzle-orm';
 import { db } from '../db'; // Adjust path to your Drizzle db instance
-import { userDetail } from '../schema';
+import { userDetail } from '../../drizzle/schema';
 import { HonoEnv } from '../guards/types';
 import { jwtAuthMiddleware } from '../guards/auth.middleware';
 import { userOwnershipMiddleware } from '../guards/ownership.middleware';

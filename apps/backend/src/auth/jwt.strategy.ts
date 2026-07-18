@@ -7,15 +7,10 @@ import { JwtPayload, AuthenticatedUser } from './types';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
-    const secret = process.env['JWT_SECRET'];
-    if (!secret) {
-      throw new Error('JWT_SECRET is not defined in environment variables');
-    }
-
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: secret,
+      secretOrKey: process.env['JWT_SECRET'] || 'fallback-secret-key',
     });
   }
 
@@ -23,6 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // This attaches { userId, username } to req.user
     return {
       userId: payload.sub,
+      email: payload.email,
       username: payload.username,
       isAdmin: payload.isAdmin,
     };

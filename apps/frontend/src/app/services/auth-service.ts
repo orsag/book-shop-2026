@@ -15,8 +15,24 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = '/api/auth';
 
-  login(username: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username });
+  login(username: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, {
+      username,
+      password,
+    });
+  }
+
+  register(credentials: {
+    email: string;
+    username: string;
+    password: string;
+  }): Observable<{ user: User }> {
+    const { email, username, password } = credentials;
+    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, {
+      email,
+      username,
+      password,
+    });
   }
 
   getUser(username: string): Observable<User> {

@@ -17,7 +17,7 @@ import {
   aggregateRating,
   giftCard,
   orderItem,
-} from '../schema';
+} from '../../drizzle/schema';
 import { HTTPException } from 'hono/http-exception';
 
 const productApp = new Hono<HonoEnv>();

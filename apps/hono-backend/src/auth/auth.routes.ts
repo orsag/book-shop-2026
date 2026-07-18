@@ -7,13 +7,21 @@ import { jwtAuthMiddleware } from '../guards/auth.middleware';
 import { HonoEnv, JwtPayload } from '../guards/types';
 import { eq } from 'drizzle-orm';
 import { db } from '../db'; // Import your new Drizzle client
-import { user } from '../schema';
+import { user } from '../../drizzle/schema';
+import * as bcrypt from 'bcryptjs';
 
 const authApp = new Hono<HonoEnv>();
 
-// --- VALIDATION SCHEMAS (Replacing NestJS DTOs) ---
+// --- VALIDATION SCHEMAS
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+const registerSchema = z.object({
+  email: z.string().email().min(1, 'Email is required'),
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 const updateFavoritesSchema = z.object({
@@ -30,9 +38,30 @@ const updateProfileSchema = z.object({
 
 // --- ROUTES ---
 
+// POST /register
+authApp.post('/register', zValidator('json', registerSchema), async (c) => {
+  const { email, username, password } = c.req.valid('json');
+  const hash = await bcrypt.hash(password, 10);
+
+  const [newUser] = await db
+    .insert(user)
+    .values({
+      id: crypto.randomUUID(),
+      email: email,
+      username: username,
+      password: hash,
+    })
+    .returning();
+
+  const { password: _, ...userWithoutPassword } = newUser;
+  return c.json({
+    user: userWithoutPassword,
+  });
+});
+
 // 1. POST /login (Replaces AuthController.login)
 authApp.post('/login', zValidator('json', loginSchema), async (c) => {
-  const { username } = c.req.valid('json');
+  const { username, password } = c.req.valid('json');
   const normalizedUsername = username.toLowerCase();
 
   const [userData] = await db
@@ -50,11 +79,18 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
     throw new Error('JWT_SECRET is not defined in environment variables');
   }
 
+  const isMatch = await bcrypt.compare(password, userData.password);
+  if (!isMatch) {
+    throw new HTTPException(401, { message: 'Invalid credentials' });
+  }
+
+
   // Create JWT Payload matching your original token
   const payload: JwtPayload = {
     sub: userData.id,
+    email: userData.email,
     username: userData.username,
-    isAdmin: userData.isAdmin, // Standard property from your user schema
+    isAdmin: userData.isAdmin ?? false,
     exp: Math.floor(Date.now() / 1000) + 3600, // Token expires in 1 hour
   };
 
@@ -66,8 +102,9 @@ authApp.post('/login', zValidator('json', loginSchema), async (c) => {
     .where(eq(user.id, userData.id))
     .returning();
 
+  const { password: _, ...userWithoutPassword } = updatedUser;
   return c.json({
-    user: updatedUser,
+    user: userWithoutPassword,
     access_token: accessToken,
   });
 });
@@ -119,7 +156,8 @@ authApp.get('/', async (c) => {
     throw new HTTPException(404, { message: `User ${username} not found` });
   }
 
-  return c.json(userData);
+  const { password: _, ...userWithoutPassword } = userData;
+  return c.json(userWithoutPassword);
 });
 
 // 4. PATCH /favorites (Replaces AuthController.updateFavorites)
@@ -137,7 +175,8 @@ authApp.patch(
       .where(eq(user.username, authenticatedUser.username.toLowerCase()))
       .returning();
 
-    return c.json(updatedUser);
+    const { password: _, ...userWithoutPassword } = updatedUser;
+    return c.json(userWithoutPassword);
   },
 );
 
@@ -160,7 +199,8 @@ authApp.patch(
       .where(eq(user.username, authenticatedUser.username.toLowerCase()))
       .returning();
 
-    return c.json(updatedUser);
+    const { password: _, ...userWithoutPassword } = updatedUser;
+    return c.json(userWithoutPassword);
   },
 );
 

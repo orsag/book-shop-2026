@@ -111,24 +111,6 @@ export const aggregateRating = pgTable("AggregateRating", {
 		}).onUpdate("cascade").onDelete("restrict"),
 ]);
 
-export const user = pgTable("User", {
-	id: text().primaryKey().notNull(),
-	email: text().notNull(),
-	username: text().notNull(),
-	isAdmin: boolean().default(false).notNull(),
-	phoneNumber: text().default('').notNull(),
-	theme: text().default('light').notNull(),
-	favorites: text().array().default(["RAY"]),
-	cartItems: text().array().default(["RAY"]),
-	lastLogin: timestamp({ precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
-	avatarUrl: text().default('').notNull(),
-	createdAt: timestamp({ precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
-	updatedAt: timestamp({ precision: 3, mode: 'string' }).notNull(),
-}, (table) => [
-	uniqueIndex("User_email_key").using("btree", table.email.asc().nullsLast().op("text_ops")),
-	uniqueIndex("User_username_key").using("btree", table.username.asc().nullsLast().op("text_ops")),
-]);
-
 export const order = pgTable("Order", {
 	id: text().primaryKey().notNull(),
 	userId: text().notNull(),
@@ -142,6 +124,25 @@ export const order = pgTable("Order", {
 			foreignColumns: [user.id],
 			name: "Order_userId_fkey"
 		}).onUpdate("cascade").onDelete("restrict"),
+]);
+
+export const user = pgTable("User", {
+	id: text().primaryKey().notNull(),
+	email: text().notNull(),
+	username: text().notNull(),
+	isAdmin: boolean().default(false),
+	phoneNumber: text().default(''),
+	theme: text().default('light'),
+	favorites: text().array().default(["RAY"]),
+	cartItems: text().array().default(["RAY"]),
+	lastLogin: timestamp({ precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	avatarUrl: text().default(''),
+	createdAt: timestamp({ precision: 3, mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp({ precision: 3, mode: 'string' }),
+	password: text().default('').notNull(),
+}, (table) => [
+	uniqueIndex("User_email_key").using("btree", table.email.asc().nullsLast().op("text_ops")),
+	uniqueIndex("User_username_key").using("btree", table.username.asc().nullsLast().op("text_ops")),
 ]);
 
 export const product = pgTable("Product", {

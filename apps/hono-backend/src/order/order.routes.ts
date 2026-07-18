@@ -8,7 +8,7 @@ import { OrderStatus } from '@store/libs';
 import { HonoEnv } from '../guards/types';
 import { eq, sql, desc, and } from 'drizzle-orm';
 import { db } from '../db'; // Adjust path to your Drizzle db instance
-import { product, order, orderItem } from '../schema';
+import { product, order, orderItem } from '../../drizzle/schema';
 
 const orderApp = new Hono<HonoEnv>();
 

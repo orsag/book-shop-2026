@@ -1,5 +1,5 @@
 <div class="min-h-screen flex items-center justify-center">
-    <app-toast />
+  <app-toast />
 
   <div class="card w-full rounded-[40px] max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
     <div class="card-body">
@@ -10,9 +10,37 @@
         </div>
       </div>
 
-      <h3 class="card-title text-xl font-bold justify-center mb-2">Welcome Back</h3>
+      <!-- 1. Dynamically change Title -->
+      <h3 class="card-title text-xl font-bold justify-center mb-2">
+        {{ registerMode() ? 'Create an Account' : 'Welcome Back' }}
+      </h3>
 
-      <form (submit)="onLogin(); $event.preventDefault()">
+      <!-- 2. Dynamically bind Submit handler -->
+      <form (submit)="registerMode() ? onRegister() : onLogin(); $event.preventDefault()"
+            class="flex flex-col gap-5"
+      >
+
+        <!-- 3. Conditionally display Email field when registerMode is active -->
+        @if (registerMode()) {
+          <div class="form-control w-full animate-fade-in">
+            <label for="email" class="label">
+              <span class="label-text font-semibold">Email Address</span>
+            </label>
+
+            <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
+              <svg lucideMail size="20"></svg>
+              <input
+                type="email"
+                class="grow"
+                placeholder="email@example.com"
+                [(ngModel)]="email"
+                name="email"
+                required
+              />
+            </label>
+          </div>
+        }
+
         <div class="form-control w-full">
           <label for="username" class="label">
             <span class="label-text font-semibold">Username</span>
@@ -33,21 +61,68 @@
           </label>
         </div>
 
+        <div class="form-control w-full">
+          <label for="password" class="label">
+            <span class="label-text font-semibold">Password</span>
+          </label>
+
+          <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
+            <svg lucidePenTool size="20"></svg>
+            <input
+              type="password"
+              class="grow"
+              placeholder="Password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minLength="1"
+              maxLength="20"
+            />
+          </label>
+        </div>
+
+        <!-- 4. Form Action Toggles Between Register or Login Button -->
         <div class="card-actions mt-8">
-          <button
-            type="submit"
-            name="login"
-            title="submit-login-btn"
-            class="btn btn-primary btn-block text-white"
-            [disabled]="!username() || store.isLoading()"
-          >
-            @if (store.isLoading()) {
-              <span class="loading loading-spinner"></span>
-            }
-            Login
-          </button>
+          @if (registerMode()) {
+            <button
+              type="submit"
+              name="register"
+              title="submit-register-btn"
+              class="btn btn-primary btn-block text-white"
+              [disabled]="!username() || !password() || !email() || store.isLoading()"
+            >
+              @if (store.isLoading()) {
+                <span class="loading loading-spinner"></span>
+              }
+              Register
+            </button>
+          } @else {
+            <button
+              type="submit"
+              name="login"
+              title="submit-login-btn"
+              class="btn btn-primary btn-block text-white"
+              [disabled]="!username() || !password() || store.isLoading()"
+            >
+              @if (store.isLoading()) {
+                <span class="loading loading-spinner"></span>
+              }
+              Login
+            </button>
+          }
         </div>
       </form>
+
+      <!-- 5. Mode Switch Link (Replacing raw checkbox for a cleaner UX) -->
+      <div class="mt-4 text-center text-sm">
+        <button
+          type="button"
+          class="link link-hover link-primary font-medium"
+          (click)="registerMode.set(!registerMode())"
+        >
+          {{ registerMode() ? 'Already have an account? Login' : "Don't have an account? Register" }}
+        </button>
+      </div>
 
       <div class="mt-6 text-center text-xs text-base-content/50 uppercase tracking-widest font-medium">
         <a routerLink="/">Continue without login</a>

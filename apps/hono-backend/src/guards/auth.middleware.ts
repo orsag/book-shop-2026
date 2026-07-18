@@ -39,6 +39,7 @@ export const jwtAuthMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => 
       userId: payload.sub,
       username: payload.username,
       isAdmin: payload.isAdmin,
+      email: payload.email,
     };
 
     // Attach user to context so down-stream routes/guards can access it (equivalent to request.user)

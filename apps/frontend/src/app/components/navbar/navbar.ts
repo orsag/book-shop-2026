@@ -3,7 +3,6 @@ import {
   computed,
   inject,
   signal,
-  effect,
   PLATFORM_ID,
   ViewChild,
   ElementRef,
@@ -33,7 +32,6 @@ import {
   LucideMenu,
 } from '@lucide/angular';
 import { NoBtnHoverDirective } from '../../core/no-btn-hover.directive';
-import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { ScrollService } from '../../services/scroll-service';
 
 @Component({
@@ -50,7 +48,6 @@ import { ScrollService } from '../../services/scroll-service';
     LucideLanguages,
     LucideShoppingBasket,
     NoBtnHoverDirective,
-    NoFocusJumpDirective,
     LucideSparkles,
     LucideUser,
     LucideX,
@@ -79,30 +76,14 @@ export class Navbar {
       : '/images/navbarLight.svg',
   );
 
-  modelUsername = '';
   // Existing signals
   isPremium = computed(() => this.store.premiumStatus()?.isPremium ?? true);
   isLoggedIn = computed(() => this.store.isLoggedIn());
 
-
   userName = this.store.user;
   isAdmin = this.store.isAdmin;
   searchQuery = signal('');
-  protected showLoginModal = signal(false);
   showSearchbar = computed(() => this.config.flags().SHOW_SEARCHBAR_HEADER);
-
-  constructor() {
-    effect(() => {
-      if (this.store.isLoggedIn()) {
-        this.showLoginModal.set(false);
-      }
-    });
-    effect(() => {
-      if (this.showLoginModal() && this.inputElement?.nativeElement) {
-        this.inputElement.nativeElement.focus();
-      }
-    });
-  }
 
   // Convert the lang changes to a signal
   activeLang = toSignal(this.translocoService.langChanges$, {
@@ -158,22 +139,18 @@ export class Navbar {
     }
   }
 
-  handleLogin() {
-    this.showLoginModal.set(true);
+  handleAuthAction() {
+    if (this.store.isLoggedIn()) {
+      this.store.logout();
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   handleLogout() {
     this.store.logout();
     this.cartStore.clearCart(); // Wipe the cart logic
     this.router.navigate(['/']);
-  }
-
-  onLoginSubmit(event: Event) {
-    event.preventDefault();
-    // Logic for auth goes here...
-    if (this.modelUsername.trim() !== '') {
-      this.store.login({ username: this.modelUsername });
-    }
   }
 
   // Handle the input event
