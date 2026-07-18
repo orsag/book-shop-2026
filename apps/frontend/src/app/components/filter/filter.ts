@@ -1,6 +1,12 @@
-import { Component, effect, Input, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  Input,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import { ConfigurationService } from '../../services/configuration-service';
-import { inject, computed } from '@angular/core';
+import { inject } from '@angular/core';
 import { BookFilters } from '../../../types';
 import { AppStore } from '../../store/app-store';
 import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
@@ -42,23 +48,16 @@ export class Filter {
   scroller = inject(ScrollService);
   bookCategories = CATEGORIES;
 
-  showFilter = computed(() => this.config.flags().SHOW_FILTER);
   isCoolingDown = signal(false);
   showHistory = signal(false);
   @Input() isCollapsed = false;
   activeIndex = signal(-1); // For keyboard navigation
   toggles = { key: 'isDiscounted', label: 'discounted' };
+  private openTimeout: any;
 
-  // Initialize from store instead of hardcoded defaults
-  filters = signal<BookFilters>({
-    type: 'BOOK',
-    search: '',
-    category: null,
-    isDiscounted: false,
-  });
+  isContentVisible = signal(false);
 
   constructor() {
-    // Create a reactive link
     effect(() => {
       const filter = this.store.filters();
       this.filters.set({
@@ -69,6 +68,35 @@ export class Filter {
       });
     });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isCollapsed']) {
+      const collapsed = changes['isCollapsed'].currentValue;
+
+      // Clear any pending opening timeouts to prevent race conditions
+      if (this.openTimeout) {
+        clearTimeout(this.openTimeout);
+      }
+
+      if (collapsed) {
+        // 1. Shrinking begins: Remove content IMMEDIATELY
+        this.isContentVisible.set(false);
+      } else {
+        // 2. Opening begins: Wait for the 300ms CSS animation to finish
+        this.openTimeout = setTimeout(() => {
+          this.isContentVisible.set(true);
+        }, 300); // Matches your transition-all duration-300
+      }
+    }
+  }
+
+  // Initialize from store instead of hardcoded defaults
+  filters = signal<BookFilters>({
+    type: 'BOOK',
+    search: '',
+    category: null,
+    isDiscounted: false,
+  });
 
   // Update helper
   updateFilter<K extends keyof BookFilters>(key: K, value: BookFilters[K]) {

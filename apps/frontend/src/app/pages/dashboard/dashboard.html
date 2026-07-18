@@ -23,19 +23,15 @@
     <!-- Render Grid or List -->
     @switch (store.viewLayout()) {
       @case (VIEW_LAYOUTS[0]) {
-        <div class="grid grid-cols-1 lg:gap-1 sm:gap-1"
+        <div class="grid grid-cols-1 lg:gap-1 sm:gap-1 transition-all duration-300 ease-in-out"
              data-testid="main-layout-grid"
-             [class.md:grid-cols-2]="isOpenedFilter()"
-             [class.lg:grid-cols-4]="isOpenedFilter()"
-             [class.md:grid-cols-4]="!isOpenedFilter()"
-             [class.lg:grid-cols-6]="!isOpenedFilter()">
+             [class.md:grid-cols-2]="!animatedGridExpanded()"
+             [class.lg:grid-cols-4]="!animatedGridExpanded()"
+             [class.md:grid-cols-4]="animatedGridExpanded()"
+             [class.lg:grid-cols-6]="animatedGridExpanded()"
+             [ngClass]="isTransitioning() ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'">
           @for (book of store.products(); track book.id) {
             <app-book-card [product]="book"></app-book-card>
-<!--            @defer (when !store.isLoading()) {-->
-<!--              <app-book-card [product]="book"></app-book-card>-->
-<!--            } @placeholder {-->
-<!--              <div class="skeleton h-60 w-full rounded-xl"></div>-->
-<!--            }-->
           }
         </div>
       }
@@ -47,11 +43,6 @@
         >
           @for (book of store.products(); track book.id; let i = $index) {
             <app-book-list-item #listItem [product]="book"></app-book-list-item>
-<!--            @defer (when !store.isLoading()) {-->
-<!--              <app-book-list-item #listItem [product]="book"></app-book-list-item>-->
-<!--            } @placeholder {-->
-<!--              <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>-->
-<!--            }-->
 
             @if (i !== store.products().length - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>
@@ -83,7 +74,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8 gap-y-4"
        [class.md:grid-cols-1]="isOpenedFilter()"
        [class.md:grid-cols-2]="!isOpenedFilter()">
-    @for (item of [1,2,3,4,5,6]; track $index) {
+    @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
       <ng-container *ngTemplateOutlet="listItemSkeleton"></ng-container>
     }
   </div>
@@ -91,7 +82,7 @@
 
 <ng-template #gridSkeleton>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    @for (item of [1,2,3,4,5,6,7,8]; track $index) {
+    @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
       <div class="skeleton h-64 w-full rounded-xl"></div>
     }
   </div>
