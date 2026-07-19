@@ -4,7 +4,7 @@ import { AppModule } from './app/app.module';
 import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { sanitizeObject } from './utils';
+import { NotFoundExceptionFilter } from './middleware/not-found.middleware';
 
 // Load .env from the root of the monorepo
 dotenv.config({ path: join(__dirname, '../../.env') });
@@ -22,21 +22,9 @@ async function bootstrap() {
   // 2. Resolve it relative to the Monorepo Root (where the app is running)
   const uploadPath = resolve(process.cwd(), rawLocation ?? '');
 
-  console.log('--- STATIC ASSET CHECK ---');
-  console.log('Absolute path to images:', uploadPath);
-  console.log('--------------------------');
-
-  const port = process.env['PORT'] || 3000;
 
   app.useStaticAssets(uploadPath, {
     prefix: '/assets/',
-  });
-
-  app.use((req, res, next) => {
-    if (req.body) {
-      req.body = sanitizeObject(req.body);
-    }
-    next();
   });
 
   app.useGlobalPipes(
@@ -47,9 +35,13 @@ async function bootstrap() {
     }),
   );
 
+  // Bind the 404 filter globally
+  app.useGlobalFilters(new NotFoundExceptionFilter());
+
   // Enable CORS so your Angular app can talk to the backend
   app.enableCors();
 
+  const port = process.env['PORT'] || 3000;
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,

@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { AppStore } from '../../store/app-store';
 import { ProgressComponent } from '../../components/common/progress.component';
 import { DEFAULT_LOADER_DELAY } from '@store/libs';
-import { LucideListCollapse } from '@lucide/angular';
 
 @Component({
   selector: 'app-main-layout',
@@ -27,7 +26,6 @@ import { LucideListCollapse } from '@lucide/angular';
     ProgressComponent,
     ToastComponent,
     CommonModule,
-    LucideListCollapse,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',

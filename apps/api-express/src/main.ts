@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { Router, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
@@ -61,8 +61,11 @@ apiRouter.use('/upload', uploadsRouter);
 // Mount the master router under the 'api' global prefix 🚀
 app.use('/api', apiRouter);
 
-app.get(/.*/, (req, res) => {
-  res.status(404).json({ message: 'Not Found on Express Root' });
+// 404 Fallback Middleware (Triggers ONLY if no route above matched)
+app.use((req: Request, res: Response, next: NextFunction): void => {
+  const error: any = new Error(`Not Found: ${req.method} ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
 });
 
 app.use(errorHandler);
