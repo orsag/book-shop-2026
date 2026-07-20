@@ -3,9 +3,9 @@ import { OrderService } from '../../services/order-service';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ToastService } from '../../services/toast-service';
-import { AppStore } from '../../store/app-store';
 import { delay } from 'rxjs';
 import { OrderStatus } from '@store/libs';
+import { CartStore } from '../../store/cart-store';
 
 @Component({
   selector: 'app-order-table',
@@ -14,7 +14,7 @@ import { OrderStatus } from '@store/libs';
   styleUrl: './order-table.css',
 })
 export class OrderTable {
-  store = inject(AppStore);
+  store = inject(CartStore);
   private orderService = inject(OrderService);
   private toast = inject(ToastService);
 

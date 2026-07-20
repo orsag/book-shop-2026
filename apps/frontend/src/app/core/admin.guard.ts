@@ -1,15 +1,15 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
-import { AppStore } from '../store/app-store'; // adjust path as needed
 import { ToastService } from '../services/toast-service';
+import { UserStore } from '../store/user-store';
 
 export const adminGuard: CanActivateFn = () => {
-  const store = inject(AppStore);
+  const userStore = inject(UserStore);
   const router = inject(Router);
   const toast = inject(ToastService);
 
   // We use the computed isAdmin signal from our store
-  if (store.isAdmin()) {
+  if (userStore.isAdmin()) {
     return true;
   }
 

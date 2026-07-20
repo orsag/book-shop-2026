@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { OrderStatus, Product } from '@store/shared-models';
 import {
   signalStore,
   withState,
@@ -11,6 +11,10 @@ import {
 } from '@ngrx/signals';
 import { BookService } from '../services/book-service';
 import { isPlatformBrowser } from '@angular/common';
+import { CreatedOrder, OrderService } from '../services/order-service';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { pipe, switchMap, tap } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
 
 export interface CartItem {
   product: Product;
@@ -19,12 +23,14 @@ export interface CartItem {
 
 export interface CartState {
   itemsMap: Record<string, CartItem>;
-  loading: boolean;
+  isLoading: boolean;
+  orders: CreatedOrder[];
 }
 
 const initialState: CartState = {
   itemsMap: {},
-  loading: false,
+  isLoading: false,
+  orders: [],
 };
 
 // Key for LocalStorage
@@ -68,95 +74,136 @@ export const CartStore = signalStore(
   })),
 
   // 2. Methods (actions)
-  withMethods((store, bookService = inject(BookService)) => ({
-    addToCart(product: Product) {
-      const currentMap = store.itemsMap();
-      const existing = currentMap[product.id];
+  withMethods(
+    (
+      store,
+      bookService = inject(BookService),
+      orderService = inject(OrderService),
+    ) => ({
+      addToCart(product: Product) {
+        const currentMap = store.itemsMap();
+        const existing = currentMap[product.id];
 
-      patchState(store, {
-        itemsMap: {
-          ...currentMap,
-          [product.id]: {
-            product,
-            quantity: existing ? existing.quantity + 1 : 1,
-          },
-        },
-      });
-    },
-
-    updateQuantity(productId: string, delta: number) {
-      const currentMap = store.itemsMap();
-      const item = currentMap[productId];
-      if (!item) return;
-
-      const newQuantity = item.quantity + delta;
-
-      if (newQuantity <= 0) {
-        const { [productId]: _, ...rest } = currentMap;
-        patchState(store, { itemsMap: rest });
-      } else {
         patchState(store, {
           itemsMap: {
             ...currentMap,
-            [productId]: { ...item, quantity: newQuantity },
+            [product.id]: {
+              product,
+              quantity: existing ? existing.quantity + 1 : 1,
+            },
           },
         });
-      }
-    },
+      },
 
-    removeItem(productId: string) {
-      const { [productId]: _, ...rest } = store.itemsMap();
-      patchState(store, { itemsMap: rest });
-    },
+      updateQuantity(productId: string, delta: number) {
+        const currentMap = store.itemsMap();
+        const item = currentMap[productId];
+        if (!item) return;
 
-    clearCart() {
-      patchState(store, { itemsMap: {} });
-    },
+        const newQuantity = item.quantity + delta;
 
-    // inside withMethods in cart-store.ts
-    syncCartWithServer() {
-      const ids = Object.keys(store.itemsMap());
+        if (newQuantity <= 0) {
+          const { [productId]: _, ...rest } = currentMap;
+          patchState(store, { itemsMap: rest });
+        } else {
+          patchState(store, {
+            itemsMap: {
+              ...currentMap,
+              [productId]: { ...item, quantity: newQuantity },
+            },
+          });
+        }
+      },
 
-      if (ids.length === 0) return;
+      removeItem(productId: string) {
+        const { [productId]: _, ...rest } = store.itemsMap();
+        patchState(store, { itemsMap: rest });
+      },
 
-      patchState(store, { loading: true });
+      clearCart() {
+        patchState(store, { itemsMap: {} });
+      },
 
-      bookService.getFavorites(ids).subscribe({
-        next: (freshBooks) => {
-          const currentMap = { ...store.itemsMap() };
-          const freshIds = new Set(freshBooks.map((b) => b.id));
-          let hasChanges = false;
+      // inside withMethods in cart-store.ts
+      syncCartWithServer() {
+        const ids = Object.keys(store.itemsMap());
 
-          freshBooks.forEach((freshBook) => {
-            const item = currentMap[freshBook.id];
-            if (item) {
-              if (
-                item.product.price !== freshBook.price ||
-                item.product.discount !== freshBook.discount
-              ) {
-                currentMap[freshBook.id] = { ...item, product: freshBook };
+        if (ids.length === 0) return;
+
+        patchState(store, { isLoading: true });
+
+        bookService.getFavorites(ids).subscribe({
+          next: (freshBooks) => {
+            const currentMap = { ...store.itemsMap() };
+            const freshIds = new Set(freshBooks.map((b) => b.id));
+            let hasChanges = false;
+
+            freshBooks.forEach((freshBook) => {
+              const item = currentMap[freshBook.id];
+              if (item) {
+                if (
+                  item.product.price !== freshBook.price ||
+                  item.product.discount !== freshBook.discount
+                ) {
+                  currentMap[freshBook.id] = { ...item, product: freshBook };
+                  hasChanges = true;
+                }
+              }
+            });
+
+            // Optional: Remove items from cart that are no longer in the DB
+            Object.keys(currentMap).forEach((id) => {
+              if (!freshIds.has(id)) {
+                delete currentMap[id];
                 hasChanges = true;
               }
-            }
-          });
+            });
 
-          // Optional: Remove items from cart that are no longer in the DB
-          Object.keys(currentMap).forEach((id) => {
-            if (!freshIds.has(id)) {
-              delete currentMap[id];
-              hasChanges = true;
+            if (hasChanges) {
+              patchState(store, { itemsMap: currentMap });
             }
-          });
+            patchState(store, { isLoading: false });
+          },
+          error: () => patchState(store, { isLoading: false }),
+        });
+      },
 
-          if (hasChanges) {
-            patchState(store, { itemsMap: currentMap });
-          }
-          patchState(store, { loading: false });
-        },
-        error: () => patchState(store, { loading: false }),
-      });
-    },
-  })),
+      updateOrderLocal(id: string, status: OrderStatus) {
+        patchState(store, {
+          orders: store
+            .orders()
+            .map((order) => (order.id === id ? { ...order, status } : order)),
+        });
+      },
+
+      removeOrderLocal(id: string) {
+        patchState(store, {
+          orders: store.orders().filter((order) => order.id !== id),
+        });
+      },
+
+      reloadOrders: rxMethod<{ userId: string }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ userId }) =>
+            orderService.getUserOrders(userId).pipe(
+              tapResponse({
+                next: (orders) => {
+                  patchState(store, {
+                    orders: orders,
+                    isLoading: false,
+                  });
+                },
+                error: () => {
+                  patchState(store, { isLoading: false });
+                },
+              }),
+            ),
+          ),
+        ),
+      ),
+    }),
+  ),
 
   // 3. Storage Sync Logic
   withHooks({

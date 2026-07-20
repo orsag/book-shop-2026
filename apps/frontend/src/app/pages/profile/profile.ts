@@ -30,6 +30,8 @@ import { ToastService } from '../../services/toast-service';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { CardSmall } from '../../components/card-small/card-small';
 import { delay } from 'rxjs';
+import { UserStore } from '../../store/user-store';
+import { CartStore } from '../../store/cart-store';
 
 @Component({
   selector: 'app-profile',
@@ -51,30 +53,32 @@ import { delay } from 'rxjs';
 })
 export class Profile implements OnInit {
   store = inject(AppStore);
+  userStore = inject(UserStore);
+  cartStore = inject(CartStore);
   orderService = inject(OrderService);
-  favorites = this.store.user()?.favorites;
+  favorites = this.userStore.user()?.favorites;
   toast = inject(ToastService);
   private isFormInitialized = false;
   OrderStatus = OSEnum;
 
   ngOnInit() {
-    const userId = this.store.user()?.id;
+    const userId = this.userStore.user()?.id;
     if (userId) {
-      this.store.loadUserDetail({ userId });
-      this.store.reloadOrders({ userId });
+      this.userStore.loadUserDetail({ userId });
+      this.cartStore.reloadOrders({ userId });
     }
   }
 
   constructor() {
     effect(() => {
-      const latestDetail = this.store.userDetail();
-      const id = this.store.user()?.id;
+      const latestDetail = this.userStore.userDetail();
+      const id = this.userStore.user()?.id;
 
       if (id) {
         untracked(() => {
           // A. Trigger the fetch if we don't have data yet
           if (!latestDetail) {
-            this.store.loadUserDetail({ userId: id });
+            this.userStore.loadUserDetail({ userId: id });
             return; // Exit early; wait for the next run when data arrives
           }
 
@@ -91,7 +95,7 @@ export class Profile implements OnInit {
 
   // 5. Update handleCancelOrder to use the new method
   handleCancelOrder(orderId: string) {
-    this.store.updateOrderLocal(orderId, 'CANCELLED' as OrderStatus);
+    this.cartStore.updateOrderLocal(orderId, 'CANCELLED' as OrderStatus);
 
     this.orderService
       .cancelOrder(orderId)
@@ -99,20 +103,20 @@ export class Profile implements OnInit {
       .subscribe({
         next: () => {
           this.toast.success('Status updated');
-          this.store.refreshUser();
+          this.userStore.refreshUser();
         },
       });
   }
 
   userDetailModel = signal<UserDetailSmall>(
-    this.mapToDetailModel(this.store.userDetail()),
+    this.mapToDetailModel(this.userStore.userDetail()),
   );
 
   userModel = signal<UserWithoutId>({
-    username: this.store.user()?.username ?? '',
-    email: this.store.user()?.email ?? '',
-    phoneNumber: this.store.user()?.phoneNumber ?? '',
-    theme: this.store.user()?.theme ?? 'light',
+    username: this.userStore.user()?.username ?? '',
+    email: this.userStore.user()?.email ?? '',
+    phoneNumber: this.userStore.user()?.phoneNumber ?? '',
+    theme: this.userStore.user()?.theme ?? 'light',
     // Move the nested fields into the userDetail object
   });
 
@@ -138,9 +142,9 @@ export class Profile implements OnInit {
     });
   });
 
-  isPremium = computed(() => this.store.userDetail()?.isPremium ?? false);
+  isPremium = computed(() => this.userStore.userDetail()?.isPremium ?? false);
   daysLeft = computed(() => {
-    const end = this.store.userDetail()?.membershipEnd;
+    const end = this.userStore.userDetail()?.membershipEnd;
     if (!end) return 0;
     const diff = new Date(end).getTime() - Date.now();
     return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
@@ -153,12 +157,12 @@ export class Profile implements OnInit {
       };
     }
     if (this.detailForm().valid()) {
-      const userId = this.store.user()?.id;
+      const userId = this.userStore.user()?.id;
       const updatedData: Partial<UserDetailSmall> = {
         ...this.userDetailModel(),
       };
       if (userId) {
-        this.store.updateUserDetail({ userId, updates: updatedData });
+        this.userStore.updateUserDetail({ userId, updates: updatedData });
       }
     }
   }

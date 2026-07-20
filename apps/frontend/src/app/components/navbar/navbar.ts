@@ -33,6 +33,7 @@ import {
 } from '@lucide/angular';
 import { NoBtnHoverDirective } from '../../core/no-btn-hover.directive';
 import { ScrollService } from '../../services/scroll-service';
+import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-navbar',
@@ -63,6 +64,7 @@ export class Navbar {
   scroller = inject(ScrollService);
   router = inject(Router);
   store = inject(AppStore);
+  userStore = inject(UserStore);
   cartStore = inject(CartStore);
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
@@ -77,11 +79,11 @@ export class Navbar {
   );
 
   // Existing signals
-  isPremium = computed(() => this.store.premiumStatus()?.isPremium ?? true);
-  isLoggedIn = computed(() => this.store.isLoggedIn());
+  isPremium = computed(() => this.userStore.premiumStatus()?.isPremium ?? true);
+  isLoggedIn = computed(() => this.userStore.isLoggedIn());
 
-  userName = this.store.user;
-  isAdmin = this.store.isAdmin;
+  userName = this.userStore.user;
+  isAdmin = this.userStore.isAdmin;
   searchQuery = signal('');
   showSearchbar = computed(() => this.config.flags().SHOW_SEARCHBAR_HEADER);
 
@@ -140,15 +142,15 @@ export class Navbar {
   }
 
   handleAuthAction() {
-    if (this.store.isLoggedIn()) {
-      this.store.logout();
+    if (this.userStore.isLoggedIn()) {
+      this.userStore.logout();
     } else {
       this.router.navigate(['/login']);
     }
   }
 
   handleLogout() {
-    this.store.logout();
+    this.userStore.logout();
     this.cartStore.clearCart(); // Wipe the cart logic
     this.router.navigate(['/']);
   }

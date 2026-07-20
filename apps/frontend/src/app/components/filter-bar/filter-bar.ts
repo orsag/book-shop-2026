@@ -3,6 +3,7 @@ import { AppStore } from '../../store/app-store';
 import { BookFilters } from '../../../types';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-filter-bar',
@@ -12,6 +13,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 })
 export class FilterBar {
   store = inject(AppStore);
+  userStore = inject(UserStore);
   filters = signal<BookFilters>({
     type: 'BOOK',
     search: '',

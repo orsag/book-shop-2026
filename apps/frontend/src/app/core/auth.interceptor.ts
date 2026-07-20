@@ -4,9 +4,11 @@ import { inject } from '@angular/core';
 import { AppStore } from '../store/app-store';
 import { catchError, throwError, finalize } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserStore } from '../store/user-store';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
+  const userStore = inject(UserStore)
   const token = store.token();
   const router = inject(Router);
   let isError401 = false;
@@ -43,7 +45,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     finalize(() => {
       if (isError401) {
         // Wipe the store and LocalStorage
-        store.logout();
+        userStore.logout();
       }
     }),
   );

@@ -89,9 +89,9 @@
               name="register"
               title="submit-register-btn"
               class="btn btn-primary btn-block text-white"
-              [disabled]="!username() || !password() || !email() || store.isLoading()"
+              [disabled]="!username() || !password() || !email() || userStore.isLoading()"
             >
-              @if (store.isLoading()) {
+              @if (userStore.isLoading()) {
                 <span class="loading loading-spinner"></span>
               }
               Register
@@ -102,9 +102,9 @@
               name="login"
               title="submit-login-btn"
               class="btn btn-primary btn-block text-white"
-              [disabled]="!username() || !password() || store.isLoading()"
+              [disabled]="!username() || !password() || userStore.isLoading()"
             >
-              @if (store.isLoading()) {
+              @if (userStore.isLoading()) {
                 <span class="loading loading-spinner"></span>
               }
               Login

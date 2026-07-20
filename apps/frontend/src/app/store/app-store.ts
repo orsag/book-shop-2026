@@ -9,7 +9,6 @@ import {
 } from '@ngrx/signals';
 import {
   computed,
-  effect,
   inject,
   linkedSignal,
   PLATFORM_ID,
@@ -17,32 +16,14 @@ import {
   resourceFromSnapshots,
   ResourceSnapshot,
 } from '@angular/core';
-import {
-  ActionResponse,
-  OrderStatus,
-  PremiumStatus,
-  ProductType,
-} from '@store/shared-models';
-import { User, UserDetail, UserDetailSmall } from '@store/shared-models';
-import { tapResponse } from '@ngrx/operators';
+import { ActionResponse, ProductType } from '@store/shared-models';
 import { Product as IProduct } from '@store/shared-models';
-import { AuthService } from '../services/auth-service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import {
-  tap,
-  map,
-  filter,
-  of,
-  distinctUntilChanged,
-  exhaustMap,
-  delay,
-} from 'rxjs';
-import { pipe, switchMap, catchError, finalize, EMPTY } from 'rxjs';
+import { tap, delay } from 'rxjs';
+import { pipe, switchMap } from 'rxjs';
 import { BookService } from '../services/book-service';
-import { DetailService } from '../services/detail-service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
 import { isPlatformBrowser } from '@angular/common';
-import { CreatedOrder, OrderService } from '../services/order-service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -55,20 +36,13 @@ import {
 } from '@store/libs';
 
 // Key for LocalStorage
-const USER_STORAGE_KEY = 'currentUser';
-const TOKEN_STORAGE_KEY = 'accessToken';
-const DETAIL_STORAGE_KEY = 'currentStatus';
 const SEARCH_HISTORY_KEY = 'searchHistory';
 
 export interface AppState {
-  user: User | null;
-  userDetail: UserDetail | null;
   token: string | null;
-  premiumStatus: PremiumStatus | null;
   _isMobile: boolean;
   _isTablet: boolean;
   // --- 📚 Book State ---
-  orders: CreatedOrder[];
   favoriteProducts: IProduct[];
   totalProducts: number;
   isLoading: boolean;
@@ -91,11 +65,7 @@ export interface AppState {
 const initialState: AppState = {
   _isMobile: false,
   _isTablet: false,
-  user: null,
-  userDetail: null,
   token: null,
-  premiumStatus: null,
-  orders: [],
   favoriteProducts: [],
   totalProducts: 0,
   isLoading: false,
@@ -149,7 +119,7 @@ export const AppStore = signalStore(
   })),
 
   // 1. Computed Values (Like Selectors)
-  withComputed(({ user, productsResource, filters, _isMobile, _isTablet }) => {
+  withComputed(({ productsResource, filters, _isMobile, _isTablet }) => {
     return {
       isMobile: computed(() => _isMobile()),
       isTablet: computed(() => _isTablet()),
@@ -157,15 +127,13 @@ export const AppStore = signalStore(
       isBook: computed(() => filters().type === 'BOOK'),
       isGame: computed(() => filters().type === 'GAME'),
       isGastro: computed(() => filters().type === 'GASTRO'),
-      isLoggedIn: computed(() => !!user()),
-      isAdmin: computed(() => user()?.isAdmin ?? false),
       isEmpty: computed(() => (productsResource.value()?.meta.total ?? 0) == 0),
       currentType: computed(() => filters().type as ProductType),
-      favoriteCount: computed(() => user()?.favorites?.length ?? 0),
-      cartCount: computed(() => user()?.cartItems?.length ?? 0),
       // MOVE calculations inside the responsive signal body here:
       totalPages: computed(() =>
-        Math.ceil((productsResource.value()?.meta.total ?? 0) / filters().limit),
+        Math.ceil(
+          (productsResource.value()?.meta.total ?? 0) / filters().limit,
+        ),
       ),
       totalProducts: computed(() => productsResource.value()?.meta.total ?? 0),
       products: computed(() => productsResource.value()?.data ?? []),
@@ -174,7 +142,9 @@ export const AppStore = signalStore(
       hasMorePage: computed(
         () =>
           filters.page() <
-          Math.ceil((productsResource.value()?.meta.total ?? 0) / filters().limit),
+          Math.ceil(
+            (productsResource.value()?.meta.total ?? 0) / filters().limit,
+          ),
       ),
     };
   }),
@@ -183,10 +153,7 @@ export const AppStore = signalStore(
   withMethods(
     (
       store,
-      orderService = inject(OrderService),
       bookService = inject(BookService),
-      authService = inject(AuthService),
-      detailService = inject(DetailService),
       errorService = inject(ErrorService),
     ) => ({
       // Update filters without triggering a fetch automatically
@@ -274,291 +241,9 @@ export const AppStore = signalStore(
         }));
       },
 
-      _syncFavorites: rxMethod<string[]>(
-        pipe(
-          distinctUntilChanged(
-            (prev, curr) =>
-              prev.length === curr.length &&
-              prev.every((id, i) => id === curr[i]),
-          ),
-          switchMap((ids) => {
-            if (ids.length === 0) {
-              patchState(store, { favoriteProducts: [], isLoading: false });
-              return of([]);
-            }
-
-            patchState(store, { isLoading: true });
-            return bookService.getFavorites(ids).pipe(
-              tap((books) => {
-                patchState(store, {
-                  favoriteProducts: books,
-                  isLoading: false,
-                });
-              }),
-              catchError(() => {
-                patchState(store, { isLoading: false });
-                return of([]);
-              }),
-            );
-          }),
-        ),
-      ),
-
-      register: rxMethod<{
-        username: string;
-        password: string;
-        email: string;
-      }>(
-        pipe(
-          // 1. Set the loading state when the action is triggered
-          tap(() => patchState(store, { isLoading: true })),
-
-          // 2. Cancel previous requests if a user spams clicks
-          switchMap((credentials) =>
-            authService.register(credentials).pipe(
-              tapResponse({
-                next: ({ user }) => {
-                  if (user) {
-                    errorService.handleSuccess(SuccessCodes.REGISTER);
-                    patchState(store, {
-                      user,
-                      isLoading: false,
-                    });
-                  } else {
-                    errorService.handleError(ErrorCodes.REGISTER);
-                    patchState(store, { isLoading: false });
-                  }
-                },
-                error: (error: any) => {
-                  errorService.handleError(ErrorCodes.REGISTER);
-                  patchState(store, { isLoading: false });
-                  return EMPTY;
-                },
-              }),
-            ),
-          ),
-        ),
-      ),
-
-      login: rxMethod<{ username: string; password: string }>(
-        pipe(
-          // 1. Set loading state immediately
-          tap(() => patchState(store, { isLoading: true })),
-
-          switchMap(({ username, password }) =>
-            authService.login(username, password).pipe(
-              switchMap(({ user, access_token }) => {
-                // 2. Patch store with auth data FIRST so interceptors/state are ready
-                patchState(store, {
-                  user,
-                  token: access_token,
-                });
-
-                // 3. Now safely call the premium status
-                return detailService.findPremiumStatus(user.id).pipe(
-                  tap((premiumStatus) => {
-                    errorService.handleSuccess(SuccessCodes.LOGIN);
-                    // Update premium status and turn off loading
-                    patchState(store, {
-                      premiumStatus: premiumStatus,
-                      isLoading: false,
-                    });
-                  }),
-                  catchError(() => {
-                    errorService.handleError(ErrorCodes.PREMIUM);
-                    // Turn off loading (user stays logged in thanks to step 2)
-                    patchState(store, { isLoading: false });
-                    return of(null);
-                  }),
-                );
-              }),
-              // Catch block for main login failure
-              catchError(() => {
-                errorService.handleError(ErrorCodes.LOGIN);
-                patchState(store, { isLoading: false });
-                return EMPTY;
-              }),
-            ),
-          ),
-        ),
-      ),
-
-      logout: rxMethod<void>(
-        pipe(
-          // 1. Immediately drop the request if another logout execution is already active
-          filter(() => !store.isLoading()),
-          map(() => store.token()),
-          filter((token): token is string => !!token),
-
-          // 2. exhaustMap blocks any subsequent clicks until the inner stream completes
-          exhaustMap(() => {
-            // Set a local loading guard state flag (Optional, but excellent UX)
-            patchState(store, { isLoading: true });
-
-            return authService.logout().pipe(
-              tap(() => {
-                errorService.handleSuccess(SuccessCodes.LOGOUT);
-              }),
-              catchError(() => {
-                errorService.handleError(ErrorCodes.LOGOUT);
-                return of(null);
-              }),
-              finalize(() => {
-                // 3. ALWAYS clean local disk footprint and turn off execution guard
-                patchState(store, {
-                  user: null,
-                  premiumStatus: null,
-                  token: null,
-                  isLoading: false, // Reset your guard block
-                });
-                localStorage.removeItem(DETAIL_STORAGE_KEY);
-                localStorage.removeItem(USER_STORAGE_KEY);
-                localStorage.removeItem(TOKEN_STORAGE_KEY);
-              }),
-            );
-          }),
-        ),
-      ),
-
-      refreshUser: rxMethod<void>(
-        pipe(
-          // Map to the current username from the store
-          map(() => store.user()?.username),
-          // Only proceed if we actually have a logged-in user
-          filter((username): username is string => !!username),
-          switchMap((username) =>
-            authService.getUser(username).pipe(
-              tap((updatedUser) => {
-                patchState(store, { user: updatedUser });
-                // Persistence sync
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-              }),
-              catchError((err) => {
-                errorService.handleError(ErrorCodes.REFRESH);
-                console.error(err);
-                return EMPTY;
-              }),
-            ),
-          ),
-        ),
-      ),
-
-      toggleFavorite: rxMethod<string>(
-        pipe(
-          switchMap((productId) => {
-            const currentUser = store.user();
-            const token = store.token(); //
-
-            // If user is not logged in or token is missing, we can't sync
-            if (!currentUser || !token) return EMPTY; //
-
-            // 1. Calculate new favorites array locally
-            const isFavorite = currentUser.favorites.includes(productId);
-            const updatedFavorites = isFavorite
-              ? currentUser.favorites.filter((id) => id !== productId)
-              : [...currentUser.favorites, productId];
-
-            // 2. Optimistic Update: Update UI immediately
-            const updatedUser = { ...currentUser, favorites: updatedFavorites };
-            patchState(store, { user: updatedUser }); //
-
-            // 3. Sync with Backend using the token
-            return authService
-              .updateUserFavorites(updatedFavorites) // Pass the token here
-              .pipe(
-                catchError(() => {
-                  errorService.handleError(ErrorCodes.TOGGLE_FAVORITE); //
-                  // Rollback: If backend fails, revert the state to the original user object
-                  patchState(store, { user: currentUser }); //
-                  return EMPTY;
-                }),
-              );
-          }),
-        ),
-      ),
-
-      // Inside AppStore withMethods
-      updateUserProfile: rxMethod<{ updates: Partial<User> }>(
-        pipe(
-          tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ updates }) => {
-            const currentUser = store.user();
-            const token = store.token();
-
-            // Guard: Ensure we have a user and a token before proceeding
-            if (!currentUser || !token) {
-              patchState(store, { isLoading: false });
-              return EMPTY;
-            }
-
-            // Whitelist only the safe fields to be sent to the backend
-            const safeUpdates = {
-              email: updates.email,
-              phoneNumber: updates.phoneNumber,
-              theme: updates.theme,
-            };
-
-            // Pass the token to the authService instead of (or in addition to) the username
-            return authService.updateProfile(safeUpdates).pipe(
-              tap((updatedUser) => {
-                errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
-                patchState(store, { user: updatedUser, isLoading: false });
-              }),
-              catchError(() => {
-                errorService.handleError(ErrorCodes.UPDATE_PROFILE);
-                patchState(store, { isLoading: false });
-                return EMPTY;
-              }),
-            );
-          }),
-        ),
-      ),
-
-      updateUserDetail: rxMethod<{
-        userId: string;
-        updates: Partial<UserDetailSmall>;
-      }>(
-        pipe(
-          tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ userId, updates }) => {
-            return detailService.updateUserDetail(userId, updates).pipe(
-              tap((updatedDetail: UserDetail) => {
-                errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
-                patchState(store, {
-                  userDetail: updatedDetail,
-                  isLoading: false,
-                });
-              }),
-              catchError(() => {
-                errorService.handleError(ErrorCodes.UPDATE_PROFILE);
-                patchState(store, { isLoading: false });
-                return EMPTY;
-              }),
-            );
-          }),
-        ),
-      ),
-
-      loadUserDetail: rxMethod<{ userId: string }>(
-        pipe(
-          tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ userId }) =>
-            detailService.getUserDetailById(userId).pipe(
-              tap((userDetail: UserDetail) => {
-                patchState(store, {
-                  userDetail: userDetail,
-                  isLoading: false,
-                });
-              }),
-              catchError(() => {
-                errorService.handleError(ErrorCodes.LOAD_PROFILE);
-                patchState(store, { isLoading: false });
-                return EMPTY;
-              }),
-            ),
-          ),
-        ),
-      ),
+      setToken(token: string | null) {
+        patchState(store, { token });
+      },
 
       setViewLayout(layout: 'grid' | 'list') {
         patchState(store, { viewLayout: layout });
@@ -596,41 +281,6 @@ export const AppStore = signalStore(
           return { searchHistory: newHistory };
         });
       },
-
-      updateOrderLocal(id: string, status: OrderStatus) {
-        patchState(store, {
-          orders: store
-            .orders()
-            .map((order) => (order.id === id ? { ...order, status } : order)),
-        });
-      },
-
-      removeOrderLocal(id: string) {
-        patchState(store, {
-          orders: store.orders().filter((order) => order.id !== id),
-        });
-      },
-
-      reloadOrders: rxMethod<{ userId: string }>(
-        pipe(
-          tap(() => patchState(store, { isLoading: true })),
-          switchMap(({ userId }) =>
-            orderService.getUserOrders(userId).pipe(
-              tapResponse({
-                next: (orders) => {
-                  patchState(store, {
-                    orders: orders,
-                    isLoading: false,
-                  });
-                },
-                error: () => {
-                  patchState(store, { isLoading: false });
-                },
-              }),
-            ),
-          ),
-        ),
-      ),
     }),
   ),
 
@@ -640,27 +290,7 @@ export const AppStore = signalStore(
       const isBrowser = isPlatformBrowser(platformId);
 
       if (isBrowser) {
-        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
-        const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
-        const savedDetail = localStorage.getItem(DETAIL_STORAGE_KEY);
         const savedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
-
-        // Automatically react to user favorite ID changes
-        const favoriteIds = computed(() => store.user()?.favorites || []);
-        store._syncFavorites(favoriteIds);
-
-        if (savedUser && savedToken) {
-          patchState(store, {
-            user: JSON.parse(savedUser),
-            token: savedToken,
-          });
-        }
-
-        if (savedDetail) {
-          patchState(store, {
-            premiumStatus: JSON.parse(savedDetail),
-          });
-        }
 
         // history
         if (savedHistory) {
@@ -686,26 +316,6 @@ export const AppStore = signalStore(
               _isTablet: !!isTabletView,
             });
           });
-
-        effect(() => {
-          const { user, token, userDetail } = store;
-          if (userDetail()) {
-            localStorage.setItem(
-              DETAIL_STORAGE_KEY,
-              JSON.stringify(userDetail()),
-            );
-          } else {
-            localStorage.removeItem(DETAIL_STORAGE_KEY);
-          }
-          const _token = token();
-          if (user() && _token) {
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
-            localStorage.setItem(TOKEN_STORAGE_KEY, _token);
-          } else {
-            localStorage.removeItem(USER_STORAGE_KEY);
-            localStorage.removeItem(TOKEN_STORAGE_KEY);
-          }
-        });
       }
     },
   }),

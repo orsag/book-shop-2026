@@ -9,10 +9,10 @@
   <section class="mb-12">
     <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
       Moje objednávky
-      <div class="badge badge-outline">{{ store.orders().length }}</div>
+      <div class="badge badge-outline">{{ cartStore.orders().length }}</div>
     </h3>
 
-    @if (store.orders().length > 0) {
+    @if (cartStore.orders().length > 0) {
       <div class="overflow-x-auto bg-base-100 rounded-xl border border-base-300 shadow-sm">
         <table class="table w-full table-fixed">
           <thead>
@@ -25,7 +25,7 @@
           </tr>
           </thead>
           <tbody>
-            @for (order of store.orders(); track order.id) {
+            @for (order of cartStore.orders(); track order.id) {
               <tr class="hover:bg-base-200/50 transition-colors">
                 <td class="group">
                   <button
@@ -83,7 +83,7 @@
     <section class="mb-12">
       <h3 class="font-bold mb-4 text-xl flex items-center gap-2">
         Moje obľúbené
-        <div class="badge badge-secondary badge-lg">{{ store.favoriteCount() }}</div>
+        <div class="badge badge-secondary badge-lg">{{ userStore.favoriteCount() }}</div>
       </h3>
       <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
         @for (book of store.favoriteProducts(); track book.id) {
@@ -101,7 +101,7 @@
         <div class="form-control w-full">
           <label for="username" class="label"><span class="label-text">Používateľské meno</span></label>
           <div class="flex items-center justify-between h-10 px-4 rounded-sm bg-base-200 text-base-content/50 border border-base-300 cursor-not-allowed">
-            <span class="font-medium text-sm">{{ store.user()?.username }}</span>
+            <span class="font-medium text-sm">{{ userStore.user()?.username }}</span>
             <svg lucideLock size="20"></svg>
           </div>
         </div>

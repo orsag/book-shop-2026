@@ -1,10 +1,10 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AppStore } from '../../store/app-store';
 import { LucideCircleUserRound, LucideMail, LucidePenTool } from '@lucide/angular';
 import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { ToastComponent } from '../../components/common/toastComponent';
+import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ import { ToastComponent } from '../../components/common/toastComponent';
   templateUrl: './login.html',
 })
 export class LoginPage {
-  store = inject(AppStore);
+  userStore = inject(UserStore);
   router = inject(Router);
 
   registerMode = signal(false);
@@ -31,7 +31,7 @@ export class LoginPage {
   constructor() {
     // Automatically react when the store state changes
     effect(() => {
-      if (this.store.isLoggedIn()) {
+      if (this.userStore.isLoggedIn()) {
         this.router.navigate(['/']);
       }
     });
@@ -39,7 +39,7 @@ export class LoginPage {
 
   async onLogin() {
     if (!this.username().trim() || !this.password().trim()) return;
-    this.store.login({
+    this.userStore.login({
       username: this.username(),
       password: this.password(),
     });
@@ -52,7 +52,7 @@ export class LoginPage {
       !this.email().trim()
     )
       return;
-    this.store.register({
+    this.userStore.register({
       email: this.email(),
       username: this.username(),
       password: this.password(),

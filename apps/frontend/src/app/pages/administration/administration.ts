@@ -9,6 +9,8 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFrown, LucidePlus } from '@lucide/angular';
+import { UserStore } from '../../store/user-store';
+import { CartStore } from '../../store/cart-store';
 
 @Component({
   selector: 'app-administration',
@@ -28,6 +30,8 @@ import { LucideFrown, LucidePlus } from '@lucide/angular';
 })
 export class Administration implements OnInit {
   store = inject(AppStore);
+  userStore = inject(UserStore);
+  cartStore = inject(CartStore);
 
   selectedProduct = signal<Product | null>(null);
   isCoverModalOpen = signal<boolean>(false);
@@ -35,10 +39,10 @@ export class Administration implements OnInit {
   isEditModalOpen = signal(false);
 
   ngOnInit() {
-    if (this.store.isAdmin()) {
-      const userId = this.store.user()?.id;
+    if (this.userStore.isAdmin()) {
+      const userId = this.userStore.user()?.id;
       if (userId) {
-        this.store.reloadOrders({ userId });
+        this.cartStore.reloadOrders({ userId });
       }
     }
   }

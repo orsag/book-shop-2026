@@ -8,6 +8,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
 import { CurrencyPipe } from '@angular/common';
 import { UXService } from '../../services/ux-service';
+import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-book-card',
@@ -25,16 +26,16 @@ import { UXService } from '../../services/ux-service';
 export class BookCard {
   @Input({ required: true }) product!: Product;
   private readonly cartStore = inject(CartStore);
-  readonly store = inject(AppStore);
+  readonly userStore = inject(UserStore);
   ux = inject(UXService);
 
   toggleFavorite(productId: string) {
-    if (!this.store.isLoggedIn()) {
+    if (!this.userStore.isLoggedIn()) {
       // Show a common or redirect to login
       return;
     }
     // We will build this method in the Store next!
-    this.store.toggleFavorite(productId);
+    this.userStore.toggleFavorite(productId);
   }
 
   handleCartAction() {

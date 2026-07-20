@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DEFAULT_TYPE, Product, ProductType } from '@store/shared-models';
-import { AppStore } from '../store/app-store';
 import { CartStore } from '../store/cart-store';
+import { UserStore } from '../store/user-store';
 
 const productGradients: Record<ProductType, string> = {
   BOOK: 'bg-gradient-to-br from-red-100 via-pink-100 to-purple-100 text-purple-900',
@@ -16,7 +16,7 @@ const productGradients: Record<ProductType, string> = {
   providedIn: 'root',
 })
 export class UXService {
-  store = inject(AppStore);
+  userStore = inject(UserStore);
   cart = inject(CartStore);
 
   isGradientClass(product: Product) {
@@ -31,7 +31,7 @@ export class UXService {
   isFavorite(product: Product) {
     const id = product.id;
     if (id) {
-      return this.store.user()?.favorites?.includes(id);
+      return this.userStore.user()?.favorites?.includes(id);
     } else {
       return false;
     }
