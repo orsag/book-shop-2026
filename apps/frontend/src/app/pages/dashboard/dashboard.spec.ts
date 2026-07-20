@@ -8,12 +8,11 @@ import { computed, signal } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
 import { getTranslocoModule } from '../../core/transloco-testing.module';
-import { of } from 'rxjs';
 import { MockComponent } from 'ng-mocks';
-import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS } from '@store/libs';
+import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
-import { BOOK_GRADIENT } from '../../../../../libs/src/mocked';
 import { UXService } from '../../services/ux-service';
+import { PaginationAccumulatorService } from '../../services/pagination-accumulator-service';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;
@@ -24,11 +23,11 @@ describe('Dashboard Component', () => {
   let mockCartStore: any;
   let mockUXService: any;
   let mockConfigService: any;
+  let mockPaginationAccumulatorService: any;
 
   beforeEach(async () => {
     // Reset mocks before each test
     mockAppStore = {
-      loadBooks: vi.fn().mockReturnValue(of([])),
       isLoading: signal(false),
       isEmpty: signal(false),
       viewLayout: signal('grid'),
@@ -56,6 +55,10 @@ describe('Dashboard Component', () => {
       getFilterValue: vi.fn().mockReturnValue(false),
     };
 
+    mockPaginationAccumulatorService = {
+      accumulate: vi.fn().mockReturnValue(signal(MOCK_PRODUCTS)),
+    };
+
     TestBed.overrideComponent(Dashboard, {
       remove: { imports: [PaginationComponent] },
       add: { imports: [MockComponent(PaginationComponent)] },
@@ -70,6 +73,10 @@ describe('Dashboard Component', () => {
         { provide: CartStore, useValue: mockCartStore },
         { provide: UXService, useValue: mockUXService },
         { provide: ConfigurationService, useValue: mockConfigService },
+        {
+          provide: PaginationAccumulatorService,
+          useValue: mockPaginationAccumulatorService,
+        },
       ],
     }).compileComponents();
 
@@ -83,12 +90,6 @@ describe('Dashboard Component', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should trigger store.loadBooks and cart sync on initialization', () => {
-    fixture.detectChanges(); // Triggers ngOnInit
-
-    expect(mockAppStore.loadBooks).toHaveBeenCalled();
   });
 
   //
@@ -122,11 +123,9 @@ describe('Dashboard Component', () => {
   });
 
   it('should render book cards when products are available in grid layout', () => {
-    // Arrange
     mockAppStore.isLoading.set(false);
     mockAppStore.isEmpty.set(false);
-    mockAppStore.viewLayout.set('grid'); // Grid is usually VIEW_LAYOUTS[0]
-    mockAppStore.products.set(MOCK_PRODUCTS);
+    mockAppStore.viewLayout.set('grid');
 
     // Act
     fixture.whenStable();
@@ -138,7 +137,6 @@ describe('Dashboard Component', () => {
 
     expect(gridElement).toBeTruthy();
 
-    // console.log(gridElement.nativeElement.innerHTML);
     const bookCards = gridElement.queryAll(By.css('app-book-card'));
     expect(bookCards.length).toBe(DEFAULT_MAX_LIMIT);
   });

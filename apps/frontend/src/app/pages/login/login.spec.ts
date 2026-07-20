@@ -34,7 +34,7 @@ describe('Login', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should be disalbled if no user name is entered', () => {
+  it('should be disabled if no user name is entered', () => {
     component.username.set('');
     fixture.detectChanges();
 
@@ -48,6 +48,7 @@ describe('Login', () => {
 
   it('should be enabled if user name is filled', () => {
     component.username.set('testuser');
+    component.password.set('password');
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -60,6 +61,7 @@ describe('Login', () => {
 
   it('should be disabled if store.isLoading() is active', () => {
     component.username.set('testuser');
+    component.password.set('password');
     mockAppStore.isLoading.set(true);
     fixture.detectChanges();
 
@@ -75,6 +77,7 @@ describe('Login', () => {
 
   it('should be called login when name is filled', async () => {
     component.username.set('knihomol123');
+    component.password.set('password');
     fixture.detectChanges();
 
     // Vyvolanie odoslania formulára
@@ -82,6 +85,7 @@ describe('Login', () => {
 
     expect(mockAppStore.login).toHaveBeenCalledWith({
       username: 'knihomol123',
+      password: 'password',
     });
   });
 
@@ -96,6 +100,7 @@ describe('Login', () => {
 
   it('should call login after submit btn clicked', () => {
     component.username.set('martin_orsag');
+    component.password.set('password');
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -107,6 +112,7 @@ describe('Login', () => {
       submitBtn.click();
       expect(mockAppStore.login).toHaveBeenCalledWith({
         username: 'martin_orsag',
+        password: 'password',
       });
     }
   });

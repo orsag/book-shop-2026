@@ -9,12 +9,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFrown, LucidePlus } from '@lucide/angular';
-import {
-  ErrorCodes,
-  ErrorService,
-  SuccessCodes,
-} from '../../core/error.handler';
-import { BookService } from '../../services/book-service';
 
 @Component({
   selector: 'app-administration',
@@ -34,8 +28,6 @@ import { BookService } from '../../services/book-service';
 })
 export class Administration implements OnInit {
   store = inject(AppStore);
-  bookService = inject(BookService);
-  errorService = inject(ErrorService);
 
   selectedProduct = signal<Product | null>(null);
   isCoverModalOpen = signal<boolean>(false);
@@ -43,9 +35,6 @@ export class Administration implements OnInit {
   isEditModalOpen = signal(false);
 
   ngOnInit() {
-    if (this.store.totalProducts() === 0) {
-      this.store.loadBooks();
-    }
     if (this.store.isAdmin()) {
       const userId = this.store.user()?.id;
       if (userId) {
@@ -102,30 +91,6 @@ export class Administration implements OnInit {
     dataToSave.createdAt = dataToSave.createdAt ?? new Date().toISOString();
     dataToSave.updatedAt = dataToSave.updatedAt ?? new Date().toISOString();
 
-    if (id) {
-      this.bookService.update(id, dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_UPDATE);
-          this.store.loadBooks();
-          this.closeModals();
-        },
-        error: (err) => {
-          this.errorService.handleError(ErrorCodes.PRODUCT_UPDATE);
-          console.error(err);
-        },
-      });
-    } else {
-      this.bookService.create(dataToSave).subscribe({
-        next: () => {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_CREATE);
-          this.store.loadBooks();
-          this.closeModals();
-        },
-        error: (err) => {
-          this.errorService.handleError(ErrorCodes.PRODUCT_CREATE);
-          console.error(err);
-        },
-      });
-    }
+    this.store.saveBook({ id, data: dataToSave });
   }
 }

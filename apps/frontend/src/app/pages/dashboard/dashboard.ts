@@ -20,6 +20,7 @@ import { FilterBar } from '../../components/filter-bar/filter-bar';
 import { LucideSearchX } from '@lucide/angular';
 import { ConfigurationService } from '../../services/configuration-service';
 import { VIEW_LAYOUTS } from '@store/libs';
+import { PaginationAccumulatorService } from '../../services/pagination-accumulator-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -42,6 +43,15 @@ export class Dashboard implements OnInit, AfterViewInit {
   cart = inject(CartStore);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
+  private accumulator = inject(PaginationAccumulatorService);
+
+  // 🚀 Single line declaration for accumulated products!
+  accumulatedProducts = this.accumulator.accumulate(
+    this.store.productsResource,
+    computed(() => this.store.filters().page),
+    computed(() => this.store.appendMode()),
+    (res) => res?.data ?? [],
+  );
 
   isOpenedFilter = computed<boolean>(() => this.config.getFilterValue());
   protected readonly VIEW_LAYOUTS = VIEW_LAYOUTS;
@@ -81,8 +91,6 @@ export class Dashboard implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.store.loadBooks();
-
     if (isPlatformBrowser(this.platformId)) {
       this.cart.syncCartWithServer();
     }

@@ -30,7 +30,7 @@
              [class.md:grid-cols-4]="animatedGridExpanded()"
              [class.lg:grid-cols-6]="animatedGridExpanded()"
              [ngClass]="isTransitioning() ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'">
-          @for (book of store.products(); track book.id) {
+          @for (book of accumulatedProducts(); track book.id) {
             <app-book-card [product]="book"></app-book-card>
           }
         </div>
@@ -41,13 +41,13 @@
              [class.md:grid-cols-1]="isOpenedFilter()"
              [class.md:grid-cols-2]="!isOpenedFilter()"
         >
-          @for (book of store.products(); track book.id; let i = $index) {
+          @for (book of accumulatedProducts(); track book.id; let i = $index) {
             <app-book-list-item #listItem [product]="book"></app-book-list-item>
 
-            @if (i !== store.products().length - 1) {
+            @if (i !== accumulatedProducts().length - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>
             }
-            @if (i % 2 === 1 && i !== store.products().length - 1) {
+            @if (i % 2 === 1 && i !== accumulatedProducts().length - 1) {
               <div class="divider col-span-full hidden md:flex my-0"></div>
             }
           }

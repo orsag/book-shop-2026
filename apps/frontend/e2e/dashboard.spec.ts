@@ -20,11 +20,20 @@ test.describe('Dashboard Layout & Components', () => {
   });
 
   test('should display double of products when Load more books', async ({ page }) => {
-    // Playwright locator will look for all instances matching the test id
     const loadMoreButton = page.getByTestId('load-more');
+
+    // 1. Set up response listener BEFORE clicking
+    const responsePromise = page.waitForResponse(
+      (res) => res.url().includes('/products') && res.status() === 200,
+    );
+
+    // 2. Click Load More
     await loadMoreButton.click();
 
-    await page.locator('.skeleton').first().waitFor({ state: 'hidden' });
+    // 3. Wait for HTTP call to complete
+    await responsePromise;
+
+    // 4. Assert updated count (Playwright automatically retries to match target count)
     const listItems = page.locator('app-book-list-item');
     await expect(listItems).toHaveCount(2 * DEFAULT_MAX_LIMIT);
   });

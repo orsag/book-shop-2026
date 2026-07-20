@@ -51,13 +51,16 @@ describe('AuthService', () => {
         access_token: 'mock-jwt-token',
       };
 
-      service.login('testuser').subscribe((response) => {
+      service.login('testuser', 'testpassword').subscribe((response) => {
         expect(response).toEqual(mockResponse);
       });
 
       const req = httpMock.expectOne('/api/auth/login');
       expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ username: 'testuser' });
+      expect(req.request.body).toEqual({
+        username: 'testuser',
+        password: 'testpassword',
+      });
 
       req.flush(mockResponse);
     });

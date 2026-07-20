@@ -4,14 +4,18 @@ import { nxE2EPreset } from '@nx/playwright/preset';
 import { workspaceRoot } from '@nx/devkit';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import dotenv from 'dotenv';
+import path from 'path';
 import 'dotenv/config';
 
 // Safe standard fallback computation for __dirname / import.meta.dirname
 const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const currentDirname = dirname(__filename);
 
 // Explicitly reading from globalThis to satisfy strict isolated compilers
 const env = (globalThis as any).process?.env || {};
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const baseURL = env['BASE_URL'] || 'http://localhost:4200';
 
 export default defineConfig({

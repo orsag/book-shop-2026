@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -11,7 +11,7 @@
     "hono": "npx nx run hono-backend:serve",
     "build": "nx build",
     "test": "npx nx test frontend",
-    "pwr": "npx nx e2e frontend",
+    "playwr": "npx nx e2e frontend",
     "bl": "nx run backend:lint",
     "fl": "nx run frontend:lint",
     "clean": "rm -rf dist .angular/cache .nx/cache",

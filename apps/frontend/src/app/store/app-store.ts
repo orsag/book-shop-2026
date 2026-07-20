@@ -5,9 +5,24 @@ import {
   withComputed,
   patchState,
   withHooks,
+  withProps,
 } from '@ngrx/signals';
-import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
-import { OrderStatus, PremiumStatus, ProductType } from '@store/shared-models';
+import {
+  computed,
+  effect,
+  inject,
+  linkedSignal,
+  PLATFORM_ID,
+  Resource,
+  resourceFromSnapshots,
+  ResourceSnapshot,
+} from '@angular/core';
+import {
+  ActionResponse,
+  OrderStatus,
+  PremiumStatus,
+  ProductType,
+} from '@store/shared-models';
 import { User, UserDetail, UserDetailSmall } from '@store/shared-models';
 import { tapResponse } from '@ngrx/operators';
 import { Product as IProduct } from '@store/shared-models';
@@ -29,7 +44,7 @@ import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
 import { isPlatformBrowser } from '@angular/common';
 import { CreatedOrder, OrderService } from '../services/order-service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ViewLayout,
   VIEW_LAYOUTS,
@@ -53,13 +68,14 @@ export interface AppState {
   _isMobile: boolean;
   _isTablet: boolean;
   // --- 📚 Book State ---
-  products: IProduct[];
   orders: CreatedOrder[];
   favoriteProducts: IProduct[];
   totalProducts: number;
   isLoading: boolean;
   viewLayout: ViewLayout;
   searchHistory: string[];
+  appendMode: boolean;
+  booksVersion: number;
   // --- 🔍 Filter State ---
   filters: {
     type: ProductType;
@@ -79,13 +95,14 @@ const initialState: AppState = {
   userDetail: null,
   token: null,
   premiumStatus: null,
-  products: [],
   orders: [],
   favoriteProducts: [],
   totalProducts: 0,
   isLoading: false,
   viewLayout: VIEW_LAYOUTS[1],
   searchHistory: [],
+  appendMode: false,
+  booksVersion: 0,
   filters: {
     type: DEFAULT_TYPE,
     page: DEFAULT_PAGE,
@@ -97,39 +114,70 @@ const initialState: AppState = {
   },
 };
 
-// Stringified cache tracker to safely evaluate deep filter object changes
-let lastFetchedFiltersKey = '';
+// RESOURCE FIX
+export function withPreviousValue<T>(resource: Resource<T>): Resource<T> {
+  const derivedResource = linkedSignal({
+    source: resource.snapshot,
+    computation: (snap, prev): ResourceSnapshot<T> => {
+      if (snap.status == 'loading' && prev && prev.value.status !== 'error') {
+        return { ...snap, value: prev.value.value };
+      }
+      return snap;
+    },
+  });
+  return resourceFromSnapshots(derivedResource);
+}
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
 
+  // 1. Instantiate the Resource using withProps
+  withProps((store, bookService = inject(BookService)) => ({
+    productsResource: rxResource<
+      { data: IProduct[]; meta: { total: number } }, // 1. Output Data Type
+      { filters: AppState['filters']; append: boolean } // 2. Request Object Type
+    >({
+      params: () => ({
+        filters: store.filters(),
+        append: store.appendMode(),
+      }),
+      stream: ({ params }) => {
+        return bookService.fetchProducts(params.filters).pipe(delay(1000));
+      },
+    }),
+  })),
+
   // 1. Computed Values (Like Selectors)
-  withComputed(
-    ({ user, totalProducts, products, filters, _isMobile, _isTablet }) => {
-      return {
-        isMobile: computed(() => _isMobile()),
-        isTablet: computed(() => _isTablet()),
-        isDesktop: computed(() => !_isMobile() && !_isTablet()),
-        isBook: computed(() => filters().type === 'BOOK'),
-        isGame: computed(() => filters().type === 'GAME'),
-        isGastro: computed(() => filters().type === 'GASTRO'),
-        isLoggedIn: computed(() => !!user()),
-        isAdmin: computed(() => user()?.isAdmin ?? false),
-        isEmpty: computed(() => products().length == 0),
-        currentType: computed(() => filters().type as ProductType),
-        favoriteCount: computed(() => user()?.favorites?.length ?? 0),
-        cartCount: computed(() => user()?.cartItems?.length ?? 0),
-        // MOVE calculations inside the responsive signal body here:
-        totalPages: computed(() =>
-          Math.ceil(totalProducts() / filters().limit),
-        ),
-        hasMorePage: computed(
-          () => filters.page() < Math.ceil(totalProducts() / filters().limit),
-        ),
-      };
-    },
-  ),
+  withComputed(({ user, productsResource, filters, _isMobile, _isTablet }) => {
+    return {
+      isMobile: computed(() => _isMobile()),
+      isTablet: computed(() => _isTablet()),
+      isDesktop: computed(() => !_isMobile() && !_isTablet()),
+      isBook: computed(() => filters().type === 'BOOK'),
+      isGame: computed(() => filters().type === 'GAME'),
+      isGastro: computed(() => filters().type === 'GASTRO'),
+      isLoggedIn: computed(() => !!user()),
+      isAdmin: computed(() => user()?.isAdmin ?? false),
+      isEmpty: computed(() => (productsResource.value()?.meta.total ?? 0) == 0),
+      currentType: computed(() => filters().type as ProductType),
+      favoriteCount: computed(() => user()?.favorites?.length ?? 0),
+      cartCount: computed(() => user()?.cartItems?.length ?? 0),
+      // MOVE calculations inside the responsive signal body here:
+      totalPages: computed(() =>
+        Math.ceil((productsResource.value()?.meta.total ?? 0) / filters().limit),
+      ),
+      totalProducts: computed(() => productsResource.value()?.meta.total ?? 0),
+      products: computed(() => productsResource.value()?.data ?? []),
+      hasError: computed(() => !!productsResource.error()),
+      isLoading: computed(() => productsResource.isLoading()),
+      hasMorePage: computed(
+        () =>
+          filters.page() <
+          Math.ceil((productsResource.value()?.meta.total ?? 0) / filters().limit),
+      ),
+    };
+  }),
 
   // 2. Methods (Like Actions/Reducers)
   withMethods(
@@ -144,65 +192,66 @@ export const AppStore = signalStore(
       // Update filters without triggering a fetch automatically
       updateFilters(newFilters: Partial<AppState['filters']>) {
         patchState(store, (state) => ({
+          appendMode: false,
           filters: { ...state.filters, ...newFilters, page: 1 },
         }));
-        this.loadBooks();
       },
 
-      loadBooks: rxMethod<{ append?: boolean } | void>(
+      deleteBook: rxMethod<string>(
         pipe(
-          // 1. Fallback for void arguments
-          map((args) => args || { append: false }),
-          // 2. Combine the trigger argument with the absolute latest filters state
-          map((args) => {
-            // Include whole filters object
-            const pureFilters = store.filters();
-            return {
-              append: args.append,
-              pureFilters,
-              currentKey: JSON.stringify(pureFilters),
-            };
-          }),
-
-          // 3. Now the filtering logic relies on captured stream data, not race-condition signals
-          filter(({ append, currentKey }) => {
-            if (
-              !append &&
-              store.products().length > 0 &&
-              currentKey === lastFetchedFiltersKey
-            ) {
-              return false;
-            }
-            return true;
-          }),
-
-          tap(() => patchState(store, { isLoading: true })),
-
-          switchMap(({ append, pureFilters }) => {
-            const params: Partial<AppState['filters']> = store.filters();
-
-            return bookService.fetchProducts(params).pipe(
-              delay(1000),
+          switchMap((bookId) =>
+            bookService.delete(bookId).pipe(
               tap({
-                next: (res) => {
-                  if (!append) {
-                    lastFetchedFiltersKey = JSON.stringify(pureFilters);
+                next: (res: ActionResponse) => {
+                  if (res.warning) {
+                    errorService.handleError(ErrorCodes.PRODUCT_DELETE);
+                  } else {
+                    errorService.handleSuccess(SuccessCodes.PRODUCT_DELETE);
+                    // 🚀 Increment version to auto-trigger rxResource reload
+                    patchState(store, (state) => ({
+                      booksVersion: state.booksVersion + 1,
+                    }));
                   }
-
-                  patchState(store, {
-                    products: append
-                      ? [...store.products(), ...res.data]
-                      : res.data,
-                    totalProducts: res.meta.total,
-                    isLoading: false,
-                  });
                 },
                 error: () => {
-                  patchState(store, { isLoading: false });
-                  errorService.handleError(ErrorCodes.FETCH_PRODUCTS);
+                  errorService.handleError(ErrorCodes.PRODUCT_DELETE);
                 },
               }),
-              catchError(() => EMPTY),
+            ),
+          ),
+        ),
+      ),
+
+      saveBook: rxMethod<{ id?: string | null; data: Partial<IProduct> }>(
+        pipe(
+          switchMap(({ id, data }) => {
+            // 1. Conditionally choose the service call
+            const request$ = id
+              ? bookService.update(id, data)
+              : bookService.create(data);
+
+            return request$.pipe(
+              tap({
+                next: () => {
+                  // Success handler based on operation type
+                  const code = id
+                    ? SuccessCodes.PRODUCT_UPDATE
+                    : SuccessCodes.PRODUCT_CREATE;
+                  errorService.handleSuccess(code);
+
+                  // Trigger resource refetch
+                  patchState(store, (state) => ({
+                    booksVersion: state.booksVersion + 1,
+                  }));
+                },
+                error: (err) => {
+                  const code = id
+                    ? ErrorCodes.PRODUCT_UPDATE
+                    : ErrorCodes.PRODUCT_CREATE;
+                  errorService.handleError(code);
+                  console.error(err);
+                },
+              }),
             );
           }),
         ),
@@ -210,19 +259,19 @@ export const AppStore = signalStore(
 
       loadMore() {
         patchState(store, (state) => ({
+          appendMode: true,
           filters: { ...state.filters, page: state.filters.page + 1 },
         }));
-        this.loadBooks({ append: true });
       },
 
       setPage(page: number) {
         patchState(store, (state) => ({
+          appendMode: false,
           filters: {
             ...state.filters,
             page: page,
           },
         }));
-        this.loadBooks();
       },
 
       _syncFavorites: rxMethod<string[]>(
@@ -284,7 +333,7 @@ export const AppStore = signalStore(
                   errorService.handleError(ErrorCodes.REGISTER);
                   patchState(store, { isLoading: false });
                   return EMPTY;
-                }
+                },
               }),
             ),
           ),

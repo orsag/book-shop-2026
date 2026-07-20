@@ -1,7 +1,8 @@
 import { expect, test as setup } from '@playwright/test';
 
 setup('Authenticate and save storage state', async ({ page }) => {
-  const TEST_USER = 'bossman';
+  const TEST_USER = process.env['USERNAME'] || 'admin';
+  const TEST_PASSWORD = process.env['PASSWORD'] || 'admin';
   const PATH = './e2e/.auth.json';
 
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -9,6 +10,7 @@ setup('Authenticate and save storage state', async ({ page }) => {
 
   // Fill Login Form and Click Login
   await page.getByPlaceholder('User name').fill(TEST_USER);
+  await page.getByPlaceholder('Password').fill(TEST_PASSWORD);
   await page.getByRole('button', { name: 'login' }).click();
 
   // Wait for Successful Login & Page Ready

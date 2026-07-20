@@ -1,9 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { ActionResponse, Product } from '@store/libs';
-import { ErrorCodes, ErrorService, SuccessCodes, } from '../../core/error.handler';
-import { BookService } from '../../services/book-service';
+import { Product } from '@store/libs';
 import { AppStore } from '../../store/app-store';
 
 @Component({
@@ -45,23 +43,13 @@ import { AppStore } from '../../store/app-store';
 export class DeleteModalComponent {
   closeModal = output<void>();
   readonly selectedBook = input.required<Product | null>();
-
   store = inject(AppStore);
-  bookService = inject(BookService);
-  errorService = inject(ErrorService);
 
-  confirmDelete() {
+  async confirmDelete() {
     const bookId = this.selectedBook()?.id;
 
     if (bookId) {
-      this.bookService.delete(bookId).subscribe((res: ActionResponse) => {
-        if (res.warning) {
-          this.errorService.handleError(ErrorCodes.PRODUCT_DELETE);
-        } else {
-          this.errorService.handleSuccess(SuccessCodes.PRODUCT_DELETE);
-          this.store.loadBooks();
-        }
-      });
+      this.store.deleteBook(bookId);
     }
 
     this.handleClose();

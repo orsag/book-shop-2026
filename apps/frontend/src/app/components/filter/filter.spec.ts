@@ -77,20 +77,22 @@ describe('Filter', () => {
   });
 
   it('should render all categories', async () => {
-    // 1. Ensure the component property matches the template's property loop
+    // 1. Ensure content visibility is enabled
+    component.isContentVisible.set(true);
+
+    // 2. Ensure component categories match mock categories
     component.bookCategories = MOCK_CATEGORIES;
 
-    // 2. Trigger change detection to update the template
+    // 3. Trigger change detection to re-evaluate @if (isContentVisible()) and @for
     fixture.detectChanges();
 
-    // 3. Query all labels or text spans within the category loop
+    // 4. Query rendered category span elements
     const categoryElements =
       fixture.nativeElement.querySelectorAll('span.category');
 
-    // 4. Assert that the rendered count matches the array length
+    // 5. Assert lengths and content match
     expect(categoryElements.length).toBe(MOCK_CATEGORIES.length);
 
-    // 5. Verify that each category string is actually rendered in order
     MOCK_CATEGORIES.forEach((category, index) => {
       expect(categoryElements[index].textContent.trim()).toBe(category);
     });

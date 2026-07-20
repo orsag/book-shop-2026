@@ -16,22 +16,23 @@ test.describe('Filter Component Tests', () => {
       // Optional: wait for the filter to become visible after clicking
       await expect(filter).toBeVisible();
     }
+
+    await page.waitForTimeout(350);
   });
 
   test('should toggle layout and display grid main-layout when clicking layout button', async ({
     page,
   }) => {
-    // 1. Click on data-testid="layout-btn"[cite: 3]
-    const button = page.getByTestId("layout-btn");
-    await button.isVisible();
-    await button.click();
+    const button = page.getByTestId('layout-btn');
+    await expect(button).toBeVisible();
 
-    // Check if visible layout is data-testid="main-layout-grid"
+    // 1. Switch to Grid
+    await button.click();
     const gridLayout = page.getByTestId('main-layout-grid');
     await expect(gridLayout).toBeVisible();
 
+    // 2. Switch back to List
     await button.click();
-    // Check if visible layout is data-testid="main-layout-list"
     const listLayout = page.getByTestId('main-layout-list');
     await expect(listLayout).toBeVisible();
   });
@@ -39,7 +40,6 @@ test.describe('Filter Component Tests', () => {
   test('should sort elements by price ascending when clicking price button', async ({
     page,
   }) => {
-    // 2. Click data-testid="price-btn"[cite: 3]
     await page.getByTestId('price-btn').click();
 
     // Give the layout a brief moment to re-render sorted results
@@ -73,7 +73,6 @@ test.describe('Filter Component Tests', () => {
   test('should display discount badges when clicking discount button', async ({
     page,
   }) => {
-    // 3. Click data-testid="discount-btn"[cite: 3]
     await page.getByTestId('discount-btn').click();
 
     // Give filters a tiny moment to apply state changes[cite: 4]
@@ -85,6 +84,7 @@ test.describe('Filter Component Tests', () => {
       .locator('app-book-list-item')
       .nth(0)
       .locator('span[title="discount"]');
+
     await expect(firstItemDiscountSpan).toBeVisible();
   });
 });
