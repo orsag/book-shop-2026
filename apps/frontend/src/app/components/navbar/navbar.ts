@@ -6,6 +6,9 @@ import {
   PLATFORM_ID,
   ViewChild,
   ElementRef,
+  effect,
+  untracked,
+  debounced,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -85,12 +88,40 @@ export class Navbar {
   userName = this.userStore.user;
   isAdmin = this.userStore.isAdmin;
   searchQuery = signal('');
+  debouncedSearchQuery = debounced(this.searchQuery, 500);
   showSearchbar = computed(() => this.config.flags().SHOW_SEARCHBAR_HEADER);
 
   // Convert the lang changes to a signal
   activeLang = toSignal(this.translocoService.langChanges$, {
     initialValue: this.translocoService.getActiveLang(),
   });
+
+  constructor() {
+    // 3. React to debounced changes safely
+    effect(() => {
+      const query = this.debouncedSearchQuery.value();
+
+      untracked(() => {
+        const storeSearch = this.store.filters().search;
+
+        // Compare against store to avoid redundant updates/navigations
+        if (query !== storeSearch) {
+          this.store.updateFilters({ search: query });
+
+          if (query.trim()) {
+            this.store.addToHistory(query);
+          }
+
+          const allowedRoutes = ['/', '/home', '/administration'];
+          if (allowedRoutes.includes(this.router.url)) {
+            this.scroller.scrollToTop();
+          } else {
+            this.router.navigate(['/']);
+          }
+        }
+      });
+    });
+  }
 
   // Toggle function
   toggleLang() {
@@ -158,24 +189,7 @@ export class Navbar {
   // Handle the input event
   onSearchChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    const value = input.value;
-
-    // 1. Update the local UI signal
-    this.searchQuery.set(value);
-
-    // 2. Update ONLY the search parameter in the store
-    this.store.updateFilters({
-      search: value,
-    });
-    this.store.addToHistory(value);
-
-    const allowedRoutes = ['/', '/home', '/administration'];
-
-    if (allowedRoutes.includes(this.router.url)) {
-      this.scroller.scrollToTop();
-    } else {
-      this.router.navigate(['/']);
-    }
+    this.searchQuery.set(input.value);
   }
 
   onClearSearchbar(): void {

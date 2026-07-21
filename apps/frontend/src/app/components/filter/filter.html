@@ -34,7 +34,16 @@
       <div class="relative">
         <label appNoFocusJump class="input input-md flex w-full items-center gap-2 bg-base-200/30 focus-within:ring-1 focus-within:ring-primary">
           <svg lucideSearch size="18" class="opacity-40"></svg>
-          <input type="text" class="grow bg-transparent border-none! outline-none!" [placeholder]="t('filters.placeholders.search')" [value]="filters().search" (input)="updateFilter('search', $any($event.target).value)" (focus)="showHistory.set(true)" (blur)="showHistory.set(false)" (keydown)="onKeyDown($event)" />
+          <input
+            type="text"
+            class="grow bg-transparent border-none! outline-none!"
+            [placeholder]="t('filters.placeholders.search')"
+            [value]="filters().search"
+            (input)="updateFilter('search', $any($event.target).value)"
+            (focus)="showHistory.set(true)"
+            (blur)="showHistory.set(false)"
+            (keydown)="onKeyDown($event)"
+          />
         </label>
 
         @if (showHistory() && store.searchHistory().length > 0) {
@@ -104,15 +113,8 @@
     }
 
     <div class="sticky mt-auto">
-      <button [disabled]="isCoolingDown()" (click)="onSubmit()" class="btn rounded-full btn-success btn-block shadow-lg">
-        @if (isCoolingDown()) {
-          <div>
-            <span class="loading loading-spinner loading-xs"></span>
-            {{ 'filters.actions.waiting' | transloco }}
-          </div>
-        } @else {
-          <div>{{ 'filters.actions.submit' | transloco }}</div>
-        }
+      <button (click)="onSubmit()" class="btn rounded-full btn-success btn-block shadow-lg">
+        <div>{{ 'filters.actions.submit' | transloco }}</div>
       </button>
     </div>
 

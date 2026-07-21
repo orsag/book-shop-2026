@@ -39,12 +39,16 @@
 
     @if (showSearchbar()) {
       <div class="hidden md:block relative group" *transloco="let t">
-        <input type="text" [value]="searchQuery()" (input.debounce.500)="onSearchChange($event)"
-               [placeholder]="t('filters.placeholders.search')"
-               class="input input-sm w-34 md:w-auto transition-all focus:outline-none"
-               [ngClass]="currentTheme() === 'dark'
-                ? 'bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40'
-                : 'bg-black/5 border-black/10 text-neutral-800 placeholder:text-neutral-500/70 focus:bg-black/10 focus:border-black/20'" />
+        <input
+          type="text"
+          class="input input-sm w-34 md:w-auto transition-all focus:outline-none"
+          [value]="searchQuery()"
+          (input)="onSearchChange($event)"
+          [placeholder]="t('filters.placeholders.search')"
+          [ngClass]="currentTheme() === 'dark'
+            ? 'bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40'
+            : 'bg-black/5 border-black/10 text-neutral-800 placeholder:text-neutral-500/70 focus:bg-black/10 focus:border-black/20'"
+        />
 
         @if (searchQuery()) {
           <button (click)="onClearSearchbar()"

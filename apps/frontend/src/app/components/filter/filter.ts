@@ -2,11 +2,12 @@ import {
   Component,
   effect,
   Input,
+  linkedSignal,
   signal,
-  SimpleChanges,
+  untracked,
 } from '@angular/core';
 import { ConfigurationService } from '../../services/configuration-service';
-import { inject } from '@angular/core';
+import { inject, debounced, SimpleChanges } from '@angular/core';
 import { BookFilters } from '../../../types';
 import { AppStore } from '../../store/app-store';
 import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
@@ -48,23 +49,40 @@ export class Filter {
   scroller = inject(ScrollService);
   bookCategories = CATEGORIES;
 
-  isCoolingDown = signal(false);
   showHistory = signal(false);
   @Input() isCollapsed = false;
   activeIndex = signal(-1); // For keyboard navigation
-  toggles = { key: 'isDiscounted', label: 'discounted' };
   private openTimeout: any;
 
   isContentVisible = signal(false);
+  // Initialize from store instead of hardcoded defaults
+  filters = linkedSignal<BookFilters>(() => {
+    const f = this.store.filters();
+    return {
+      type: f.type,
+      search: f.search,
+      category: f.category,
+      isDiscounted: f.isDiscounted,
+    };
+  });
+
+  debouncedFilters = debounced(this.filters, 500);
 
   constructor() {
     effect(() => {
-      const filter = this.store.filters();
-      this.filters.set({
-        type: filter.type,
-        search: filter.search,
-        category: filter.category,
-        isDiscounted: filter.isDiscounted,
+      const debouncedVal = this.debouncedFilters.value();
+      if (!debouncedVal.search) return;
+
+      untracked(() => {
+        // Compare with store to avoid redundant submits when store and filters are identical
+        const storeFilters = this.store.filters();
+        const hasChanged = debouncedVal.search !== storeFilters.search;
+
+        if (hasChanged && !this.store.isMobile()) {
+          this.store.updateFilters(debouncedVal);
+          this.store.addToHistory(debouncedVal.search);
+          this.scroller.scrollToTop();
+        }
       });
     });
   }
@@ -89,14 +107,6 @@ export class Filter {
       }
     }
   }
-
-  // Initialize from store instead of hardcoded defaults
-  filters = signal<BookFilters>({
-    type: 'BOOK',
-    search: '',
-    category: null,
-    isDiscounted: false,
-  });
 
   // Update helper
   updateFilter<K extends keyof BookFilters>(key: K, value: BookFilters[K]) {
