@@ -1,17 +1,21 @@
 <footer *transloco="let t"
   class="bg-black/10 backdrop-blur-sm shadow-[0_-15px_30px_rgba(0,0,0,0.25)] border-t border-base-300 text-base-content pt-12 pb-16 px-4 md:px-8 mt-auto w-full max-w-full overflow-hidden">
-  <div class="max-w-[1200px] mx-auto">
+
+  <div class="max-w-300 mx-auto">
 
     <!-- ================= TOP SECTION: ICONS ================= -->
     <div class="grid grid-cols-3 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between gap-y-10 gap-x-2 md:gap-x-4 items-start text-center mb-12">
-
       @for (item of footerItems; track item.translationKey) {
-        <a (click)="openWipModal(item)" class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full">
-          <div class="relative w-10 h-10 md:w-[60px] md:h-[60px]">
-            <img [ngSrc]="item.image" fill [alt]="item.alt" class="object-contain transition-transform group-hover:scale-105" />
+        <button
+          type="button"
+          (click)="openWipModal(item)"
+          class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full text-center">
+
+          <div class="relative w-10 h-10 md:w-15 md:h-15">
+            <img [ngSrc]="item.image" fill [alt]="item.alt" class="object-contain transition-transform group-hover:scale-110" />
           </div>
 
-          <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight">
+          <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider leading-tight transition-all duration-200 group-hover:text-primary group-hover:scale-105 inline-block">
             @if (item.isSplit) {
               @for (line of t(item.translationKey).split('|'); track $index) {
                 <span class="block">{{ line }}</span>
@@ -20,9 +24,8 @@
               {{ t(item.translationKey) }}
             }
           </span>
-        </a>
+        </button>
       }
-
     </div>
 
     <!-- DIVIDER -->
@@ -60,6 +63,10 @@
         <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.gift_cards') }}</a>
       </div>
 
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="text-xs tracking-wider">Ⓒ 2026-{{ currentYear }} Golden Bee Bookshop, Námestie SNP 2497/24, Zvolen, Slovakia</span>
+      </div>
+
     </div>
   </div>
 </footer>
@@ -72,7 +79,7 @@
           {{ t(activeItem.translationKey).replace('|', ' ') }}
         </h3>
 
-        <div class="relative w-14 h-14 bg-base-200 p-2 rounded-2xl flex-shrink-0">
+        <div class="relative w-14 h-14 bg-base-200 p-2 rounded-2xl shrink-0">
           <img [ngSrc]="activeItem.image" fill [alt]="activeItem.alt" class="object-contain" />
         </div>
       </div>
@@ -81,11 +88,10 @@
     }
 
     <p class="py-4 text-sm text-base-content/70">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      {{ dummyText }}
     </p>
     <div class="modal-action">
       <form method="dialog">
-        <!-- daisyUI automatically handles closing the native dialog here -->
         <button class="btn btn-sm btn-ghost rounded-full">Zatvoriť</button>
       </form>
     </div>
