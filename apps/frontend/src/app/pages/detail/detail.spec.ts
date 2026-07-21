@@ -4,9 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { getTranslocoModule, ErrorService } from '@core';
 import { vi } from 'vitest';
 import { of, BehaviorSubject } from 'rxjs';
-import { UXService } from '../../services/ux-service';
+import { BookService, UXService } from '@service';
 import { CartStore } from '../../store/cart-store';
-import { BookService } from '../../services/book-service';
 import { MOCKED_PRODUCT } from '@store/libs';
 
 describe('Detail', () => {

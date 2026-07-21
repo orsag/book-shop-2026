@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ToastService } from '../services/toast-service';
+import { ToastService } from '@service';
 
 // Define your error codes as a const object for better type inference
 export const ErrorCodes = {

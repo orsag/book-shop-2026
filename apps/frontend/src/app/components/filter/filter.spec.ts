@@ -4,8 +4,7 @@ import { getTranslocoModule } from '@core';
 import { AppStore } from '../../store/app-store';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { ConfigurationService } from '../../services/configuration-service';
-import { ScrollService } from '../../services/scroll-service';
+import { ConfigurationService, ScrollService } from '@service';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,

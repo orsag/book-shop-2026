@@ -2,7 +2,7 @@ import { Component, inject, OnInit, Signal } from '@angular/core';
 import { CartItem, CartStore } from '../../store/cart-store';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { OrderService, CreatedOrder } from '../../services/order-service';
+import { OrderService, CreatedOrder } from '@service';
 import {
   ErrorCodes,
   ErrorService,

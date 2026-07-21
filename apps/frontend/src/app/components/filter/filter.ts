@@ -7,14 +7,13 @@ import {
   untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService, ScrollService } from '@service';
 import { inject, debounced, SimpleChanges } from '@angular/core';
 import { BookFilters } from '../../../types';
 import { AppStore } from '../../store/app-store';
 import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { Router } from '@angular/router';
-import { ScrollService } from '../../services/scroll-service';
 import { NoFocusJumpDirective } from '@core';
 import {
   LucideArrowDownNarrowWide,

@@ -17,7 +17,7 @@ import {
   isPlatformBrowser,
 } from '@angular/common';
 import { ThemePicker } from '../theme-picker/theme-picker';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService, ScrollService } from '@service';
 import { AppStore } from '../../store/app-store';
 import { FormsModule } from '@angular/forms';
 import { CartStore } from '../../store/cart-store';
@@ -35,7 +35,6 @@ import {
   LucideMenu,
 } from '@lucide/angular';
 import { TooltipDirective, NoBtnHoverDirective } from '@core';
-import { ScrollService } from '../../services/scroll-service';
 import { UserStore } from '../../store/user-store';
 
 @Component({

@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
 import { CartStore } from '../../store/cart-store';
-import { OrderService } from '../../services/order-service';
+import { OrderService } from '@service';
 import {
   ErrorService,
   SuccessCodes,

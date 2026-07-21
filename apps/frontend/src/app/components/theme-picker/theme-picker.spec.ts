@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ThemePicker } from './theme-picker';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
 

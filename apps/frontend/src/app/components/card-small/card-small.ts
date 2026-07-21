@@ -5,7 +5,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 import { UserStore } from '../../store/user-store';
 
 @Component({

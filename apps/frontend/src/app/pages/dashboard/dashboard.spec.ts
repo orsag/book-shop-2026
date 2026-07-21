@@ -3,7 +3,11 @@ import { Dashboard } from './dashboard';
 import { Pagination as PaginationComponent } from '../../components/pagination/pagination';
 import { AppStore } from '../../store/app-store';
 import { CartStore } from '../../store/cart-store';
-import { ConfigurationService } from '../../services/configuration-service';
+import {
+  ConfigurationService,
+  UXService,
+  PaginationAccumulatorService,
+} from '@service';
 import { computed, signal } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
@@ -11,8 +15,6 @@ import { getTranslocoModule } from '@core';
 import { MockComponent } from 'ng-mocks';
 import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
-import { UXService } from '../../services/ux-service';
-import { PaginationAccumulatorService } from '../../services/pagination-accumulator-service';
 import { UserStore } from '../../store/user-store';
 
 describe('Dashboard Component', () => {

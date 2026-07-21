@@ -3,7 +3,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
-import { BookService } from '../../services/book-service';
+import { BookService } from '@service';
 import { AppStore } from '../../store/app-store';
 import {
   LucideClock,
@@ -15,7 +15,7 @@ import {
 } from '@lucide/angular';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 import { ErrorCodes, ErrorService } from '@core';
 import { OverlayComponent } from '../../components/common/overlay.component';
 

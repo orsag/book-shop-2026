@@ -18,9 +18,8 @@ import { isPlatformBrowser, NgClass, NgTemplateOutlet } from '@angular/common';
 import { CartStore } from '../../store/cart-store';
 import { FilterBar } from '../../components/filter-bar/filter-bar';
 import { LucideSearchX } from '@lucide/angular';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService, PaginationAccumulatorService } from '@service';
 import { VIEW_LAYOUTS } from '@store/libs';
-import { PaginationAccumulatorService } from '../../services/pagination-accumulator-service';
 
 @Component({
   selector: 'app-dashboard',

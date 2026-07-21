@@ -2,12 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Navbar } from './navbar';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
 import { computed, signal } from '@angular/core';
 import { AppStore } from '../../store/app-store';
 import { CartStore } from '../../store/cart-store';
-import { ScrollService } from '../../services/scroll-service';
 import { ProductType } from '@store/libs';
 import { UserStore } from '../../store/user-store';
 

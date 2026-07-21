@@ -4,7 +4,7 @@ import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 import { OverlayComponent } from '../common/overlay.component';
 
 @Component({

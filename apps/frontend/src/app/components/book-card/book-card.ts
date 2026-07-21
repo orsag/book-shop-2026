@@ -6,7 +6,7 @@ import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
 import { CurrencyPipe } from '@angular/common';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 import { UserStore } from '../../store/user-store';
 
 @Component({

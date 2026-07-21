@@ -24,9 +24,8 @@ import {
   LucideClipboardCopy,
   LucideShoppingBag
 } from '@lucide/angular';
-import { OrderService } from '../../services/order-service';
+import { OrderService, ToastService } from '@service';
 import { OrderStatus as OSEnum } from '@store/shared-models';
-import { ToastService } from '../../services/toast-service';
 import { NoFocusJumpDirective } from '@core';
 import { CardSmall } from '../../components/card-small/card-small';
 import { delay } from 'rxjs';

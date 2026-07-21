@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Success } from './success';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
-import { OrderService } from '../../services/order-service';
+import { OrderService } from '@service';
 
 const MOCK_CREATED_ORDER = {
   id: 'd93bckja0a',

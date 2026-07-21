@@ -9,9 +9,8 @@ import {
   patchState,
   withHooks,
 } from '@ngrx/signals';
-import { BookService } from '../services/book-service';
+import { BookService, CreatedOrder, OrderService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
-import { CreatedOrder, OrderService } from '../services/order-service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';

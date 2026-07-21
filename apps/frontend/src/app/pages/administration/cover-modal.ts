@@ -9,9 +9,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/libs';
 import { AppStore } from '../../store/app-store';
-import { BookService } from '../../services/book-service';
+import { BookService, ImageUploadService } from '@service';
 import { ErrorCodes, ErrorService, NoFocusJumpDirective } from '@core';
-import { ImageUploadService } from '../../services/image-upload-service';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { LucideImageUp } from '@lucide/angular';
 

@@ -24,7 +24,8 @@
       "@store/libs": ["./apps/libs/src/index.ts"],
       "@prisma-client": ["./generated/prisma-entry.ts"],
       "@prismalib": ["./prisma/prisma.ts"],
-      "@core": ["./apps/frontend/src/app/core"]
+      "@core": ["./apps/frontend/src/app/core"],
+      "@service": ["./apps/frontend/src/app/services"]
     },
   },
   "angularCompilerOptions": {

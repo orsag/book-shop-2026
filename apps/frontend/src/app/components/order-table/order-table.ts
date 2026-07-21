@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { OrderService } from '../../services/order-service';
+import { OrderService, ToastService } from '@service';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { ToastService } from '../../services/toast-service';
 import { delay } from 'rxjs';
 import { OrderStatus } from '@store/libs';
 import { CartStore } from '../../store/cart-store';

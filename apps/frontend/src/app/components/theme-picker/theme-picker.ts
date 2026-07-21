@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DAISY_THEMES } from '@store/shared-models';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 import { LucideMoon, LucideSun } from '@lucide/angular';
 import { TooltipDirective } from '@core';
 

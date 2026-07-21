@@ -3,9 +3,8 @@ import { OrderTable } from './order-table';
 import { getTranslocoModule } from '@core';
 import { signal } from '@angular/core';
 import { AppStore } from '../../store/app-store';
-import { OrderService } from '../../services/order-service';
+import { OrderService, ToastService } from '@service';
 import { of } from 'rxjs';
-import { ToastService } from '../../services/toast-service';
 
 const MOCK_CREATED_ORDER = {
   id: 'd93bckja0a',

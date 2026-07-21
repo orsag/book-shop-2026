@@ -21,7 +21,7 @@ import { Product as IProduct } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap, delay } from 'rxjs';
 import { pipe, switchMap } from 'rxjs';
-import { BookService } from '../services/book-service';
+import { BookService } from '@service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { isPlatformBrowser } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';

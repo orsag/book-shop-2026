@@ -13,8 +13,7 @@ import { catchError, exhaustMap, filter, finalize } from 'rxjs/operators';
 import { EMPTY, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
-import { AuthService } from '../services/auth-service';
-import { DetailService } from '../services/detail-service';
+import { AuthService, DetailService } from '@service';
 import { AppStore } from './app-store';
 import { isPlatformBrowser } from '@angular/common';
 

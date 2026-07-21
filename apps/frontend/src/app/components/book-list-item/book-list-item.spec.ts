@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { MOCKED_PRODUCT, BOOK_GRADIENT } from '@store/libs';
 import { CartStore } from '../../store/cart-store';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 
 describe('BookListItem', () => {
   let component: BookListItem;

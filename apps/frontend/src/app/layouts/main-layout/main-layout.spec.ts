@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainLayoutComponent as MainLayout } from './main-layout';
 import { CartStore } from '../../store/cart-store';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 import { vi } from 'vitest';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';

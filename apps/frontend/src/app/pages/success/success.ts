@@ -1,10 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import {
-  CreatedOrder,
-  CreatedOrderItem,
-  OrderService,
-} from '../../services/order-service';
+import { CreatedOrder, CreatedOrderItem, OrderService } from '@service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import {
   LucideChessQueen,
@@ -33,7 +29,6 @@ import { TotalPricePipe, SinglePricePipe } from '@core';
 export class Success implements OnInit {
   private route = inject(ActivatedRoute);
   private orderService = inject(OrderService);
-  // protected readonly CreatedOrderItemRecord = {} as CreatedOrderItem;
 
   order = signal<CreatedOrder | null>(null);
   orderItems = computed<CreatedOrderItem[]>(() => {
@@ -56,6 +51,5 @@ export class Success implements OnInit {
         });
       }
     }
-
   }
 }

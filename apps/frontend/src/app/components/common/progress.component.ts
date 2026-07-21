@@ -1,6 +1,6 @@
 import { OnDestroy, inject, ViewEncapsulation, computed } from '@angular/core';
 import { Component, input, signal, effect } from '@angular/core';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 
 @Component({
   selector: 'app-progress',

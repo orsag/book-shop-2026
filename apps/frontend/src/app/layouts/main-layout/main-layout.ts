@@ -6,7 +6,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { RouterOutlet } from '@angular/router';
 import { ScrollBtnComponent } from '../../components/common/scrollToTop';
 import { ToastComponent } from '../../components/common/toastComponent';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, of, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';

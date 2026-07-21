@@ -3,7 +3,7 @@ import { CardSmall } from './card-small';
 import { getTranslocoModule } from '@core';
 import { vi } from 'vitest';
 import { CartStore } from '../../store/cart-store';
-import { UXService } from '../../services/ux-service';
+import { UXService } from '@service';
 import { provideRouter } from '@angular/router';
 import { MOCKED_PRODUCT } from '@store/libs';
 import { UserStore } from '../../store/user-store';

@@ -7,7 +7,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { LucideArrowBigUp } from '@lucide/angular';
-import { ConfigurationService } from '../../services/configuration-service';
+import { ConfigurationService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
