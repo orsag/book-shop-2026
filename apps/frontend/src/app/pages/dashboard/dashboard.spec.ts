@@ -7,7 +7,7 @@ import { ConfigurationService } from '../../services/configuration-service';
 import { computed, signal } from '@angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { MockComponent } from 'ng-mocks';
 import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';

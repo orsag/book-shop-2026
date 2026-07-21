@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Administration } from './administration';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { computed, signal } from '@angular/core';
 import { AppStore } from '../../store/app-store';
 import {

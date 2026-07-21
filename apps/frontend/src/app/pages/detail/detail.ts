@@ -16,7 +16,7 @@ import {
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '../../services/ux-service';
-import { ErrorCodes, ErrorService } from '../../core/error.handler';
+import { ErrorCodes, ErrorService } from '@core';
 import { OverlayComponent } from '../../components/common/overlay.component';
 
 @Component({

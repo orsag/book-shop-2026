@@ -8,8 +8,7 @@ import { Administration } from './pages/administration/administration';
 import { Shopping } from './pages/shopping/shopping';
 import { Success } from './pages/success/success';
 // ======================================================================
-import { authGuard } from './core/auth.guard';
-import { adminGuard } from './core/admin.guard';
+import { authGuard, adminGuard } from '@core';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { LoginPage } from './pages/login/login';

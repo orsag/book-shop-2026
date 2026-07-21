@@ -12,7 +12,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, exhaustMap, filter, finalize } from 'rxjs/operators';
 import { EMPTY, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
+import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { AuthService } from '../services/auth-service';
 import { DetailService } from '../services/detail-service';
 import { AppStore } from './app-store';

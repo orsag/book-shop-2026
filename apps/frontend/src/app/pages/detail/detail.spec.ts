@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Detail } from './detail';
 import { ActivatedRoute } from '@angular/router';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule, ErrorService } from '@core';
 import { vi } from 'vitest';
 import { of, BehaviorSubject } from 'rxjs';
 import { UXService } from '../../services/ux-service';
 import { CartStore } from '../../store/cart-store';
 import { BookService } from '../../services/book-service';
-import { ErrorService } from '../../core/error.handler';
-import { MOCKED_PRODUCT } from '../../../../../libs/src/mocked';
+import { MOCKED_PRODUCT } from '@store/libs';
 
 describe('Detail', () => {
   const routeParams$ = new BehaviorSubject({ id: '123' });

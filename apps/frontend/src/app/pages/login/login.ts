@@ -2,7 +2,7 @@ import { Component, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideCircleUserRound, LucideMail, LucidePenTool } from '@lucide/angular';
-import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
+import { NoFocusJumpDirective } from '@core';
 import { ToastComponent } from '../../components/common/toastComponent';
 import { UserStore } from '../../store/user-store';
 

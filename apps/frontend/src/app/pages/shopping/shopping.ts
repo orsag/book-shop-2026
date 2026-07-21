@@ -7,7 +7,7 @@ import {
   ErrorCodes,
   ErrorService,
   SuccessCodes,
-} from '../../core/error.handler';
+} from '@core';
 import { LucideTrash2 } from '@lucide/angular';
 
 @Component({

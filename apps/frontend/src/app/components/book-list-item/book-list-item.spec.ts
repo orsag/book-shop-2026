@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BookListItem } from './book-list-item';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { MOCKED_PRODUCT, BOOK_GRADIENT } from '@store/libs';

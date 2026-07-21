@@ -1,4 +1,4 @@
-<div class="block">
+<div class="block" [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'">
   <label class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors">
     <!-- this hidden checkbox controls the state -->
     <input type="checkbox" class="theme-controller" [checked]="isChecked()"

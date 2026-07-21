@@ -17,6 +17,7 @@
     <div class="absolute top-2 left-4 flex gap-2">
       <button type="button"
               data-testid="logo-btn"
+              [appTooltip]="this.config.getFilterValue() ? 'Hide filter' : 'Open filter'"
               class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
               (click)="handleButtonClick(false)">
         <img [ngSrc]="logo"
@@ -52,6 +53,7 @@
 
         @if (searchQuery()) {
           <button (click)="onClearSearchbar()"
+                  appTooltip="Toggle theme"
                   class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs btn-circle transition-transform hover:scale-125"
                   [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
             ✕
@@ -62,6 +64,7 @@
 
     <button (click)="toggleLang()" appNoHoverButton
             data-testid="language-btn"
+            [appTooltip]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'"
             class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold group"
             [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
             [title]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'">
@@ -74,15 +77,23 @@
 
     <div class="hidden md:block">
       @if (!isLoggedIn()) {
-        <button (click)="handleAuthAction()" appNoHoverButton
-                class="btn btn-ghost btn-sm btn-square"
-                [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
+        <button
+          (click)="handleAuthAction()"
+          appNoHoverButton
+          class="btn btn-ghost btn-sm btn-square"
+          appTooltip="Login"
+          [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
+        >
           <svg lucideLogIn></svg>
         </button>
       } @else {
-        <button (click)="handleLogout()" appNoHoverButton
-                class="btn btn-ghost btn-sm btn-square"
-                [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
+        <button
+          (click)="handleLogout()"
+          appNoHoverButton
+          appTooltip="Logout"
+          class="btn btn-ghost btn-sm btn-square"
+          [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
+        >
           <svg lucideLogOut></svg>
         </button>
       }
@@ -93,6 +104,7 @@
       [disabled]="cartStore.itemCount() === 0"
       [class.opacity-50]="cartStore.itemCount() === 0"
       [routerLink]="cartStore.itemCount() > 0 ? '/shopping' : null"
+      appTooltip="Shopping cart"
       class="btn btn-ghost btn-sm btn-square relative group text-neutral-800"
       aria-label="View Shopping Cart">
       <div
@@ -116,6 +128,7 @@
         <button
           type="button"
           data-testid="profile-btn"
+          appTooltip="Profile"
           (click)="showProfileModal.set(!showProfileModal())"
           [ngClass]="showProfileModal()
               ? 'bg-error text-white'

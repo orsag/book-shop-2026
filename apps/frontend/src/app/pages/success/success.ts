@@ -12,8 +12,7 @@ import {
   LucideShoppingBasket,
   LucideCircleUserRound,
 } from '@lucide/angular';
-import { TotalPricePipe } from '../../core/totalPrice.pipe';
-import { SinglePricePipe } from '../../core/singlePrice.pipe';
+import { TotalPricePipe, SinglePricePipe } from '@core';
 
 @Component({
   selector: 'app-success',

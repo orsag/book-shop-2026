@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageNotFound } from './page-not-found';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 
 describe('PageNotFound', () => {

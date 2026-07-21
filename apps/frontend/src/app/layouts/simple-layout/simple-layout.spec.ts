@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   SimpleLayoutComponent as SimpleLayout,
 } from './simple-layout';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 
 describe('SimpleLayout', () => {

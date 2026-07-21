@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Navbar } from './navbar';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { ConfigurationService } from '../../services/configuration-service';
 import { vi } from 'vitest';

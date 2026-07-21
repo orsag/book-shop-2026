@@ -9,7 +9,7 @@ import {
   ErrorService,
   SuccessCodes,
   ErrorCodes,
-} from '../../core/error.handler';
+} from '@core';
 import { of, throwError } from 'rxjs';
 
 describe('Shopping Component', () => {

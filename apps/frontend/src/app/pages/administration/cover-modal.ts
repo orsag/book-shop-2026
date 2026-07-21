@@ -10,10 +10,9 @@ import { CommonModule } from '@angular/common';
 import { Product } from '@store/libs';
 import { AppStore } from '../../store/app-store';
 import { BookService } from '../../services/book-service';
-import { ErrorCodes, ErrorService } from '../../core/error.handler';
+import { ErrorCodes, ErrorService, NoFocusJumpDirective } from '@core';
 import { ImageUploadService } from '../../services/image-upload-service';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
-import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
 import { LucideImageUp } from '@lucide/angular';
 
 @Component({

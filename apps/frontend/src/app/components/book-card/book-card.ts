@@ -2,7 +2,6 @@ import { Component, inject, Input } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { AppStore } from '../../store/app-store';
 import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';

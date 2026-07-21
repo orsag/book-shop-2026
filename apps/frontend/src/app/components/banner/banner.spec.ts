@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BannerComponent } from './banner';
 import { provideRouter } from '@angular/router';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 
 describe('Banner', () => {
   let component: BannerComponent;

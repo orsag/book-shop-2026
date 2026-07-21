@@ -3,7 +3,7 @@ import { MainLayoutComponent as MainLayout } from './main-layout';
 import { CartStore } from '../../store/cart-store';
 import { ConfigurationService } from '../../services/configuration-service';
 import { vi } from 'vitest';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { computed, signal } from '@angular/core';
 

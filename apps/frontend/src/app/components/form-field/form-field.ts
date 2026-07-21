@@ -1,6 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
-import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
+import { NoFocusJumpDirective } from '@core';
 import { LucideFrown } from '@lucide/angular';
 
 @Component({

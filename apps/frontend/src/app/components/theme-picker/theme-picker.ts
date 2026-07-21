@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { DAISY_THEMES } from '@store/shared-models';
 import { ConfigurationService } from '../../services/configuration-service';
 import { LucideMoon, LucideSun } from '@lucide/angular';
+import { TooltipDirective } from '@core';
 
 @Component({
   selector: 'app-theme-picker',
-  imports: [CommonModule, LucideSun, LucideMoon],
+  imports: [CommonModule, LucideSun, LucideMoon, TooltipDirective],
   templateUrl: './theme-picker.html',
   styleUrl: './theme-picker.css',
 })

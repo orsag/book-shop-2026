@@ -34,7 +34,7 @@ import {
   LucideX,
   LucideMenu,
 } from '@lucide/angular';
-import { NoBtnHoverDirective } from '../../core/no-btn-hover.directive';
+import { TooltipDirective, NoBtnHoverDirective } from '@core';
 import { ScrollService } from '../../services/scroll-service';
 import { UserStore } from '../../store/user-store';
 
@@ -57,6 +57,7 @@ import { UserStore } from '../../store/user-store';
     LucideX,
     LucideMenu,
     LucideLayoutDashboard,
+    TooltipDirective,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',

@@ -7,7 +7,7 @@ import { OrderService } from '../../services/order-service';
 import { ToastService } from '../../services/toast-service';
 import { OrderStatus } from '@store/shared-models';
 import { of } from 'rxjs';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { UserStore } from '../../store/user-store';
 import { CartStore } from '../../store/cart-store';

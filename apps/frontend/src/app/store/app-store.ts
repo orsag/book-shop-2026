@@ -22,7 +22,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap, delay } from 'rxjs';
 import { pipe, switchMap } from 'rxjs';
 import { BookService } from '../services/book-service';
-import { ErrorCodes, ErrorService, SuccessCodes } from '../core/error.handler';
+import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { isPlatformBrowser } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';

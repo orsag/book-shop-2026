@@ -6,6 +6,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ConfigurationService } from '../../services/configuration-service';
 import { inject, debounced, SimpleChanges } from '@angular/core';
 import { BookFilters } from '../../../types';
@@ -14,7 +15,7 @@ import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { Router } from '@angular/router';
 import { ScrollService } from '../../services/scroll-service';
-import { NoFocusJumpDirective } from '../../core/no-focus-jump.directive';
+import { NoFocusJumpDirective } from '@core';
 import {
   LucideArrowDownNarrowWide,
   LucideArrowUpWideNarrow,
@@ -23,7 +24,6 @@ import {
   LucidePercent,
   LucideSearch,
 } from '@lucide/angular';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-filter',

@@ -18,9 +18,6 @@ export class FilterBar {
     type: 'BOOK',
     search: '',
     category: null,
-    // isAvailable: false,
-    // isBestSeller: false,
-    // isNewRelease: false,
     isDiscounted: false,
   });
 

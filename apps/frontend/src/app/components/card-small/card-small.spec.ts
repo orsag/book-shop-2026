@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardSmall } from './card-small';
-import { getTranslocoModule } from '../../core/transloco-testing.module';
+import { getTranslocoModule } from '@core';
 import { vi } from 'vitest';
 import { CartStore } from '../../store/cart-store';
 import { UXService } from '../../services/ux-service';
