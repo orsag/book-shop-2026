@@ -13,6 +13,7 @@ import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
 import { UXService } from '../../services/ux-service';
 import { PaginationAccumulatorService } from '../../services/pagination-accumulator-service';
+import { UserStore } from '../../store/user-store';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;
@@ -20,6 +21,7 @@ describe('Dashboard Component', () => {
 
   // 1. Create mock structures using Angular Signals
   let mockAppStore: any;
+  let mockUserStore: any;
   let mockCartStore: any;
   let mockUXService: any;
   let mockConfigService: any;
@@ -33,6 +35,9 @@ describe('Dashboard Component', () => {
       viewLayout: signal('grid'),
       products: signal([]),
       hasMorePage: computed(() => true),
+    };
+
+    mockUserStore = {
       isLoggedIn: computed(() => false),
       isAdmin: computed(() => false),
     };
@@ -70,6 +75,7 @@ describe('Dashboard Component', () => {
       providers: [
         provideRouter([]),
         { provide: AppStore, useValue: mockAppStore },
+        { provide: UserStore, useValue: mockUserStore },
         { provide: CartStore, useValue: mockCartStore },
         { provide: UXService, useValue: mockUXService },
         { provide: ConfigurationService, useValue: mockConfigService },

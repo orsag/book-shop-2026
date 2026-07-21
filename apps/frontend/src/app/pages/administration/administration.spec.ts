@@ -3,18 +3,34 @@ import { Administration } from './administration';
 import { getTranslocoModule } from '../../core/transloco-testing.module';
 import { computed, signal } from '@angular/core';
 import { AppStore } from '../../store/app-store';
-import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_SEARCH, DEFAULT_TYPE } from '@store/libs';
+import {
+  DEFAULT_MAX_LIMIT,
+  DEFAULT_PAGE,
+  DEFAULT_SEARCH,
+  DEFAULT_TYPE,
+} from '@store/libs';
 import { vi } from 'vitest';
 import { MockComponent } from 'ng-mocks';
 import { OrderTable } from '../../components/order-table/order-table';
 import { BookTable } from '../../components/book-table/book-table';
+import { UserStore } from '../../store/user-store';
+import { CartStore } from '../../store/cart-store';
 
 describe('Administration', () => {
   let component: Administration;
   let mockAppStore: any;
+  let mockUserStore: any;
+  let mockCartStore: any;
   let fixture: ComponentFixture<Administration>;
 
   beforeEach(async () => {
+    mockCartStore = {
+      reloadOrders: vi.fn(),
+    };
+    mockUserStore = {
+      isLoggedIn: computed(() => false),
+      isAdmin: computed(() => false),
+    };
     mockAppStore = {
       userId: signal({ id: '123456' }),
       isLoading: signal(false),
@@ -22,8 +38,6 @@ describe('Administration', () => {
       viewLayout: signal('grid'),
       products: signal([]),
       hasMorePage: computed(() => true),
-      isLoggedIn: computed(() => false),
-      isAdmin: computed(() => false),
       filters: signal({
         type: DEFAULT_TYPE,
         page: DEFAULT_PAGE,
@@ -38,7 +52,6 @@ describe('Administration', () => {
       isGame: computed(() => false),
       isGastro: computed(() => false),
       setPage: vi.fn(),
-      reloadOrders: vi.fn(),
     };
 
     TestBed.overrideComponent(Administration, {
@@ -48,7 +61,11 @@ describe('Administration', () => {
 
     await TestBed.configureTestingModule({
       imports: [Administration, getTranslocoModule()],
-      providers: [{ provide: AppStore, useValue: mockAppStore }],
+      providers: [
+        { provide: AppStore, useValue: mockAppStore },
+        { provide: UserStore, useValue: mockUserStore },
+        { provide: CartStore, useValue: mockCartStore },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Administration);

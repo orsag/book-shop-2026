@@ -327,7 +327,6 @@ export const UserStore = signalStore(
         }
 
         effect(() => {
-          const { token } = appStore;
           const { user, userDetail } = store;
           if (userDetail()) {
             localStorage.setItem(
@@ -337,7 +336,7 @@ export const UserStore = signalStore(
           } else {
             localStorage.removeItem(DETAIL_STORAGE_KEY);
           }
-          const _token = token();
+          const _token = appStore.token();
           if (user() && _token) {
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
             localStorage.setItem(TOKEN_STORAGE_KEY, _token);

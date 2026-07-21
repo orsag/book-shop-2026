@@ -4,20 +4,20 @@ import { getTranslocoModule } from '../../core/transloco-testing.module';
 import { vi } from 'vitest';
 import { CartStore } from '../../store/cart-store';
 import { UXService } from '../../services/ux-service';
-import { AppStore } from '../../store/app-store';
 import { provideRouter } from '@angular/router';
 import { MOCKED_PRODUCT } from '@store/libs';
+import { UserStore } from '../../store/user-store';
 
 describe('BookCard', () => {
   let component: CardSmall;
-  let mockAppStore: any;
+  let mockUserStore: any;
   let mockUXService: any;
   let mockCartStore: any;
 
   let fixture: ComponentFixture<CardSmall>;
 
   beforeEach(async () => {
-    mockAppStore = {
+    mockUserStore = {
       isLoggedIn: vi.fn().mockReturnValue(true),
       toggleFavorite: vi.fn(),
     };
@@ -39,7 +39,7 @@ describe('BookCard', () => {
       imports: [CardSmall, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: AppStore, useValue: mockAppStore },
+        { provide: UserStore, useValue: mockUserStore },
         { provide: CartStore, useValue: mockCartStore },
         { provide: UXService, useValue: mockUXService },
       ],

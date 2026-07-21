@@ -3,15 +3,15 @@ import { LoginPage } from './login';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
-import { AppStore } from '../../store/app-store';
+import { UserStore } from '../../store/user-store';
 
 describe('Login', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
-  let mockAppStore: any;
+  let mockUserStore: any;
 
   beforeEach(async () => {
-    mockAppStore = {
+    mockUserStore = {
       isLoggedIn: signal(false),
       isLoading: signal(false),
       login: vi.fn(),
@@ -21,7 +21,7 @@ describe('Login', () => {
       imports: [LoginPage],
       providers: [
         provideRouter([]),
-        { provide: AppStore, useValue: mockAppStore },
+        { provide: UserStore, useValue: mockUserStore },
       ],
     }).compileComponents();
 
@@ -62,7 +62,7 @@ describe('Login', () => {
   it('should be disabled if store.isLoading() is active', () => {
     component.username.set('testuser');
     component.password.set('password');
-    mockAppStore.isLoading.set(true);
+    mockUserStore.isLoading.set(true);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
@@ -83,7 +83,7 @@ describe('Login', () => {
     // Vyvolanie odoslania formulára
     await component.onLogin();
 
-    expect(mockAppStore.login).toHaveBeenCalledWith({
+    expect(mockUserStore.login).toHaveBeenCalledWith({
       username: 'knihomol123',
       password: 'password',
     });
@@ -95,7 +95,7 @@ describe('Login', () => {
 
     await component.onLogin();
 
-    expect(mockAppStore.login).not.toHaveBeenCalled();
+    expect(mockUserStore.login).not.toHaveBeenCalled();
   });
 
   it('should call login after submit btn clicked', () => {
@@ -110,7 +110,7 @@ describe('Login', () => {
 
     if (submitBtn) {
       submitBtn.click();
-      expect(mockAppStore.login).toHaveBeenCalledWith({
+      expect(mockUserStore.login).toHaveBeenCalledWith({
         username: 'martin_orsag',
         password: 'password',
       });

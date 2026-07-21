@@ -9,24 +9,29 @@ import { AppStore } from '../../store/app-store';
 import { CartStore } from '../../store/cart-store';
 import { ScrollService } from '../../services/scroll-service';
 import { ProductType } from '@store/libs';
+import { UserStore } from '../../store/user-store';
 
 describe('Navbar', () => {
   let component: Navbar;
   let mockAppStore: any;
+  let mockUserStore: any;
   let mockCartStore: any;
   let mockConfigService: any;
   let mockScrollService: any;
   let fixture: ComponentFixture<Navbar>;
 
   beforeEach(async () => {
-    mockAppStore = {
-      currentType: computed(() => 'BOOK' as ProductType),
+    mockUserStore = {
       isLoggedIn: vi.fn().mockReturnValue(true),
       premiumStatus: signal({ isPremium: true }),
       user: signal({}),
       isAdmin: signal(true),
       logout: vi.fn(),
       login: vi.fn(),
+    };
+
+    mockAppStore = {
+      currentType: computed(() => 'BOOK' as ProductType),
       updateFilters: vi.fn(),
       addToHistory: vi.fn(),
     };
@@ -53,6 +58,7 @@ describe('Navbar', () => {
         provideRouter([]),
         { provide: AppStore, useValue: mockAppStore },
         { provide: CartStore, useValue: mockCartStore },
+        { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: ScrollService, useValue: mockScrollService },
       ],

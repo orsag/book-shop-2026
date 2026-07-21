@@ -9,16 +9,24 @@ import { OrderStatus } from '@store/shared-models';
 import { of } from 'rxjs';
 import { getTranslocoModule } from '../../core/transloco-testing.module';
 import { provideRouter } from '@angular/router';
+import { UserStore } from '../../store/user-store';
+import { CartStore } from '../../store/cart-store';
 
 describe('Profile Component (Vitest)', () => {
   let component: Profile;
   let fixture: ComponentFixture<Profile>;
   let mockAppStore: any;
+  let mockUserStore: any;
+  let mockCartStore: any;
   let mockOrderService: any;
   let mockToastService: any;
 
   beforeEach(async () => {
-    mockAppStore = {
+    mockUserStore = {
+      favoriteCount: signal(1),
+      refreshUser: vi.fn(),
+      updateUserDetail: vi.fn(),
+      loadUserDetail: vi.fn(),
       user: signal({
         id: 'user-123',
         username: 'john_doe',
@@ -37,6 +45,8 @@ describe('Profile Component (Vitest)', () => {
         isPremium: false,
         membershipEnd: null,
       }),
+    };
+    mockCartStore = {
       orders: signal([
         {
           id: 'ord-001',
@@ -45,13 +55,11 @@ describe('Profile Component (Vitest)', () => {
           status: OrderStatus.PENDING,
         },
       ]),
-      favoriteProducts: signal([{ id: 'book-1', name: 'Zaklínač', price: 15 }]),
-      favoriteCount: signal(1),
-      loadUserDetail: vi.fn(),
       reloadOrders: vi.fn(),
       updateOrderLocal: vi.fn(),
-      refreshUser: vi.fn(),
-      updateUserDetail: vi.fn(),
+    };
+    mockAppStore = {
+      favoriteProducts: signal([{ id: 'book-1', name: 'Zaklínač', price: 15 }]),
     };
 
     // 2. Nastavenie mockov pre služby
@@ -75,6 +83,8 @@ describe('Profile Component (Vitest)', () => {
       imports: [Profile, getTranslocoModule()],
       providers: [
         provideRouter([]),
+        { provide: UserStore, useValue: mockUserStore },
+        { provide: CartStore, useValue: mockCartStore },
         { provide: AppStore, useValue: mockAppStore },
         { provide: OrderService, useValue: mockOrderService },
         { provide: ToastService, useValue: mockToastService },
@@ -88,10 +98,10 @@ describe('Profile Component (Vitest)', () => {
 
   it('should load data of user details', () => {
     expect(component).toBeTruthy();
-    expect(mockAppStore.loadUserDetail).toHaveBeenCalledWith({
+    expect(mockUserStore.loadUserDetail).toHaveBeenCalledWith({
       userId: 'user-123',
     });
-    expect(mockAppStore.reloadOrders).toHaveBeenCalledWith({
+    expect(mockCartStore.reloadOrders).toHaveBeenCalledWith({
       userId: 'user-123',
     });
   });
@@ -106,7 +116,7 @@ describe('Profile Component (Vitest)', () => {
     });
 
     it('shoudl display placeholder if zero orders', () => {
-      mockAppStore.orders.set([]);
+      mockCartStore.orders.set([]);
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
@@ -144,7 +154,7 @@ describe('Profile Component (Vitest)', () => {
 
       if (cancelBtn) {
         cancelBtn.click();
-        expect(mockAppStore.updateOrderLocal).toHaveBeenCalledWith(
+        expect(mockCartStore.updateOrderLocal).toHaveBeenCalledWith(
           'ord-001',
           'CANCELLED',
         );
@@ -170,7 +180,7 @@ describe('Profile Component (Vitest)', () => {
       if (saveBtn) {
         saveBtn.click();
         expect(saveSpy).toHaveBeenCalled();
-        expect(mockAppStore.updateUserDetail).toHaveBeenCalled();
+        expect(mockUserStore.updateUserDetail).toHaveBeenCalled();
       }
     });
 

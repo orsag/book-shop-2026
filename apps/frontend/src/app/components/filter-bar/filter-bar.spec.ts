@@ -4,16 +4,20 @@ import { getTranslocoModule } from '../../core/transloco-testing.module';
 import { signal, computed } from '@angular/core';
 import { AppStore } from '../../store/app-store';
 import { provideRouter } from '@angular/router';
+import { UserStore } from '../../store/user-store';
 
 describe('FilterBar', () => {
   let component: FilterBar;
   let mockAppStore: any;
+  let mockUserStore: any;
   let fixture: ComponentFixture<FilterBar>;
 
   beforeEach(async () => {
-    mockAppStore = {
+    mockUserStore = {
       isLoggedIn: computed(() => true),
       isAdmin: computed(() => true),
+    };
+    mockAppStore = {
       updateFilters: vi.fn(),
     };
 
@@ -22,6 +26,7 @@ describe('FilterBar', () => {
       providers: [
         provideRouter([]),
         { provide: AppStore, useValue: mockAppStore },
+        { provide: UserStore, useValue: mockUserStore },
       ],
     }).compileComponents();
 
