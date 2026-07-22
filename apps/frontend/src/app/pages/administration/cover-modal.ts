@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/libs';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { BookService, ImageUploadService } from '@service';
 import { ErrorCodes, ErrorService, NoFocusJumpDirective } from '@core';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';

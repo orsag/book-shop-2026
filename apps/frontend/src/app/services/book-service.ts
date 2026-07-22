@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ActionResponse, Product as IProduct, ProductType } from '@store/libs';
 import { Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
-import { AppState } from '../store/app-store';
+import { AppState } from '@store';
 
 @Injectable({
   providedIn: 'root',

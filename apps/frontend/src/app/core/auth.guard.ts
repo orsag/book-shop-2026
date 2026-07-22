@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { ToastService } from '@service';
-import { UserStore } from '../store/user-store';
+import { UserStore } from '@store';
 
 export const authGuard: CanActivateFn = () => {
   const userStore = inject(UserStore);

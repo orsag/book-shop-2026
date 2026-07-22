@@ -5,10 +5,8 @@ import { provideRouter } from '@angular/router';
 import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
 import { computed, signal } from '@angular/core';
-import { AppStore } from '../../store/app-store';
-import { CartStore } from '../../store/cart-store';
+import { AppStore, CartStore, UserStore } from '@store';
 import { ProductType } from '@store/libs';
-import { UserStore } from '../../store/user-store';
 
 describe('Navbar', () => {
   let component: Navbar;

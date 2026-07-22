@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DEFAULT_TYPE, Product, ProductType } from '@store/shared-models';
-import { CartStore } from '../store/cart-store';
-import { UserStore } from '../store/user-store';
+import { CartStore, UserStore } from '@store';
 
 const productGradients: Record<ProductType, string> = {
   BOOK: 'bg-gradient-to-br from-red-100 via-pink-100 to-purple-100 text-purple-900',

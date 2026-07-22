@@ -2,14 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Profile } from './profile';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore, CartStore } from '@store';
 import { OrderService, ToastService } from '@service';
 import { OrderStatus } from '@store/shared-models';
 import { of } from 'rxjs';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
-import { UserStore } from '../../store/user-store';
-import { CartStore } from '../../store/cart-store';
 
 describe('Profile Component (Vitest)', () => {
   let component: Profile;

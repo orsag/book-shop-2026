@@ -2,11 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardSmall } from './card-small';
 import { getTranslocoModule } from '@core';
 import { vi } from 'vitest';
-import { CartStore } from '../../store/cart-store';
+import { CartStore, UserStore } from '@store';
 import { UXService } from '@service';
 import { provideRouter } from '@angular/router';
 import { MOCKED_PRODUCT } from '@store/libs';
-import { UserStore } from '../../store/user-store';
 
 describe('BookCard', () => {
   let component: CardSmall;

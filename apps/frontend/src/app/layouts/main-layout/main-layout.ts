@@ -1,17 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { BannerComponent } from '../../components/banner/banner';
-import { Filter } from '../../components/filter/filter';
-import { Footer } from '../../components/footer/footer';
-import { Navbar } from '../../components/navbar/navbar';
+import { BannerComponent, Filter, Footer, Navbar, Toast, ScrollBtn } from '@component';
+import { ProgressComponent } from '@component';
 import { RouterOutlet } from '@angular/router';
-import { ScrollBtnComponent } from '../../components/common/scrollToTop';
-import { ToastComponent } from '../../components/common/toastComponent';
 import { ConfigurationService } from '@service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, of, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AppStore } from '../../store/app-store';
-import { ProgressComponent } from '../../components/common/progress.component';
+import { AppStore } from '@store';
 import { DEFAULT_LOADER_DELAY } from '@store/libs';
 
 @Component({
@@ -22,9 +17,9 @@ import { DEFAULT_LOADER_DELAY } from '@store/libs';
     Footer,
     Navbar,
     RouterOutlet,
-    ScrollBtnComponent,
+    ScrollBtn,
     ProgressComponent,
-    ToastComponent,
+    Toast,
     CommonModule,
   ],
   templateUrl: './main-layout.html',

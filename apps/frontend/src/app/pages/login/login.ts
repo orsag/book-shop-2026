@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideCircleUserRound, LucideMail, LucidePenTool } from '@lucide/angular';
 import { NoFocusJumpDirective } from '@core';
-import { ToastComponent } from '../../components/common/toastComponent';
-import { UserStore } from '../../store/user-store';
+import { Toast } from '@component';
+import { UserStore } from '@store';
 
 @Component({
   selector: 'app-login',
   imports: [
-    ToastComponent,
+    Toast,
     RouterLink,
     FormsModule,
     LucideCircleUserRound,

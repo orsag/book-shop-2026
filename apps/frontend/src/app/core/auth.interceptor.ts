@@ -1,10 +1,9 @@
 // auth.interceptor.ts
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AppStore } from '../store/app-store';
+import { AppStore, UserStore } from '@store';
 import { catchError, throwError, finalize } from 'rxjs';
 import { Router } from '@angular/router';
-import { UserStore } from '../store/user-store';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);

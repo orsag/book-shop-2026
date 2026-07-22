@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { Footer } from '../../components/footer/footer';
-import { Navbar } from '../../components/navbar/navbar';
+import { Footer, Navbar, Toast, ScrollBtn } from '@component';
 import { RouterOutlet } from '@angular/router';
-import { ScrollBtnComponent } from '../../components/common/scrollToTop';
-import { ToastComponent } from '../../components/common/toastComponent';
 
 @Component({
   selector: 'app-simple-layout',
@@ -11,8 +8,8 @@ import { ToastComponent } from '../../components/common/toastComponent';
     Footer,
     Navbar,
     RouterOutlet,
-    ScrollBtnComponent,
-    ToastComponent,
+    ScrollBtn,
+    Toast,
   ],
   templateUrl: './simple-layout.html',
   styleUrl: './simple-layout.css',

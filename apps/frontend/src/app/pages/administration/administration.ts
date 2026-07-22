@@ -1,16 +1,13 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { BookTable } from '../../components/book-table/book-table';
+import { BookTable, OrderTable } from '@component';
 import { CommonModule } from '@angular/common';
 import { Product } from '@store/shared-models';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore, CartStore } from '@store';
 import { EditBookModalComponent } from './edit-book-modal';
-import { OrderTable } from '../../components/order-table/order-table';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFrown, LucidePlus } from '@lucide/angular';
-import { UserStore } from '../../store/user-store';
-import { CartStore } from '../../store/cart-store';
 
 @Component({
   selector: 'app-administration',

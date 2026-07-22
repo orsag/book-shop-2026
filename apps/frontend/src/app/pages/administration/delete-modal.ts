@@ -2,7 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Product } from '@store/libs';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 
 @Component({
   selector: 'app-delete-modal',

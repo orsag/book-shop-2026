@@ -16,7 +16,7 @@ import {
   OrderStatus,
   UserDetail,
 } from '@store/shared-models';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore, CartStore } from '@store';
 import { FormsModule } from '@angular/forms';
 import {
   LucideLock,
@@ -27,10 +27,8 @@ import {
 import { OrderService, ToastService } from '@service';
 import { OrderStatus as OSEnum } from '@store/shared-models';
 import { NoFocusJumpDirective } from '@core';
-import { CardSmall } from '../../components/card-small/card-small';
+import { CardSmall } from '@component';
 import { delay } from 'rxjs';
-import { UserStore } from '../../store/user-store';
-import { CartStore } from '../../store/cart-store';
 
 @Component({
   selector: 'app-profile',

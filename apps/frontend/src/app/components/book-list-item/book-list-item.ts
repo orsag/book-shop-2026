@@ -2,10 +2,10 @@ import { Component, inject, Input, signal } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CartStore } from '../../store/cart-store';
+import { CartStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '@service';
-import { OverlayComponent } from '../common/overlay.component';
+import { OverlayComponent } from '../common';
 
 @Component({
   selector: 'app-book-list-item',

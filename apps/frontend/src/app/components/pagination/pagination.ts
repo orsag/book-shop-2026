@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import {
   LucideChevronLeft,
   LucideChevronsLeft,

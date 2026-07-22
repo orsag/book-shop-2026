@@ -1,8 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Dashboard } from './dashboard';
-import { Pagination as PaginationComponent } from '../../components/pagination/pagination';
-import { AppStore } from '../../store/app-store';
-import { CartStore } from '../../store/cart-store';
+import { Pagination as PaginationComponent } from '@component';
+import { AppStore, CartStore, UserStore } from '@store';
 import {
   ConfigurationService,
   UXService,
@@ -15,7 +14,6 @@ import { getTranslocoModule } from '@core';
 import { MockComponent } from 'ng-mocks';
 import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
-import { UserStore } from '../../store/user-store';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;

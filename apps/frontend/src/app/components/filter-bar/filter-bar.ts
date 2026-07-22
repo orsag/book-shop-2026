@@ -1,9 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore } from '@store';
 import { BookFilters } from '../../../types';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-filter-bar',

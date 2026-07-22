@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { CommonModule } from '@angular/common';
 
 @Component({

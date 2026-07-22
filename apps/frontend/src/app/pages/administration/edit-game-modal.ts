@@ -18,9 +18,9 @@ import {
   CATEGORIES,
 } from '@store/libs';
 import { GAME_CATEGORIES } from '@store/shared-models';
-import { AppStore } from '../../store/app-store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { FormFieldComponent } from '../../components/form-field/form-field';
+import { FormFieldComponent } from '@component';
+import { AppStore } from '@store';
 import { applyCommonProductRules } from './form-rules.shared';
 
 type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
@@ -205,6 +205,7 @@ export class EditGameModalComponent {
             description: descriptor,
             product_quality: quality,
             gameDetails: { ...details },
+            isAvailable: true,
           });
         });
       }

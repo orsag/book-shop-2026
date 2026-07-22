@@ -19,9 +19,9 @@ import {
   ProductType,
 } from '@store/libs';
 import { CATEGORIES } from '@store/shared-models';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { FormFieldComponent } from '../../components/form-field/form-field';
+import { FormFieldComponent } from '@component';
 import { applyCommonProductRules } from './form-rules.shared';
 
 type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {

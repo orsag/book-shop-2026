@@ -10,15 +10,11 @@ import {
   signal,
   ViewChildren,
 } from '@angular/core';
-import { BookCard } from '../../components/book-card/book-card';
-import { BookListItem } from '../../components/book-list-item/book-list-item';
-import { AppStore } from '../../store/app-store';
-import { Pagination } from '../../components/pagination/pagination';
 import { isPlatformBrowser, NgClass, NgTemplateOutlet } from '@angular/common';
-import { CartStore } from '../../store/cart-store';
-import { FilterBar } from '../../components/filter-bar/filter-bar';
-import { LucideSearchX } from '@lucide/angular';
+import { BookCard, BookListItem, Pagination, FilterBar } from '@component';
 import { ConfigurationService, PaginationAccumulatorService } from '@service';
+import { AppStore, CartStore } from '@store';
+import { LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
 
 @Component({

@@ -3,7 +3,7 @@ import { BookCard } from './book-card';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { CartStore } from '../../store/cart-store';
+import { CartStore } from '@store';
 import { UXService } from '@service';
 import { BOOK_GRADIENT, MOCKED_PRODUCT } from '@store/libs';
 

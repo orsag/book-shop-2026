@@ -27,7 +27,7 @@ import { isPlatformBrowser } from '@angular/common';
     </button>
   `,
 })
-export class ScrollBtnComponent {
+export class ScrollBtn {
   isVisible = signal(false);
   private config = inject(ConfigurationService);
   showFilter = computed(() => this.config.flags().SHOW_FILTER);

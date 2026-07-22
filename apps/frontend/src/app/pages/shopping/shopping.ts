@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
-import { CartItem, CartStore } from '../../store/cart-store';
+import { CartItem, CartStore } from '@store';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { OrderService, CreatedOrder } from '@service';

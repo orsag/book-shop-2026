@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pagination } from './pagination';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { computed, signal } from '@angular/core';
 import {
   DEFAULT_MAX_LIMIT,

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Administration } from './administration';
 import { getTranslocoModule } from '@core';
 import { computed, signal } from '@angular/core';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore, CartStore } from '@store';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -11,10 +11,7 @@ import {
 } from '@store/libs';
 import { vi } from 'vitest';
 import { MockComponent } from 'ng-mocks';
-import { OrderTable } from '../../components/order-table/order-table';
-import { BookTable } from '../../components/book-table/book-table';
-import { UserStore } from '../../store/user-store';
-import { CartStore } from '../../store/cart-store';
+import { OrderTable, BookTable } from '@component';
 
 describe('Administration', () => {
   let component: Administration;

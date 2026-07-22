@@ -3,7 +3,7 @@ import { Shopping } from './shopping';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
-import { CartStore } from '../../store/cart-store';
+import { CartStore } from '@store';
 import { OrderService } from '@service';
 import {
   ErrorService,

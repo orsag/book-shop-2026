@@ -2,11 +2,10 @@ import { Component, inject, Input } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { CartStore } from '../../store/cart-store';
+import { CartStore, UserStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
 import { UXService } from '@service';
-import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-card-small',

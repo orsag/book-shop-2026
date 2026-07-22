@@ -4,7 +4,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { delay } from 'rxjs';
 import { OrderStatus } from '@store/libs';
-import { CartStore } from '../../store/cart-store';
+import { CartStore } from '@store';
 
 @Component({
   selector: 'app-order-table',

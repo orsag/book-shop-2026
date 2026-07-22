@@ -2,9 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FilterBar } from './filter-bar';
 import { getTranslocoModule } from '@core';
 import { signal, computed } from '@angular/core';
-import { AppStore } from '../../store/app-store';
+import { AppStore, UserStore } from '@store';
 import { provideRouter } from '@angular/router';
-import { UserStore } from '../../store/user-store';
 
 describe('FilterBar', () => {
   let component: FilterBar;

@@ -23,6 +23,6 @@ import { ToastService } from '@service';
     }
   `,
 })
-export class ToastComponent {
+export class Toast {
   protected toastService = inject(ToastService);
 }

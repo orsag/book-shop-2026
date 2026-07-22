@@ -2,7 +2,7 @@ import { Component, computed, inject, output, Signal } from '@angular/core';
 import { Product } from '@store/shared-models';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
   LucideTrash2,

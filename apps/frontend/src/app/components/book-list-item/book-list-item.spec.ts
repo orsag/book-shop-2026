@@ -4,7 +4,7 @@ import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { MOCKED_PRODUCT, BOOK_GRADIENT } from '@store/libs';
-import { CartStore } from '../../store/cart-store';
+import { CartStore } from '@store';
 import { UXService } from '@service';
 
 describe('BookListItem', () => {

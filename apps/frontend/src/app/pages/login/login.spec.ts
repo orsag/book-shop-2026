@@ -3,7 +3,7 @@ import { LoginPage } from './login';
 import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
-import { UserStore } from '../../store/user-store';
+import { UserStore } from '@store';
 
 describe('Login', () => {
   let component: LoginPage;

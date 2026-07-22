@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
 import { BookService } from '@service';
-import { AppStore } from '../../store/app-store';
+import { AppStore, CartStore } from '@store';
 import {
   LucideClock,
   LucideLanguages,
@@ -13,11 +13,10 @@ import {
   LucideCalendarDays,
   LucideSearchX,
 } from '@lucide/angular';
-import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '@service';
 import { ErrorCodes, ErrorService } from '@core';
-import { OverlayComponent } from '../../components/common/overlay.component';
+import { OverlayComponent } from '@component';
 
 @Component({
   selector: 'app-detail',

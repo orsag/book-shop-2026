@@ -18,10 +18,10 @@ import {
 } from '@angular/common';
 import { ThemePicker } from '../theme-picker/theme-picker';
 import { ConfigurationService, ScrollService } from '@service';
-import { AppStore } from '../../store/app-store';
+import { AppStore, CartStore, UserStore } from '@store';
 import { FormsModule } from '@angular/forms';
-import { CartStore } from '../../store/cart-store';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { TooltipDirective, NoBtnHoverDirective } from '@core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   LucideLogIn,
@@ -34,8 +34,6 @@ import {
   LucideX,
   LucideMenu,
 } from '@lucide/angular';
-import { TooltipDirective, NoBtnHoverDirective } from '@core';
-import { UserStore } from '../../store/user-store';
 
 @Component({
   selector: 'app-navbar',

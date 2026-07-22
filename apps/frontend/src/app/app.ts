@@ -1,9 +1,8 @@
 import { Component, HostListener, inject, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { ConfigurationService } from './services/configuration-service';
-import { ScrollService } from './services/scroll-service';
+import { ConfigurationService, ScrollService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
-import { GradientBgComponent } from './components/common/gradient-bg.component';
+import { GradientBgComponent } from '@component';
 import { filter } from 'rxjs';
 
 @Component({

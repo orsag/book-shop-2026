@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OrderTable } from './order-table';
 import { getTranslocoModule } from '@core';
 import { signal } from '@angular/core';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { OrderService, ToastService } from '@service';
 import { of } from 'rxjs';
 

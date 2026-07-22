@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Filter } from './filter';
 import { getTranslocoModule } from '@core';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
 import { ConfigurationService, ScrollService } from '@service';

@@ -3,7 +3,7 @@ import { BookTable } from './book-table';
 import { getTranslocoModule } from '@core';
 import { computed, signal } from '@angular/core';
 import { Product } from '@store/shared-models';
-import { AppStore } from '../../store/app-store';
+import { AppStore } from '@store';
 
 describe('BookTable', () => {
   let component: BookTable;
