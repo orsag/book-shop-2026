@@ -12,6 +12,7 @@ import { authGuard, adminGuard } from '@core';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { LoginPage } from './pages/login/login';
+import { VideosComponent } from './pages/videos/videos';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
@@ -50,6 +51,7 @@ export const appRoutes: Route[] = [
       { path: 'features', component: Features, canActivate: [authGuard] },
       { path: 'shopping', component: Shopping },
       { path: 'success/:id', component: Success },
+      { path: 'videos', component: VideosComponent },
       { path: 'wip', component: PageNotFound },
       { path: '**', component: PageNotFound },
     ],

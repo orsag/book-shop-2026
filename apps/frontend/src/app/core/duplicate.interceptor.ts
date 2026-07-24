@@ -12,8 +12,8 @@ export const duplicateRequestInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ) => {
-  // Filtrujeme iba GET požiadavky (POST/PUT zvyčajne nechceme takto globálne kešovať)
-  if (req.method !== 'GET') {
+  // 1. Skip non-GET requests AND video/media stream endpoints
+  if (req.method !== 'GET' || req.url.includes('/videos/')) {
     return next(req);
   }
 

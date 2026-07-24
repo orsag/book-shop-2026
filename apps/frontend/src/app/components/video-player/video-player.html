@@ -1,0 +1,60 @@
+<div class="card w-full max-w-4xl bg-base-300 shadow-xl overflow-hidden border border-base-content/10">
+  <div class="relative aspect-video bg-black flex items-center justify-center">
+    <video
+      #videoElement
+      controls
+      preload="metadata"
+      (progress)="onProgress()"
+      (loadedmetadata)="onLoadedMetadata()"
+      (seeking)="onSeeking()"
+      (error)="onError($event)"
+      class="w-full h-full object-contain">
+    </video>
+
+
+    <!-- Signal-driven DaisyUI Badges Overlay -->
+    <div class="absolute top-4 left-4 flex gap-2">
+      @if (videoResource.isLoading()) {
+        <div class="badge badge-primary gap-2 p-3 shadow-lg">
+          <span class="loading loading-spinner loading-xs"></span>
+          Initializing Stream
+        </div>
+      }
+
+      @if (videoResource.error()) {
+        <div class="badge badge-error gap-2 p-3 shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          Stream Failed
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Real-time Metrics Bar using DaisyUI Stats -->
+  <div class="card-body p-4 bg-base-200">
+    <div class="stats stats-vertical sm:stats-horizontal shadow bg-base-100 border border-base-content/5">
+      <div class="stat">
+        <div class="stat-title text-xs uppercase tracking-wider">Status</div>
+        <div class="stat-value text-base capitalize text-primary">
+          {{ videoResource.status() }}
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title text-xs uppercase tracking-wider">Downloaded</div>
+        <div class="stat-value text-base font-mono">
+          {{ formattedBytes() }}
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title text-xs uppercase tracking-wider">Chunks Processed</div>
+        <div class="stat-value text-base font-mono">
+          {{ chunksCount() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,10 +2,40 @@
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import * as http from 'node:http';
 
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: './node_modules/.vite/book-store-2026',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+
+        // Keep-Alive ON → stabilné TCP spojenia pre Range requests
+        agent: new http.Agent({
+          keepAlive: true,
+          maxSockets: 50,
+          maxFreeSockets: 10,
+        }),
+
+        configure: (proxy) => {
+          // Nechaj browser riadiť Connection header
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.removeHeader('Connection');
+          });
+
+          // Loguj len reálne chyby, nie browser cancely
+          proxy.on('error', (err) => {
+            if (err.name === 'ECONNRESET') return;
+            console.error('Proxy error:', err);
+          });
+        },
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     viteStaticCopy({

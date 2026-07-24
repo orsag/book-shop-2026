@@ -12,3 +12,4 @@ export * from './navbar/navbar';
 export * from './order-table/order-table';
 export * from './pagination/pagination';
 export * from './theme-picker/theme-picker';
+export * from './video-player/video-player';

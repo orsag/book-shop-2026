@@ -15,20 +15,24 @@ export class LoggingMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const start = Date.now();
 
-    // Fire the 'finish' event when response headers and body are sent to the OS
-    res.on('finish', () => {
-      const ms = Date.now() - start;
+    const logRequest = () => {
+      res.removeListener('finish', logRequest);
+      res.removeListener('close', logRequest);
 
+      const ms = Date.now() - start;
       pinoLogger.info(
         {
           method: req.method,
-          url: req.originalUrl || req.url, // originalUrl preserves the /api prefix
+          url: req.originalUrl || req.url,
           status: res.statusCode,
           duration: `${ms}ms`,
         },
         'Request completed',
       );
-    });
+    };
+
+    res.on('finish', logRequest);
+    res.on('close', logRequest);
 
     next();
   }

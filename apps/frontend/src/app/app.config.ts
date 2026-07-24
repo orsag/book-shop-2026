@@ -14,7 +14,6 @@ import {
 import { provideTransloco } from '@jsverse/transloco';
 import {
   authInterceptor,
-  duplicateRequestInterceptor,
   TranslationsHttpLoader,
 } from '@core';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
@@ -26,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(
-      withInterceptors([authInterceptor, duplicateRequestInterceptor]),
+      withInterceptors([authInterceptor]),
       withInterceptorsFromDi(),
     ),
     provideTransloco({

@@ -197,3 +197,20 @@ model ImageRecord {
   url       String
   createdAt DateTime @default(now())
 }
+
+model Video {
+  id       String @id @default(uuid()) @db.Uuid
+  title    String
+  mimeType String @default("video/mp4") @map("mime_type")
+
+  // Store binary video buffer directly in Postgres (bytea)
+  data Bytes
+
+  // File size in bytes (makes HTTP Range headers fast to calculate without loading 'data')
+  size Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("videos")
+}

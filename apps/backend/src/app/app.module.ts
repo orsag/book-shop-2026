@@ -14,6 +14,7 @@ import { OrderModule } from '../order/order.module';
 import { UserDetailModule } from '../user-detail/user-detail.module';
 import { UploadsModule } from '../uploads/uploads.module';
 import { ProductsModule } from '../product/products.module';
+import { VideoModule } from '../video/video.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProductsModule } from '../product/products.module';
     UserDetailModule,
     UploadsModule,
     ProductsModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -32,10 +34,12 @@ export class AppModule implements NestModule {
     consumer
       // 1. Logging applies to EVERYTHING
       .apply(LoggingMiddleware)
+      .exclude({ path: 'videos/*', method: RequestMethod.ALL })
       .forRoutes({ path: '*', method: RequestMethod.ALL })
 
       // 2. Sanitization ONLY applies to methods with request bodies
       .apply(SanitizeMiddleware)
+      .exclude({ path: 'videos/*', method: RequestMethod.ALL })
       .forRoutes(
         { path: '*', method: RequestMethod.POST },
         { path: '*', method: RequestMethod.PUT },

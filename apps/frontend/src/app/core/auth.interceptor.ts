@@ -7,10 +7,15 @@ import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
-  const userStore = inject(UserStore)
+  const userStore = inject(UserStore);
   const token = store.token();
   const router = inject(Router);
   let isError401 = false;
+
+  // 1. Skip video/media stream endpoints
+  if (req.url.includes('/videos/')) {
+    return next(req);
+  }
 
   let authReq = req;
   if (token) {
@@ -48,4 +53,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     }),
   );
-};
+};;;

@@ -22,6 +22,13 @@
       </button>
     </li>
 
+    <li>
+      <button routerLink="/videos"
+              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#89b847] border-[#89b847] hover:bg-[#89b847] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+        Videos
+      </button>
+    </li>
+
     @if (userStore.isLoggedIn()) {
       <li>
         <button routerLink="/profile"
