@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Readable } from 'stream';
 
 @Injectable()
 export class VideoService {
@@ -16,22 +15,19 @@ export class VideoService {
     return video;
   }
 
-  async getVideoStream(id: string, start: number, end: number) {
+  async getVideoChunk(id: string, start: number, end: number) {
     const video = await this.prisma.client.video.findUnique({
       where: { id },
-      select: { data: true, mimeType: true, size: true },
+      select: { data: true },
     });
 
     if (!video) throw new NotFoundException('Video not found');
 
-    // Slice the byte array buffer directly for HTTP Range requests
-    const chunk = video.data.subarray(start, end + 1);
-    const stream = Readable.from(chunk);
-
-    return {
-      stream,
-      mimeType: video.mimeType,
-      size: video.size,
-    };
+    const raw: any = video.data;
+    if (raw && typeof raw.slice === 'function') {
+      return raw.slice(start, end + 1);
+    }
+    // return Buffer.from(raw).slice(start, end + 1);
+    return Buffer.from(raw).subarray(start, end + 1);
   }
 }
