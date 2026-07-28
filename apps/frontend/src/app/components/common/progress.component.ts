@@ -1,6 +1,13 @@
-import { OnDestroy, inject, ViewEncapsulation, computed } from '@angular/core';
+import {
+  OnDestroy,
+  inject,
+  ViewEncapsulation,
+  computed,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Component, input, signal, effect } from '@angular/core';
 import { ConfigurationService } from '@service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-progress',
@@ -32,19 +39,21 @@ export class ProgressComponent implements OnDestroy {
   showLoader = input<boolean>(false);
   config = inject(ConfigurationService);
   isDarkTheme = computed(() => this.config.theme() === 'dark');
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
-    // 2. React to the loader visibility
+    // 1. React immediately to signal updates so classes & styles bind instantly
     effect(() => {
       if (this.showLoader()) {
-        this.animateProgress(); // Start animation when loader appears
+        this.animateProgress();
       } else {
-        this.resetProgress(); // Reset when it disappears
+        this.resetProgress();
       }
     });
   }
 
   animateProgress() {
+    if (!this.isBrowser) return;
     // Cancel any existing animation before starting a new one
     if (this.animationId) cancelAnimationFrame(this.animationId);
 
@@ -64,7 +73,10 @@ export class ProgressComponent implements OnDestroy {
   }
 
   resetProgress() {
-    if (this.animationId) cancelAnimationFrame(this.animationId);
+    if (this.isBrowser && this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
     this.progressValue.set(0);
   }
 

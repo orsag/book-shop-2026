@@ -54,5 +54,7 @@ prisma/*.db-journal
 .env
 
 __screenshots__/
-debug_books.json
 /apps/frontend/e2e/.auth.json
+
+cypress/videos
+cypress/screenshots

@@ -1,10 +1,9 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
   NgZone,
   inject,
   ElementRef,
+  afterNextRender, DestroyRef,
 } from '@angular/core';
 import { ConfigurationService } from '@service';
 
@@ -57,19 +56,25 @@ import { ConfigurationService } from '@service';
   `,
   styleUrls: ['./gradient-bg.component.scss'],
 })
-export class GradientBgComponent implements OnInit, OnDestroy {
+export class GradientBgComponent {
   config = inject(ConfigurationService);
   private ngZone = inject(NgZone);
   private hostRef = inject(ElementRef);
+  private destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.ngZone.runOutsideAngular(() => {
-      window.addEventListener('mousemove', this.onMouseMove, { passive: true });
+  constructor() {
+    afterNextRender(() => {
+      this.ngZone.runOutsideAngular(() => {
+        window.addEventListener('mousemove', this.onMouseMove, {
+          passive: true,
+        });
+      });
+
+      // 2. Register cleanup specifically for when this client-side component destroys
+      this.destroyRef.onDestroy(() => {
+        window.removeEventListener('mousemove', this.onMouseMove);
+      });
     });
-  }
-
-  ngOnDestroy(): void {
-    window.removeEventListener('mousemove', this.onMouseMove);
   }
 
   private onMouseMove = (event: MouseEvent): void => {

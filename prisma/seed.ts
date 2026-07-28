@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { prisma, Prisma } from '@prismalib';
-import { createProduct, createAdmin } from './product';
+import { prisma, Prisma } from './prisma';
+import { DEFAULT_EMAIL } from './creator.constants';
+import { createAdmin } from './creator';
+import { createProduct } from './createProduct';
 
 async function main() {
   await prisma.gastro.deleteMany();
@@ -12,6 +14,20 @@ async function main() {
   await prisma.product.deleteMany();
   console.log(' ✅ Deleted products...');
 
+  await prisma.userDetail.deleteMany();
+  console.log(' ✅ Deleted userDetail...');
+
+  await prisma.user.deleteMany({
+    where: {
+      OR: [
+        { username: 'bossman' },
+        { username: 'bossmann' },
+        { email: DEFAULT_EMAIL },
+      ],
+    },
+  });
+  console.log(' ✅ Deleted users...');
+
   for (let i = 0; i < 300; i++) {
     const type = faker.helpers.arrayElement(['BOOK', 'GAME', 'GASTRO']);
     // 1. Create the Base Product
@@ -21,8 +37,10 @@ async function main() {
   }
   console.log(' ✅ Seeded 300 products...');
 
-  const freshAdmin = createAdmin();
-  await prisma.user.upsert(freshAdmin);
+  const freshAdmin = await createAdmin();
+  await prisma.user.create({
+    data: { ...freshAdmin },
+  });
   console.log(' 👤 Seeded Admin...');
 
   // 3. Handle Random Users
@@ -51,35 +69,37 @@ async function main() {
 async function seedDetail() {
   console.log(' 🚀 Starting to populate UserDetails...');
 
-  // 1. Fetch all existing users
   const allUsers = await prisma.user.findMany();
 
   for (const user of allUsers) {
-    await prisma.userDetail.upsert({
-      where: { userId: user.id },
-      update: {}, // Don't change anything if it already exists
-      create: {
-        userId: user.id,
-        // Using faker for that "Real App" feel
-        isPremium: true,
-        membershipStart: faker.date.past({ years: 1 }),
-        membershipEnd: faker.date.future({ years: 1 }),
-        displayName: faker.person.fullName(),
-        addressLine1: faker.location.streetAddress(),
-        city: faker.location.city(),
-        countryCode: 'SK', // Keeping it local to Zvolenská Slatina!
-        avatarUrl: faker.image.avatar(),
-        bio: faker.person.bio(),
-        // If you added these to your model:
-        iban: faker.finance.iban(),
-        dateOfBirth: faker.date.birthdate(),
-        lastActiveAt: faker.date.past({ years: 1 }),
-        updatedAt: new Date(),
-      },
-    });
-  }
+    try {
+      const existingDetail = await prisma.userDetail.findUnique({
+        where: { userId: user.id },
+      });
 
-  console.log(` ✅ Success! Linked Details to ${allUsers.length} users.`);
+      if (!existingDetail) {
+        await prisma.userDetail.create({
+          data: {
+            userId: user.id,
+            isPremium: true,
+            membershipStart: faker.date.past({ years: 1 }),
+            membershipEnd: faker.date.future({ years: 1 }),
+            displayName: faker.person.fullName(),
+            addressLine1: faker.location.streetAddress(),
+            city: faker.location.city(),
+            countryCode: 'SK',
+            avatarUrl: faker.image.avatar(),
+            bio: faker.person.bio(),
+            iban: faker.finance.iban(),
+            dateOfBirth: faker.date.birthdate(),
+            lastActiveAt: faker.date.past({ years: 1 }),
+          },
+        });
+      }
+    } catch (err) {
+      console.error(` ⚠️ Failed to seed details for user ${user.id}:`, err);
+    }
+  }
 }
 
 main().finally(() => prisma.$disconnect());

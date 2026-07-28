@@ -15,9 +15,9 @@ import {
   UpdateProductDto,
   EMPTY_BOOK,
   BookDetails,
-  createProduct,
   ProductType,
 } from '@store/libs';
+import { createProduct } from '../../../../../../prisma/createProduct';
 import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';

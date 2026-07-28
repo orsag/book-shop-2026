@@ -1,8 +1,10 @@
+import cypress from 'eslint-plugin-cypress/flat';
 import playwright from 'eslint-plugin-playwright';
 import nx from '@nx/eslint-plugin';
 import baseConfig from '../../eslint.base.config.mjs';
 
 export default [
+  cypress.configs['recommended'],
   playwright.configs['flat/recommended'],
   ...nx.configs['flat/angular'],
   ...nx.configs['flat/angular-template'],
@@ -35,6 +37,15 @@ export default [
   },
   {
     files: ['**/*.ts', '**/*.js'],
+    // Override or add rules here
+    rules: {},
+  },
+  {
+    files: ['**/*.ts', '**/*.js'],
+    // Override or add rules here
+    rules: {},
+  },
+  {
     // Override or add rules here
     rules: {},
   },

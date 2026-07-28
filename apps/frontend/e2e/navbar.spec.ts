@@ -40,7 +40,7 @@ test.describe('Navbar Component Tests', () => {
 
   test('should open the modal window with corresponding item heading when first item is clicked', async ({ page }) => {
     // 1. target the top icons container grid layout
-    const firstFooterLink = page.locator('footer .grid a').nth(0);
+    const firstFooterLink = page.locator('footer .grid button').nth(0);
 
     // 2. Extract the expected heading string value from the layout before clicking
     const expectedHeading = await firstFooterLink.locator('span').innerText();

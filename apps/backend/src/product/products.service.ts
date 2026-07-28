@@ -11,6 +11,11 @@ import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
+  private calculateEffectivePrice(product: { price: number; discount?: number | null }): number {
+    const discountMultiplier = 1 - (product.discount || 0);
+    return product.price * discountMultiplier;
+  }
+
   async findAll({
     type = DEFAULT_TYPE,
     page = DEFAULT_PAGE,
@@ -105,7 +110,7 @@ export class ProductsService {
     orderBy.push({ id: 'asc' });
 
     // 3. Execute Parallel Queries
-    const [data, total] = await Promise.all([
+    const [rawProducts, total] = await Promise.all([
       this.prisma.client.product.findMany({
         where,
         skip,
@@ -122,8 +127,21 @@ export class ProductsService {
       this.prisma.client.product.count({ where }),
     ]);
 
+    const dataSorted = [...rawProducts];
+    if (sortBy === 'price_asc') {
+      dataSorted.sort(
+        (a, b) =>
+          this.calculateEffectivePrice(a) - this.calculateEffectivePrice(b),
+      );
+    } else if (sortBy === 'price_desc') {
+      dataSorted.sort(
+        (a, b) =>
+          this.calculateEffectivePrice(b) - this.calculateEffectivePrice(a),
+      );
+    }
+
     return {
-      data,
+      data: dataSorted,
       meta: {
         total,
         page,

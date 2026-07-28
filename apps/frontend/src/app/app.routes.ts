@@ -1,3 +1,4 @@
+import { authGuard, adminGuard } from '@core';
 import { Route } from '@angular/router';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { PageNotFound } from './pages/page-not-found/page-not-found';
@@ -7,12 +8,11 @@ import { Features } from './pages/features/features';
 import { Administration } from './pages/administration/administration';
 import { Shopping } from './pages/shopping/shopping';
 import { Success } from './pages/success/success';
-// ======================================================================
-import { authGuard, adminGuard } from '@core';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout';
-import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { LoginPage } from './pages/login/login';
 import { VideosComponent } from './pages/videos/videos';
+// ======================================================================
+import { MainLayoutComponent } from './layouts/main-layout/main-layout';
+import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },

@@ -1,0 +1,70 @@
+stages:
+  - e2e-test
+
+cypress-e2e:
+  stage: e2e-test
+  image:
+    name: cypress/browsers:24.16.0
+    entrypoint: [""] # Clears any default entrypoint interference
+
+  # Spin up the database container alongside the Cypress container
+  services:
+    - name: postgres:15-alpine
+      alias: postgres-db # Alias to reach the DB via hostname
+
+  # Set database credentials and connection variables
+  variables:
+    CYPRESS_CACHE_FOLDER: "/root/.cache/Cypress"
+    # Set default values if UI variables are empty/missing
+    POSTGRES_DB: "mydatabase"
+    POSTGRES_USER: "myusername"
+    POSTGRES_PASSWORD: "mypassword"
+
+    # Constructed connection string
+    DATABASE_URL: "postgresql://myusername:mypassword@postgres-db:5432/mydatabase?schema=public&connection_limit=20"
+    # NestJS Backend Environment Variables
+    JWT_SECRET: "default_secret_key"
+    JWT_EXPIRES_IN: "1d"
+    USERNAME: "bossmann"
+    PASSWORD: "admin12345"
+    UPLOAD_LOCATION: "./uploads"
+
+  # Cache node_modules based on your lockfile
+  cache:
+    key:
+      files:
+        - package-lock.json # Or yarn.lock / pnpm-lock.yaml
+    paths:
+      - .npm/
+      - .nx/cache # Caching Nx build outputs speeds up builds even further!
+
+  before_script:
+    - npm ci --prefer-offline --no-audit --no-fund
+
+  script:
+    - npx nx run libs:build
+
+    - npx wait-on tcp:postgres-db:5432 --timeout 30000
+
+    - npx prisma generate
+
+    - npx prisma migrate deploy  # Creates all tables instantly
+
+    - npm run seed
+
+    - npx nx run backend:serve &
+
+    - npx wait-on http-get://localhost:3000/api --timeout 60000
+
+    - npx nx run frontend:serve &
+
+    - npx wait-on http-get://localhost:4200 --timeout 120000
+
+    - npx nx run frontend:e2e --baseUrl=http://localhost:4200
+
+  artifacts:
+    when: on_failure
+    paths:
+      - apps/frontend/cypress/videos
+      - apps/frontend/cypress/screenshots
+    expire_in: 1 week

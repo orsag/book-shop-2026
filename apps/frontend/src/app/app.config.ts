@@ -12,16 +12,23 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideTransloco } from '@jsverse/transloco';
-import {
-  authInterceptor,
-  TranslationsHttpLoader,
-} from '@core';
+import { authInterceptor, TranslationsHttpLoader } from '@core';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+import {
+  EVENT_MANAGER_PLUGINS,
+  provideClientHydration,
+  withEventReplay,
+} from '@angular/platform-browser';
 import { StopEventPlugin } from './plugins/stop-event.plugin';
+import localeSk from '@angular/common/locales/sk';
+import { registerLocaleData } from '@angular/common';
+
+// Register locale data globally before configuration initialization
+registerLocaleData(localeSk, 'sk-SK');
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(

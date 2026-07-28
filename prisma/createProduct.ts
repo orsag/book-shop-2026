@@ -1,40 +1,17 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker/locale/en';
 import {
   categories,
+  computerGames,
   computerGameBrands,
   computerGameCategory,
   DISCOUNT,
   gastroBrands,
   gatroCategory,
-  computerGames,
   RATING,
   RATING_MAX,
   RATING_MIN,
-  DEFAULT_EMAIL,
-  DEFAULT_AVATAR,
-  ProductCreateInput,
 } from './creator.constants';
-import { ProductType } from '../shared-models';
-
-export function createAdmin() {
-  return {
-    where: { email: DEFAULT_EMAIL }, // Unique identifier
-    update: {
-      avatarUrl: DEFAULT_AVATAR,
-      phoneNumber: '+421900000000',
-    }, // If found, do nothing
-    create: {
-      username: 'bossman',
-      email: DEFAULT_EMAIL,
-      isAdmin: true,
-      phoneNumber: '+421900000000',
-      avatarUrl: DEFAULT_AVATAR,
-      theme: 'light',
-      favorites: [] as string[],
-      cartItems: [] as any[],
-    },
-  };
-}
+import { ProductType } from '@store/libs';
 
 export function getName(type: ProductType) {
   const map: Record<ProductType, string> = {
@@ -44,7 +21,7 @@ export function getName(type: ProductType) {
     GIFT_CARD: faker.commerce.productName(),
   };
   return map[type] ?? faker.commerce.productName();
-};
+}
 
 export function createProduct(type: ProductType) {
   const availableCount = faker.number.int({ min: 0, max: 50 });
@@ -53,7 +30,7 @@ export function createProduct(type: ProductType) {
   const discount = faker.helpers.arrayElement(DISCOUNT);
   const price = parseFloat(faker.commerce.price({ min: 9, max: 300, dec: 2 }));
 
-  const createInput: ProductCreateInput = {
+  const createInput: any = {
     sku: faker.string.alphanumeric(8).toUpperCase(),
     name: getName(type),
     alternativeHeadline: faker.company.catchPhrase(),

@@ -44,8 +44,6 @@ export interface AppState {
   _isTablet: boolean;
   // --- 📚 Book State ---
   favoriteProducts: IProduct[];
-  totalProducts: number;
-  isLoading: boolean;
   viewLayout: ViewLayout;
   searchHistory: string[];
   appendMode: boolean;
@@ -67,8 +65,6 @@ const initialState: AppState = {
   _isTablet: false,
   token: null,
   favoriteProducts: [],
-  totalProducts: 0,
-  isLoading: false,
   viewLayout: VIEW_LAYOUTS[1],
   searchHistory: [],
   appendMode: false,
@@ -312,8 +308,8 @@ export const AppStore = signalStore(
               result.breakpoints[Breakpoints.Medium];
 
             patchState(store, {
-              _isMobile: !!isMobileView,
-              _isTablet: !!isTabletView,
+              _isMobile: isMobileView,
+              _isTablet: isTabletView,
             });
           });
       }
