@@ -5,7 +5,7 @@
 @source "../../libs/src";
 
 @plugin "daisyui" {
-  themes: all;
+  themes: light --default, dark --prefersdark;
 }
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

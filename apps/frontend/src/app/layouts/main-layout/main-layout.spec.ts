@@ -1,22 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainLayoutComponent as MainLayout } from './main-layout';
-import { CartStore } from '@store';
+import { AppStore } from '@store';
 import { ConfigurationService } from '@service';
 import { vi } from 'vitest';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
-import { computed, signal } from '@angular/core';
+import { signal } from '@angular/core';
+import {
+  BannerComponent,
+  Navbar,
+  Filter,
+  ProgressComponent,
+} from '@component';
+import { MockComponent } from 'ng-mocks';
 
 describe('MainLayout', () => {
   let component: MainLayout;
-  let mockCartStore: any;
+  let mockAppStore: any;
   let mockConfigService: any;
   let fixture: ComponentFixture<MainLayout>;
 
   beforeEach(async () => {
-    mockCartStore = {
-      itemCount: computed(() => 0),
-      syncCartWithServer: vi.fn(),
+    mockAppStore = {
+      token: signal('mockToken'),
+      isLoading: signal(false),
     };
 
     mockConfigService = {
@@ -27,11 +34,23 @@ describe('MainLayout', () => {
       }),
     };
 
+    TestBed.overrideComponent(MainLayout, {
+      remove: { imports: [Navbar, BannerComponent, ProgressComponent, Filter] },
+      add: {
+        imports: [
+          MockComponent(Navbar),
+          MockComponent(BannerComponent),
+          MockComponent(ProgressComponent),
+          MockComponent(Filter),
+        ],
+      },
+    });
+
     await TestBed.configureTestingModule({
       imports: [MainLayout, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: CartStore, useValue: mockCartStore },
+        { provide: AppStore, useValue: mockAppStore },
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();

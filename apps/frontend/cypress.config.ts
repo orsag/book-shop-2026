@@ -1,6 +1,10 @@
 import { nxE2EPreset } from '@nx/cypress/plugins/cypress-preset';
 import { defineConfig } from 'cypress';
+import { fileURLToPath } from 'url';
 // 'nx run frontend:serve-static',
+
+// @ts-ignore
+const __filename: string = fileURLToPath(import.meta.url);
 
 const proxyCommand = 'node proxy-server.js';
 

@@ -1,16 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Videos } from './videos';
+import { VideosComponent } from './videos';
+import { getTranslocoModule } from '@core';
+import { MockComponent } from 'ng-mocks';
+import { VideoPlayer } from '@component';
 
 describe('Videos', () => {
-  let component: Videos;
-  let fixture: ComponentFixture<Videos>;
+  let component: VideosComponent;
+  let fixture: ComponentFixture<VideosComponent>;
 
   beforeEach(async () => {
+    TestBed.overrideComponent(VideosComponent, {
+      remove: { imports: [VideoPlayer] },
+      add: { imports: [MockComponent(VideoPlayer)] },
+    });
+
     await TestBed.configureTestingModule({
-      imports: [Videos],
+      imports: [VideosComponent, getTranslocoModule()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Videos);
+    fixture = TestBed.createComponent(VideosComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,21 +1,9 @@
 import { DEFAULT_MAX_LIMIT } from '@store/libs';
 
 describe('Dashboard Layout & Components', () => {
-  beforeEach(() => {
-    cy.intercept('GET', '**/products*').as('getProducts');
-    // 1. Authenticate using the custom command
-    cy.login();
-
-    // 3. Visit home page and wait for loading skeleton to disappear
+  it('should display exact number of book list items and zero book cards in list view', () => {
     cy.visit('/');
     cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
-
-    // cy.get('[data-testid="main-layout-list"]', { timeout: 20000 }).should(
-    //   'be.visible',
-    // );
-  });
-
-  it('should display exact number of book list items and zero book cards in list view', () => {
     // 1. Verify number of app-book-list-item is equal to DEFAULT_MAX_LIMIT
     cy.get('app-book-list-item').should('have.length', DEFAULT_MAX_LIMIT);
 
@@ -24,6 +12,9 @@ describe('Dashboard Layout & Components', () => {
   });
 
   it('should display double of products when Load more books', () => {
+    cy.intercept('GET', '**/products*').as('getProducts');
+    cy.visit('/');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
     // 1. Click Load More
     cy.get('[data-testid="load-more"]').click();
 
@@ -37,6 +28,9 @@ describe('Dashboard Layout & Components', () => {
   });
 
   it('should add the first item to the cart', () => {
+    cy.visit('/');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
+
     const ADD_LABEL = 'Do košíka';
     const REMOVE_LABEL = 'Odobrať';
 

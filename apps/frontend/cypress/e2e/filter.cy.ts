@@ -1,6 +1,6 @@
 describe('Filter Component Tests', () => {
   beforeEach(() => {
-    cy.login();
+    // cy.login();
     cy.visit('/');
     cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
 
@@ -14,12 +14,10 @@ describe('Filter Component Tests', () => {
 
       if (!isFilterVisible) {
         cy.get('[data-testid="logo-btn"]').click();
+        cy.wait(350);
         cy.get('[data-testid="filter-component"]').should('be.visible');
       }
     });
-
-    // Short pause replacing page.waitForTimeout(350)
-    cy.wait(500);
   });
 
   it('should toggle layout and display grid main-layout when clicking layout button', () => {

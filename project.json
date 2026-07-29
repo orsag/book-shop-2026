@@ -6,15 +6,6 @@
   "prefix": "app",
   "sourceRoot": "./src",
   "tags": [],
-  "projects": {
-    "prisma": {
-      "root": "prisma",
-      "sourceRoot": "prisma",
-      "projectType": "library",
-      "tags": ["type:config", "scope:prisma"],
-      "targets": {}
-    }
-  },
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",

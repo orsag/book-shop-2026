@@ -3,6 +3,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { ConfigurationService, ScrollService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
 import { GradientBgComponent } from '@component';
+import { isDevMode } from '@angular/core';
 import { filter } from 'rxjs';
 
 @Component({
@@ -16,6 +17,7 @@ export class App {
   scrollService = inject(ScrollService);
   config = inject(ConfigurationService);
   private platformId = inject(PLATFORM_ID);
+  showGradientBg = isDevMode();
 
   constructor() {
     this.router.events
