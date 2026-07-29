@@ -48,7 +48,7 @@ import { delay } from 'rxjs';
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
-export class Profile implements OnInit {
+export class Profile {
   store = inject(AppStore);
   userStore = inject(UserStore);
   cartStore = inject(CartStore);
@@ -58,14 +58,6 @@ export class Profile implements OnInit {
   private isFormInitialized = false;
   OrderStatus = OSEnum;
 
-  ngOnInit() {
-    const userId = this.userStore.user()?.id;
-    if (userId) {
-      this.userStore.loadUserDetail({ userId });
-      this.cartStore.reloadOrders({ userId });
-    }
-  }
-
   constructor() {
     effect(() => {
       const latestDetail = this.userStore.userDetail();
@@ -73,6 +65,7 @@ export class Profile implements OnInit {
 
       if (id) {
         untracked(() => {
+          this.cartStore.reloadOrders({ userId: id });
           // A. Trigger the fetch if we don't have data yet
           if (!latestDetail) {
             this.userStore.loadUserDetail({ userId: id });

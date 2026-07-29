@@ -5,28 +5,28 @@ import { createAdmin } from './creator';
 import { createProduct } from './createProduct';
 
 async function main() {
-  await prisma.gastro.deleteMany();
-  await prisma.aggregateRating.deleteMany();
-  await prisma.book.deleteMany();
-  await prisma.game.deleteMany();
-  console.log(' ✅ Deleted extensions...');
-  // Clear existing data
-  await prisma.product.deleteMany();
-  console.log(' ✅ Deleted products...');
-
-  await prisma.userDetail.deleteMany();
-  console.log(' ✅ Deleted userDetail...');
-
-  await prisma.user.deleteMany({
-    where: {
-      OR: [
-        { username: 'bossman' },
-        { username: 'bossmann' },
-        { email: DEFAULT_EMAIL },
-      ],
-    },
-  });
-  console.log(' ✅ Deleted users...');
+  // await prisma.gastro.deleteMany();
+  // await prisma.aggregateRating.deleteMany();
+  // await prisma.book.deleteMany();
+  // await prisma.game.deleteMany();
+  // console.log(' ✅ Deleted extensions...');
+  // // Clear existing data
+  // await prisma.product.deleteMany();
+  // console.log(' ✅ Deleted products...');
+  //
+  // await prisma.userDetail.deleteMany();
+  // console.log(' ✅ Deleted userDetail...');
+  //
+  // await prisma.user.deleteMany({
+  //   where: {
+  //     OR: [
+  //       { username: 'bossman' },
+  //       { username: 'bossmann' },
+  //       { email: DEFAULT_EMAIL },
+  //     ],
+  //   },
+  // });
+  // console.log(' ✅ Deleted users...');
 
   for (let i = 0; i < 300; i++) {
     const type = faker.helpers.arrayElement(['BOOK', 'GAME', 'GASTRO']);

@@ -16,8 +16,6 @@ import { authInterceptor, TranslationsHttpLoader } from '@core';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import {
   EVENT_MANAGER_PLUGINS,
-  provideClientHydration,
-  withEventReplay,
 } from '@angular/platform-browser';
 import { StopEventPlugin } from './plugins/stop-event.plugin';
 import localeSk from '@angular/common/locales/sk';
@@ -28,7 +26,6 @@ registerLocaleData(localeSk, 'sk-SK');
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(

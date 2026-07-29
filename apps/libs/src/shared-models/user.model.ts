@@ -1,5 +1,3 @@
-import type { Request } from 'express';
-
 export interface User {
   id: string;
   username: string;
@@ -16,12 +14,11 @@ export interface User {
 }
 
 // Define the shape of your JWT payload
-export interface RequestWithUser extends Request {
+export interface RequestWithUser {
   user: {
     userId: string;
     username: string;
     isAdmin: boolean;
-    // add other properties from your JWT payload here
   };
 }
 

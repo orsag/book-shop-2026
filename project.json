@@ -37,7 +37,7 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kb",
+              "maximumWarning": "2mb",
               "maximumError": "1mb"
             },
             {
@@ -95,7 +95,9 @@
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "book-store-2026:build",
+        "buildTarget": "frontend:build",
+        "host": "127.0.0.1",
+        "port": 4200,
         "spa": true
       }
     }

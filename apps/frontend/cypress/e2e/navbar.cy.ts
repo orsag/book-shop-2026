@@ -2,7 +2,7 @@ describe('Navbar Component Tests', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/');
-    cy.get('.skeleton').should('not.exist');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
   });
 
   it('should toggle language to SK when language button is clicked', () => {

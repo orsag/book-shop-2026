@@ -20,19 +20,26 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/frontend/public"
+            "input": "apps/frontend/public",
+            "output": "."
+          },
+          {
+            "glob": "serve.json",
+            "input": "apps/frontend",
+            "output": "browser"
           }
         ],
         "styles": ["apps/frontend/src/styles.css"],
         "browser": "apps/frontend/src/main.ts",
-        "server": "apps/frontend/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/frontend/src/server.ts"
-        },
-        "outputMode": "server"
+        "outputMode": "static"
       },
       "configurations": {
         "production": {
+          "optimization": true,
+          "sourceMap": false,
+          "namedChunks": false,
+          "outputMode": "static",
+          "ssr": false,
           "budgets": [
             {
               "type": "initial",
@@ -92,6 +99,8 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "frontend:build",
+        "host": "127.0.0.1",
+        "port": 4200,
         "spa": true
       }
     }

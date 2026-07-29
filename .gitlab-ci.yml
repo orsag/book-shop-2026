@@ -9,11 +9,15 @@ cypress-e2e:
 
   # Spin up the database container alongside the Cypress container
   services:
-    - name: postgres:15-alpine
+    - name: postgres:18.3-alpine
       alias: postgres-db # Alias to reach the DB via hostname
 
   # Set database credentials and connection variables
   variables:
+    npm_config_cache: "/tmp/npm-cache"
+    NODE_ENV: "production"
+    NPM_CONFIG_PRODUCTION: false
+    NODE_OPTIONS: "--max-old-space-size=4096"
     CYPRESS_CACHE_FOLDER: "/root/.cache/Cypress"
     # Set default values if UI variables are empty/missing
     POSTGRES_DB: "mydatabase"
@@ -29,38 +33,37 @@ cypress-e2e:
     PASSWORD: "admin12345"
     UPLOAD_LOCATION: "./uploads"
 
-  # Cache node_modules based on your lockfile
-  cache:
-    key:
-      files:
-        - package-lock.json # Or yarn.lock / pnpm-lock.yaml
-    paths:
-      - .npm/
-      - .nx/cache # Caching Nx build outputs speeds up builds even further!
-
   before_script:
-    - npm ci --prefer-offline --no-audit --no-fund
+    - rm -rf /tmp/npm-cache
+    - rm -rf node_modules
+    - rm -rf ~/.npm
+    - rm -rf /root/.npm
+    - npm cache clean --force
+    - npm install --no-audit --no-fund
 
   script:
-    - npx nx run libs:build
-
-    - npx wait-on tcp:postgres-db:5432 --timeout 30000
-
     - npx prisma generate
-
-    - npx prisma migrate deploy  # Creates all tables instantly
-
+    - npx prisma db push
     - npm run seed
 
-    - npx nx run backend:serve &
+    # - npx prisma migrate deploy  # Creates all tables instantly
 
-    - npx wait-on http-get://localhost:3000/api --timeout 60000
+    - npx nx run libs:build
+    - npx nx build backend --skip-nx-cache
+    - npx nx build frontend --configuration=production
+    - npx wait-on tcp:postgres-db:5432 --timeout 30000
 
-    - npx nx run frontend:serve &
+    # 2. Start NestJS Backend in background
+    - node dist/apps/backend/main.js &
+    - npx wait-on http-get://127.0.0.1:3000/api --timeout 60000
 
-    - npx wait-on http-get://localhost:4200 --timeout 120000
+    # 3. Serve production build in background (NO esbuild dev server deadlock!)
+    # - npx serve -s dist/apps/frontend/browser -l 4200 &
+    # - npx wait-on http-get://127.0.0.1:4200 --timeout 30000
 
-    - npx nx run frontend:e2e --baseUrl=http://localhost:4200
+    # 4. Run Cypress against static production bundle
+    #node -e 'fetch("http://127.0.0.1:3000/api/products?type=BOOK&page=1&limit=12&isDiscounted=false").then(r => r.json()).then(d => console.log(JSON.stringify(d, null, 2)))'
+    - npx nx run frontend:e2e
 
   artifacts:
     when: on_failure

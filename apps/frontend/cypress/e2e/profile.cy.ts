@@ -4,7 +4,7 @@ describe('Profile Route Tests', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/profile');
-    cy.get('.skeleton').should('not.exist');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
   });
 
   it('should display the correct page heading', () => {

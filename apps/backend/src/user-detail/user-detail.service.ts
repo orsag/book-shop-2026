@@ -71,7 +71,7 @@ export class UserDetailService {
       // Prisma error code for "Record to delete does not exist"
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
+        (error as Prisma.PrismaClientKnownRequestError).code === 'P2025'
       ) {
         throw new NotFoundException(`User detail with ID ${userId} not found.`);
       }

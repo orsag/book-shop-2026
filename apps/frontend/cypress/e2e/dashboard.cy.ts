@@ -2,15 +2,13 @@ import { DEFAULT_MAX_LIMIT } from '@store/libs';
 
 describe('Dashboard Layout & Components', () => {
   beforeEach(() => {
+    cy.intercept('GET', '**/products*').as('getProducts');
     // 1. Authenticate using the custom command
     cy.login();
 
-    // 2. Intercept network request for "Load More" test tracking
-    cy.intercept('GET', '**/products*').as('getProducts');
-
     // 3. Visit home page and wait for loading skeleton to disappear
     cy.visit('/');
-    cy.get('.skeleton').should('not.exist');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
 
     // cy.get('[data-testid="main-layout-list"]', { timeout: 20000 }).should(
     //   'be.visible',

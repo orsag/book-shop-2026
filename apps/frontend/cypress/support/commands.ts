@@ -11,7 +11,7 @@ declare namespace Cypress {
 
 Cypress.Commands.add('login', () => {
   // 1. Retrieve env variables using cy.env() FIRST
-  cy.env(['USERNAME', 'PASSWORD']).then((env) => {
+  cy.env(['USERNAME', 'PASSWORD', 'NODE_ENV', 'BASE_URL']).then((env) => {
     const username = env['USERNAME'] || 'admin';
     const password = env['PASSWORD'] || 'admin';
 
@@ -23,30 +23,31 @@ Cypress.Commands.add('login', () => {
     }
 
     // 2. Pass username to cy.session identifier
-    cy.session([username], () => {
-      // Set viewport matching Playwright setup
-      cy.viewport(1920, 1080);
+    cy.session(
+      [username],
+      () => {
+        // Set viewport matching Playwright setup
+        cy.viewport(1920, 1080);
 
-      cy.visit('/login');
+        cy.visit('/login');
 
-      // Fill Login Form and Click Login
-      cy.get('input[placeholder="User name"]').type(username);
-      cy.get('input[placeholder="Password"]').type(password);
+        // Fill Login Form and Click Login
+        cy.get('input[placeholder="User name"]').type(username);
+        cy.get('input[placeholder="Password"]').type(password);
 
-      cy.get('button[name="login"]').should('not.be.disabled').click();
+        cy.get('button[name="login"]').should('not.be.disabled').click();
 
-      cy.wait(1000);
-
-      // Wait for Successful Login & Page Ready
-      // cy.url().should('not.include', '/login');
-    }, {
-      validate() {
-        cy.getAllLocalStorage().then((storage) => {
-          const originStorage = storage['http://localhost:4200'] || {};
-          // Adjust key according to your app (e.g. 'token', 'auth', 'user')
-          expect(Object.keys(originStorage).length).to.be.greaterThan(0);
-        });
-      }
-    });
+        cy.wait(1000);
+      },
+      {
+        validate() {
+          cy.getAllLocalStorage().then((storage) => {
+            const baseUrl = env['BASE_URL'];
+            const originStorage = storage[baseUrl] || {};
+            expect(originStorage).to.have.property('accessToken');
+          });
+        },
+      },
+    );
   });
 });

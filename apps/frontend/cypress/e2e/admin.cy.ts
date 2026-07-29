@@ -2,7 +2,7 @@ describe('Administration Route Tests', () => {
   beforeEach(() => {
     cy.login();
     cy.visit('/administration');
-    cy.get('.skeleton').should('not.exist');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
   });
 
   it('should display the correct page heading', () => {

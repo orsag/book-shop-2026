@@ -58,3 +58,5 @@ __screenshots__/
 
 cypress/videos
 cypress/screenshots
+.gitlab-ci-local.env
+.gitlab-ci-local

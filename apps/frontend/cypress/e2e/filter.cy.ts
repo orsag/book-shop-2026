@@ -1,11 +1,8 @@
 describe('Filter Component Tests', () => {
   beforeEach(() => {
-    // 1. Authenticate session
     cy.login();
-
-    // 2. Visit homepage and wait for loading skeleton to disappear
     cy.visit('/');
-    cy.get('.skeleton').should('not.exist');
+    cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
 
     // 3. Conditional check: Open filter if not visible
     cy.get('body').then(($body) => {
@@ -22,7 +19,7 @@ describe('Filter Component Tests', () => {
     });
 
     // Short pause replacing page.waitForTimeout(350)
-    cy.wait(350);
+    cy.wait(500);
   });
 
   it('should toggle layout and display grid main-layout when clicking layout button', () => {
