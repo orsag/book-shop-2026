@@ -5,9 +5,9 @@
     "src/**/*.ts",
     "../../libs/src/**/*.ts",
     "../../generated/prisma/client.ts",
-    "../../prisma/prisma.ts",
+    "../../prisma/prisma.ts"
   ],
   "compilerOptions": {
-    "esModuleInterop": true,
-  },
+    "esModuleInterop": true
+  }
 }

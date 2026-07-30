@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  HttpCode,
+  HttpStatus,
   ParseIntPipe,
   DefaultValuePipe,
   UseGuards,
@@ -63,6 +65,7 @@ export class ProductsController {
   }
 
   @Post('list')
+  @HttpCode(HttpStatus.OK)
   async getProductsByIds(@Body('ids') ids: string[]) {
     // If no IDs are provided, return an empty array immediately
     if (!ids || ids.length === 0) {

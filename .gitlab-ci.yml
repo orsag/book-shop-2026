@@ -1,6 +1,7 @@
 stages:
-  - test
-  - e2e-test
+  - vitest
+  - e2e-backend
+  - e2e-frontend
 
 .node_env_template: &node_env_template
   image:
@@ -26,6 +27,8 @@ stages:
     JWT_EXPIRES_IN: "1d"
     USERNAME: "bossmann"
     PASSWORD: "admin12345"
+    TEST_NAME: "testinguser"
+    TEST_PASSWORD: "tester12345"
     UPLOAD_LOCATION: "./uploads"
 
   # Spin up the database container alongside the Cypress container
@@ -37,15 +40,28 @@ stages:
     - npm install --no-audit --no-fund
 
 unit-tests:
-  stage: test
+  stage: vitest
   <<: *node_env_template
   script:
     - npx nx test frontend --skip-nx-cache
   rules:
     - when: always
 
-cypress-e2e:
-  stage: e2e-test
+cypress-e2e-backend:
+  stage: e2e-backend
+  <<: *node_env_template
+  script:
+    - echo "Starting NestJS Backend API (E2E) Tests"
+    - npx prisma generate
+    - npx prisma db push
+    - npm run seed
+
+    - npx nx run libs:build
+    - npx nx build backend --skip-nx-cache
+    - npx nx run backend:e2e
+
+cypress-e2e-frontend:
+  stage: e2e-frontend
   <<: *node_env_template
   script:
     - npx prisma generate

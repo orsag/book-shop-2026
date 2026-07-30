@@ -5,20 +5,22 @@ import { prisma, PrismaClient } from '@prismalib';
 
 @Injectable()
 export class PrismaService implements OnModuleInit, OnModuleDestroy {
-  // Use public so you can access it via prismaService.client
   public client: PrismaClient;
+  private connected = false;
 
   constructor() {
-    // Initialize the client here
     this.client = prisma;
   }
 
   async onModuleInit() {
+    if (this.connected) {
+      return;
+    }
+
     console.log('Connecting to DB:', process.env['DATABASE_URL']);
     try {
-      // In some custom/adapter setups, $connect is internal.
-      // We call it safely:
       await (this.client as any).$connect();
+      this.connected = true;
       console.log('✅ Database connected successfully');
     } catch (error) {
       console.error(
@@ -30,5 +32,6 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy() {
     await (this.client as any).$disconnect();
+    this.connected = false;
   }
 }

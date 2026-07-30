@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -14,13 +14,13 @@
     "build-fe": "npx nx build frontend --skip-nx-cache 2>&1 | tail -10",
     "build-be": "npx nx build backend --skip-nx-cache 2>&1 | tail -10",
     "build-libs": "npx nx build libs --skip-nx-cache 2>&1 | tail -5",
-    "hono": "npx nx run hono-backend:serve",
-    "build": "nx build",
-    "test": "npx nx test frontend",
+    "backend2": "npx nx run hono-backend:serve",
     "playwright": "npx nx playwright frontend",
+    "test": "npx nx test frontend",
     "clean": "rm -rf dist .angular/cache .nx/cache",
     "rmrf": "rm -rf node_modules package-lock.json",
-    "e2e": "npx nx run frontend:e2e"
+    "e2e": "npx nx run frontend:e2e",
+    "backend-cypress": "npx nx run backend:e2e"
   },
   "private": true,
   "dependencies": {

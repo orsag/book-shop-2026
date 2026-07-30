@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import * as dotenv from 'dotenv';
@@ -9,9 +9,30 @@ import { NotFoundExceptionFilter } from './middleware/not-found.middleware';
 // Load .env from the root of the monorepo
 dotenv.config({ path: join(__dirname, '../../.env') });
 
+/**
+ * Custom logger to suppress verbose route mapping and dependency loading logs
+ */
+class QuietLogger extends ConsoleLogger {
+  override log(message: string, context?: string) {
+    if (context === 'RouterExplorer' || context === 'RoutesResolver' || context === 'InstanceLoader') {
+      return; // Suppress these specific contexts
+    }
+    super.log(message, context);
+  }
+
+  override warn(message: string, context?: string) {
+    if (context === 'LegacyRouteConverter') {
+      return; // Suppress the path-to-regexp asterisk warnings too if desired
+    }
+    super.warn(message, context);
+  }
+}
+
 async function bootstrap() {
   // 2. Add the Generic Type here <NestExpressApplication>
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: new QuietLogger(),
+  });
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

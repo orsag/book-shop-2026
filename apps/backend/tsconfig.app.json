@@ -10,19 +10,19 @@
       "vitest/importMeta",
       "vite/client",
       "node",
-      "vitest",
+      "vitest"
     ],
     "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2021",
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler"
   },
   "include": [
     "src/**/*.ts",
     "../../libs/src/**/*.ts",
     "../../generated/prisma/client.ts",
-    "../../prisma/prisma.ts",
+    "../../prisma/prisma.ts"
   ],
 }

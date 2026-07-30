@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -42,12 +42,7 @@ export class ProductsService {
 
       const fuzzyMatches = await this.prisma.client.$queryRaw<{ id: string }[]>`
         SELECT id FROM "Product" 
-        WHERE 
-          -- 1. Catch substring variations (e.g., "froz" matches "Frozen")
-          name ILIKE ${percentageSearch}
-          OR
-      -- 2. Catch overall typo closeness (Highly forgiving threshold)
-      similarity(name, ${cleanedSearch}) > 0.18
+        WHERE name ILIKE ${percentageSearch}
       `;
 
       const matchedIds = fuzzyMatches.map((m) => m.id);
@@ -145,14 +140,15 @@ export class ProductsService {
       meta: {
         total,
         page,
+        limit,
         lastPage: Math.ceil(total / limit),
         hasMore: page < Math.ceil(total / limit),
       },
     };
   }
 
-  findOne(id: string, type = 'BOOK') {
-    return this.prisma.client.product.findUnique({
+  async findOne(id: string, type = 'BOOK') {
+    const product = await this.prisma.client.product.findUnique({
       where: { id },
       include: {
         rating: true,
@@ -162,6 +158,12 @@ export class ProductsService {
         cardDetails: type === 'GIFT_CARD',
       },
     });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    return product;
   }
 
   getProductsByIds(ids: string[]) {
@@ -242,12 +244,10 @@ export class ProductsService {
   }
 
   async remove(id: string) {
-    // 1. Check if the book is part of any existing orders
     const orderCount = await this.prisma.client.orderItem.count({
       where: { productId: id },
     });
 
-    // 2. If it is linked to orders, forbid deletion and return a warning
     if (orderCount > 0) {
       return {
         success: false,
@@ -256,10 +256,34 @@ export class ProductsService {
       };
     }
 
-    // 3. Otherwise, proceed with standard deletion
-    await this.prisma.client.book.delete({
+    const product = await this.prisma.client.product.findUnique({
       where: { id },
+      select: { productType: true },
     });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    const detailWhere = { productId: id };
+
+    switch (product.productType) {
+      case 'BOOK':
+        await this.prisma.client.book.delete({ where: detailWhere });
+        break;
+      case 'GAME':
+        await this.prisma.client.game.delete({ where: detailWhere });
+        break;
+      case 'GASTRO':
+        await this.prisma.client.gastro.delete({ where: detailWhere });
+        break;
+      case 'GIFT_CARD':
+        await this.prisma.client.giftCard.delete({ where: detailWhere });
+        break;
+    }
+
+    await this.prisma.client.aggregateRating.delete({ where: detailWhere });
+    await this.prisma.client.product.delete({ where: { id } });
 
     return {
       success: true,

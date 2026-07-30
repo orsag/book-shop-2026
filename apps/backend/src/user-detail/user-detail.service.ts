@@ -57,9 +57,21 @@ export class UserDetailService {
     });
   }
 
-  create(createUserDetailDto: CreateUserDetailDto) {
-    console.log(JSON.stringify(createUserDetailDto));
-    return 'This action adds a new userDetail';
+  async create(createUserDetailDto: CreateUserDetailDto) {
+    return this.prisma.client.userDetail.create({
+      data: {
+        ...createUserDetailDto,
+        dateOfBirth: createUserDetailDto.dateOfBirth
+          ? new Date(createUserDetailDto.dateOfBirth)
+          : undefined,
+        membershipStart: createUserDetailDto.membershipStart
+          ? new Date(createUserDetailDto.membershipStart)
+          : undefined,
+        membershipEnd: createUserDetailDto.membershipEnd
+          ? new Date(createUserDetailDto.membershipEnd)
+          : undefined,
+      },
+    });
   }
 
   async remove(userId: string) {

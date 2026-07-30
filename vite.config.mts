@@ -61,7 +61,6 @@ export default defineConfig(() => ({
       '**/node_modules/**',
       '**/dist/**',
       'apps/backend/**',
-      'apps/backend-e2e/**',
     ],
     reporters: ['default'],
     coverage: {
