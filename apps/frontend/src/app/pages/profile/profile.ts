@@ -3,7 +3,6 @@ import {
   computed,
   effect,
   inject,
-  OnInit,
   signal,
   untracked,
 } from '@angular/core';
@@ -29,6 +28,8 @@ import { OrderStatus as OSEnum } from '@store/shared-models';
 import { NoFocusJumpDirective } from '@core';
 import { CardSmall } from '@component';
 import { delay } from 'rxjs';
+import { RedFocusDirective } from '../../core/red-focus.directive';
+import { FieldErrorComponent } from '../../components/common/field-error.component';
 
 @Component({
   selector: 'app-profile',
@@ -44,6 +45,8 @@ import { delay } from 'rxjs';
     NoFocusJumpDirective,
     CurrencyPipe,
     LucideShoppingBag,
+    RedFocusDirective,
+    FieldErrorComponent,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
@@ -74,7 +77,7 @@ export class Profile {
 
           // B. Protective condition: Only set the model IF we haven't initialized yet
           if (!this.isFormInitialized && latestDetail) {
-            //!this.detailForm().dirty()
+            //!this.form().dirty()
             this.userDetailModel.set(this.mapToDetailModel(latestDetail));
             this.isFormInitialized = true; // Lock it down
           }
@@ -110,11 +113,19 @@ export class Profile {
     // Move the nested fields into the userDetail object
   });
 
-  detailForm = form(this.userDetailModel, (schemaPath) => {
+  form = form(this.userDetailModel, (schemaPath) => {
     required(schemaPath.displayName, {
       message: 'Display name is required',
     });
-
+    required(schemaPath.city, {
+      message: 'City is required',
+    });
+    required(schemaPath.addressLine1, {
+      message: 'Street is required',
+    });
+    required(schemaPath.iban, {
+      message: 'Iban is required',
+    });
     required(schemaPath.city, {
       message: 'City is required',
     });
@@ -133,32 +144,51 @@ export class Profile {
   });
 
   isPremium = computed(() => this.userStore.userDetail()?.isPremium ?? false);
-  daysLeft = computed(() => {
-    const end = this.userStore.userDetail()?.membershipEnd;
-    if (!end) return 0;
-    const diff = new Date(end).getTime() - Date.now();
-    return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-  });
 
   handleSave() {
-    if (this.userForm().valid()) {
-      const updatedData: Partial<User> = {
-        ...this.userModel(),
-      };
-    }
-    if (this.detailForm().valid()) {
+    if (this.form().valid() && this.userForm().valid()) {
       const userId = this.userStore.user()?.id;
       const updatedData: Partial<UserDetailSmall> = {
         ...this.userDetailModel(),
       };
+      const updatedUserData: Partial<User> = {
+        ...this.userModel(),
+      };
       if (userId) {
-        this.userStore.updateUserDetail({ userId, updates: updatedData });
+        this.userStore.updateUserDetail({
+          userId,
+          updates: updatedData,
+          user: updatedUserData,
+        });
       }
+    } else {
+      this.handleNextInvalidField();
     }
   }
 
-  handleCancel() {
+  handleNextInvalidField() {
+    const fields = [
+      this.userForm.email,
+      this.userForm.phoneNumber,
+      this.form.bio,
+      this.form.city,
+      this.form.addressLine1,
+      this.form.iban,
+      this.form.taxId,
+      this.form.dateOfBirth,
+    ];
+
+    const invalidField = fields.find((field) => field().invalid());
+
+    if (invalidField) {
+      invalidField().focusBoundControl();
+    }
+  }
+
+  handleReset() {
     this.userForm().reset();
+    this.form().focusBoundControl();
+    // this.inputs()[0]?.nativeElement.focus();
     this.toast.success('Zmeny resetované');
   }
 

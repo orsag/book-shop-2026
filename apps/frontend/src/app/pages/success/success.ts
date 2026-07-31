@@ -9,6 +9,7 @@ import {
   LucideCircleUserRound,
 } from '@lucide/angular';
 import { TotalPricePipe, SinglePricePipe } from '@core';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-success',
@@ -22,6 +23,7 @@ import { TotalPricePipe, SinglePricePipe } from '@core';
     CurrencyPipe,
     TotalPricePipe,
     SinglePricePipe,
+    RedFocusDirective,
   ],
   templateUrl: './success.html',
   styleUrl: './success.css',

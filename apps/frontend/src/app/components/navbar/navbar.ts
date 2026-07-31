@@ -34,6 +34,7 @@ import {
   LucideX,
   LucideMenu,
 } from '@lucide/angular';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-navbar',
@@ -55,6 +56,7 @@ import {
     LucideMenu,
     LucideLayoutDashboard,
     TooltipDirective,
+    RedFocusDirective,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',

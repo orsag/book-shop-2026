@@ -23,6 +23,7 @@ import {
   LucidePercent,
   LucideSearch,
 } from '@lucide/angular';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-filter',
@@ -37,6 +38,7 @@ import {
     LucideArrowDownNarrowWide,
     LucideArrowUpWideNarrow,
     LucidePercent,
+    RedFocusDirective,
   ],
   templateUrl: './filter.html',
   styleUrl: './filter.css',

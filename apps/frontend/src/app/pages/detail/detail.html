@@ -38,43 +38,39 @@
           <p class="text-xl text-base-content/60 italic">od {{ ux.author(data) }}</p>
         </div>
 
-        <div class="card bg-base-100 border border-base-300 p-2 md:p-6 shadow-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xl md:text-2xl font-black text-primary">
-                {{
-                  (data.price * (1 - data.discount)) |
-                    currency:'EUR':'symbol':'1.2-2':'sk-SK'
-                }}
-              </p>
-              <p class="text-xs opacity-60 uppercase tracking-widest font-bold">
-                Cena s DPH
-              </p>
-            </div>
-
-            <div class="flex gap-3">
-              <button
-                (click.stop)="handleCartAction()"
-                class="btn btn-sm md:btn-lg md:px-12 font-bold"
-                [class.btn-primary]="!ux.isInCart(data)"
-                [class.btn-error]="ux.isInCart(data)"
-                [disabled]="!data.isAvailable"
-              >
-              <span>
-                {{
-                  ux.isInCart(data) ? t('cart.remove_from_cart') :
-                    t('cart.add_to_cart')
-                }}
-              </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <div class="prose max-w-none">
           <p class="leading-relaxed whitespace-pre-wrap text-base-content/80">
             {{ data.description || 'Popis k tejto knihe momentálne nie je k dispozícii.' }}
           </p>
+        </div>
+
+        <div class="flex flex-col gap-6 p-6 bg-base-200/30 rounded-[2.5rem] shadow-sm">
+          <div>
+            <p class="text-xl md:text-2xl font-black text-primary">
+              {{ data | singlePrice | currency:'EUR' }}
+            </p>
+            <p class="text-xs opacity-60 uppercase tracking-widest font-bold">
+              Cena s DPH
+            </p>
+          </div>
+
+          <div class="flex gap-3">
+            <button
+              appRedFocus
+              (click.stop)="handleCartAction()"
+              class="btn btn-sm md:btn-lg md:px-12 font-bold"
+              [class.btn-primary]="!ux.isInCart(data)"
+              [class.btn-error]="ux.isInCart(data)"
+              [disabled]="!data.isAvailable"
+            >
+            <span>
+              {{
+                ux.isInCart(data) ? t('cart.remove_from_cart') :
+                  t('cart.add_to_cart')
+              }}
+            </span>
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-row w-full"></div>
@@ -82,8 +78,8 @@
     </div>
 
     @if (data.bookDetails) {
-      <div class="flex justify-center w-full md:px-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1100px] p-2 bg-base-200/30 rounded-[2.5rem] border border-base-300/40">
+      <div class="flex justify-center w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1100px] p-6 bg-base-200/30 rounded-[2.5rem] border border-base-300/40">
 
           <div class="bg-base-100 border border-base-300 rounded-3xl p-6 shadow-sm flex items-center min-w-0 min-h-[112px] relative overflow-hidden group">
             <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-b from-primary to-secondary opacity-70"></div>

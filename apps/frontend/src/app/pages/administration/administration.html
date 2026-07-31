@@ -6,6 +6,7 @@
     </div>
 
     <button
+      appRedFocus
       type="button"
       class="btn btn-primary gap-2 shadow-md"
       (click)="openCreateModal()">
@@ -29,31 +30,46 @@
 
       <div class="flex items-center justify-start">
         <div class="join bg-base-200/50 p-1 rounded-xl">
-          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
-                  [disabled]="store.filters().page <= 1"
-                  (click)="store.setPage(1)">
+          <button
+            appRedFocus
+            class="join-item btn btn-sm transition-all hover:btn-neutral"
+            [disabled]="store.filters().page <= 1"
+            (click)="store.setPage(1)"
+          >
             {{ t('administration.first') }}
           </button>
 
-          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
-                  [disabled]="store.filters().page <= 1"
-                  (click)="store.setPage(store.filters().page - 1)">
+          <button
+            appRedFocus
+            class="join-item btn btn-sm transition-all hover:btn-neutral"
+            [disabled]="store.filters().page <= 1"
+            (click)="store.setPage(store.filters().page - 1)"
+          >
             {{ store.filters().page - 1 }}
           </button>
 
-          <button class="join-item btn btn-sm btn-active pointer-events-none font-bold">
+          <button
+            appRedFocus
+            class="join-item btn btn-sm btn-active pointer-events-none font-bold"
+          >
             {{ t('administration.page') }} {{ store.filters().page }} / {{ store.totalPages() }}
           </button>
 
-          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
-                  [disabled]="!store.hasMorePage()"
-                  (click)="store.setPage(store.filters().page + 1)">
+          <button
+            appRedFocus
+            class="join-item btn btn-sm transition-all hover:btn-neutral"
+            [disabled]="!store.hasMorePage()"
+            (click)="store.setPage(store.filters().page + 1)"
+          >
             {{ store.filters().page + 1 }}
           </button>
 
-          <button class="join-item btn btn-sm transition-all hover:btn-neutral"
-                  [disabled]="!store.hasMorePage()"
-                  (click)="store.setPage(store.totalPages())">
+          <button
+            appRedFocus
+            class="join-item btn btn-sm transition-all hover:btn-neutral"
+            [disabled]="!store.hasMorePage()"
+            (click)="store.setPage(store.totalPages())"
+          >
             {{ t('administration.last') }}
           </button>
         </div>

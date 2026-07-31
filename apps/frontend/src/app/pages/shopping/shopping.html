@@ -9,6 +9,7 @@
             <h2 class="card-title text-2xl m-0">Tvoj košík</h2>
             @if (cartStore.items().length > 0) {
               <button
+                appRedFocus
                 title="clear-btn"
                 class="btn btn-outline btn-error btn-sm"
                 (click)="cartStore.clearCart()">
@@ -21,7 +22,7 @@
             <div class="py-10 text-center">
               <div class="text-5xl mb-4">🛒</div>
               <p class="text-base-content/60 italic mb-6">Empty cart</p>
-              <button class="btn btn-secondary uppercase font-bold tracking-widest" routerLink="/">
+              <button appRedFocus class="btn btn-secondary uppercase font-bold tracking-widest" routerLink="/">
                 Späť k nákupu
               </button>
             </div>
@@ -52,12 +53,14 @@
                   <div class="flex items-center gap-1">
                     <div class="join">
                       <button
+                        appRedFocus
                         class="btn btn-xs join-item"
                         (click)="cartStore.updateQuantity(item.product.id, -1)"
                         title="minus-btn">-
                       </button>
                       <button class="btn btn-xs join-item no-animation cursor-default">{{ item.quantity }}</button>
                       <button
+                        appRedFocus
                         class="btn btn-xs join-item"
                         (click)="cartStore.updateQuantity(item.product.id, 1)"
                         [disabled]="item.quantity >= item.product.availableCount"
@@ -65,6 +68,7 @@
                       </button>
                     </div>
                     <button
+                      appRedFocus
                       class="btn btn-ghost btn-xs text-error"
                       title="remove-btn"
                       (click)="cartStore.removeItem(item.product.id)">
@@ -108,11 +112,13 @@
 
             <div class="flex flex-col sm:flex-row gap-4 mt-4">
               <button
+                appRedFocus
                 class="btn btn-sm btn-secondary uppercase tracking-widest shadow-lg"
                 routerLink="/">
                 Pokračovať v nákupe
               </button>
               <button
+                appRedFocus
                 class="btn btn-sm btn-success uppercase tracking-widest shadow-lg"
                 (click)="handleCheckout()">
                 Objednať & Zaplatiť
@@ -131,20 +137,21 @@
         <div class="space-y-3">
           <!-- Sekcia 1 -->
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
-            <input type="radio" name="faq-accordion" checked="checked" />
-            <div class="collapse-title text-base font-medium">
+            <input type="radio" name="faq-accordion" checked="checked" tabindex="-1" />
+
+            <div tabindex="0" appRedFocus class="collapse-title text-base font-medium cursor-pointer">
               How do I create an account?
             </div>
+
             <div class="collapse-content text-sm text-base-content/80">
-              <p>To create an account, simply click on the "Sign Up" or "Register" button at the top right of the screen
-                and follow the provided instructions to enter your details.</p>
+              <p>To create an account, simply click on the "Sign Up" or "Register" button at the top right of the screen and follow the provided instructions to enter your details.</p>
             </div>
           </div>
 
           <!-- Sekcia 2 -->
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
-            <input type="radio" name="faq-accordion" />
-            <div class="collapse-title text-base font-medium">
+            <input type="radio" name="faq-accordion" tabindex="-1" />
+            <div tabindex="0" appRedFocus class="collapse-title text-base font-medium">
               I forgot my username. What should I do?
             </div>
             <div class="collapse-content text-sm text-base-content/80">
@@ -155,8 +162,8 @@
 
           <!-- Sekcia 3 -->
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
-            <input type="radio" name="faq-accordion" />
-            <div class="collapse-title text-base font-medium">
+            <input type="radio" name="faq-accordion" tabindex="-1" />
+            <div tabindex="0" appRedFocus class="collapse-title text-base font-medium">
               How do I update my profile information?
             </div>
             <div class="collapse-content text-sm text-base-content/80">
@@ -167,8 +174,8 @@
 
           <!-- Sekcia 4 -->
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
-            <input type="radio" name="faq-accordion" />
-            <div class="collapse-title text-base font-medium">
+            <input type="radio" name="faq-accordion" tabindex="-1" />
+            <div tabindex="0" appRedFocus class="collapse-title text-base font-medium">
               How do I return books and items?
             </div>
             <div class="collapse-content text-sm text-base-content/80">
@@ -180,8 +187,8 @@
 
           <!-- Sekcia 5 -->
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm">
-            <input type="radio" name="faq-accordion" />
-            <div class="collapse-title text-base font-medium">
+            <input type="radio" name="faq-accordion" tabindex="-1" />
+            <div tabindex="0" appRedFocus class="collapse-title text-base font-medium">
               How do I get free shipping?
             </div>
             <div class="collapse-content text-sm text-base-content/80">

@@ -7,6 +7,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
 import { CurrencyPipe } from '@angular/common';
 import { UXService } from '@service';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-book-card',
@@ -17,6 +18,7 @@ import { UXService } from '@service';
     LucideHeart,
     TranslocoDirective,
     CurrencyPipe,
+    RedFocusDirective,
   ],
   templateUrl: './book-card.html',
   styleUrl: './book-card.css',

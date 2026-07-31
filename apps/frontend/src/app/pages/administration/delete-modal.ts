@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Product } from '@store/libs';
 import { AppStore } from '@store';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-delete-modal',
   standalone: true,
-  imports: [CommonModule, TranslocoDirective],
+  imports: [CommonModule, TranslocoDirective, CdkTrapFocus],
   template: `
-    <dialog *transloco="let t" class="modal modal-open">
+    <dialog *transloco="let t" cdkTrapFocus class="modal modal-open">
       <div class="modal-box border border-error/20">
         <h3 class="font-bold text-lg text-error">
           {{ t('administration.delete_book') }}
-        </h3>
+        </h3>   
         <p class="py-4">
           {{ t('administration.delete_book2') }}
           <strong>{{ selectedBook()?.name }}</strong

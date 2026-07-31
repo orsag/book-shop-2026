@@ -2,15 +2,19 @@
      class="meteor-card relative flex items-stretch gap-5 group max-h-[400px]">
 
   <div
+    tabindex="-1"
     class="relative shrink-0 cursor-pointer rounded-xl overflow-hidden h-[188px] w-[120px] isolate"
     [routerLink]="['/product', product.id]"
     (mouseenter)="isHovered.set(true)"
     (mouseleave)="isHovered.set(false)"
   >
-    <img [ngSrc]="product.coverUrl || 'images/placeholder.webp'"
-         width="120" height="188"
-         class="w-full h-full object-cover block"
-         [alt]="t('list_item.cover', { title: product.name })">
+    <img
+      [ngSrc]="product.coverUrl || 'images/placeholder.webp'"
+      width="120"
+      height="188"
+      class="w-full h-full object-cover block"
+      [alt]="t('list_item.cover', { title: product.name })"
+    />
 
     @if (isHovered()) {
       <div class="absolute inset-0 z-10 pointer-events-none rounded-xl overflow-hidden bg-transparent">
@@ -36,7 +40,7 @@
     </div>
 
     <!-- Row 2: Title & Author -->
-    <h3 class="font-bold text-md md:text-lg text-base-content leading-tight group-hover:text-primary transition-colors cursor-pointer line-clamp-2"
+    <h3 appRedFocus class="font-bold text-md md:text-lg text-base-content leading-tight group-hover:text-primary transition-colors cursor-pointer line-clamp-2"
         [routerLink]="['/product', product.id]">
       {{ product.name }}
     </h3>
@@ -81,6 +85,7 @@
       <!-- Button -->
       @if (product.availableCount !== 0) {
         <button
+          appRedFocus
           data-testid="add-to-cart"
           class="btn btn-sm"
           [class.btn-error]="ux.isInCart(product)"
@@ -95,7 +100,7 @@
         </button>
       } @else {
         <div class="tooltip" [attr.data-tip]="t('common.sold_out_tooltip')">
-          <button class="btn btn-soft btn-sm" disabled>{{ t('common.sold_out') }}</button>
+          <button appRedFocus class="btn btn-soft btn-sm" disabled>{{ t('common.sold_out') }}</button>
         </div>
       }
     </div>

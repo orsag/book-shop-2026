@@ -23,6 +23,7 @@ import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '@component';
 import { applyCommonProductRules } from './form-rules.shared';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 
 type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
   bookDetails: NonNullable<UpdateProductDto['bookDetails']>;
@@ -30,9 +31,9 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
 
 @Component({
   selector: 'app-edit-book-modal',
-  imports: [CommonModule, TranslocoDirective, FormFieldComponent],
+  imports: [CommonModule, TranslocoDirective, FormFieldComponent, CdkTrapFocus],
   template: `
-    <dialog *transloco="let t" class="modal modal-open">
+    <dialog cdkTrapFocus *transloco="let t" class="modal modal-open">
       <div class="modal-box max-w-2xl">
         <h3 class="font-bold text-xl mb-4 text-primary">
           {{ selectedBook() ? t('edit_modal.edit') : t('edit_modal.create') }}

@@ -30,7 +30,7 @@
                     <div class="flex-1">
                       <h3 class="font-bold">{{ item.product.name }}</h3>
                       <p class="text-sm opacity-50">
-                        {{ item.quantity }}x {{ item | singlePrice | currency:'EUR' }}
+                        {{ item.quantity }}x {{ item.product | singlePrice | currency:'EUR' }}
                       </p>
                     </div>
                     <div class="font-semibold">
@@ -51,11 +51,11 @@
               <div class="badge badge-secondary mt-2 font-bold">{{ details.status }}</div> </div>
           </div>
 
-          <button routerLink="/home" class="btn btn-primary btn-block">
+          <button appRedFocus routerLink="/home" class="btn btn-primary btn-block">
             <svg lucideShoppingBasket></svg>
             Späť do obchodu
           </button>
-          <button routerLink="/profile" class="btn btn-primary btn-block">
+          <button appRedFocus routerLink="/profile" class="btn btn-primary btn-block">
             <svg lucideCircleUserRound></svg>
             Späť do profilu
           </button>

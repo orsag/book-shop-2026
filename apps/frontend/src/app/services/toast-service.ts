@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 export type ToastType = 'info' | 'success' | 'alert';
 
@@ -13,6 +14,7 @@ interface Toast {
   providedIn: 'root',
 })
 export class ToastService {
+  private live = inject(LiveAnnouncer);
   // Private signal to manage state
   private toastsSignal = signal<Toast[]>([]);
 
@@ -32,14 +34,17 @@ export class ToastService {
 
   success(text: string, duration?: number) {
     this.show(text, 'success', duration);
+    this.live.announce(text, 'assertive');
   }
 
   alert(text: string, duration?: number) {
     this.show(text, 'alert', duration);
+    this.live.announce(text, 'assertive');
   }
 
   info(text: string, duration?: number) {
     this.show(text, 'info', duration);
+    this.live.announce(text, 'assertive');
   }
 
   private remove(id: string) {

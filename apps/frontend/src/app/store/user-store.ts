@@ -209,6 +209,7 @@ export const UserStore = signalStore(
       updateUserDetail: rxMethod<{
         userId: string;
         updates: Partial<UserDetailSmall>;
+        user: Partial<User>;
       }>(
         pipe(
           tap(() => patchState(store, { isLoading: true })),

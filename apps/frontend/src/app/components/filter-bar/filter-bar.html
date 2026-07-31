@@ -2,28 +2,36 @@
   <ul class="flex items-center gap-x-4 pb-3">
 
     <li>
-      <button (click)="updateFilter('type', 'BOOK')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#F075AE] border-[#F075AE] hover:bg-[#F075AE] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+      <button
+        appRedFocus
+        (click)="updateFilter('type', 'BOOK')"
+        class="btn btn-sm rounded-full btn-outline font-ribeye text-[#F075AE] border-[#F075AE] hover:bg-[#F075AE] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Books
       </button>
     </li>
 
     <li>
-      <button (click)="updateFilter('type', 'GAME')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#85cee0] border-[#85cee0] hover:bg-[#85cee0] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+      <button
+        appRedFocus
+        (click)="updateFilter('type', 'GAME')"
+        class="btn btn-sm rounded-full btn-outline font-ribeye text-[#85cee0] border-[#85cee0] hover:bg-[#85cee0] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Games
       </button>
     </li>
 
     <li>
-      <button (click)="updateFilter('type', 'GASTRO')"
+      <button
+        appRedFocus
+        (click)="updateFilter('type', 'GASTRO')"
               class="btn btn-sm rounded-full btn-outline font-ribeye text-[#89b847] border-[#89b847] hover:bg-[#89b847] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Gastro
       </button>
     </li>
 
     <li>
-      <button routerLink="/videos"
+      <button
+        appRedFocus
+        routerLink="/videos"
               class="btn btn-sm rounded-full btn-outline font-ribeye text-[#89b847] border-[#89b847] hover:bg-[#89b847] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Videos
       </button>
@@ -31,7 +39,9 @@
 
     @if (userStore.isLoggedIn()) {
       <li>
-        <button routerLink="/profile"
+        <button
+          appRedFocus
+          routerLink="/profile"
                 class="btn btn-sm rounded-full btn-outline font-ribeye text-[#ff6666] border-[#ff6666] hover:bg-[#ff6666] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
           {{ t('filters.bar.profile') }}
         </button>
@@ -40,7 +50,9 @@
 
     @if (userStore.isAdmin()) {
       <li>
-        <button routerLink="/administration"
+        <button
+          appRedFocus
+          routerLink="/administration"
                 class="btn btn-sm rounded-full btn-outline font-ribeye text-[#96bfff] border-[#96bfff] hover:bg-[#96bfff] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
           {{ t('filters.bar.admin') }}
         </button>

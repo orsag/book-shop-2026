@@ -7,6 +7,7 @@
     <div class="grid grid-cols-3 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between gap-y-10 gap-x-2 md:gap-x-4 items-start text-center mb-12">
       @for (item of footerItems; track item.translationKey) {
         <button
+          appRedFocus
           type="button"
           (click)="openWipModal(item)"
           class="flex flex-col items-center gap-2 md:gap-4 cursor-pointer group w-full text-center">
@@ -36,31 +37,31 @@
 
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.about_us.about_us') }}:</span>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.about_bookshop') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.careers_at_bookshop') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_inc') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_kitchen') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.about_us.about_bookshop') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.about_us.careers_at_bookshop') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_inc') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.about_us.bookshop_kitchen') }}</a>
       </div>
 
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.services.services') }}:</span>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.affiliate_program') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.publisher_author_guidelines') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.bulk_order_discounts') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.mobile_apps') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.membership') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.services.bookfairs') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.affiliate_program') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.publisher_author_guidelines') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.bulk_order_discounts') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.mobile_apps') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.membership') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.services.bookfairs') }}</a>
       </div>
 
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span class="font-bold text-xs uppercase tracking-wider text-base-content mr-1">{{ t('footer.quick_help.quick_help') }}:</span>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.help_center') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.shipping_returns') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.store_pickup') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.order_status') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.product_recalls') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.corrections_updates') }}</a>
-        <a routerLink="wip" class="hover:underline hover:text-primary">{{ t('footer.quick_help.gift_cards') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.help_center') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.shipping_returns') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.store_pickup') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.order_status') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.product_recalls') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.corrections_updates') }}</a>
+        <a routerLink="wip" appRedFocus class="hover:underline hover:text-primary">{{ t('footer.quick_help.gift_cards') }}</a>
       </div>
 
       <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -71,7 +72,12 @@
   </div>
 </footer>
 
-<dialog #wipModal class="modal modal-bottom sm:modal-middle">
+<dialog
+  #wipModal
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  class="modal modal-bottom sm:modal-middle"
+>
   <div class="modal-box" *transloco="let t">
     @if (selectedItem(); as activeItem) {
       <div class="flex items-center justify-between gap-4 border-b border-base-200 pb-4 mb-4">
@@ -92,7 +98,7 @@
     </p>
     <div class="modal-action">
       <form method="dialog">
-        <button class="btn btn-sm btn-ghost rounded-full">Zatvoriť</button>
+        <button appRedFocus class="btn btn-sm btn-ghost rounded-full">Zatvoriť</button>
       </form>
     </div>
   </div>

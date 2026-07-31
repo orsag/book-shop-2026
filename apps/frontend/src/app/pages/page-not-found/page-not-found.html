@@ -12,11 +12,11 @@
     </p>
 
     <div class="mt-8 flex items-center justify-center gap-x-6">
-      <a routerLink="/" class="btn btn-primary shadow-sm">
+      <a appRedFocus routerLink="/" class="btn btn-primary shadow-sm">
         {{ t('administration.back_home') }}
       </a>
 
-      <a href="javascript:void(0)"
+      <a appRedFocus href="javascript:void(0)"
          (click)="$event.preventDefault()"
          class="btn btn-outline tooltip"
          data-tip="Work in progress">
@@ -30,6 +30,7 @@
   <!-- I gave it max-w-5xl (1024px) so it gets big, but doesn't look insane on 4k ultra-wide monitors -->
   <div class="mt-12 w-full flex items-center justify-center">
     <img
+      tabindex="-1"
       src="images/pepe.jpg"
       width="600"
       height="250"

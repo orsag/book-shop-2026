@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center gap-6 mt-16 pb-12">
+<div class="flex flex-col sm:flex-row items-center gap-6 mt-2 pb-12">
 
   @if (store.isLoading()) {
     <div class="flex flex-col items-center gap-3 animate-pulse">
@@ -9,6 +9,7 @@
 
     @if (store.hasMorePage()) {
       <button
+        appRedFocus
         data-testid="load-more"
         (click)="store.loadMore()"
         class="group btn btn-primary btn-wide rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
@@ -25,16 +26,22 @@
 
     <div class="flex items-center gap-2 p-1.5 bg-base-200/50 backdrop-blur-md rounded-full border border-base-300 shadow-xl">
 
-      <button (click)="store.setPage(1)"
-              [disabled]="store.filters().page <= 1"
-              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
-              title="First Page">
+      <button
+        appRedFocus
+        title="First Page"
+        (click)="store.setPage(1)"
+        [disabled]="store.filters().page <= 1"
+        class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+      >
         <svg lucideChevronsLeft size="18"></svg>
       </button>
 
-      <button (click)="store.setPage(store.filters().page - 1)"
-              [disabled]="store.filters().page <= 1"
-              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all">
+      <button
+        appRedFocus
+        (click)="store.setPage(store.filters().page - 1)"
+        [disabled]="store.filters().page <= 1"
+        class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+      >
         <svg lucideChevronLeft size="18"></svg>
       </button>
 
@@ -47,16 +54,22 @@
         </div>
       </div>
 
-      <button (click)="store.setPage(store.filters().page + 1)"
-              [disabled]="!store.hasMorePage()"
-              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all">
+      <button
+        appRedFocus
+        (click)="store.setPage(store.filters().page + 1)"
+        [disabled]="!store.hasMorePage()"
+        class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+      >
         <svg lucideChevronRight size="18"></svg>
       </button>
 
-      <button (click)="store.setPage(store.totalPages())"
-              [disabled]="!store.hasMorePage()"
-              class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
-              title="Last Page">
+      <button
+        appRedFocus
+        (click)="store.setPage(store.totalPages())"
+        [disabled]="!store.hasMorePage()"
+        class="btn btn-circle btn-ghost btn-sm disabled:opacity-20 hover:scale-110 active:scale-90 transition-all"
+        title="Last Page"
+      >
         <svg lucideChevronsRight size="18"></svg>
       </button>
     </div>

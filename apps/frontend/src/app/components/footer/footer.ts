@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { FOOTER_ITEMS } from '@store/libs';
 import { loremIpsum } from 'lorem-ipsum';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 interface FooterItem {
   translationKey: string;
@@ -14,7 +16,13 @@ interface FooterItem {
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, TranslocoDirective, NgOptimizedImage],
+  imports: [
+    RouterLink,
+    TranslocoDirective,
+    NgOptimizedImage,
+    CdkTrapFocus,
+    RedFocusDirective,
+  ],
   templateUrl: './footer.html',
   styleUrl: './footer.css',
 })
@@ -23,7 +31,7 @@ export class Footer {
   selectedItem = signal<FooterItem | null>(null);
   currentYear: number = new Date().getFullYear();
   footerItems = FOOTER_ITEMS;
-  dummyText: string = "";
+  dummyText: string = '';
 
   generateDummyText() {
     return loremIpsum({

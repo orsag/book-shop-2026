@@ -3,10 +3,11 @@ import { AppStore, UserStore } from '@store';
 import { BookFilters } from '../../../types';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-filter-bar',
-  imports: [TranslocoDirective, RouterLink],
+  imports: [TranslocoDirective, RouterLink, RedFocusDirective],
   templateUrl: './filter-bar.html',
   styleUrl: './filter-bar.css',
 })

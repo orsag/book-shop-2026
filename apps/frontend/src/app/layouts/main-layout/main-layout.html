@@ -14,15 +14,23 @@
     }
 
     <div class="flex flex-col md:flex-row flex-grow relative">
-
-      <aside
-        class="border-base-300 border-r bg-base-100/60 backdrop-blur-md sticky top-0 shrink-0 z-30 transition-all duration-500 ease-in-out p-6 flex flex-col gap-4 h-[calc(100vh-64px)]"
-        [ngClass]="showFilter()
-        ? 'w-full md:w-72 h-[calc(100vh-64px)] p-6 border-r bg-base-100/60 backdrop-blur-md'
-        : 'w-0 h-0 md:h-[calc(100vh-64px)] p-0 opacity-0 pointer-events-none bg-base-100/0'"
-      >
-        <app-filter [isCollapsed]="!showFilter()"></app-filter>
-      </aside>
+      @if (store.isMobile()) {
+        <aside
+          class="absolute inset-0 z-30 bg-base-100/95 backdrop-blur-md flex flex-col gap-4 h-[calc(100vh-64px)] overflow-y-auto transition-all duration-500 ease-in-out
+             {{ showFilter()
+                ? 'p-6 opacity-100 translate-y-0 pointer-events-auto'
+                : 'p-0 opacity-0 -translate-y-4 pointer-events-none overflow-hidden' }}"
+        >
+          <app-filter [isCollapsed]="!showFilter()"></app-filter>
+        </aside>
+      } @else {
+        <aside
+          class="border-base-300 bg-base-100/60 backdrop-blur-md sticky top-0 shrink-0 z-30 transition-all duration-500 ease-in-out flex flex-col h-[calc(100vh-64px)]
+             {{ showFilter() ? 'w-72 p-6 border-r opacity-100' : 'w-0 p-0 border-r-0 opacity-0 pointer-events-none overflow-hidden' }}"
+        >
+          <app-filter [isCollapsed]="!showFilter()"></app-filter>
+        </aside>
+      }
 
       <main class="flex-grow p-4 md:p-6 min-w-0">
         <router-outlet></router-outlet>

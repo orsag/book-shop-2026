@@ -11,9 +11,9 @@ import { Directive } from '@angular/core';
     '[class.hover:shadow-none]': 'true',
 
     // Focus Neutralization (This is what's hitting your <div>)
-    '[class.focus:bg-transparent]': 'true',
-    '[class.focus:border-transparent]': 'true',
-    '[class.focus:outline-none]': 'true',
+    // '[class.focus:bg-transparent]': 'true',
+    // '[class.focus:border-transparent]': 'true',
+    // '[class.focus:outline-none]': 'true',
 
     // DaisyUI Dropdown Specifics
     // Prevents the background from changing when the dropdown is active

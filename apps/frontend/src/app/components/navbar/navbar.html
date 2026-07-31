@@ -3,7 +3,7 @@
 <div class="navbar shadow-2xl h-25 relative bg-neutral text-white max-w-full">
 
   <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden"
-       [style.backgroundImage]="'url(' + currentNavbarBackground() + ')'"
+       [style.background-image]="`url(${currentNavbarBackground()})`"
        style="background-position: bottom; background-repeat: no-repeat; background-size: cover;">
   </div>
 
@@ -27,9 +27,11 @@
              alt="Bookshop logo">
       </button>
 
-      <a routerLink="/"
-         class="ribeye-regular text-md inline-block md:text-3xl font-bold transition-all duration-300"
-         [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-[#143B22]'"
+      <a
+        appRedFocus
+        routerLink="/"
+        class="ribeye-regular text-md inline-block md:text-3xl font-bold transition-all duration-300"
+        [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-[#143B22]'"
       >
         Golden Bee Bookshop
       </a>
@@ -62,7 +64,9 @@
       </div>
     }
 
-    <button (click)="toggleLang()" appNoHoverButton
+    <button (click)="toggleLang()"
+            appRedFocus
+            appNoHoverButton
             data-testid="language-btn"
             [appTooltip]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'"
             class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold group"
@@ -79,6 +83,7 @@
       @if (!isLoggedIn()) {
         <button
           (click)="handleAuthAction()"
+          appRedFocus
           appNoHoverButton
           class="btn btn-ghost btn-sm btn-square"
           appTooltip="Login"
@@ -89,6 +94,7 @@
       } @else {
         <button
           (click)="handleLogout()"
+          appRedFocus
           appNoHoverButton
           appTooltip="Logout"
           class="btn btn-ghost btn-sm btn-square"
@@ -100,10 +106,12 @@
     </div>
 
     <button
+      appRedFocus
       appNoHoverButton
       [disabled]="cartStore.itemCount() === 0"
       [class.opacity-50]="cartStore.itemCount() === 0"
       [routerLink]="cartStore.itemCount() > 0 ? '/shopping' : null"
+      [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
       appTooltip="Shopping cart"
       class="btn btn-ghost btn-sm btn-square relative group text-neutral-800"
       aria-label="View Shopping Cart">
@@ -127,6 +135,8 @@
       <div class="relative group z-[9999]">
         <button
           type="button"
+          appRedFocus
+          appNoHoverButton
           data-testid="profile-btn"
           appTooltip="Profile"
           (click)="showProfileModal.set(!showProfileModal())"
@@ -154,8 +164,8 @@
 
               @if (isAdmin()) {
                 <span title="admin" class="badge badge-error badge-sm font-bold uppercase tracking-wider text-[10px] text-white mt-2">
-              Administrator
-            </span>
+                  Administrator
+                </span>
               }
             </div>
 
@@ -181,26 +191,26 @@
             <ul class="menu menu-sm px-0 pt-2 gap-1">
               @if (isAdmin()) {
                 <li>
-                  <a routerLink="administration" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                  <a appRedFocus routerLink="administration" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
                     <svg lucideLayoutDashboard size="16" class="opacity-70"></svg>
                     Administration
                   </a>
                 </li>
               }
               <li>
-                <a routerLink="/profile" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                <a appRedFocus routerLink="/profile" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
                   <svg lucideUser size="16" class="opacity-70"></svg>
                   Edit Profile
                 </a>
               </li>
               <li>
-                <a routerLink="/features" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
+                <a appRedFocus routerLink="/features" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
                   <svg lucideSparkles size="16" class="opacity-70"></svg>
                   Features
                 </a>
               </li>
               <li class="mt-1 border-t border-base-100 pt-1">
-                <a (click)="logoutMenuItem($event); showProfileModal.set(false)" role="button" tabindex="0"
+                <a appRedFocus (click)="logoutMenuItem($event); showProfileModal.set(false)" role="button" tabindex="0"
                    class="rounded-lg text-error hover:bg-error/10 font-semibold">
                   <svg lucideLogOut size="16"></svg>
                   Logout

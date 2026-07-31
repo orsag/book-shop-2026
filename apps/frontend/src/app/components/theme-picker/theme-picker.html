@@ -1,16 +1,28 @@
-<div class="block" [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'">
-  <label class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors">
-    <!-- this hidden checkbox controls the state -->
-    <input type="checkbox" class="theme-controller" [checked]="isChecked()"
-           (change)="toggleTheme()" />
+<!--<button appNoHoverButton class="block" [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'">-->
+<!--  <label class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors">-->
+<!--    &lt;!&ndash; this hidden checkbox controls the state &ndash;&gt;-->
+<!--    <input type="checkbox" class="theme-controller" [checked]="isChecked()"-->
+<!--           (change)="toggleTheme()" />-->
 
+<!--    &lt;!&ndash; sun icon &ndash;&gt;-->
+<!--    <svg class="swap-on fill-current text-yellow-500" lucideSun />-->
+
+<!--    &lt;!&ndash; moon icon &ndash;&gt;-->
+<!--    <svg class="swap-off fill-current text-neutral-800" lucideMoon />-->
+<!--  </label>-->
+<!--</button>-->
+
+<button
+  appNoHoverButton
+  appRedFocus class="block cursor-pointer" [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'" (click)="toggleTheme()">
+  <div class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors" [class.swap-active]="isChecked()">
     <!-- sun icon -->
     <svg class="swap-on fill-current text-yellow-500" lucideSun />
 
     <!-- moon icon -->
     <svg class="swap-off fill-current text-neutral-800" lucideMoon />
-  </label>
-</div>
+  </div>
+</button>
 
 <!--<div title="Change Theme" class="dropdown dropdown-end block z-50">-->
 <!--  <div tabindex="0"-->

@@ -20,6 +20,7 @@
       </p>
     </div>
   } @else {
+    <app-pagination />
     <!-- Render Grid or List -->
     @switch (store.viewLayout()) {
       @case (VIEW_LAYOUTS[0]) {
@@ -54,8 +55,6 @@
         </div>
       }
     }
-
-    <app-pagination />
   }
 </main>
 
