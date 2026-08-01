@@ -78,7 +78,7 @@ export const UserStore = signalStore(
                     patchState(store, { isLoading: false });
                   }
                 },
-                error: (error: any) => {
+                error: () => {
                   errorService.handleError(ErrorCodes.REGISTER);
                   patchState(store, { isLoading: false });
                   return EMPTY;

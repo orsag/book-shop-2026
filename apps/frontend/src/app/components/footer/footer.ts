@@ -31,7 +31,7 @@ export class Footer {
   selectedItem = signal<FooterItem | null>(null);
   currentYear: number = new Date().getFullYear();
   footerItems = FOOTER_ITEMS;
-  dummyText: string = '';
+  dummyText = '';
 
   generateDummyText() {
     return loremIpsum({

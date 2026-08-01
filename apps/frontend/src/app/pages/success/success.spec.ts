@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Success } from './success';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, ParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { OrderService } from '@service';
 
@@ -15,8 +15,8 @@ const MOCK_CREATED_ORDER = {
 
 describe('Success', () => {
   let component: Success;
-  let mockOrderService: any;
-  let mockSnapshotRoute: any;
+  let mockOrderService: Partial<OrderService>;
+  let mockSnapshotRoute: { snapshot: { paramMap: ParamMap } };
   let fixture: ComponentFixture<Success>;
 
   beforeEach(async () => {

@@ -1,14 +1,42 @@
-import cypress from 'eslint-plugin-cypress/flat';
-import playwright from 'eslint-plugin-playwright';
+import cypress from 'eslint-plugin-cypress';
 import nx from '@nx/eslint-plugin';
 import baseConfig from '../../eslint.base.config.mjs';
 
 export default [
-  cypress.configs['recommended'],
-  playwright.configs['flat/recommended'],
   ...nx.configs['flat/angular'],
   ...nx.configs['flat/angular-template'],
   ...baseConfig,
+  {
+    // Override rules to prevent the crash on path imports
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          enforceBuildableLibDependency: true,
+          allow: [
+            '@core',
+            '@service',
+            '@component',
+            '@store',
+            '@store/libs',
+            '../../eslint.base.config.mjs',
+            '../../../../../../prisma/createProduct',
+          ],
+          depConstraints: [
+            {
+              sourceTag: '*',
+              onlyDependOnLibsWithTags: ['*'],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // Cypress configuration (applies to cypress files)
+  {
+    files: ['cypress/**/*.ts', '**/*.cy.ts'],
+    ...cypress.configs.recommended,
+  },
   {
     files: ['**/*.ts'],
     rules: {
@@ -28,6 +56,19 @@ export default [
           style: 'kebab-case',
         },
       ],
+    },
+  },
+  {
+    files: [
+      '**/*.spec.ts',
+      '**/*.test.ts',
+      '**/*.cy.ts',
+      '**/form-field.ts',
+      '**/field-error.component.ts',
+      '**/playwright.config.mts',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {

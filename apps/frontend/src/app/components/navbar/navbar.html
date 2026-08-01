@@ -248,6 +248,7 @@
                   appRedFocus
                   role="menuitem"
                   (click)="logoutMenuItem($event);showProfileModal.set(false)"
+                  (keydown.enter)="logoutMenuItem($event);showProfileModal.set(false)"
                   tabindex="0"
                   class="rounded-lg text-error hover:bg-error/10 font-semibold"
                 >

@@ -10,11 +10,11 @@ import { CommonModule } from '@angular/common';
     @if (
       field() && field()!.invalid() && (field()!.touched() || field()!.dirty())
     ) {
-      <label class="label pt-1 pb-0">
+      <div class="label pt-1 pb-0">
         <span class="label-text-alt text-error font-medium">
           {{ field()!.errors()?.[0]?.message || defaultMessage() }}
         </span>
-      </label>
+      </div>
     }
   `,
 })

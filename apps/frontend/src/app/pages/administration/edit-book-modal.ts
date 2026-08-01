@@ -22,12 +22,11 @@ import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '@component';
-import { applyCommonProductRules } from './form-rules.shared';
+import {
+  applyCommonProductRules,
+  UpdateProductDtoFrontend,
+} from './form-rules.shared';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-
-type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
-  bookDetails: NonNullable<UpdateProductDto['bookDetails']>;
-};
 
 @Component({
   selector: 'app-edit-book-modal',
@@ -189,7 +188,7 @@ type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
 })
 export class EditBookModalComponent {
   closeModal = output<void>();
-  commonSave = output<{ id: string | undefined; dataToSave: any }>();
+  commonSave = output<{ id: string | undefined; dataToSave: Partial<Product> }>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
 

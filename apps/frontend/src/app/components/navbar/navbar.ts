@@ -133,8 +133,8 @@ export class Navbar {
     this.translocoService.setActiveLang(newLang);
   }
 
-  logoutMenuItem(event: PointerEvent): void {
-    this.closeDropdown(event);
+  logoutMenuItem(event: Event): void {
+    this.closeDropdown(event as PointerEvent);
     this.handleLogout();
   }
 

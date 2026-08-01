@@ -10,7 +10,7 @@ describe('ThemePicker', () => {
   let fixture: ComponentFixture<ThemePicker>;
 
   // Create a single shared signal reference
-  let themeSignal = signal('light');
+  const themeSignal = signal('light');
 
   beforeEach(async () => {
     themeSignal.set('light');

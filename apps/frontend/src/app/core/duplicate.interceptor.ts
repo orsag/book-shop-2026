@@ -1,12 +1,13 @@
 import {
   HttpInterceptorFn,
   HttpRequest,
-  HttpHandlerFn,
+  HttpHandlerFn, HttpEvent,
 } from '@angular/common/http';
 import { shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 // Mapa pre ukladanie aktívnych požiadaviek
-const activeRequests = new Map<string, any>();
+const activeRequests = new Map<string, Observable<HttpEvent<unknown>>>();
 
 export const duplicateRequestInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
@@ -21,7 +22,7 @@ export const duplicateRequestInterceptor: HttpInterceptorFn = (
 
   if (activeRequests.has(cacheKey)) {
     // Ak už rovnaká požiadavka beží, vrátime jej existujúci prúd
-    return activeRequests.get(cacheKey);
+    return activeRequests.get(cacheKey) as Observable<HttpEvent<unknown>>;
   }
 
   // Ak nebeží, spustíme ju a pridáme shareReplay

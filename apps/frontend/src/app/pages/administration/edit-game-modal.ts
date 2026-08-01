@@ -10,22 +10,15 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { form, min, max } from '@angular/forms/signals';
-import {
-  Product,
-  UpdateProductDto,
-  EMPTY_GAME,
-  GameDetails,
-  CATEGORIES,
-} from '@store/libs';
+import { Product, EMPTY_GAME, GameDetails, CATEGORIES } from '@store/libs';
 import { GAME_CATEGORIES } from '@store/shared-models';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '@component';
 import { AppStore } from '@store';
-import { applyCommonProductRules } from './form-rules.shared';
-
-type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
-  gameDetails: NonNullable<UpdateProductDto['gameDetails']>;
-};
+import {
+  applyCommonProductRules,
+  UpdateProductGameDtoFrontend,
+} from './form-rules.shared';
 
 @Component({
   selector: 'app-edit-game-modal',
@@ -171,8 +164,8 @@ export class EditGameModalComponent {
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
 
-  editModel = signal<UpdateProductDtoFrontend>({
-    ...(EMPTY_GAME as UpdateProductDtoFrontend),
+  editModel = signal<UpdateProductGameDtoFrontend>({
+    ...(EMPTY_GAME as UpdateProductGameDtoFrontend),
   });
   readonly idBook = computed(() => this.selectedBook()?.id);
 

@@ -53,7 +53,7 @@ export class Dashboard implements OnInit, AfterViewInit {
 
   animatedGridExpanded = signal(false);
   isTransitioning = signal(false);
-  private debounceTimeout: any;
+  private debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect(() => {
@@ -61,6 +61,7 @@ export class Dashboard implements OnInit, AfterViewInit {
 
       if (this.debounceTimeout) {
         clearTimeout(this.debounceTimeout);
+        this.debounceTimeout = null;
       }
 
       if (filterOpened) {

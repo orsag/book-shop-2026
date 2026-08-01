@@ -6,7 +6,7 @@ module.exports = [
     logLevel: 'debug',
     changeOrigin: true,
     // Disable response buffering so streaming/Range requests work
-    onProxyRes(proxyRes, req) {
+    onProxyRes(proxyRes) {
       proxyRes.headers['X-Accel-Buffering'] = 'no';
     },
   },

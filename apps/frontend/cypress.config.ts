@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress';
 import { fileURLToPath } from 'url';
 // 'nx run frontend:serve-static',
 
-// @ts-ignore
+// @ts-expect-error we need this import here
 const __filename: string = fileURLToPath(import.meta.url);
 
 const proxyCommand = 'node proxy-server.js';

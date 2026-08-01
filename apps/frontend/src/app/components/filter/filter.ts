@@ -3,6 +3,7 @@ import {
   effect,
   Input,
   linkedSignal,
+  OnChanges,
   signal,
   untracked,
 } from '@angular/core';
@@ -47,7 +48,7 @@ import {
   templateUrl: './filter.html',
   styleUrl: './filter.css',
 })
-export class Filter {
+export class Filter implements OnChanges {
   store = inject(AppStore);
   router = inject(Router);
   config = inject(ConfigurationService);
@@ -57,7 +58,7 @@ export class Filter {
   showHistory = signal(false);
   @Input() isCollapsed = false;
   activeIndex = signal(-1); // For keyboard navigation
-  private openTimeout: any;
+  private openTimeout: ReturnType<typeof setTimeout> | null = null;
 
   isContentVisible = signal(false);
   // Initialize from store instead of hardcoded defaults
@@ -99,6 +100,7 @@ export class Filter {
       // Clear any pending opening timeouts to prevent race conditions
       if (this.openTimeout) {
         clearTimeout(this.openTimeout);
+        this.openTimeout = null;
       }
 
       if (collapsed) {

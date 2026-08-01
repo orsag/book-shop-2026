@@ -41,7 +41,11 @@ describe('Dashboard Layout & Components', () => {
       .find('[data-testid="add-to-cart"]')
       .should('be.visible')
       .and('have.text', ADD_LABEL)
-      .click()
+      .click();
+
+    cy.get('app-book-list-item')
+      .first()
+      .find('[data-testid="add-to-cart"]')
       .should('have.text', REMOVE_LABEL);
   });
 });

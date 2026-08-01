@@ -105,7 +105,7 @@ export class VideoPlayer {
     // Optional: telemetry or debug logs
   }
 
-  onError(event: any) {
+  onError(event: Event) {
     console.error('Video error:', event);
   }
 }

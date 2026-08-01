@@ -14,15 +14,15 @@ describe('Filter Component Tests', () => {
 
       if (!isFilterVisible) {
         cy.get('[data-testid="logo-btn"]').click();
-        cy.wait(500);
-        cy.get('[data-testid="filter-component"]').should('be.visible');
+        cy.get('[data-testid="filter-component"]').should('be.visible', {
+          timeout: 1000,
+        });
       }
     });
   });
 
   it('should toggle layout and display grid main-layout when clicking layout button', () => {
-    const button = cy.get('[data-testid="layout-btn"]');
-    button.should('be.visible');
+    cy.get('[data-testid="layout-btn"]').should('be.visible');
 
     // 1. Switch to Grid
     cy.get('[data-testid="layout-btn"]').click();

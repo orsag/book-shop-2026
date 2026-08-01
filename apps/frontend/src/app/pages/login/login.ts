@@ -5,6 +5,7 @@ import {
   effect,
   ViewChild,
   ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -28,7 +29,7 @@ import { UserStore } from '@store';
   ],
   templateUrl: './login.html',
 })
-export class LoginPage {
+export class LoginPage implements AfterViewInit {
   @ViewChild('firstInput') firstInput?: ElementRef<HTMLInputElement>;
   @ViewChild('emailInput') emailInput?: ElementRef<HTMLInputElement>;
 

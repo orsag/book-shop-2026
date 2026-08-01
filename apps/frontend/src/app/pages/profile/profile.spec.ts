@@ -12,11 +12,11 @@ import { provideRouter } from '@angular/router';
 describe('Profile Component (Vitest)', () => {
   let component: Profile;
   let fixture: ComponentFixture<Profile>;
+  let mockOrderService: any;
+  let mockToastService: any;
   let mockAppStore: any;
   let mockUserStore: any;
   let mockCartStore: any;
-  let mockOrderService: any;
-  let mockToastService: any;
 
   beforeEach(async () => {
     mockUserStore = {

@@ -5,10 +5,22 @@ import {
   min,
   minLength,
   required,
+  SchemaPathTree,
 } from '@angular/forms/signals';
+import { UpdateProductDto } from '@store/libs';
+
+export type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
+  bookDetails: NonNullable<UpdateProductDto['bookDetails']>;
+};
+
+export type UpdateProductGameDtoFrontend = Omit<UpdateProductDto, 'gameDetails'> & {
+  gameDetails: NonNullable<UpdateProductDto['gameDetails']>;
+};
 
 export function applyCommonProductRules(
-  schemaPath: any
+  schemaPath: SchemaPathTree<
+    UpdateProductDtoFrontend | UpdateProductGameDtoFrontend
+  >,
 ) {
   required(schemaPath.name, {
     message: 'Title is required',

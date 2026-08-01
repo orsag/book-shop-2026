@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.6.5",
+  "version": "2.6.6",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -9,7 +9,7 @@
     "seed": "npx tsx prisma/seed.ts",
     "pipe": "clear && gitlab-ci-local",
     "kill": "clear && killall -9 node",
-    "lint": "npx nx run frontend:lint --skip-nx-cache 2>&1 | tail -20",
+    "lint": "npx nx run frontend:lint --skip-nx-cache 2>&1",
     "install:browsers": "npx playwright install chromium",
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",
     "build-fe": "npx nx build frontend --skip-nx-cache 2>&1 | tail -10",
@@ -63,7 +63,7 @@
     "hono-rate-limiter": "^0.5.3",
     "jsonwebtoken": "^9.0.3",
     "lorem-ipsum": "^3.0.0",
-    "lucide": "^1.25.0",
+    "lucide": "^1.28.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pino": "^10.3.1",
@@ -124,9 +124,9 @@
     "@typescript-eslint/utils": "^8.40.0",
     "@vitest/coverage-v8": "4.1.9",
     "@vitest/ui": "4.1.9",
-    "angular-eslint": "^22.0.0",
+    "angular-eslint": "^22.1.0",
     "cypress": "^15.17.0",
-    "daisyui": "5.7.4",
+    "daisyui": "5.7.9",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
