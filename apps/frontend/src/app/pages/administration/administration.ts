@@ -8,7 +8,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFrown, LucidePlus } from '@lucide/angular';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-administration',

@@ -10,3 +10,5 @@ export * from './tooltip.directive';
 export * from './totalPrice.pipe';
 export * from './transloco-loader';
 export * from './transloco-testing.module';
+export * from './red-focus.directive';
+export * from './blue-focus.directive';

@@ -5,7 +5,6 @@ import {
   OnDestroy,
   inject,
   Renderer2,
-  HostListener,
 } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 
@@ -36,32 +35,6 @@ export class RedFocusDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.focusMonitor.stopMonitoring(this.elementRef);
-  }
-
-  // Intercept Enter or Space key presses when focused via keyboard
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault(); // Prevent default page scroll on Space
-
-      const el = this.elementRef.nativeElement;
-
-      // If it's a collapse title, find and check its associated radio input
-      const collapseItem = el.closest('.collapse');
-      if (collapseItem) {
-        const radioInput = collapseItem.querySelector(
-          'input[type="radio"]',
-        ) as HTMLInputElement;
-        if (radioInput) {
-          radioInput.checked = true;
-          // Dispatch a change event so Angular/DaisyUI picks up the state change
-          radioInput.dispatchEvent(new Event('change'));
-        }
-      } else {
-        // Fallback for standard buttons/links
-        el.click();
-      }
-    }
   }
 
   private removeStyles() {

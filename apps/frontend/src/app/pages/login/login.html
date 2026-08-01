@@ -1,12 +1,16 @@
 <div class="min-h-screen flex items-center justify-center">
   <app-toast />
 
-  <div class="card w-full rounded-[40px] max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="form-title"
+    class="card w-full rounded-[40px] max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
     <div class="card-body">
 
       <div class="flex justify-center mb-4">
         <div class="bg-primary/20 p-4 rounded-full">
-          <img src="/images/stack-of-books.png" width="80" height="80" alt="Stack of books" />
+          <img src="/images/stack-of-books.png" width="80" height="80" alt="Stack of books" aria-hidden="true" />
         </div>
       </div>
 
@@ -28,15 +32,17 @@
             </label>
 
             <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-              <svg lucideMail size="20"></svg>
+              <svg lucideMail size="20" aria-hidden="true"></svg>
               <input
                 #emailInput
+                appBlueFocus
                 type="email"
                 class="grow"
                 placeholder="email@example.com"
                 [(ngModel)]="email"
                 name="email"
                 required
+                aria-required="true"
               />
             </label>
           </div>
@@ -48,15 +54,17 @@
           </label>
 
           <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-            <svg lucideCircleUserRound size="20"></svg>
+            <svg lucideCircleUserRound size="20" aria-hidden="true"></svg>
             <input
               #firstInput
+              appBlueFocus
               type="text"
               class="grow"
               placeholder="User name"
               [(ngModel)]="username"
               name="username"
               required
+              aria-required="true"
               minLength="3"
               maxLength="50"
             />
@@ -69,14 +77,16 @@
           </label>
 
           <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-            <svg lucidePenTool size="20"></svg>
+            <svg lucidePenTool size="20" aria-hidden="true"></svg>
             <input
+              appBlueFocus
               type="password"
               class="grow"
               placeholder="Password"
               [(ngModel)]="password"
               name="password"
               required
+              aria-required="true"
               minLength="1"
               maxLength="20"
             />
@@ -84,7 +94,7 @@
         </div>
 
         <!-- 4. Form Action Toggles Between Register or Login Button -->
-        <div class="card-actions mt-8">
+        <div class="card-actions mt-8" aria-live="polite">
           @if (registerMode()) {
             <button
               appRedFocus
@@ -92,10 +102,11 @@
               name="register"
               title="submit-register-btn"
               class="btn btn-primary btn-block text-white"
+              [attr.aria-busy]="userStore.isLoading()"
               [disabled]="!username() || !password() || !email() || userStore.isLoading()"
             >
               @if (userStore.isLoading()) {
-                <span class="loading loading-spinner"></span>
+                <span class="loading loading-spinner" aria-hidden="true"></span>
               }
               Register
             </button>
@@ -106,10 +117,11 @@
               name="login"
               title="submit-login-btn"
               class="btn btn-primary btn-block text-white"
+              [attr.aria-busy]="userStore.isLoading()"
               [disabled]="!username() || !password() || userStore.isLoading()"
             >
               @if (userStore.isLoading()) {
-                <span class="loading loading-spinner"></span>
+                <span class="loading loading-spinner" aria-hidden="true"></span>
               }
               Login
             </button>
@@ -123,6 +135,7 @@
           appRedFocus
           type="button"
           class="link link-hover link-primary font-medium"
+          [attr.aria-label]="registerMode() ? 'Switch to login form' : 'Switch to registration form'"
           (click)="handleRegisterMode()"
         >
           {{ registerMode() ? 'Already have an account? Login' : "Don't have an account? Register" }}

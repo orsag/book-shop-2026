@@ -14,7 +14,11 @@ import { AppStore } from '@store';
 import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { Router } from '@angular/router';
-import { NoFocusJumpDirective } from '@core';
+import {
+  BlueFocusDirective,
+  NoFocusJumpDirective,
+  RedFocusDirective,
+} from '@core';
 import {
   LucideArrowDownNarrowWide,
   LucideArrowUpWideNarrow,
@@ -23,7 +27,6 @@ import {
   LucidePercent,
   LucideSearch,
 } from '@lucide/angular';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-filter',
@@ -39,6 +42,7 @@ import { RedFocusDirective } from '../../core/red-focus.directive';
     LucideArrowUpWideNarrow,
     LucidePercent,
     RedFocusDirective,
+    BlueFocusDirective,
   ],
   templateUrl: './filter.html',
   styleUrl: './filter.css',

@@ -6,7 +6,7 @@ import { CartStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '@service';
 import { OverlayComponent } from '../common';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-book-list-item',

@@ -15,9 +15,13 @@ import {
 } from '@lucide/angular';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { UXService } from '@service';
-import { ErrorCodes, ErrorService, SinglePricePipe } from '@core';
+import {
+  ErrorCodes,
+  ErrorService,
+  SinglePricePipe,
+  RedFocusDirective,
+} from '@core';
 import { OverlayComponent } from '@component';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-detail',

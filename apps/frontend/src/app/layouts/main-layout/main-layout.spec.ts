@@ -22,6 +22,7 @@ describe('MainLayout', () => {
 
   beforeEach(async () => {
     mockAppStore = {
+      isMobile: signal(false),
       token: signal('mockToken'),
       isLoading: signal(false),
     };

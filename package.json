@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -9,6 +9,7 @@
     "seed": "npx tsx prisma/seed.ts",
     "pipe": "clear && gitlab-ci-local",
     "kill": "clear && killall -9 node",
+    "lint": "npx nx run frontend:lint --skip-nx-cache 2>&1 | tail -20",
     "install:browsers": "npx playwright install chromium",
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",
     "build-fe": "npx nx build frontend --skip-nx-cache 2>&1 | tail -10",

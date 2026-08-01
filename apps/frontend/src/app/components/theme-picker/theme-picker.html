@@ -14,7 +14,12 @@
 
 <button
   appNoHoverButton
-  appRedFocus class="block cursor-pointer" [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'" (click)="toggleTheme()">
+  appRedFocus
+  role="button"
+  class="block cursor-pointer"
+  [appTooltip]="isChecked() ? 'Light theme' : 'Dark theme'"
+  (click)="toggleTheme()"
+>
   <div class="swap swap-rotate text-neutral-800 hover:text-neutral-600 transition-colors" [class.swap-active]="isChecked()">
     <!-- sun icon -->
     <svg class="swap-on fill-current text-yellow-500" lucideSun />

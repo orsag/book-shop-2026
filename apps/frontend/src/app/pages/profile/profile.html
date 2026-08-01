@@ -108,36 +108,36 @@
 
         <div class="form-control w-full">
           <label for="displayname" class="label"><span class="label-text">Zobrazované meno</span></label>
-          <input appNoFocusJump id="displayname" type="text" [formField]="form.displayName" class="input input-bordered w-full" />
+          <input appNoFocusJump appBlueFocus id="displayname" type="text" [formField]="form.displayName" class="input input-bordered w-full" />
           <app-field-error [field]="form.displayName()"></app-field-error>
         </div>
 
         <div class="form-control w-full">
           <label for="email" class="label"><span class="label-text">Email</span></label>
-          <input appNoFocusJump id="email" type="email" [formField]="userForm.email" class="input input-bordered w-full" />
+          <input appNoFocusJump appBlueFocus id="email" type="email" [formField]="userForm.email" class="input input-bordered w-full" />
           <app-field-error [field]="userForm.email()"></app-field-error>
         </div>
 
         <div class="form-control w-full">
           <label for="phone" class="label"><span class="label-text">Telefón</span></label>
-          <input appNoFocusJump id="phone" type="text" [formField]="userForm.phoneNumber" class="input input-bordered w-full" />
+          <input appNoFocusJump appBlueFocus id="phone" type="text" [formField]="userForm.phoneNumber" class="input input-bordered w-full" />
           <app-field-error [field]="userForm.phoneNumber()"></app-field-error>
         </div>
 
         <div class="form-control md:col-span-2">
           <label for="user-bio" class="label"><span class="label-text font-bold">O mne</span></label>
-          <textarea appNoFocusJump id="user-bio" [formField]="form.bio" class="textarea textarea-bordered h-24 w-full" placeholder="Povedzte nám niečo o sebe..."></textarea>
+          <textarea appNoFocusJump appBlueFocus id="user-bio" [formField]="form.bio" class="textarea textarea-bordered h-24 w-full" placeholder="Povedzte nám niečo o sebe..."></textarea>
         </div>
 
         <div class="form-control">
           <label for="city" class="label"><span class="label-text">Mesto</span></label>
-          <input appNoFocusJump id="city" type="text" [formField]="form.city" class="input input-bordered w-full" />
+          <input appNoFocusJump appBlueFocus id="city" type="text" [formField]="form.city" class="input input-bordered w-full" />
           <app-field-error [field]="form.city()"></app-field-error>
         </div>
 
         <div class="form-control">
           <label for="addressLine1" class="label"><span class="label-text">Ulica</span></label>
-          <input appNoFocusJump id="addressLine1" type="text" [formField]="form.addressLine1" class="input input-bordered w-full" />
+          <input appNoFocusJump appBlueFocus id="addressLine1" type="text" [formField]="form.addressLine1" class="input input-bordered w-full" />
           <app-field-error [field]="form.addressLine1()"></app-field-error>
         </div>
 
@@ -149,12 +149,12 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="form-control md:col-span-2">
               <label for="iban" class="label text-xs uppercase">IBAN</label>
-              <input appNoFocusJump id="iban" type="text" [formField]="form.iban" class="input input-sm input-bordered font-mono w-full" placeholder="SK..." />
+              <input appNoFocusJump appBlueFocus id="iban" type="text" [formField]="form.iban" class="input input-sm input-bordered font-mono w-full" placeholder="SK..." />
               <app-field-error [field]="form.iban()"></app-field-error>
             </div>
             <div class="form-control">
               <label for="taxId" class="label text-xs">DIČ (Tax ID)</label>
-              <input appNoFocusJump id="taxId" type="text" [formField]="form.taxId" class="input input-sm input-bordered" />
+              <input appNoFocusJump appBlueFocus id="taxId" type="text" [formField]="form.taxId" class="input input-sm input-bordered" />
               <app-field-error [field]="form.taxId()"></app-field-error>
             </div>
             <div class="form-control">

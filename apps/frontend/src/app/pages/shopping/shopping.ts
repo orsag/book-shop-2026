@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, Signal } from '@angular/core';
 import { CartItem, CartStore } from '@store';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
@@ -7,9 +7,9 @@ import {
   ErrorCodes,
   ErrorService,
   SuccessCodes,
+  RedFocusDirective,
 } from '@core';
 import { LucideTrash2 } from '@lucide/angular';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-shopping',
@@ -45,5 +45,28 @@ export class Shopping implements OnInit {
         this.errorService.handleError(ErrorCodes.CHECKOUT);
       },
     });
+  }
+
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      const target = event.target as HTMLElement;
+
+      // Check if the event happened inside a collapse item specific to this component
+      const collapseItem = target.closest('.collapse');
+      if (collapseItem) {
+        event.preventDefault(); // Prevent default page scroll on Space
+
+        const radioInput = collapseItem.querySelector(
+          'input[type="radio"]',
+        ) as HTMLInputElement;
+
+        if (radioInput) {
+          radioInput.checked = true;
+          // Dispatch change event so Angular/DaisyUI picks up the state change
+          radioInput.dispatchEvent(new Event('change'));
+        }
+      }
+    }
   }
 }

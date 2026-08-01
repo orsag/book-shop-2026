@@ -1,6 +1,6 @@
 @let logo = '/images/logo.svg';
 
-<div class="navbar shadow-2xl h-25 relative bg-neutral text-white max-w-full">
+<div class="navbar shadow-2xl h-25 relative bg-neutral text-white max-w-full" aria-label="Main Navigation">
 
   <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden"
        [style.background-image]="`url(${currentNavbarBackground()})`"
@@ -15,16 +15,23 @@
 
   <div class="flex-1 gap-1 z-10">
     <div class="absolute top-2 left-4 flex gap-2">
-      <button type="button"
-              data-testid="logo-btn"
-              [appTooltip]="this.config.getFilterValue() ? 'Hide filter' : 'Open filter'"
-              class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
-              (click)="handleButtonClick(false)">
-        <img [ngSrc]="logo"
-             width="40" height="40"
-             class="object-cover logo-base"
-             [class.logo-spin]="isRotating()"
-             alt="Bookshop logo">
+      <button
+        type="button"
+        data-testid="logo-btn"
+        aria-label="Toggle filter panel"
+        [attr.aria-expanded]="this.config.getFilterValue()"
+        [appTooltip]="this.config.getFilterValue() ? 'Hide filter' : 'Open filter'"
+        class="shrink-0 cursor-pointer rounded-lg transition-all duration-300 hover:scale-110"
+        (click)="handleButtonClick(false)"
+      >
+        <img
+          [ngSrc]="logo"
+          width="40" height="40"
+          class="object-cover logo-base"
+          [class.logo-spin]="isRotating()"
+          alt="Bookshop logo"
+          aria-hidden="true"
+        >
       </button>
 
       <a
@@ -44,6 +51,7 @@
       <div class="hidden md:block relative group" *transloco="let t">
         <input
           type="text"
+          appBlueFocus
           class="input input-sm w-34 md:w-auto transition-all focus:outline-none"
           [value]="searchQuery()"
           (input)="onSearchChange($event)"
@@ -56,6 +64,7 @@
         @if (searchQuery()) {
           <button (click)="onClearSearchbar()"
                   appTooltip="Toggle theme"
+                  aria-label="Clear search query"
                   class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-ghost btn-xs btn-circle transition-transform hover:scale-125"
                   [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'">
             ✕
@@ -68,6 +77,7 @@
             appRedFocus
             appNoHoverButton
             data-testid="language-btn"
+            aria-label="Switch language"
             [appTooltip]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'"
             class="btn btn-ghost btn-sm hidden md:block gap-2 rounded-sm font-bold group"
             [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
@@ -87,6 +97,7 @@
           appNoHoverButton
           class="btn btn-ghost btn-sm btn-square"
           appTooltip="Login"
+          aria-label="Log in"
           [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
         >
           <svg lucideLogIn></svg>
@@ -97,6 +108,7 @@
           appRedFocus
           appNoHoverButton
           appTooltip="Logout"
+          aria-label="Log out"
           class="btn btn-ghost btn-sm btn-square"
           [ngClass]="currentTheme() === 'dark' ? 'text-white' : 'text-neutral-800'"
         >
@@ -139,6 +151,8 @@
           appNoHoverButton
           data-testid="profile-btn"
           appTooltip="Profile"
+          aria-haspopup="dialog"
+          [attr.aria-expanded]="showProfileModal()"
           (click)="showProfileModal.set(!showProfileModal())"
           [ngClass]="showProfileModal()
               ? 'bg-error text-white'
@@ -156,6 +170,8 @@
         @if (showProfileModal()) {
           <div
             data-testid="profile-modal"
+            role="dialog"
+            aria-label="User Profile"
             class="absolute right-0 mt-3 w-72 bg-base-100 rounded-2xl shadow-2xl border border-base-200 text-base-content p-4 animate-in fade-in slide-in-from-top-2 duration-200">
 
             <div class="flex flex-col items-center text-center pb-3 border-b border-base-200">
@@ -188,31 +204,54 @@
               }
             </div>
 
-            <ul class="menu menu-sm px-0 pt-2 gap-1">
+            <ul class="menu menu-sm px-0 pt-2 gap-1" role="menu">
               @if (isAdmin()) {
-                <li>
-                  <a appRedFocus routerLink="administration" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
-                    <svg lucideLayoutDashboard size="16" class="opacity-70"></svg>
+                <li role="none">
+                  <a
+                    appRedFocus
+                    role="menuitem"
+                    routerLink="administration"
+                    (click)="showProfileModal.set(false)"
+                    class="rounded-lg font-medium"
+                  >
+                    <svg lucideLayoutDashboard size="16" class="opacity-70" aria-hidden="true"></svg>
                     Administration
                   </a>
                 </li>
               }
-              <li>
-                <a appRedFocus routerLink="/profile" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
-                  <svg lucideUser size="16" class="opacity-70"></svg>
+              <li role="none">
+                <a
+                  appRedFocus
+                  role="menuitem"
+                  routerLink="/profile"
+                  (click)="showProfileModal.set(false)"
+                  class="rounded-lg font-medium"
+                >
+                  <svg lucideUser size="16" class="opacity-70" aria-hidden="true"></svg>
                   Edit Profile
                 </a>
               </li>
-              <li>
-                <a appRedFocus routerLink="/features" (click)="showProfileModal.set(false)" class="rounded-lg font-medium">
-                  <svg lucideSparkles size="16" class="opacity-70"></svg>
+              <li role="none">
+                <a
+                  appRedFocus
+                  role="menuitem"
+                  routerLink="/features"
+                  (click)="showProfileModal.set(false)"
+                  class="rounded-lg font-medium"
+                >
+                  <svg lucideSparkles size="16" class="opacity-70" aria-hidden="true"></svg>
                   Features
                 </a>
               </li>
-              <li class="mt-1 border-t border-base-100 pt-1">
-                <a appRedFocus (click)="logoutMenuItem($event); showProfileModal.set(false)" role="button" tabindex="0"
-                   class="rounded-lg text-error hover:bg-error/10 font-semibold">
-                  <svg lucideLogOut size="16"></svg>
+              <li class="mt-1 border-t border-base-100 pt-1" role="none">
+                <a
+                  appRedFocus
+                  role="menuitem"
+                  (click)="logoutMenuItem($event);showProfileModal.set(false)"
+                  tabindex="0"
+                  class="rounded-lg text-error hover:bg-error/10 font-semibold"
+                >
+                  <svg lucideLogOut size="16" aria-hidden="true"></svg>
                   Logout
                 </a>
               </li>
@@ -223,7 +262,7 @@
             class="modal-backdrop fixed inset-0 z-[-1]"
             role="button"
             tabindex="0"
-            aria-label="Close"
+            aria-label="Close profile menu"
             (click)="showProfileModal.set(false)"
             (keydown.enter)="showProfileModal.set(false)"
             (keydown.space)="showProfileModal.set(false)"

@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-page-not-found',

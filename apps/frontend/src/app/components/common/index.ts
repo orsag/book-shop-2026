@@ -3,3 +3,4 @@ export * from './overlay.component';
 export * from './progress.component';
 export * from './scroll-top.component';
 export * from './toast.component';
+export * from './field-error.component';

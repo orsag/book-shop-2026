@@ -1,12 +1,12 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
-import { NoFocusJumpDirective } from '@core';
+import { BlueFocusDirective, NoFocusJumpDirective } from '@core';
 import { LucideFrown } from '@lucide/angular';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
-  imports: [FormField, NoFocusJumpDirective, LucideFrown],
+  imports: [FormField, NoFocusJumpDirective, LucideFrown, BlueFocusDirective],
   template: `
     <div class="form-control">
       <label class="label" [attr.for]="inputId()">
@@ -30,6 +30,7 @@ import { LucideFrown } from '@lucide/angular';
       } @else if (type() === 'textarea') {
         <textarea
           appNoFocusJump
+          appBlueFocus
           [id]="inputId()"
           [formField]="control()"
           class="textarea textarea-bordered validator w-full h-28"
@@ -50,6 +51,7 @@ import { LucideFrown } from '@lucide/angular';
       } @else {
         <input
           appNoFocusJump
+          appBlueFocus
           [type]="type()"
           [id]="inputId()"
           [formField]="control()"

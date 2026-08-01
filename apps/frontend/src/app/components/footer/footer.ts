@@ -5,7 +5,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { FOOTER_ITEMS } from '@store/libs';
 import { loremIpsum } from 'lorem-ipsum';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 interface FooterItem {
   translationKey: string;

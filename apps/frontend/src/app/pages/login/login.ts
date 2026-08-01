@@ -9,10 +9,9 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideCircleUserRound, LucideMail, LucidePenTool } from '@lucide/angular';
-import { NoFocusJumpDirective } from '@core';
+import { BlueFocusDirective, NoFocusJumpDirective, RedFocusDirective } from '@core';
 import { Toast } from '@component';
 import { UserStore } from '@store';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +24,7 @@ import { RedFocusDirective } from '../../core/red-focus.directive';
     LucidePenTool,
     LucideMail,
     RedFocusDirective,
+    BlueFocusDirective,
   ],
   templateUrl: './login.html',
 })

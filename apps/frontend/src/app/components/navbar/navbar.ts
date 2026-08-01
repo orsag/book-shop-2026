@@ -21,7 +21,11 @@ import { ConfigurationService, ScrollService } from '@service';
 import { AppStore, CartStore, UserStore } from '@store';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { TooltipDirective, NoBtnHoverDirective } from '@core';
+import {
+  TooltipDirective,
+  NoBtnHoverDirective,
+  RedFocusDirective, BlueFocusDirective,
+} from '@core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   LucideLogIn,
@@ -34,7 +38,6 @@ import {
   LucideX,
   LucideMenu,
 } from '@lucide/angular';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-navbar',
@@ -57,6 +60,7 @@ import { RedFocusDirective } from '../../core/red-focus.directive';
     LucideLayoutDashboard,
     TooltipDirective,
     RedFocusDirective,
+    BlueFocusDirective,
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',

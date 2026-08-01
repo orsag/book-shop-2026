@@ -25,11 +25,13 @@ import {
 } from '@lucide/angular';
 import { OrderService, ToastService } from '@service';
 import { OrderStatus as OSEnum } from '@store/shared-models';
-import { NoFocusJumpDirective } from '@core';
-import { CardSmall } from '@component';
+import {
+  NoFocusJumpDirective,
+  RedFocusDirective,
+  BlueFocusDirective
+} from '@core';
+import { CardSmall, FieldErrorComponent } from '@component';
 import { delay } from 'rxjs';
-import { RedFocusDirective } from '../../core/red-focus.directive';
-import { FieldErrorComponent } from '../../components/common/field-error.component';
 
 @Component({
   selector: 'app-profile',
@@ -46,6 +48,7 @@ import { FieldErrorComponent } from '../../components/common/field-error.compone
     CurrencyPipe,
     LucideShoppingBag,
     RedFocusDirective,
+    BlueFocusDirective,
     FieldErrorComponent,
   ],
   templateUrl: './profile.html',
@@ -125,9 +128,6 @@ export class Profile {
     });
     required(schemaPath.iban, {
       message: 'Iban is required',
-    });
-    required(schemaPath.city, {
-      message: 'City is required',
     });
   });
 

@@ -2,14 +2,13 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CreatedOrder, CreatedOrderItem, OrderService } from '@service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { TotalPricePipe, SinglePricePipe, RedFocusDirective } from '@core';
 import {
   LucideChessQueen,
   LucideFrown,
   LucideShoppingBasket,
   LucideCircleUserRound,
 } from '@lucide/angular';
-import { TotalPricePipe, SinglePricePipe } from '@core';
-import { RedFocusDirective } from '../../core/red-focus.directive';
 
 @Component({
   selector: 'app-success',

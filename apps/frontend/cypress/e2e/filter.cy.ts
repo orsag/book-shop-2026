@@ -14,7 +14,7 @@ describe('Filter Component Tests', () => {
 
       if (!isFilterVisible) {
         cy.get('[data-testid="logo-btn"]').click();
-        cy.wait(350);
+        cy.wait(500);
         cy.get('[data-testid="filter-component"]').should('be.visible');
       }
     });

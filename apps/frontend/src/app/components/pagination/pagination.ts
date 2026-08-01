@@ -7,7 +7,7 @@ import {
   LucideChevronsRight,
   LucideChevronDown,
 } from '@lucide/angular';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-pagination',

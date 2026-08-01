@@ -32,8 +32,8 @@ describe('Profile Route Tests', () => {
     cy.get('#iban').clear().type('SK1234567890123456789012');
     cy.get('#taxId').clear().type('SK2021222324');
 
-    // 5. Click the primary "Uložiť" (Save) button
-    cy.contains('button', 'Uložiť').click();
+    // 5. Click the primary (Save) button
+    cy.contains('button', 'Save').click();
 
     // 6. Target the dynamic toast component container and save as alias
     cy.get('[data-testid="toast"] .alert').as('toastAlert');
@@ -48,5 +48,28 @@ describe('Profile Route Tests', () => {
 
     // 9. Wait and verify the network call returns 200 OK
     cy.wait('@updateUserDetail').its('response.statusCode').should('eq', 200);
+  });
+
+  it('should display validation errors when required fields are cleared', () => {
+    // 1. Clear fields to trigger validation errors
+    cy.get('#email').clear();
+    cy.get('#displayname').clear();
+    cy.get('#addressLine1').clear();
+    cy.get('#iban').clear();
+    cy.get('#phone').clear();
+
+    // 2. Click save or blur fields to force error display if validation requires interaction/touch
+    cy.contains('button', 'Save').click();
+
+    // 3. Assert that the correct error messages appear in the DOM
+    cy.get('#email').parent().should('contain.text', 'Email is required');
+    cy.get('#displayname')
+      .parent()
+      .should('contain.text', 'Display name is required');
+    cy.get('#addressLine1')
+      .parent()
+      .should('contain.text', 'Street is required');
+    cy.get('#iban').parent().should('contain.text', 'Iban is required');
+    cy.get('#phone').parent().should('contain.text', 'Phone is required');
   });
 });

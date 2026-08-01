@@ -39,27 +39,27 @@ describe('ThemePicker', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should be unchecked when currentTheme is "light"', async () => {
+  it('should not have swap-active class when currentTheme is "light"', async () => {
     themeSignal.set('light'); // Update the existing signal's value
 
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const checkbox = fixture.nativeElement.querySelector(
-      '.theme-controller',
-    ) as HTMLInputElement;
-    expect(checkbox.checked).toBe(false);
+    const swapContainer = fixture.nativeElement.querySelector(
+      '.swap',
+    ) as HTMLElement;
+    expect(swapContainer.classList.contains('swap-active')).toBe(false);
   });
 
-  it('should be checked when currentTheme is "dark"', async () => {
+  it('should have swap-active class when currentTheme is "dark"', async () => {
     themeSignal.set('dark'); // Update the existing signal's value
 
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const checkbox = fixture.nativeElement.querySelector(
-      '.theme-controller',
-    ) as HTMLInputElement;
-    expect(checkbox.checked).toBe(true);
+    const swapContainer = fixture.nativeElement.querySelector(
+      '.swap',
+    ) as HTMLElement;
+    expect(swapContainer.classList.contains('swap-active')).toBe(true);
   });
 });

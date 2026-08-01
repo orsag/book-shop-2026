@@ -12,15 +12,31 @@
             {{ t('filters.sections.type') }}
           </h3>
         </div>
-        <div class="join w-full">
-          <button type="button" (click)="updateFilter('type', 'BOOK')" appRedFocus
-                  [class.btn-primary]="filters().type === 'BOOK'" class="btn join-item flex-1">Books
+        <div class="join w-full" role="group" [attr.aria-label]="t('filters.sections.type')">
+          <button
+            appRedFocus
+            [attr.aria-pressed]="filters().type === 'BOOK'"
+            type="button" (click)="updateFilter('type', 'BOOK')"
+            [class.btn-primary]="filters().type === 'BOOK'" class="btn join-item flex-1"
+          >Books
           </button>
-          <button type="button" (click)="updateFilter('type', 'GAME')" appRedFocus
-                  [class.btn-primary]="filters().type === 'GAME'" class="btn join-item flex-1">Games
+
+          <button
+            appRedFocus
+            [attr.aria-pressed]="filters().type === 'GAME'"
+            type="button" (click)="updateFilter('type', 'GAME')"
+            [class.btn-primary]="filters().type === 'GAME'"
+            class="btn join-item flex-1"
+          >Games
           </button>
-          <button type="button" (click)="updateFilter('type', 'GASTRO')" appRedFocus
-                  [class.btn-primary]="filters().type === 'GASTRO'" class="btn join-item flex-1">Gastro
+
+          <button
+            appRedFocus
+            [attr.aria-pressed]="filters().type === 'GASTRO'"
+            type="button" (click)="updateFilter('type', 'GASTRO')"
+            [class.btn-primary]="filters().type === 'GASTRO'"
+            class="btn join-item flex-1"
+          >Gastro
           </button>
         </div>
       </section>
@@ -39,11 +55,18 @@
       </div>
 
       <div class="relative">
-        <label appNoFocusJump
-               class="input input-md flex w-full items-center gap-2 bg-base-200/30 focus-within:ring-1 focus-within:ring-primary">
+        <label
+          appNoFocusJump
+          class="input input-md flex w-full items-center gap-2 bg-base-200/30 focus-within:ring-1 focus-within:ring-primary"
+        >
           <svg lucideSearch size="18" class="opacity-40"></svg>
           <input
+            appBlueFocus
             type="text"
+            role="combobox"
+            aria-autocomplete="list"
+            [attr.aria-expanded]="showHistory() && store.searchHistory().length > 0"
+            aria-controls="search-history-list"
             class="grow bg-transparent border-none! outline-none!"
             [placeholder]="t('filters.placeholders.search')"
             [value]="filters().search"
@@ -55,11 +78,17 @@
         </label>
 
         @if (showHistory() && store.searchHistory().length > 0) {
-          <ul class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl overflow-hidden">
+          <ul role="listbox"
+              class="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-lg shadow-xl overflow-hidden">
             @for (item of store.searchHistory(); track item; let i = $index) {
-              <li (mousedown)="selectHistory(item)" [class.bg-primary]="i === activeIndex()"
-                  [class.text-primary-content]="i === activeIndex()"
-                  class="px-4 py-2 text-sm cursor-pointer hover:bg-base-200 transition-colors flex items-center gap-2">
+              <li
+                role="option"
+                [attr.aria-selected]="i === activeIndex()"
+                (mousedown)="selectHistory(item)"
+                [class.bg-primary]="i === activeIndex()"
+                [class.text-primary-content]="i === activeIndex()"
+                class="px-4 py-2 text-sm cursor-pointer hover:bg-base-200 transition-colors flex items-center gap-2"
+              >
                 <svg lucideSearch size="14" class="opacity-30"></svg>
                 {{ item }}
               </li>
@@ -74,33 +103,50 @@
         <h3 class="text-xs font-bold uppercase tracking-widest text-base-content/40">
           {{ t('filters.sections.sort') }}
         </h3>
-        <button type="button" (click)="store.toggleSort(null)" appRedFocus
-                class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 px-1 transition-all">
+        <button
+          type="button" (click)="store.toggleSort(null)"
+          appRedFocus
+          class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 px-1 transition-all"
+        >
           {{ t('filters.actions.clear') }}
         </button>
       </div>
 
       <!-- Kept layout static and uniform since it only exists while fully open -->
       <div class="flex items-center justify-around gap-3 flex-row">
-        <button data-testid="layout-btn" appRedFocus
-                (click)="store.setViewLayout(store.viewLayout() === VIEW_LAYOUTS[0] ? VIEW_LAYOUTS[1] : VIEW_LAYOUTS[0])"
-                class="btn btn-circle btn-ghost swap swap-rotate"
-                [class.swap-active]="store.viewLayout() === VIEW_LAYOUTS[1]">
+        <button
+          data-testid="layout-btn"
+          appRedFocus
+          aria-label="Toggle view layout"
+          (click)="store.setViewLayout(store.viewLayout() === VIEW_LAYOUTS[0] ? VIEW_LAYOUTS[1] : VIEW_LAYOUTS[0])"
+          class="btn btn-circle btn-ghost swap swap-rotate"
+          [class.swap-active]="store.viewLayout() === VIEW_LAYOUTS[1]"
+        >
           <svg lucideList class="swap-on" size="20"></svg>
           <svg lucideGrid class="swap-off" size="20"></svg>
         </button>
 
-        <button data-testid="price-btn" appRedFocus (click)="store.toggleSort('price')"
-                class="btn btn-circle btn-ghost swap swap-rotate"
-                [class.btn-active]="store.filters().sortBy?.startsWith('price')"
-                [class.swap-active]="store.filters().sortBy === 'price_desc'">
+        <button
+          data-testid="price-btn"
+          appRedFocus
+          aria-label="Sort by price"
+          (click)="store.toggleSort('price')"
+          class="btn btn-circle btn-ghost swap swap-rotate"
+          [class.btn-active]="store.filters().sortBy?.startsWith('price')"
+          [class.swap-active]="store.filters().sortBy === 'price_desc'"
+        >
           <svg lucideArrowDownNarrowWide class="swap-on text-primary" size="20"></svg>
           <svg lucideArrowUpWideNarrow class="swap-off" size="20"></svg>
         </button>
 
-        <button data-testid="discount-btn" appRedFocus (click)="updateFilter('isDiscounted', !filters().isDiscounted)"
-                class="btn btn-circle btn-ghost swap swap-rotate" [class.btn-active]="filters().isDiscounted"
-                [class.swap-active]="filters().isDiscounted">
+        <button
+          data-testid="discount-btn"
+          appRedFocus
+          aria-label="Filter discounted items"
+          (click)="updateFilter('isDiscounted', !filters().isDiscounted)"
+          class="btn btn-circle btn-ghost swap swap-rotate" [class.btn-active]="filters().isDiscounted"
+          [class.swap-active]="filters().isDiscounted"
+        >
           <svg lucidePercent class="swap-on text-success" size="20"></svg>
           <svg lucidePercent class="swap-off" size="20"></svg>
         </button>
@@ -109,38 +155,58 @@
 
     @if (store.isBook()) {
       <section>
-        <div class="flex justify-between items-center h-5 w-full whitespace-nowrap overflow-hidden mb-3">
-          <h3 class="text-xs font-bold uppercase tracking-widest text-base-content/40">
-            {{ t('filters.sections.categories') }}
-            <span class="badge badge-ghost badge-xs ml-2">{{ store.products().length }}
-              / {{ store.totalProducts() }}</span>
-          </h3>
-          <button type="button" (click)="updateFilter('category', null)" appRedFocus
-                  class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 px-1 transition-all">
-            {{ 'filters.actions.clear' | transloco }}
-          </button>
-        </div>
-        <div class="flex flex-col">
-          @for (cat of bookCategories; track cat) {
-            <label appRedFocus
-                   class="flex items-center gap-3 px-4 py-2 rounded-xl over:border-base-300 hover:bg-base-200 cursor-pointer group transition-colors">
-              <input type="radio" name="bookCategory" class="radio radio-sm radio-info"
-                     [checked]="filters().category === cat" (change)="updateFilter('category', cat)" />
-              <div class="flex items-center gap-2">
+        <fieldset class="border-0 m-0 p-0">
+          <div class="flex justify-between items-center h-5 w-full whitespace-nowrap overflow-hidden mb-3">
+            <legend class="text-xs font-bold uppercase tracking-widest text-base-content/40">
+              {{ t('filters.sections.categories') }}
+              <span class="badge badge-ghost badge-xs ml-2" aria-hidden="true">
+                {{ store.products().length }} / {{ store.totalProducts() }}
+              </span>
+            </legend>
+            <button
+              appRedFocus
+              type="button"
+              (click)="updateFilter('category', null)"
+              class="text-[10px] uppercase font-bold tracking-tight link link-hover opacity-50 hover:opacity-100 px-1 transition-all"
+            >
+              {{ 'filters.actions.clear' | transloco }}
+            </button>
+          </div>
+
+          <!-- Screen reader announcement for product count -->
+          <span class="sr-only">
+            Showing {{ store.products().length }} of {{ store.totalProducts() }} products
+          </span>
+
+          <div class="flex flex-col">
+            @for (cat of bookCategories; track cat) {
+              <label
+                class="flex items-center gap-3 px-4 py-2 rounded-xl over:border-base-300 hover:bg-base-200 cursor-pointer group transition-colors">
+                <input
+                  appRedFocus
+                  type="radio"
+                  name="bookCategory"
+                  class="radio radio-sm radio-info"
+                  [checked]="filters().category === cat"
+                  (change)="updateFilter('category', cat)"
+                />
+                <div class="flex items-center gap-2">
                 <span
-                  class="category text-md font-medium text-base-content/70 group-hover:text-[#85c0ee] transition-colors">{{ cat }}</span>
-              </div>
-            </label>
-          }
-        </div>
+                  class="category text-md font-medium text-base-content/70 group-hover:text-[#85c0ee] transition-colors">
+                  {{ cat }}
+                </span>
+                </div>
+              </label>
+            }
+          </div>
+        </fieldset>
       </section>
     }
 
-    <div class="sticky mt-auto">
+    <div class="sticky mt-auto" role="region" aria-label="Filter actions">
       <button (click)="onSubmit()" appRedFocus class="btn rounded-full btn-success btn-block shadow-lg">
         <div>{{ 'filters.actions.submit' | transloco }}</div>
       </button>
     </div>
-
   }
 </div>

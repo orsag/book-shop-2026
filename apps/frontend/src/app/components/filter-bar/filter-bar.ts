@@ -3,7 +3,7 @@ import { AppStore, UserStore } from '@store';
 import { BookFilters } from '../../../types';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-filter-bar',

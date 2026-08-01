@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import { DAISY_THEMES } from '@store/shared-models';
 import { ConfigurationService } from '@service';
 import { LucideMoon, LucideSun } from '@lucide/angular';
-import { NoBtnHoverDirective, TooltipDirective } from '@core';
-import { RedFocusDirective } from '../../core/red-focus.directive';
+import {
+  NoBtnHoverDirective,
+  TooltipDirective,
+  RedFocusDirective,
+} from '@core';
 
 @Component({
   selector: 'app-theme-picker',
