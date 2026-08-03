@@ -17,6 +17,7 @@ describe('ThemePicker', () => {
 
     mockConfigService = {
       theme: themeSignal,
+      isDarkTheme: vi.fn(() => themeSignal() === 'dark'),
       setTheme: vi.fn((newTheme) => themeSignal.set(newTheme)),
       flags: vi.fn().mockReturnValue({
         INFINITE_COLOR_THEMES: false,

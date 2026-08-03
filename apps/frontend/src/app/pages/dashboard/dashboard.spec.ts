@@ -58,6 +58,7 @@ describe('Dashboard Component', () => {
 
     mockConfigService = {
       getFilterValue: vi.fn().mockReturnValue(false),
+      isDarkTheme: vi.fn().mockReturnValue(false),
     };
 
     mockPaginationAccumulatorService = {

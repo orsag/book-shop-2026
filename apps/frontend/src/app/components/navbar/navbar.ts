@@ -80,9 +80,7 @@ export class Navbar {
   currentTheme = this.config.theme;
 
   currentNavbarBackground = computed(() =>
-    this.config.theme() === 'dark'
-      ? '/images/navbarDark.svg'
-      : '/images/navbarLight.svg',
+    this.config.isDarkTheme() ? '/images/navbarDark.svg' : '/images/navbarLight.svg',
   );
 
   // Existing signals

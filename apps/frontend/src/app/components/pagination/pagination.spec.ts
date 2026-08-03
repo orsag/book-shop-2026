@@ -73,7 +73,7 @@ describe('Pagination', () => {
       '[data-testid="load-more"]',
     );
     expect(loadMoreBtn).toBeTruthy();
-    expect(loadMoreBtn.textContent).toContain('Load More Books');
+    expect(loadMoreBtn.textContent).toContain('Load More');
 
     // B. Verify the Page Indicators (Current Page / Total Pages)
     const pageContainer =

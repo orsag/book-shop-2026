@@ -7,23 +7,6 @@
     </div>
   } @else {
 
-    @if (store.hasMorePage()) {
-      <button
-        appRedFocus
-        data-testid="load-more"
-        (click)="store.loadMore()"
-        class="group btn btn-primary btn-wide rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
-      >
-        <div class="flex items-center gap-2">
-          <svg lucideChevronDown
-               size="18"
-               class="group-hover:translate-y-1 transition-transform duration-300">
-          </svg>
-          <span class="uppercase tracking-wider text-xs font-black">Load More Books</span>
-        </div>
-      </button>
-    }
-
     <div class="flex items-center gap-2 p-1.5 bg-base-200/50 backdrop-blur-md rounded-full border border-base-300 shadow-xl">
 
       <button
@@ -74,9 +57,28 @@
       </button>
     </div>
 
-    <div class="badge badge-outline border-base-content/10 py-3 px-4 gap-2 opacity-60">
-      <div class="size-1.5 rounded-full bg-success animate-pulse"></div>
-      <span class="text-[10px] font-bold uppercase tracking-tighter">
+    @if (store.hasMorePage()) {
+      <button
+        appRedFocus
+        data-testid="load-more"
+        (click)="store.loadMore()"
+        class="group btn btn-primary rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+      >
+        <div class="flex items-center justify-center gap-2">
+          <svg lucideChevronDown
+               size="18"
+               class="group-hover:translate-y-0.5 transition-transform duration-300">
+          </svg>
+          <span class="uppercase tracking-wider text-xs font-black">Load More</span>
+        </div>
+      </button>
+    }
+
+    <div
+      aria-hidden="true"
+      class="badge badge-outline border-base-content/10 py-5 px-5 gap-4 opacity-60 rounded-full">
+      <div class="size-4 rounded-full bg-success animate-pulse"></div>
+      <span class="font-medium font-bold uppercase">
         Showing {{ store.products().length }} of {{ store.totalProducts() }} Items
       </span>
     </div>

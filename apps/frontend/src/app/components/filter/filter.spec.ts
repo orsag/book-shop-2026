@@ -45,6 +45,7 @@ describe('Filter', () => {
 
     mockConfigService = {
       toggleFlag: vi.fn(),
+      isDarkTheme: vi.fn().mockReturnValue(false),
       flags: vi.fn().mockReturnValue({
         SHOW_FILTER: true,
       }),

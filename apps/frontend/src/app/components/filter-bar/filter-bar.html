@@ -1,59 +1,65 @@
 <div class="hidden md:block" *transloco="let t">
   <ul class="flex items-center gap-x-4 pb-3">
 
+    <!-- Books -->
     <li>
       <button
         appRedFocus
         (click)="updateFilter('type', 'BOOK')"
-        class="btn btn-sm rounded-full btn-outline font-ribeye text-[#F075AE] border-[#F075AE] hover:bg-[#F075AE] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+        class="btn btn-sm rounded-full font-ribeye text-[#ec4899] dark:text-[#f472b6] border-[#ec4899]/40 dark:border-[#f472b6]/40 bg-[#ec4899]/10 hover:bg-[#ec4899] hover:text-white hover:border-[#ec4899] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Books
       </button>
     </li>
 
+    <!-- Games -->
     <li>
       <button
         appRedFocus
         (click)="updateFilter('type', 'GAME')"
-        class="btn btn-sm rounded-full btn-outline font-ribeye text-[#85cee0] border-[#85cee0] hover:bg-[#85cee0] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+        class="btn btn-sm rounded-full font-ribeye text-[#0ea5e9] dark:text-[#38bdf8] border-[#0ea5e9]/40 dark:border-[#38bdf8]/40 bg-[#0ea5e9]/10 hover:bg-[#0ea5e9] hover:text-white hover:border-[#0ea5e9] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Games
       </button>
     </li>
 
+    <!-- Gastro -->
     <li>
       <button
         appRedFocus
         (click)="updateFilter('type', 'GASTRO')"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#89b847] border-[#89b847] hover:bg-[#89b847] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+        class="btn btn-sm rounded-full font-ribeye text-[#10b981] dark:text-[#34d399] border-[#10b981]/40 dark:border-[#34d399]/40 bg-[#10b981]/10 hover:bg-[#10b981] hover:text-white hover:border-[#10b981] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Gastro
       </button>
     </li>
 
+    <!-- Videos (Restored unique distinct color: Warm Amber/Orange) -->
     <li>
       <button
         appRedFocus
         routerLink="/videos"
-              class="btn btn-sm rounded-full btn-outline font-ribeye text-[#89b847] border-[#89b847] hover:bg-[#89b847] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+        class="btn btn-sm rounded-full font-ribeye text-[#f59e0b] dark:text-[#fbbf24] border-[#f59e0b]/40 dark:border-[#fbbf24]/40 bg-[#f59e0b]/10 hover:bg-[#f59e0b] hover:text-white hover:border-[#f59e0b] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
         Videos
       </button>
     </li>
 
+    <!-- Profile -->
     @if (userStore.isLoggedIn()) {
       <li>
         <button
           appRedFocus
           routerLink="/profile"
-                class="btn btn-sm rounded-full btn-outline font-ribeye text-[#ff6666] border-[#ff6666] hover:bg-[#ff6666] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+          class="btn btn-sm rounded-full font-ribeye text-[#ef4444] dark:text-[#f87171] border-[#ef4444]/40 dark:border-[#f87171]/40 bg-[#ef4444]/10 hover:bg-[#ef4444] hover:text-white hover:border-[#ef4444] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
           {{ t('filters.bar.profile') }}
         </button>
       </li>
     }
 
+    <!-- Admin -->
     @if (userStore.isAdmin()) {
       <li>
         <button
           appRedFocus
           routerLink="/administration"
-                class="btn btn-sm rounded-full btn-outline font-ribeye text-[#96bfff] border-[#96bfff] hover:bg-[#96bfff] hover:text-white hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
+          class="btn btn-sm rounded-full font-ribeye text-[#6366f1] dark:text-[#818cf8] border-[#6366f1]/40 dark:border-[#818cf8]/40 bg-[#6366f1]/10 hover:bg-[#6366f1] hover:text-white hover:border-[#6366f1] hover:scale-110 transition-all duration-200 normal-case text-base tracking-wider px-4">
           {{ t('filters.bar.admin') }}
         </button>
       </li>

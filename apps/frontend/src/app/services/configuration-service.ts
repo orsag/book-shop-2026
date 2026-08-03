@@ -101,4 +101,8 @@ export class ConfigurationService {
   getFilterValue() {
     return this.flags().SHOW_FILTER;
   }
+
+  isDarkTheme() {
+    return this.theme() === 'dark';
+  }
 }

@@ -75,13 +75,38 @@
     display: none;
   }
 
+  // Dark Theme Variant Adjustments
   &.is-dark-theme {
-    background: OKLCH(var(--b1)) !important;
+    --bg-color-1: rgb(15, 23, 42);   // Deep slate/navy background
+    --bg-color-2: rgb(30, 27, 75);   // Deep indigo shade
 
-    .gradients-container {
-      display: none !important;
-    }
+    // Softer, moody jewel tones that blend smoothly into the dark background
+    // Very dark, moody tones that barely peek through as deep ambient shadows/glows
+    --color1: 46, 16, 101;           // Ultra-dark muted purple
+    --color2: 7, 54, 88;             // Ultra-dark muted blue
+    --color3: 112, 12, 48;           // Ultra-dark muted pink/magenta
+    --color4: 8, 70, 65;             // Ultra-dark muted teal
+    --color5: 30, 27, 94;            // Ultra-dark muted indigo
+    --color-interactive: 76, 29, 149; // Deep, subtle glowing violet for the mouse
+
+    --blending: screen;
+
+    --blending: screen;
   }
+  //&.is-dark-theme {
+  //  --bg-color-1: rgb(15, 23, 42);   // Deep slate/navy background
+  //  --bg-color-2: rgb(30, 27, 75);   // Deep indigo shade
+  //
+  //  // Vibrant neon/deep jewel tones that pop against dark backgrounds
+  //  --color1: 139, 92, 246;          // Purple
+  //  --color2: 14, 165, 233;          // Electric Blue
+  //  --color3: 236, 72, 153;          // Pink
+  //  --color4: 20, 184, 166;          // Teal
+  //  --color5: 99, 102, 241;          // Indigo
+  //  --color-interactive: 168, 85, 247; // Bright Violet
+  //
+  //  --blending: screen;              // Screen blend mode makes dark themes glow vibrantly
+  //}
 
   /* .gradients-container {
     // 🔴 Sharpness Fix: Lowered the secondary blur from 40px to 24px so colors don't wash out completely

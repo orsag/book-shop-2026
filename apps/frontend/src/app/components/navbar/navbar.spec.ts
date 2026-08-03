@@ -57,6 +57,7 @@ describe('Navbar', () => {
 
     mockConfigService = {
       theme: signal('light'),
+      isDarkTheme: vi.fn().mockReturnValue(false),
       getFilterValue: vi.fn().mockReturnValue(false),
       flags: vi.fn().mockReturnValue({
         SHOW_SEARCHBAR_HEADER: false,

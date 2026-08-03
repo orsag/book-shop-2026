@@ -11,7 +11,7 @@ import { ConfigurationService } from '@service';
   selector: 'app-gradient-bg',
   standalone: true,
   template: `
-    <div class="gradient-bg" [class.is-dark-theme]="config.theme() === 'dark'">
+    <div class="gradient-bg" [class.is-dark-theme]="config.isDarkTheme()">
       <svg xmlns="http://www.w3.org/2000/svg" class="goo-svg">
         <defs>
           <filter id="goo" x="-10%" y="-10%" width="120%" height="120%">
@@ -78,8 +78,6 @@ export class GradientBgComponent {
   }
 
   private onMouseMove = (event: MouseEvent): void => {
-    if (this.config.theme() === 'dark') return;
-
     const style = this.hostRef.nativeElement.style;
     style.setProperty('--mouse-x', `${event.clientX}px`);
     style.setProperty('--mouse-y', `${event.clientY}px`);

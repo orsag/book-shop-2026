@@ -27,10 +27,17 @@ import {
   UpdateProductDtoFrontend,
 } from './form-rules.shared';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-edit-book-modal',
-  imports: [CommonModule, TranslocoDirective, FormFieldComponent, CdkTrapFocus],
+  imports: [
+    CommonModule,
+    TranslocoDirective,
+    FormFieldComponent,
+    CdkTrapFocus,
+    RedFocusDirective,
+  ],
   template: `
     <dialog cdkTrapFocus *transloco="let t" class="modal modal-open">
       <div class="modal-box max-w-2xl">
@@ -154,13 +161,21 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
         </div>
 
         <div class="modal-action">
-          <button class="btn btn-ghost" (click)="handleClose()">
+          <button 
+            appRedFocus 
+            class="btn btn-ghost" 
+            (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
-          <button class="btn btn-info" (click)="handleGenerateFields()">
+          <button
+            appRedFocus 
+            class="btn btn-info"
+            (click)="handleGenerateFields()"
+          >
             {{ t('edit_modal.generate') }}
           </button>
           <button
+            appRedFocus
             class="btn btn-primary"
             [disabled]="editForm().invalid()"
             (click)="handleSave()"
@@ -188,7 +203,10 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 })
 export class EditBookModalComponent {
   closeModal = output<void>();
-  commonSave = output<{ id: string | undefined; dataToSave: Partial<Product> }>();
+  commonSave = output<{
+    id: string | undefined;
+    dataToSave: Partial<Product>;
+  }>();
   readonly selectedBook = input.required<Product | null>();
   store = inject(AppStore);
 

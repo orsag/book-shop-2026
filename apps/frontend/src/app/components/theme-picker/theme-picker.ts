@@ -25,7 +25,7 @@ import {
 export class ThemePicker {
   config = inject(ConfigurationService);
 
-  isChecked = computed(() => this.config.theme() === 'dark');
+  isChecked = computed(() => this.config.isDarkTheme());
 
   availableThemes = computed(() => {
     return this.config.flags().INFINITE_COLOR_THEMES
@@ -43,7 +43,7 @@ export class ThemePicker {
   }
 
   toggleTheme() {
-    const newTheme = this.config.theme() === 'dark' ? 'light' : 'dark';
+    const newTheme = this.config.isDarkTheme() ? 'light' : 'dark';
 
     // 1. Update the state (or Signal)
     this.config.setTheme(newTheme);

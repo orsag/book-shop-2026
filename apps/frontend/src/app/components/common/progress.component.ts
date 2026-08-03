@@ -38,7 +38,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class ProgressComponent implements OnDestroy {
   showLoader = input<boolean>(false);
   config = inject(ConfigurationService);
-  isDarkTheme = computed(() => this.config.theme() === 'dark');
+  isDarkTheme = computed(() => this.config.isDarkTheme());
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {

@@ -29,6 +29,7 @@ describe('MainLayout', () => {
 
     mockConfigService = {
       theme: signal('light'),
+      isDarkTheme: vi.fn().mockReturnValue(false),
       flags: vi.fn().mockReturnValue({
         SHOW_FILTER: false,
         SHOW_DISCOUNT_BANNER: false,

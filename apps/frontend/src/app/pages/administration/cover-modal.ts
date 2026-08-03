@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Product } from '@store/libs';
 import { AppStore } from '@store';
 import { BookService, ImageUploadService } from '@service';
-import { ErrorCodes, ErrorService, NoFocusJumpDirective } from '@core';
+import { ErrorCodes, ErrorService, NoFocusJumpDirective, RedFocusDirective } from '@core';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { LucideImageUp } from '@lucide/angular';
 
@@ -23,6 +23,7 @@ import { LucideImageUp } from '@lucide/angular';
     TranslocoPipe,
     LucideImageUp,
     NoFocusJumpDirective,
+    RedFocusDirective,
   ],
   template: `
     <dialog *transloco="let t" class="modal modal-open">
@@ -46,8 +47,9 @@ import { LucideImageUp } from '@lucide/angular';
 
           <div class="flex items-center gap-4">
             <button
+              appRedFocus
               type="button"
-              class="btn btn-outline btn-primary"
+              class="btn btn-primary"
               (click)="fileInput.click()"
             >
               <svg lucideImageUp size="20"></svg>
@@ -80,10 +82,14 @@ import { LucideImageUp } from '@lucide/angular';
         }
 
         <div class="modal-action">
-          <button class="btn btn-ghost" (click)="handleClose()">
+          <button 
+            appRedFocus
+            class="btn btn-ghost"
+            (click)="handleClose()">
             {{ t('administration.cancel_btn') }}
           </button>
           <button
+            appRedFocus
             class="btn btn-primary"
             [disabled]="!selectedFile()"
             (click)="handleUpload()"
