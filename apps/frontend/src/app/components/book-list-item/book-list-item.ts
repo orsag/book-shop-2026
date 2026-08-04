@@ -4,7 +4,7 @@ import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { UXService } from '@service';
+import { ToastService, UXService } from '@service';
 import { OverlayComponent } from '../common';
 import { RedFocusDirective } from '@core';
 
@@ -23,6 +23,7 @@ import { RedFocusDirective } from '@core';
 })
 export class BookListItem {
   cartStore = inject(CartStore);
+  toast = inject(ToastService);
   ux = inject(UXService);
   isHovered = signal(false);
   @Input({ required: true }) product!: Product;
@@ -31,9 +32,11 @@ export class BookListItem {
     if (this.ux.isInCart(this.product)) {
       // If it's there, remove it
       this.cartStore.removeItem(this.product.id);
+      this.toast.success('Removed product');
     } else if (this.product.availableCount > 0) {
       // If it's not, add it
       this.cartStore.addToCart(this.product);
+      this.toast.success('Added product to cart');
     }
   }
 }

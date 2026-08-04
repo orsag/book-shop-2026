@@ -1,7 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DAISY_THEMES } from '@store/shared-models';
-import { ConfigurationService } from '@service';
+import { ConfigurationService, ToastService } from '@service';
 import { LucideMoon, LucideSun } from '@lucide/angular';
 import {
   NoBtnHoverDirective,
@@ -24,28 +23,16 @@ import {
 })
 export class ThemePicker {
   config = inject(ConfigurationService);
+  toast = inject(ToastService);
 
   isChecked = computed(() => this.config.isDarkTheme());
 
-  availableThemes = computed(() => {
-    return this.config.flags().INFINITE_COLOR_THEMES
-      ? DAISY_THEMES
-      : DAISY_THEMES.filter((t) => ['light', 'dark'].includes(t.name));
-  });
-
-  isTwoColumns = computed(() => {
-    return this.availableThemes().length <= 2;
-  });
-
-  changeTheme(theme: string) {
-    // One call, the Service's 'effect' does the rest
-    this.config.setTheme(theme);
-  }
-
   toggleTheme() {
     const newTheme = this.config.isDarkTheme() ? 'light' : 'dark';
+    const capitalized = newTheme.charAt(0).toUpperCase() + newTheme.slice(1)
 
     // 1. Update the state (or Signal)
     this.config.setTheme(newTheme);
+    this.toast.info('Theme changed: ' + capitalized);
   }
 }

@@ -36,7 +36,7 @@ describe('Profile Route Tests', () => {
     cy.contains('button', 'Save').click();
 
     // 6. Target the dynamic toast component container and save as alias
-    cy.get('[data-testid="toast"] .alert').as('toastAlert');
+    cy.get('[data-testid="toast-item"]').as('toastAlert');
 
     // 7. Verify visibility
     cy.get('@toastAlert').should('be.visible');

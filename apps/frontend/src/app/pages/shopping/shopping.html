@@ -12,7 +12,7 @@
                 appRedFocus
                 title="clear-btn"
                 class="btn btn-outline btn-error btn-sm"
-                (click)="cartStore.clearCart()">
+                (click)="handleClearCart()">
                 Vyprázdniť košík
               </button>
             }
@@ -55,14 +55,14 @@
                       <button
                         appRedFocus
                         class="btn btn-xs join-item"
-                        (click)="cartStore.updateQuantity(item.product.id, -1)"
+                        (click)="handleUpdateMinus(item)"
                         title="minus-btn">-
                       </button>
                       <button class="btn btn-xs join-item no-animation cursor-default">{{ item.quantity }}</button>
                       <button
                         appRedFocus
                         class="btn btn-xs join-item"
-                        (click)="cartStore.updateQuantity(item.product.id, 1)"
+                        (click)="handleUpdatePlus(item)"
                         [disabled]="item.quantity >= item.product.availableCount"
                         title="plus-btn">+
                       </button>
@@ -71,7 +71,7 @@
                       appRedFocus
                       class="btn btn-ghost btn-xs text-error"
                       title="remove-btn"
-                      (click)="cartStore.removeItem(item.product.id)">
+                      (click)="handleRemoveItem(item)">
                       <svg lucideTrash2></svg>
                     </button>
                   </div>

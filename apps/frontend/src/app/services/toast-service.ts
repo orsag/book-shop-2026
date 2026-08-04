@@ -3,11 +3,12 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 export type ToastType = 'simple' | 'success' | 'danger' | 'warning';
 
-interface Toast {
+export interface Toast {
   id: string;
   text: string;
   type: ToastType;
-  duration?: number;
+  duration: number;
+  expiresAt: number;
 }
 
 @Injectable({
@@ -21,11 +22,15 @@ export class ToastService {
   // Public readonly signal for components to consume
   public toasts = this.toastsSignal.asReadonly();
 
-  show(text: string, type: ToastType = 'simple', duration = 10000) {
+  show(text: string, type: ToastType = 'simple', duration = 5000) {
     const id = crypto.randomUUID();
+    const expiresAt = Date.now() + duration;
 
     // Add new common to the list
-    this.toastsSignal.update((all) => [...all, { id, text, type }]);
+    this.toastsSignal.update((all) => [
+      ...all,
+      { id, text, type, duration, expiresAt },
+    ]);
 
     setTimeout(() => {
       this.remove(id);
@@ -50,6 +55,10 @@ export class ToastService {
   danger(text: string, duration?: number) {
     this.show(text, 'danger', duration);
     this.live.announce(text, 'assertive');
+  }
+
+  dismiss(id: string) {
+    this.remove(id);
   }
 
   private remove(id: string) {

@@ -38,7 +38,9 @@ describe('ToastService', () => {
       expect(activeToasts[0]).toEqual({
         id: expect.any(String),
         text: 'Hello World',
-        type: 'info',
+        type: 'simple',
+        duration: 5000,
+        expiresAt: expect.any(Number),
       });
     });
 
@@ -50,15 +52,15 @@ describe('ToastService', () => {
       const activeToasts = service.toasts();
       expect(activeToasts.length).toBe(3);
       expect(activeToasts[0].type).toBe('success');
-      expect(activeToasts[1].type).toBe('alert');
-      expect(activeToasts[2].type).toBe('info');
+      expect(activeToasts[1].type).toBe('warning');
+      expect(activeToasts[2].type).toBe('simple');
     });
   });
 
   describe('Auto-removing Toasts (Timers)', () => {
     it('should automatically remove a toast after its specified duration', () => {
       // 1. Create a toast with a 3000ms duration
-      service.show('Temporary Toast', 'info', 3000);
+      service.show('Temporary Toast', 'simple', 3000);
       expect(service.toasts().length).toBe(1);
 
       // 2. Fast-forward time by 2999 milliseconds (just before timeout)
@@ -72,7 +74,7 @@ describe('ToastService', () => {
 
     it('should handle multiple toasts with different durations correctly', () => {
       service.show('Quick Toast', 'success', 1000);
-      service.show('Slow Toast', 'alert', 5000);
+      service.show('Slow Toast', 'warning', 5000);
       expect(service.toasts().length).toBe(2);
 
       // Fast-forward past the first toast's duration

@@ -34,7 +34,7 @@ test.describe('Profile Route Tests', () => {
     await page.getByRole('button', { name: 'Uložiť' }).click();
 
     // 6. Target the dynamic toast component container
-    const toastAlert = page.getByTestId('toast').locator('.alert');
+    const toastAlert = page.getByTestId('toast-item');
 
     // 7. Verify it has the contextual success styling class applied
     await toastAlert.isVisible();

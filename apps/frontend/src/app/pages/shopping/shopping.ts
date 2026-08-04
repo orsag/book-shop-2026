@@ -2,7 +2,7 @@ import { Component, HostListener, inject, OnInit, Signal } from '@angular/core';
 import { CartItem, CartStore } from '@store';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { OrderService, CreatedOrder } from '@service';
+import { OrderService, CreatedOrder, ToastService } from '@service';
 import {
   ErrorCodes,
   ErrorService,
@@ -21,6 +21,7 @@ export class Shopping implements OnInit {
   protected cartStore = inject(CartStore);
   private orderService = inject(OrderService);
   private errorService = inject(ErrorService);
+  private toast = inject(ToastService);
   private router = inject(Router);
 
   items: Signal<CartItem[]> = this.cartStore.items;
@@ -68,5 +69,25 @@ export class Shopping implements OnInit {
         }
       }
     }
+  }
+
+  protected handleClearCart() {
+    this.cartStore.clearCart();
+    this.toast.danger('Cart cleared');
+  }
+
+  protected handleRemoveItem(item: CartItem) {
+    this.cartStore.removeItem(item.product.id);
+    this.toast.danger('Cart item removed');
+  }
+
+  protected handleUpdateMinus(item: CartItem) {
+    this.cartStore.updateQuantity(item.product.id, -1);
+    this.toast.danger('Item count updated');
+  }
+
+  protected handleUpdatePlus(item: CartItem) {
+    this.cartStore.updateQuantity(item.product.id, 1);
+    this.toast.danger('Item count updated');
   }
 }
