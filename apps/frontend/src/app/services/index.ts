@@ -8,3 +8,4 @@ export * from './pagination-accumulator-service';
 export * from './scroll-service';
 export * from './toast-service';
 export * from './ux-service';
+export * from './initialization.service';

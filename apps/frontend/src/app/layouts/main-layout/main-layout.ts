@@ -1,5 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
-import { BannerComponent, Filter, Footer, Navbar, Toast, ScrollBtn } from '@component';
+import {
+  BannerComponent,
+  Filter,
+  Footer,
+  Navbar,
+  Toast,
+  ScrollBtn,
+} from '@component';
 import { ProgressComponent } from '@component';
 import { RouterOutlet } from '@angular/router';
 import { ConfigurationService } from '@service';

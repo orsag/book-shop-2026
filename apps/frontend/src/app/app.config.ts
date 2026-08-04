@@ -3,6 +3,8 @@ import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   LOCALE_ID,
+  provideAppInitializer,
+  inject,
 } from '@angular/core';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -20,6 +22,7 @@ import {
 import { StopEventPlugin } from './plugins/stop-event.plugin';
 import localeSk from '@angular/common/locales/sk';
 import { registerLocaleData } from '@angular/common';
+import { InitializationService } from '@service';
 
 // Register locale data globally before configuration initialization
 registerLocaleData(localeSk, 'sk-SK');
@@ -51,6 +54,10 @@ export const appConfig: ApplicationConfig = {
       useClass: StopEventPlugin,
       multi: true,
     },
+    provideAppInitializer(() => {
+      const initialService = inject(InitializationService);
+      return initialService.main();
+    }),
     { provide: LOCALE_ID, useValue: 'sk-SK' },
   ],
 };

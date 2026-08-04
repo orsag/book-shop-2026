@@ -10,9 +10,9 @@ import { ToastService } from '@service';
         @for (toast of toastService.toasts(); track toast.id) {
           <div
             class="alert shadow-lg border-none animate-in fade-in slide-in-from-top-4 duration-500"
-            [class.alert-info]="toast.type === 'info'"
+            [class.alert-info]="toast.type === 'simple'"
             [class.alert-success]="toast.type === 'success'"
-            [class.alert-error]="toast.type === 'alert'"
+            [class.alert-error]="toast.type === 'warning'"
           >
             <span class="text-md font-bold text-left whitespace-pre-line">
               {{ toast.text }}

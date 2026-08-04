@@ -102,6 +102,7 @@ export const UserStore = signalStore(
                   user,
                 });
                 appStore.setToken(access_token);
+                localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
 
                 // 3. Now safely call the premium status
                 return detailService.findPremiumStatus(user.id).pipe(
@@ -298,6 +299,25 @@ export const UserStore = signalStore(
           }),
         ),
       ),
+
+      invalidateUser() {
+        patchState(store, { user: null, userDetail: null, premiumStatus: null });
+      },
+
+      updateStore(
+        user?: User | null,
+        userDetail?: UserDetail | null,
+        premiumStatus?: PremiumStatus | null,
+      ) {
+        const partialState: Partial<UserState> = {};
+
+        if (user !== undefined) partialState.user = user;
+        if (userDetail !== undefined) partialState.userDetail = userDetail;
+        if (premiumStatus !== undefined)
+          partialState.premiumStatus = premiumStatus;
+
+        patchState(store, partialState);
+      },
     }),
   ),
   withHooks({
@@ -309,23 +329,6 @@ export const UserStore = signalStore(
       const isBrowser = isPlatformBrowser(platformId);
 
       if (isBrowser) {
-        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
-        const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
-        const savedDetail = localStorage.getItem(DETAIL_STORAGE_KEY);
-
-        if (savedUser && savedToken) {
-          patchState(store, {
-            user: JSON.parse(savedUser),
-          });
-          appStore.setToken(savedToken);
-        }
-
-        if (savedDetail) {
-          patchState(store, {
-            premiumStatus: JSON.parse(savedDetail),
-          });
-        }
-
         effect(() => {
           const { user, userDetail } = store;
           if (userDetail()) {
@@ -333,16 +336,11 @@ export const UserStore = signalStore(
               DETAIL_STORAGE_KEY,
               JSON.stringify(userDetail()),
             );
-          } else {
-            localStorage.removeItem(DETAIL_STORAGE_KEY);
           }
           const _token = appStore.token();
           if (user() && _token) {
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
             localStorage.setItem(TOKEN_STORAGE_KEY, _token);
-          } else {
-            localStorage.removeItem(USER_STORAGE_KEY);
-            localStorage.removeItem(TOKEN_STORAGE_KEY);
           }
         });
       }

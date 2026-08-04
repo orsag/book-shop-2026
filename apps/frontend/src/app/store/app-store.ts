@@ -241,6 +241,10 @@ export const AppStore = signalStore(
         patchState(store, { token });
       },
 
+      setHistory(searchHistory: string[]) {
+        patchState(store, { searchHistory });
+      },
+
       setViewLayout(layout: 'grid' | 'list') {
         patchState(store, { viewLayout: layout });
       },
@@ -286,13 +290,6 @@ export const AppStore = signalStore(
       const isBrowser = isPlatformBrowser(platformId);
 
       if (isBrowser) {
-        const savedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
-
-        // history
-        if (savedHistory) {
-          patchState(store, { searchHistory: JSON.parse(savedHistory) });
-        }
-
         const breakpointObserver = inject(BreakpointObserver);
 
         breakpointObserver

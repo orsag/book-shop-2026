@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
-export type ToastType = 'info' | 'success' | 'alert';
+export type ToastType = 'simple' | 'success' | 'danger' | 'warning';
 
 interface Toast {
   id: string;
@@ -21,7 +21,7 @@ export class ToastService {
   // Public readonly signal for components to consume
   public toasts = this.toastsSignal.asReadonly();
 
-  show(text: string, type: ToastType = 'info', duration = 3000) {
+  show(text: string, type: ToastType = 'simple', duration = 10000) {
     const id = crypto.randomUUID();
 
     // Add new common to the list
@@ -38,12 +38,17 @@ export class ToastService {
   }
 
   alert(text: string, duration?: number) {
-    this.show(text, 'alert', duration);
+    this.show(text, 'warning', duration);
     this.live.announce(text, 'assertive');
   }
 
   info(text: string, duration?: number) {
-    this.show(text, 'info', duration);
+    this.show(text, 'simple', duration);
+    this.live.announce(text, 'assertive');
+  }
+
+  danger(text: string, duration?: number) {
+    this.show(text, 'danger', duration);
     this.live.announce(text, 'assertive');
   }
 
