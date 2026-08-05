@@ -1,42 +1,34 @@
 <main class="flex flex-col items-center justify-start py-6" *transloco="let t">
 
-  <!-- TEXT AND BUTTONS CONTAINER (Constrained to ~576px for readability) -->
-  <div class="text-center max-w-xl">
+  <div
+    class="hero min-h-screen"
+    style="background-image: url('/images/hong-kong-4k.jpg');"
+  >
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-neutral-content text-center">
+      <div class="max-w-md">
+        <h1 class="mb-5 text-5xl font-bold dark:text-black">
+          {{ t('administration.not_found') }}
+        </h1>
+        <p class="mb-5 text-lg dark:text-black">
+          {{ t('administration.sorry') }}
+        </p>
+        <div class="mt-8 flex items-center justify-center gap-x-6">
+          <button appRedFocus routerLink="/" class="btn btn-xl btn-primary shadow-sm">
+            {{ t('administration.back_home') }}
+          </button>
 
-    <h1 class="text-3xl font-bold tracking-tight text-base-content sm:text-5xl">
-      {{ t('administration.not_found') }}
-    </h1>
-
-    <p class="mt-4 text-lg leading-7 text-base-content/70">
-      {{ t('administration.sorry') }}
-    </p>
-
-    <div class="mt-8 flex items-center justify-center gap-x-6">
-      <a appRedFocus routerLink="/" class="btn btn-primary shadow-sm">
-        {{ t('administration.back_home') }}
-      </a>
-
-      <a appRedFocus href="javascript:void(0)"
-         (click)="$event.preventDefault()"
-         class="btn btn-outline tooltip"
-         data-tip="Work in progress">
-        {{ t('administration.support') }} <span aria-hidden="true">&rarr;</span>
-      </a>
+          <button
+            appRedFocus
+            (click)="$event.preventDefault()"
+            class="btn btn-xl btn-primary tooltip"
+            data-tip="Work in progress"
+          >
+            {{ t('administration.support') }} <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
     </div>
-
-  </div>
-
-  <!-- IMAGE CONTAINER (Moved OUTSIDE the max-w-xl div!) -->
-  <!-- I gave it max-w-5xl (1024px) so it gets big, but doesn't look insane on 4k ultra-wide monitors -->
-  <div class="mt-12 w-full flex items-center justify-center">
-    <img
-      tabindex="-1"
-      src="images/pepe.jpg"
-      width="600"
-      height="250"
-      alt="pepe"
-      class="w-[600px] h-[300px] object-cover rounded-xl shadow-2xl opacity-50"
-    >
   </div>
 
 </main>

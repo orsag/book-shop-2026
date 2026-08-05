@@ -16,17 +16,23 @@ export class BookService {
   fetchProducts(
     p: Partial<AppState['filters']>,
   ): Observable<PaginatedProducts> {
-    let params = new HttpParams();
-    Object.entries(p).forEach(([k, v]) => {
-      if (v !== null && v !== undefined && v !== '') {
-        params = params.set(k, v.toString());
-      }
+    const cleanParams = Object.fromEntries(
+      Object.entries(p).filter(
+        ([_, v]) => v !== null && v !== undefined && v !== '',
+      ),
+    );
+
+    const params = new HttpParams({
+      fromObject: cleanParams as Record<string, string>,
     });
+
     return this.http.get<PaginatedProducts>(this.apiUrl, { params });
   }
 
   getOne(id: string, type: ProductType): Observable<IProduct> {
-    return this.http.get<IProduct>(`${this.apiUrl}/${id}`, { params: { type } });
+    return this.http.get<IProduct>(`${this.apiUrl}/${id}`, {
+      params: { type },
+    });
   }
 
   create(product: Partial<IProduct>): Observable<IProduct> {
