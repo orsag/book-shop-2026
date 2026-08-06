@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CartStore, UserStore } from '@store';
@@ -24,7 +24,7 @@ import { RedFocusDirective } from '@core';
   styleUrl: './book-card.css',
 })
 export class BookCard {
-  @Input({ required: true }) product!: Product;
+  @Input({ required: true }) product!: CreateProductDto;
   private readonly cartStore = inject(CartStore);
   readonly userStore = inject(UserStore);
   ux = inject(UXService);

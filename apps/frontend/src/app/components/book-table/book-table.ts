@@ -1,5 +1,5 @@
 import { Component, computed, inject, output, Signal } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AppStore } from '@store';
@@ -28,11 +28,11 @@ import {
 })
 export class BookTable {
   store = inject(AppStore);
-  edit = output<Product>();
-  remove = output<Product>();
-  editCover = output<Product>();
+  edit = output<CreateProductDto>();
+  remove = output<CreateProductDto>();
+  editCover = output<CreateProductDto>();
 
-  products: Signal<Product[]> = this.store.products;
+  products: Signal<CreateProductDto[]> = this.store.products;
 
   dynamicColumns = computed(() => {
     if (this.store.isBook()) {
@@ -48,15 +48,15 @@ export class BookTable {
     }
   });
 
-  handleEdit(book: Product) {
+  handleEdit(book: CreateProductDto) {
     this.edit.emit(book);
   }
 
-  handleEditCover(book: Product) {
+  handleEditCover(book: CreateProductDto) {
     this.editCover.emit(book);
   }
 
-  handleDelete(book: Product) {
+  handleDelete(book: CreateProductDto) {
     this.remove.emit(book);
   }
 }

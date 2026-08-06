@@ -1,4 +1,7 @@
-import type { Product, ProductType } from '@store/libs';
+import {
+  CreateProductDto as ICreateProductDto,
+  CreateProductDtoProductType,
+} from '@api';
 import {
   IsString,
   IsNumber,
@@ -46,7 +49,7 @@ export class BookDto {
   @IsString()
   binding!: string;
   @IsString()
-  publishedDate!: Date;
+  publishedDate!: string;
   @IsOptional()
   @IsBoolean()
   audioBook!: boolean;
@@ -107,7 +110,7 @@ export class GiftCardDto {
   priceCurrency!: string;
 }
 
-export class CreateProductDto implements Product {
+export class CreateProductDto implements ICreateProductDto {
   @IsString()
   id: string = 'default-id-123';
   @IsString()
@@ -137,7 +140,7 @@ export class CreateProductDto implements Product {
   @IsIn(['BOOK', 'GAME', 'GASTRO', 'GIFT_CARD'], {
     message: 'category must be one of: BOOK, GAME, GASTRO, GIFT_CARD',
   })
-  productType!: ProductType;
+  productType!: CreateProductDtoProductType;
 
   // Relations (optional for partial DTOs or loaded relations)
   // @IsOptional()
@@ -165,7 +168,7 @@ export class CreateProductDto implements Product {
   @Type(() => GiftCardDto)
   cardDetails?: GiftCardDto | null;
   @IsString()
-  createdAt: Date = new Date();
+  createdAt!: string;
   @IsString()
-  updatedAt: Date = new Date();
+  updatedAt!: string;
 }

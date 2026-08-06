@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '@store/shared-models';
+import { User } from '@store/libs';
 import { Observable } from 'rxjs';
 
 export interface LoginResponse {

@@ -12,6 +12,7 @@ import { AuthModule } from '../auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { OrderModule } from '../order/order.module';
 import { UserDetailModule } from '../user-detail/user-detail.module';
+import { UserModule } from '../user/user.module';
 import { UploadsModule } from '../uploads/uploads.module';
 import { ProductsModule } from '../product/products.module';
 import { VideoModule } from '../video/video.module';
@@ -22,6 +23,7 @@ import { VideoModule } from '../video/video.module';
     PrismaModule,
     OrderModule,
     UserDetailModule,
+    UserModule,
     UploadsModule,
     ProductsModule,
     VideoModule,

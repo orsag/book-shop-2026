@@ -1,9 +1,9 @@
-import { ProductType } from '@store/libs';
+import { CreateProductDtoProductType } from '@api';
 
 export const DEFAULT_LOADER_DELAY = 1000;
 export const DEFAULT_MAX_LIMIT = 12;
 export const DEFAULT_PAGE = 1;
-export const DEFAULT_TYPE = 'BOOK' as ProductType;
+export const DEFAULT_TYPE = 'BOOK' as CreateProductDtoProductType;
 export const DEFAULT_SEARCH = '';
 
 export const VIEW_LAYOUTS = ['grid', 'list'] as const;

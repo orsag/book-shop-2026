@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NotFoundExceptionFilter } from './middleware/not-found.middleware';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // Load .env from the root of the monorepo
 dotenv.config({ path: join(__dirname, '../../.env') });
@@ -61,6 +62,18 @@ async function bootstrap() {
 
   // Enable CORS so your Angular app can talk to the backend
   app.enableCors();
+
+  const config = new DocumentBuilder()
+    .setTitle('BookStore API')
+    .setDescription('The API description for our BookStore')
+    .setVersion('1.0')
+    .addBearerAuth() // Optional: if you use JWT auth
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+
+  // This serves the interactive Swagger UI at /api-docs
+  SwaggerModule.setup('api-docs', app, documentFactory);
 
   const port = process.env['PORT'] || 3000;
   await app.listen(port);

@@ -25,4 +25,12 @@
     "../../generated/prisma/client.ts",
     "../../prisma/prisma.ts"
   ],
+  "exclude": [
+    "src/**/*.test.tsx",
+    "src/**/*.spec.tsx",
+    "src/**/*.test.js",
+    "src/**/*.spec.js",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts"
+  ]
 }

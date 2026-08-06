@@ -59,8 +59,8 @@ export class OrderController {
   }
 
   @Get('user/:userId')
-  findAllByUser(@Req() req: RequestWithUser) {
-    return this.orderService.findAllByUser(req.user.userId);
+  findAllByUser(@Req() req: RequestWithUser, @Param('userId') userId: string) {
+    return this.orderService.findAllByUser(userId);
   }
 
   @Patch(':id/cancel')

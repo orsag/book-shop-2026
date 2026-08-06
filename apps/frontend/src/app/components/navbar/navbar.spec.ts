@@ -6,7 +6,7 @@ import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
 import { computed, signal } from '@angular/core';
 import { AppStore, CartStore, UserStore } from '@store';
-import { ProductType } from '@store/libs';
+import { CreateProductDtoProductType as ProductType } from '@api';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,

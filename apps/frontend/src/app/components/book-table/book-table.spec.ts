@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BookTable } from './book-table';
+import { BookTable } from '@component';
 import { getTranslocoModule } from '@core';
 import { computed, signal } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { AppStore } from '@store';
 
 describe('BookTable', () => {
@@ -12,7 +12,7 @@ describe('BookTable', () => {
 
   beforeEach(async () => {
     mockAppStore = {
-      products: signal<Product[]>([]),
+      products: signal<CreateProductDto[]>([]),
       isBook: computed(() => true),
       isGame: computed(() => false),
       isGastro: computed(() => false),

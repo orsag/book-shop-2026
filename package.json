@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "2.6.9",
+  "version": "2.7.0",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -9,6 +9,7 @@
     "seed": "npx tsx prisma/seed.ts",
     "pipe": "clear && gitlab-ci-local",
     "kill": "clear && killall -9 node",
+    "generate:client": "orval --config orval.config.ts",
     "lint": "npx nx run frontend:lint --skip-nx-cache 2>&1",
     "install:browsers": "npx playwright install chromium",
     "serve": "npx nx run-many -t serve --projects=frontend,backend --parallel=2 --output-style=stream",
@@ -34,6 +35,7 @@
     "@angular/platform-browser": "~22.0.8",
     "@angular/platform-server": "~22.0.8",
     "@angular/router": "~22.0.8",
+    "@faker-js/faker": "^10.4.0",
     "@hono/node-server": "^2.0.8",
     "@hono/zod-validator": "^0.9.0",
     "@jsverse/transloco": "^8.4.0",
@@ -44,6 +46,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/swagger": "^11.4.6",
     "@ngrx/operators": "^21.1.0",
     "@ngrx/signals": "^21.1.0",
     "@prisma/adapter-pg": "^7.9.0",
@@ -72,9 +75,9 @@
     "postgres": "^3.4.9",
     "reflect-metadata": "^0.1.14",
     "rxjs": "~7.8.0",
+    "swagger-ui-express": "^5.0.1",
     "tailwindcss": "^4.3.0",
-    "zod": "^4.4.3",
-    "@faker-js/faker": "^10.4.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@angular-devkit/architect": "^0.2200.6",
@@ -136,6 +139,7 @@
     "jsonc-eslint-parser": "^2.1.0",
     "ng-mocks": "^14.15.3",
     "nx": "23.1.0",
+    "orval": "^8.23.0",
     "prettier": "~3.8.4",
     "prisma": "^7.9.0",
     "react-refresh": "^0.10.0",

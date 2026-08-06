@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FindAllParams } from './types';
+import {
+  ProductsControllerFindAllParams,
+  CreateProductDtoProductType,
+} from '@api';
 import { Prisma } from '@prismalib';
 import { ProductWhereInput } from '@prismalib';
 import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
@@ -11,7 +14,10 @@ import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  private calculateEffectivePrice(product: { price: number; discount?: number | null }): number {
+  private calculateEffectivePrice(product: {
+    price: number;
+    discount?: number | null;
+  }): number {
     const discountMultiplier = 1 - (product.discount || 0);
     return product.price * discountMultiplier;
   }
@@ -24,7 +30,7 @@ export class ProductsService {
     category,
     sortBy,
     isDiscounted,
-  }: FindAllParams) {
+  }: ProductsControllerFindAllParams) {
     const skip = (page - 1) * limit;
     const andConditions: ProductWhereInput | ProductWhereInput[] = [];
 
@@ -88,7 +94,7 @@ export class ProductsService {
     }
 
     const where: Prisma.ProductWhereInput = {
-      productType: type,
+      productType: type as CreateProductDtoProductType,
       AND: andConditions,
     };
 

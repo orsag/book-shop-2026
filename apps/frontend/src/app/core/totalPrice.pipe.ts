@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Product } from '@store/libs';
+import { CreateProductDto as IProduct } from '@api';
 
 type Item = {
   productId: string;
   quantity: number;
   price: number;
-  product: Product;
+  product: IProduct;
 };
 
 @Pipe({

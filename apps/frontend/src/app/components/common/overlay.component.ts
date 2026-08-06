@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './overlay.component.html',
 })
 export class OverlayComponent {
-  @Input({ required: true }) product!: Product;
+  @Input({ required: true }) product!: CreateProductDto;
   /*
     id: string
   sku: string

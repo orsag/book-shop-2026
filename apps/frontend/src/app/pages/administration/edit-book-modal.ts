@@ -11,12 +11,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { form, min, required, maxLength } from '@angular/forms/signals';
 import {
-  Product,
-  UpdateProductDto,
   EMPTY_BOOK,
-  BookDetails,
-  ProductType,
 } from '@store/libs';
+import { CreateProductDto as IProduct, UpdateProductDto, BookDto } from '@api';
+import { CreateProductDtoProductType as ProductType } from '@api';
 import { createProduct } from '../../../../../../prisma/createProduct';
 import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '@store';
@@ -205,9 +203,9 @@ export class EditBookModalComponent {
   closeModal = output<void>();
   commonSave = output<{
     id: string | undefined;
-    dataToSave: Partial<Product>;
+    dataToSave: Partial<IProduct>;
   }>();
-  readonly selectedBook = input.required<Product | null>();
+  readonly selectedBook = input.required<IProduct | null>();
   store = inject(AppStore);
 
   editModel = signal<UpdateProductDtoFrontend>({
@@ -232,14 +230,13 @@ export class EditBookModalComponent {
           const quality = book.product_quality ? book.product_quality : 'new';
           const details = book.bookDetails
             ? book.bookDetails
-            : (EMPTY_BOOK.bookDetails as BookDetails);
+            : (EMPTY_BOOK.bookDetails as BookDto);
 
           this.editModel.set({
             name: book.name,
             alternativeHeadline: book.alternativeHeadline,
             price: book.price,
             discount: book.discount,
-            isAvailable: book.isAvailable,
             availableCount: book.availableCount,
             productType: book.productType,
             description: descriptor,
@@ -284,13 +281,12 @@ export class EditBookModalComponent {
       : 'new';
     const details = tempProduct.bookDetails
       ? { ...tempProduct.bookDetails.create }
-      : (EMPTY_BOOK.bookDetails as BookDetails);
+      : (EMPTY_BOOK.bookDetails as BookDto);
     this.editModel.set({
       name: tempProduct.name,
       alternativeHeadline: tempProduct.alternativeHeadline,
       price: tempProduct.price ?? 100,
       discount: tempProduct.discount ?? 0,
-      isAvailable: true,
       availableCount: tempProduct.availableCount ?? 0,
       productType: tempProduct.productType as ProductType,
       description: descriptor,

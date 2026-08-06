@@ -16,8 +16,7 @@ import {
   resourceFromSnapshots,
   ResourceSnapshot,
 } from '@angular/core';
-import { ActionResponse, ProductType } from '@store/shared-models';
-import { Product as IProduct } from '@store/shared-models';
+import { ActionResponse } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap, delay } from 'rxjs';
 import { pipe, switchMap } from 'rxjs';
@@ -26,6 +25,10 @@ import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { isPlatformBrowser } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type {
+  CreateProductDtoProductType as ProductType,
+  CreateProductDto as IProduct,
+} from '@api';
 import {
   ViewLayout,
   VIEW_LAYOUTS,

@@ -11,10 +11,10 @@ import {
   RATING_MAX,
   RATING_MIN,
 } from './creator.constants';
-import { ProductType } from '@store/libs';
+import { CreateProductDtoProductType } from '@api';
 
-export function getName(type: ProductType) {
-  const map: Record<ProductType, string> = {
+export function getName(type: CreateProductDtoProductType) {
+  const map: Record<CreateProductDtoProductType, string> = {
     BOOK: faker.commerce.productName(),
     GAME: faker.helpers.arrayElement(computerGames),
     GASTRO: faker.food.dish(),
@@ -23,7 +23,7 @@ export function getName(type: ProductType) {
   return map[type] ?? faker.commerce.productName();
 }
 
-export function createProduct(type: ProductType) {
+export function createProduct(type: CreateProductDtoProductType) {
   const availableCount = faker.number.int({ min: 0, max: 50 });
   const isAvailable = availableCount > 0;
   const condition = Math.random() < 0.9 ? 'new' : 'used';

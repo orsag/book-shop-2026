@@ -1,7 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { Product } from '@store/libs';
+import { CreateProductDto as IProduct } from '@api';
 import { AppStore } from '@store';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 
@@ -43,7 +43,7 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 })
 export class DeleteModalComponent {
   closeModal = output<void>();
-  readonly selectedBook = input.required<Product | null>();
+  readonly selectedBook = input.required<IProduct | null>();
   store = inject(AppStore);
 
   async confirmDelete() {

@@ -1,4 +1,5 @@
-import { Product as IProduct, ProductType } from '@store/libs';
+import { CreateProductDto as IProduct } from '@api';
+import { CreateProductDtoProductType as ProductType } from '@api';
 
 export interface BookFilters {
   type: ProductType;
@@ -24,12 +25,3 @@ export interface PaginatedProducts {
     count: number;
   };
 }
-
-// Define a type for your filter/sort items
-export type FilterItem = {
-  label: string;
-  icon: string;
-  isActive: () => boolean;
-  action: () => void;
-  style: 'warning' | 'outline'; // To distinguish your specific button styles
-};

@@ -7,7 +7,7 @@ import {
   required,
   SchemaPathTree,
 } from '@angular/forms/signals';
-import { UpdateProductDto } from '@store/libs';
+import { UpdateProductDto } from '@api';
 
 export type UpdateProductDtoFrontend = Omit<UpdateProductDto, 'bookDetails'> & {
   bookDetails: NonNullable<UpdateProductDto['bookDetails']>;

@@ -1,5 +1,5 @@
 import { Component, inject, Input, signal } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartStore } from '@store';
@@ -26,7 +26,7 @@ export class BookListItem {
   toast = inject(ToastService);
   ux = inject(UXService);
   isHovered = signal(false);
-  @Input({ required: true }) product!: Product;
+  @Input({ required: true }) product!: CreateProductDto;
 
   handleCartAction() {
     if (this.ux.isInCart(this.product)) {

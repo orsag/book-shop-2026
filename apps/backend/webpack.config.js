@@ -4,9 +4,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   resolve: {
-    plugins: [
-      new TsconfigPathsPlugin({ configFile: './tsconfig.app.json' }),
-    ],
+    plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.app.json' })],
   },
   output: {
     path: join(__dirname, '../../dist/apps/backend'),
@@ -26,6 +24,18 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMap: true,
+      // 👉 ADD THIS TRANSFORMER BLOCK:
+      transformers: [
+        {
+          name: '@nestjs/swagger/plugin',
+          options: {
+            classValidatorShim: true,
+            // If your DTOs are in shared libs outside apps/backend/src,
+            // you can also specify file suffix patterns if needed:
+            dtoFileNameSuffix: ['.dto.ts', '.entity.ts'],
+          },
+        },
+      ],
     }),
   ],
   watchOptions: {

@@ -1,22 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product, OrderStatus, Order } from '@store/shared-models';
+import { OrderStatus, Order } from '@store/shared-models';
 import { Observable } from 'rxjs';
-
-export interface OrderItem {
-  productId: string;
-  quantity: number;
-}
-
-export interface CreateOrderDto {
-  items: OrderItem[];
-}
+import { CreateProductDto as IProduct, CreateOrderDto } from '@api';
 
 export interface CreatedOrderItem {
   productId: string;
   quantity: number;
   price: number;
-  product: Product;
+  product: IProduct;
 }
 
 export interface CreatedOrder {

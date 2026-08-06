@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { form, min, max } from '@angular/forms/signals';
-import { Product, EMPTY_GAME, GameDetails, CATEGORIES } from '@store/libs';
+import { EMPTY_GAME, CATEGORIES } from '@store/libs';
 import { GAME_CATEGORIES } from '@store/shared-models';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { FormFieldComponent } from '@component';
@@ -19,6 +19,7 @@ import {
   applyCommonProductRules,
   UpdateProductGameDtoFrontend,
 } from './form-rules.shared';
+import { GameDto, CreateProductDto as IProduct } from '@api';
 
 @Component({
   selector: 'app-edit-game-modal',
@@ -159,9 +160,9 @@ export class EditGameModalComponent {
   closeModal = output<void>();
   commonSave = output<{
     id: string | undefined;
-    dataToSave: Partial<Product>;
+    dataToSave: Partial<IProduct>;
   }>();
-  readonly selectedBook = input.required<Product | null>();
+  readonly selectedBook = input.required<IProduct | null>();
   store = inject(AppStore);
 
   editModel = signal<UpdateProductGameDtoFrontend>({
@@ -186,7 +187,7 @@ export class EditGameModalComponent {
           const quality = book.product_quality ? book.product_quality : 'new';
           const details = book.gameDetails
             ? book.gameDetails
-            : (EMPTY_GAME.gameDetails as GameDetails);
+            : (EMPTY_GAME.gameDetails as GameDto);
 
           this.editModel.set({
             name: book.name,
@@ -198,7 +199,6 @@ export class EditGameModalComponent {
             description: descriptor,
             product_quality: quality,
             gameDetails: { ...details },
-            isAvailable: true,
           });
         });
       }

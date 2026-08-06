@@ -21,8 +21,8 @@ import {
   DEFAULT_TYPE,
   DEFAULT_PAGE,
   DEFAULT_MAX_LIMIT,
-  ProductType,
 } from '@store/libs';
+import { CreateProductDtoProductType } from '@api';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../guards/admin.guard';
 
@@ -37,7 +37,8 @@ export class ProductsController {
 
   @Get('')
   findAll(
-    @Query('type', new DefaultValuePipe(DEFAULT_TYPE)) type: ProductType,
+    @Query('type', new DefaultValuePipe(DEFAULT_TYPE))
+    type: CreateProductDtoProductType,
     @Query('page', new DefaultValuePipe(DEFAULT_PAGE), ParseIntPipe)
     page: number,
     @Query('limit', new DefaultValuePipe(DEFAULT_MAX_LIMIT), ParseIntPipe)
@@ -60,7 +61,10 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Query('type') type: ProductType) {
+  findOne(
+    @Param('id') id: string,
+    @Query('type') type: CreateProductDtoProductType,
+  ) {
     return this.productsService.findOne(id, type);
   }
 

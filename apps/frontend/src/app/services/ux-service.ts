@@ -1,5 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { DEFAULT_TYPE, Product, ProductType } from '@store/shared-models';
+import { DEFAULT_TYPE } from '@store/shared-models';
+import { CreateProductDto } from '@api';
+import { CreateProductDtoProductType as ProductType } from '@api';
 import { CartStore, UserStore } from '@store';
 
 const productGradients: Record<ProductType, string> = {
@@ -18,7 +20,7 @@ export class UXService {
   userStore = inject(UserStore);
   cart = inject(CartStore);
 
-  isGradientClass(product: Product) {
+  isGradientClass(product: CreateProductDto) {
     const productType = product.productType;
     if (productType) {
       return productGradients[productType];
@@ -27,7 +29,7 @@ export class UXService {
     }
   };
 
-  isFavorite(product: Product) {
+  isFavorite(product: CreateProductDto) {
     const id = product.id;
     if (id) {
       return this.userStore.user()?.favorites?.includes(id);
@@ -36,7 +38,7 @@ export class UXService {
     }
   };
 
-  isInCart(product: Product) {
+  isInCart(product: CreateProductDto) {
     const id = product.id;
     if (id) {
       return !!this.cart.itemsMap()[id];
@@ -45,7 +47,7 @@ export class UXService {
     }
   }
 
-  readingHours (product: Product) {
+  readingHours (product: CreateProductDto) {
     if (product.productType === DEFAULT_TYPE) {
       const pages = product.bookDetails?.pageCount || 0;
       if (pages === 0) return 0;
@@ -55,7 +57,7 @@ export class UXService {
     }
   };
 
-  category(product: Product) {
+  category(product: CreateProductDto) {
     switch (product.productType) {
       case 'BOOK':
         return product.bookDetails?.category;
@@ -68,7 +70,7 @@ export class UXService {
     }
   };
 
-  author(product: Product) {
+  author(product: CreateProductDto) {
     switch (product.productType) {
       case 'BOOK':
         return product.bookDetails?.author;

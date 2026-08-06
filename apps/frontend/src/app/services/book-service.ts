@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ActionResponse, Product as IProduct, ProductType } from '@store/libs';
+import { ActionResponse } from '@store/libs';
+import { CreateProductDto as IProduct } from '@api';
+import { CreateProductDtoProductType as ProductType } from '@api';
 import { Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '@store';

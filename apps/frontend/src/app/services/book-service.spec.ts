@@ -6,7 +6,8 @@ import {
 } from '@angular/common/http/testing';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { BookService } from './book-service';
-import { ProductType, Product, DEFAULT_MAX_LIMIT } from '@store/libs';
+import { Product, DEFAULT_MAX_LIMIT } from '@store/libs';
+import { CreateProductDtoProductType as ProductType } from '@api';
 import { PaginatedProducts } from '../../types';
 
 describe('BookService', () => {

@@ -7,7 +7,7 @@ import {
   withHooks,
   patchState,
 } from '@ngrx/signals';
-import { PremiumStatus, User, UserDetail, UserDetailSmall } from '@store/libs';
+import { PremiumStatus, User, UserDetailSmall } from '@store/libs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, exhaustMap, filter, finalize } from 'rxjs/operators';
 import { EMPTY, map, of, pipe, switchMap, tap } from 'rxjs';
@@ -16,6 +16,7 @@ import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { AuthService, DetailService } from '@service';
 import { AppStore } from './app-store';
 import { isPlatformBrowser } from '@angular/common';
+import { CreateUserDetailDto } from '@api';
 
 const USER_STORAGE_KEY = 'currentUser';
 const TOKEN_STORAGE_KEY = 'accessToken';
@@ -23,7 +24,7 @@ const DETAIL_STORAGE_KEY = 'currentStatus';
 
 export interface UserState {
   user: User | null;
-  userDetail: UserDetail | null;
+  userDetail: CreateUserDetailDto | null;
   premiumStatus: PremiumStatus | null;
   isLoading: boolean;
 }
@@ -216,7 +217,7 @@ export const UserStore = signalStore(
           tap(() => patchState(store, { isLoading: true })),
           switchMap(({ userId, updates }) => {
             return detailService.updateUserDetail(userId, updates).pipe(
-              tap((updatedDetail: UserDetail) => {
+              tap((updatedDetail: CreateUserDetailDto) => {
                 errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
                 patchState(store, {
                   userDetail: updatedDetail,
@@ -238,7 +239,7 @@ export const UserStore = signalStore(
           tap(() => patchState(store, { isLoading: true })),
           switchMap(({ userId }) =>
             detailService.getUserDetailById(userId).pipe(
-              tap((userDetail: UserDetail) => {
+              tap((userDetail: CreateUserDetailDto) => {
                 patchState(store, {
                   userDetail: userDetail,
                   isLoading: false,
@@ -285,17 +286,22 @@ export const UserStore = signalStore(
             if (!currentUser || !token) return EMPTY;
 
             // 1. Calculate new favorites array locally
-            const isFavorite = currentUser.favorites.includes(productId);
+            const isFavorite = currentUser.favorites?.includes(productId);
+            const oldArray = currentUser.favorites ? [...currentUser.favorites] : [];
             const updatedFavorites = isFavorite
-              ? currentUser.favorites.filter((id) => id !== productId)
-              : [...currentUser.favorites, productId];
+              ? currentUser.favorites?.filter((id) => id !== productId)
+              : [...oldArray, productId];
 
             // 2. Optimistic Update: Update UI immediately
             const updatedUser = { ...currentUser, favorites: updatedFavorites };
             patchState(store, { user: updatedUser }); //
 
             // 3. Sync with Backend using the token
-            return authService.updateUserFavorites(updatedFavorites);
+            if (updatedFavorites) {
+              return authService.updateUserFavorites(updatedFavorites);
+            } else {
+              return EMPTY;
+            }
           }),
         ),
       ),
@@ -306,7 +312,7 @@ export const UserStore = signalStore(
 
       updateStore(
         user?: User | null,
-        userDetail?: UserDetail | null,
+        userDetail?: CreateUserDetailDto | null,
         premiumStatus?: PremiumStatus | null,
       ) {
         const partialState: Partial<UserState> = {};

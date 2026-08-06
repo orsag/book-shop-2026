@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PremiumStatus, UserDetail } from '@store/libs';
+import { PremiumStatus, UserDetailSmall } from '@store/libs';
+import { CreateUserDetailDto as UserDetail } from '@api';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class DetailService {
 
   updateUserDetail(
     userId: string,
-    updated: Partial<UserDetail>,
+    updated: Partial<UserDetailSmall>,
   ): Observable<UserDetail> {
     return this.http.patch<UserDetail>(`${this.API_URL}/${userId}`, updated);
   }

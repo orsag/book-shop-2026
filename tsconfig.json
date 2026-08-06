@@ -27,7 +27,8 @@
       "@core": ["./apps/frontend/src/app/core"],
       "@service": ["./apps/frontend/src/app/services"],
       "@component": ["./apps/frontend/src/app/components"],
-      "@store": ["./apps/frontend/src/app/store"]
+      "@store": ["./apps/frontend/src/app/store"],
+      "@api": ["./apps/libs/src/api-interfaces/generated/models"]
     }
   },
   "angularCompilerOptions": {

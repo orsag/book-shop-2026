@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
-import { OrderStatus, Product } from '@store/shared-models';
+import { OrderStatus } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import {
   signalStore,
   withState,
@@ -16,7 +16,7 @@ import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 
 export interface CartItem {
-  product: Product;
+  product: CreateProductDto;
   quantity: number;
 }
 
@@ -79,7 +79,7 @@ export const CartStore = signalStore(
       bookService = inject(BookService),
       orderService = inject(OrderService),
     ) => ({
-      addToCart(product: Product) {
+      addToCart(product: CreateProductDto) {
         const currentMap = store.itemsMap();
         const existing = currentMap[product.id];
 

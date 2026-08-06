@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { Product } from '@store/shared-models';
+import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CartStore, UserStore } from '@store';
@@ -20,7 +20,7 @@ import { UXService } from '@service';
   styleUrl: './card-small.css',
 })
 export class CardSmall {
-  @Input({ required: true }) product!: Product;
+  @Input({ required: true }) product!: CreateProductDto;
   private readonly cartStore = inject(CartStore);
   readonly userStore = inject(UserStore);
   ux = inject(UXService);

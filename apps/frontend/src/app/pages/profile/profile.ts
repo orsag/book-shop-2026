@@ -9,11 +9,10 @@ import {
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { form, FormField, required } from '@angular/forms/signals';
 import {
-  UserWithoutId,
+  UpdateUserDtoSmall,
   UserDetailSmall,
   User,
   OrderStatus,
-  UserDetail,
 } from '@store/shared-models';
 import { AppStore, UserStore, CartStore } from '@store';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +31,7 @@ import {
 } from '@core';
 import { CardSmall, FieldErrorComponent } from '@component';
 import { delay } from 'rxjs';
+import { UpdateUserDetailDto } from '@api';
 
 @Component({
   selector: 'app-profile',
@@ -108,7 +108,7 @@ export class Profile {
     this.mapToDetailModel(this.userStore.userDetail()),
   );
 
-  userModel = signal<UserWithoutId>({
+  userModel = signal<UpdateUserDtoSmall>({
     username: this.userStore.user()?.username ?? '',
     email: this.userStore.user()?.email ?? '',
     phoneNumber: this.userStore.user()?.phoneNumber ?? '',
@@ -131,17 +131,7 @@ export class Profile {
     });
   });
 
-  userForm = form(this.userModel, (schemaPath) => {
-    required(schemaPath.username, {
-      message: 'Username is required',
-    });
-    required(schemaPath.email, {
-      message: 'Email is required',
-    });
-    required(schemaPath.phoneNumber, {
-      message: 'Phone is required',
-    });
-  });
+  userForm = form(this.userModel);
 
   isPremium = computed(() => this.userStore.userDetail()?.isPremium ?? false);
 
@@ -178,7 +168,7 @@ export class Profile {
       this.form.dateOfBirth,
     ];
 
-    const invalidField = fields.find((field) => field().invalid());
+    const invalidField = fields.find((field) => field && field().invalid());
 
     if (invalidField) {
       invalidField().focusBoundControl();
@@ -201,7 +191,7 @@ export class Profile {
   }
 
   // 1. Extract the mapping logic to a reusable method
-  private mapToDetailModel(detail: UserDetail | null): UserDetailSmall {
+  private mapToDetailModel(detail: UpdateUserDetailDto | null): UserDetailSmall {
     return {
       displayName: detail?.displayName ?? '',
       bio: detail?.bio ?? '',
@@ -217,7 +207,7 @@ export class Profile {
       taxId: detail?.taxId ?? '',
       dateOfBirth: detail?.dateOfBirth
         ? new Date(detail.dateOfBirth).toISOString().split('T')[0]
-        : null,
+        : new Date().toISOString().split('T')[0],
     };
   }
 

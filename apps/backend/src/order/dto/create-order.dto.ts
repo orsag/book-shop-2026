@@ -12,16 +12,16 @@ import { Type } from 'class-transformer';
 class OrderItemDto {
   @IsUUID()
   @IsNotEmpty()
-  productId: string;
+  productId!: string;
 
   @IsInt()
   @Min(1)
-  quantity: number;
+  quantity!: number;
 }
 
 export class CreateOrderDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDto)
-  items: OrderItemDto[];
+  items!: OrderItemDto[];
 }
