@@ -14,6 +14,7 @@ export default [
         {
           enforceBuildableLibDependency: true,
           allow: [
+            '@api',
             '@core',
             '@service',
             '@component',

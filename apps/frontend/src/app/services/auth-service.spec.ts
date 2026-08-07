@@ -6,19 +6,20 @@ import {
 } from '@angular/common/http/testing';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { AuthService, LoginResponse } from './auth-service';
-import { CreateUserDto } from '@api';
+import { User } from '@store/libs';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
 
   // Mock data definitions for clean assertions
-  const mockUser: CreateUserDto = {
+  const mockUser: User = {
+    id: '1234',
+    lastLogin: new Date(),
+    cartItems: [],
     username: 'testuser',
     email: 'test@example.com',
     favorites: ['book-1'],
-    password: 'password',
-    // Include any other mandatory fields from your User model
   };
 
   beforeEach(() => {
@@ -118,7 +119,7 @@ describe('AuthService', () => {
   // --- Testing PATCH (Profile updates) ---
   describe('updateProfile', () => {
     it('should send a PATCH request containing partial user profile updates', () => {
-      const profileUpdates: Partial<CreateUserDto> = {
+      const profileUpdates: Partial<User> = {
         email: 'newemail@example.com',
       };
       const mockUpdatedUser = { ...mockUser, ...profileUpdates };

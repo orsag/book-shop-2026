@@ -6,8 +6,11 @@ import {
 } from '@angular/common/http/testing';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { BookService } from './book-service';
-import { Product, DEFAULT_MAX_LIMIT } from '@store/libs';
-import { CreateProductDtoProductType as ProductType } from '@api';
+import { DEFAULT_MAX_LIMIT } from '@store/libs';
+import {
+  CreateProductDtoProductType as ProductType,
+  CreateProductDto,
+} from '@api';
 import { PaginatedProducts } from '../../types';
 
 describe('BookService', () => {
@@ -77,7 +80,7 @@ describe('BookService', () => {
       const mockProduct = {
         id: defaultProductId,
         name: defaultProductName,
-      } as unknown as Product;
+      } as unknown as CreateProductDto;
 
       service
         .getOne(defaultProductId, defaultProductType)
@@ -100,7 +103,7 @@ describe('BookService', () => {
       const mockResponse = {
         id: '999',
         name: 'New Book',
-      } as unknown as Product;
+      } as unknown as CreateProductDto;
 
       service.create(newProduct).subscribe((res) => {
         expect(res).toEqual(mockResponse);
@@ -132,7 +135,7 @@ describe('BookService', () => {
   });
 });
 
-const MOCK_FOUND_PRODUCTS: Product[] = [
+const MOCK_FOUND_PRODUCTS: CreateProductDto[] = [
   {
     id: '01b9d23b-0a21-409f-a28a-85f07f2d5b75',
     sku: '27Z6SGMY',
@@ -150,14 +153,6 @@ const MOCK_FOUND_PRODUCTS: Product[] = [
     productType: 'BOOK',
     createdAt: '2026-05-16T10:00:00.992Z',
     updatedAt: '2026-06-26T07:47:14.213Z',
-    rating: {
-      id: 'f94d9da1-dd11-41ba-b0b7-bb11ce936791',
-      ratingValue: 5,
-      ratingCount: 248,
-      bestRating: 5,
-      worstRating: 1,
-      productId: '01b9d23b-0a21-409f-a28a-85f07f2d5b75',
-    },
     bookDetails: {
       id: 'cd4fe403-fe47-4fd9-8ffc-439f3d0095bb',
       productId: '01b9d23b-0a21-409f-a28a-85f07f2d5b75',
@@ -168,7 +163,7 @@ const MOCK_FOUND_PRODUCTS: Product[] = [
       bookFormat: 'Audiobook',
       category: 'Fantasy',
       binding: 'flexibound',
-      publishedDate: new Date('2026-01-30T19:22:36.209Z'),
+      publishedDate: new Date('2026-01-30T19:22:36.209Z').toDateString(),
       audioBook: false,
       audioLength: 227,
       audioLanguage: 'Slovak',

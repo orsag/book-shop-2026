@@ -1,6 +1,6 @@
 import { CreateUserDetailDto, CreateUserDto } from '@api';
 
-export interface User extends CreateUserDto {
+export interface User extends Omit<CreateUserDto, 'password'> {
   id: string;
   lastLogin: Date;
   cartItems: string[];

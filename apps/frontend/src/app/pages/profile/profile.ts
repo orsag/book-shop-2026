@@ -63,6 +63,8 @@ export class Profile {
   toast = inject(ToastService);
   private isFormInitialized = false;
   OrderStatus = OSEnum;
+  private detailSnapshot = signal<UserDetailSmall | undefined>(undefined);
+  private userSnapshot = signal<UpdateUserDtoSmall | undefined>(undefined);
 
   constructor() {
     effect(() => {
@@ -83,6 +85,13 @@ export class Profile {
             //!this.form().dirty()
             this.userDetailModel.set(this.mapToDetailModel(latestDetail));
             this.isFormInitialized = true; // Lock it down
+            this.detailSnapshot.set(this.mapToDetailModel(latestDetail));
+            this.userSnapshot.set({
+              username: this.userStore.user()?.username ?? '',
+              email: this.userStore.user()?.email ?? '',
+              phoneNumber: this.userStore.user()?.phoneNumber ?? '',
+              theme: this.userStore.user()?.theme ?? 'light',
+            });
           }
         });
       }
@@ -176,10 +185,16 @@ export class Profile {
   }
 
   handleReset() {
-    this.userForm().reset();
+    const us = this.userSnapshot();
+    const ds = this.detailSnapshot();
+    if (us && ds) {
+      this.userForm().reset(us);
+      this.form().reset(ds);
+      this.toast.success('Zmeny resetované');
+    }
+
     this.form().focusBoundControl();
     // this.inputs()[0]?.nativeElement.focus();
-    this.toast.success('Zmeny resetované');
   }
 
   // Logic to determine if an order can be cancelled (within 14 days)
@@ -191,7 +206,9 @@ export class Profile {
   }
 
   // 1. Extract the mapping logic to a reusable method
-  private mapToDetailModel(detail: UpdateUserDetailDto | null): UserDetailSmall {
+  private mapToDetailModel(
+    detail: UpdateUserDetailDto | null,
+  ): UserDetailSmall {
     return {
       displayName: detail?.displayName ?? '',
       bio: detail?.bio ?? '',
