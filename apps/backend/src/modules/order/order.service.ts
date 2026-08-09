@@ -23,7 +23,7 @@ export class OrderService {
       return `Missing userId #${userId} and will stop create method.`;
     }
     // 🛡️ We use a transaction to ensure either everything succeeds or nothing does
-    return this.prisma.client.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx) => {
 
       let totalAmount = 0;
       const VAT_RATE = 0.05;
@@ -87,14 +87,14 @@ export class OrderService {
   }
 
   findAll() {
-    return this.prisma.client.order.findMany({
+    return this.prisma.order.findMany({
       include: { items: true },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   findOne(id: string) {
-    return this.prisma.client.order.findUnique({
+    return this.prisma.order.findUnique({
       where: { id },
       include: { items: { include: { product: true } } },
     });
@@ -106,7 +106,7 @@ export class OrderService {
   }
 
   async remove(userId: string, id: string, isAdmin: boolean) {
-    return await this.prisma.client.$transaction(async (tx) => {
+    return await this.prisma.$transaction(async (tx) => {
       // 1. Delete all items associated with this order first
       await tx.orderItem.deleteMany({
         where: { orderId: id },
@@ -127,7 +127,7 @@ export class OrderService {
     if (!userId) {
       return `Missing userId #${userId} and will stop create method.`;
     }
-    return this.prisma.client.order.findMany({
+    return this.prisma.order.findMany({
       where: { userId },
       include: {
         items: {
@@ -143,7 +143,7 @@ export class OrderService {
     if (!userId) {
       return `Missing userId #${userId} and will stop create method.`;
     }
-    const order = await this.prisma.client.order.findUnique({
+    const order = await this.prisma.order.findUnique({
       where: { id },
     });
 
@@ -162,14 +162,14 @@ export class OrderService {
     }
 
     // Perform the cancellation
-    return this.prisma.client.order.update({
+    return this.prisma.order.update({
       where: { id },
       data: { status: 'CANCELLED' }, // Assuming your Enum or string is 'CANCELLED'
     });
   }
 
   async updateStatus(id: string, status: string) {
-    return this.prisma.client.order.update({
+    return this.prisma.order.update({
       where: { id },
       data: { status: status as OrderStatus },
     });

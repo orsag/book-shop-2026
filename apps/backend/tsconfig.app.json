@@ -10,7 +10,8 @@
       "vitest/importMeta",
       "vite/client",
       "node",
-      "vitest"
+      "vitest",
+      "jest"
     ],
     "noImplicitAny": false,
     "strictPropertyInitialization": false,

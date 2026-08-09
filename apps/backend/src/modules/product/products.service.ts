@@ -46,7 +46,7 @@ export class ProductsService {
           : cleanedSearch;
       const percentageSearch = `%${rootWord}%`;
 
-      const fuzzyMatches = await this.prisma.client.$queryRaw<{ id: string }[]>`
+      const fuzzyMatches = await this.prisma.$queryRaw<{ id: string }[]>`
         SELECT id FROM "Product" 
         WHERE name ILIKE ${percentageSearch}
       `;
@@ -112,7 +112,7 @@ export class ProductsService {
 
     // 3. Execute Parallel Queries
     const [rawProducts, total] = await Promise.all([
-      this.prisma.client.product.findMany({
+      this.prisma.product.findMany({
         where,
         skip,
         take: limit,
@@ -125,7 +125,7 @@ export class ProductsService {
           cardDetails: type === 'GIFT_CARD',
         },
       }),
-      this.prisma.client.product.count({ where }),
+      this.prisma.product.count({ where }),
     ]);
 
     const dataSorted = [...rawProducts];
@@ -154,7 +154,7 @@ export class ProductsService {
   }
 
   async findOne(id: string, type = 'BOOK') {
-    const product = await this.prisma.client.product.findUnique({
+    const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
         rating: true,
@@ -173,7 +173,7 @@ export class ProductsService {
   }
 
   getProductsByIds(ids: string[]) {
-    return this.prisma.client.product.findMany({
+    return this.prisma.product.findMany({
       where: {
         id: {
           in: ids,
@@ -243,14 +243,14 @@ export class ProductsService {
       };
     }
 
-    return this.prisma.client.product.update({
+    return this.prisma.product.update({
       where: { id },
       data: updateData,
     });
   }
 
   async remove(id: string) {
-    const orderCount = await this.prisma.client.orderItem.count({
+    const orderCount = await this.prisma.orderItem.count({
       where: { productId: id },
     });
 
@@ -262,7 +262,7 @@ export class ProductsService {
       };
     }
 
-    const product = await this.prisma.client.product.findUnique({
+    const product = await this.prisma.product.findUnique({
       where: { id },
       select: { productType: true },
     });
@@ -275,21 +275,21 @@ export class ProductsService {
 
     switch (product.productType) {
       case 'BOOK':
-        await this.prisma.client.book.delete({ where: detailWhere });
+        await this.prisma.book.delete({ where: detailWhere });
         break;
       case 'GAME':
-        await this.prisma.client.game.delete({ where: detailWhere });
+        await this.prisma.game.delete({ where: detailWhere });
         break;
       case 'GASTRO':
-        await this.prisma.client.gastro.delete({ where: detailWhere });
+        await this.prisma.gastro.delete({ where: detailWhere });
         break;
       case 'GIFT_CARD':
-        await this.prisma.client.giftCard.delete({ where: detailWhere });
+        await this.prisma.giftCard.delete({ where: detailWhere });
         break;
     }
 
-    await this.prisma.client.aggregateRating.delete({ where: detailWhere });
-    await this.prisma.client.product.delete({ where: { id } });
+    await this.prisma.aggregateRating.delete({ where: detailWhere });
+    await this.prisma.product.delete({ where: { id } });
 
     return {
       success: true,
@@ -360,7 +360,7 @@ export class ProductsService {
     }
 
     // 4. Save to database and return the newly created product with its relation included
-    return this.prisma.client.product.create({
+    return this.prisma.product.create({
       data: createData,
       include: {
         rating: true,

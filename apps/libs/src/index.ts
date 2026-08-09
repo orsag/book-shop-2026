@@ -2,3 +2,4 @@ export * from './constants';
 export * from './shared-models';
 export * from './utils';
 export * from './mocked';
+export * from './types';

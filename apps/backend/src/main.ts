@@ -1,10 +1,9 @@
 import { ConsoleLogger, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { AppModule } from './modules/app/app.module';
 import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { NotFoundExceptionFilter } from './middleware/not-found.middleware';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // Load .env from the root of the monorepo
@@ -56,9 +55,6 @@ async function bootstrap() {
       transform: true, // Automatically transforms payloads to match DTO types
     }),
   );
-
-  // Bind the 404 filter globally
-  app.useGlobalFilters(new NotFoundExceptionFilter());
 
   // Enable CORS so your Angular app can talk to the backend
   app.enableCors();

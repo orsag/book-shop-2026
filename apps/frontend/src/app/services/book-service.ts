@@ -6,12 +6,13 @@ import { CreateProductDtoProductType as ProductType } from '@api';
 import { Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '@store';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
-  private http = inject(HttpClient);
+  private api = inject(ApiService);
   private apiUrl = '/api/products';
 
   // Pure fetcher used by the Store
@@ -28,29 +29,29 @@ export class BookService {
       fromObject: cleanParams as Record<string, string>,
     });
 
-    return this.http.get<PaginatedProducts>(this.apiUrl, { params });
+    return this.api.get<PaginatedProducts>(this.apiUrl, { params });
   }
 
   getOne(id: string, type: ProductType): Observable<IProduct> {
-    return this.http.get<IProduct>(`${this.apiUrl}/${id}`, {
+    return this.api.get<IProduct>(`${this.apiUrl}/${id}`, {
       params: { type },
     });
   }
 
   create(product: Partial<IProduct>): Observable<IProduct> {
-    return this.http.post<IProduct>(this.apiUrl, product);
+    return this.api.post<IProduct>(this.apiUrl, product);
   }
 
   update(id: string, product: Partial<IProduct>): Observable<IProduct> {
-    return this.http.patch<IProduct>(`${this.apiUrl}/${id}`, product);
+    return this.api.patch<IProduct>(`${this.apiUrl}/${id}`, product);
   }
 
   delete(id: string): Observable<ActionResponse> {
-    return this.http.delete<ActionResponse>(`${this.apiUrl}/${id}`);
+    return this.api.delete<ActionResponse>(`${this.apiUrl}/${id}`);
   }
 
   // Fetches multiple books by their IDs for the favorites list
   getFavorites(ids: string[]): Observable<IProduct[]> {
-    return this.http.post<IProduct[]>(`${this.apiUrl}/list`, { ids });
+    return this.api.post<IProduct[]>(`${this.apiUrl}/list`, { ids });
   }
 }

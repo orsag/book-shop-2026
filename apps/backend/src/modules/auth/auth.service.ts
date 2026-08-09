@@ -20,7 +20,7 @@ export class AuthService {
   async register(dto: RegisterDto) {
     const hash = await bcrypt.hash(dto.password, 10);
     try {
-      const user: any = await this.prisma.client.user.create({
+      const user: any = await this.prisma.user.create({
         data: { email: dto.email, username: dto.username, password: hash },
       });
       delete user.password;
@@ -32,7 +32,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const username = dto.username.toLowerCase();
-    const user = await this.prisma.client.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { username },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async findByUsername(username: string) {
-    const user: any = await this.prisma.client.user.findUnique({
+    const user: any = await this.prisma.user.findUnique({
       where: { username: username.toLowerCase() },
     });
 
@@ -68,7 +68,7 @@ export class AuthService {
 
   async logout(username: string) {
     // Logic: Ensure the user actually exists before "logging out"
-    const user = await this.prisma.client.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { username: username.toLowerCase() },
     });
 
@@ -77,7 +77,7 @@ export class AuthService {
     }
 
     // Optional: You could update a field like `lastActive` here
-    this.prisma.client.user.update({
+    this.prisma.user.update({
       where: { username: username.toLowerCase() },
       data: {
         lastLogin: new Date(),
@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   async updateFavorites(username: string, favorites: string[]) {
-    const updatedUser: any = await this.prisma.client.user.update({
+    const updatedUser: any = await this.prisma.user.update({
       where: { username: username.toLowerCase() },
       data: { favorites: favorites },
     });
@@ -104,7 +104,7 @@ export class AuthService {
     username: string,
     updates: { email?: string; phoneNumber?: string; theme?: string },
   ) {
-    const updatedUser: any = this.prisma.client.user.update({
+    const updatedUser: any = this.prisma.user.update({
       where: { username: username.toLowerCase() },
       data: {
         email: updates.email,

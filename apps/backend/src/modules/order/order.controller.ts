@@ -14,7 +14,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { RequestWithUser } from '@store/libs';
-import { AdminGuard } from '../guards/admin.guard';
+import { AdminGuard } from '../../guards/admin.guard';
 
 @Controller('order')
 @UseGuards(JwtAuthGuard)

@@ -7,7 +7,7 @@ export class UploadsService {
 
   async saveImageData(filename: string) {
     const publicUrl = `/assets/${filename}`;
-    return this.prisma.client.imageRecord.create({
+    return this.prisma.imageRecord.create({
       data: {
         url: publicUrl,
         filename: filename,

@@ -1,15 +1,20 @@
 /* eslint-disable */
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 // Import from your specific generated path
-import { prisma, PrismaClient } from '@prismalib';
+import { adapter, PrismaClient } from '@prismalib';
 
 @Injectable()
-export class PrismaService implements OnModuleInit, OnModuleDestroy {
-  public client: PrismaClient;
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
   private connected = false;
 
   constructor() {
-    this.client = prisma;
+    super({
+      adapter,
+      omit: { user: { password: true } },
+    });
   }
 
   async onModuleInit() {
@@ -19,19 +24,19 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
     console.log('Connecting to DB:', process.env['DATABASE_URL']);
     try {
-      await (this.client as any).$connect();
+      await this.$connect();
       this.connected = true;
       console.log('✅ Database connected successfully');
     } catch (error) {
       console.error(
         '❌ Database connection failed:',
-        JSON.stringify(error, null, 2)
+        JSON.stringify(error, null, 2),
       );
     }
   }
 
   async onModuleDestroy() {
-    await (this.client as any).$disconnect();
+    await this.$disconnect();
     this.connected = false;
   }
 }

@@ -11,11 +11,6 @@ export interface BookFilters {
   category: string | null;
 }
 
-export type QuickFilterState = {
-  mode: 'all' | 'bestSellers' | 'newReleases' | 'discounted' | 'soldOut';
-  sortBy: 'price_asc' | 'price_desc' | null;
-};
-
 export interface PaginatedProducts {
   data: IProduct[];
   meta: {

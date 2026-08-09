@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UserOwnershipGuard } from '../guards/user-ownership.guard';
-import { AdminGuard } from '../guards/admin.guard';
+import { UserOwnershipGuard } from '../../guards/user-ownership.guard';
+import { AdminGuard } from '../../guards/admin.guard';
+import { SanitizeInterceptor } from '../../interceptors/sanitize.interceptor';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard, UserOwnershipGuard)
@@ -37,6 +39,7 @@ export class UserController {
   }
 
   @Patch(':userId')
+  @UseInterceptors(SanitizeInterceptor)
   update(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,

@@ -6,7 +6,7 @@ export class VideoService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getVideoMetadata(id: string) {
-    const video = await this.prisma.client.video.findUnique({
+    const video = await this.prisma.video.findUnique({
       where: { id },
       select: { id: true, title: true, mimeType: true, size: true },
     });
@@ -16,7 +16,7 @@ export class VideoService {
   }
 
   async getVideoChunk(id: string, start: number, end: number) {
-    const video = await this.prisma.client.video.findUnique({
+    const video = await this.prisma.video.findUnique({
       where: { id },
       select: { data: true },
     });

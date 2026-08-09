@@ -1,6 +1,11 @@
-// sanitize.middleware.ts
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+// src/common/interceptors/sanitize.interceptor.ts
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { JSDOM } from 'jsdom';
 import createDOMPurify from 'dompurify';
 
@@ -8,12 +13,15 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 @Injectable()
-export class SanitizeMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
-    if (req.body) {
-      req.body = this.sanitizeObject(req.body);
+export class SanitizeInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const request = context.switchToHttp().getRequest();
+
+    if (request.body) {
+      request.body = this.sanitizeObject(request.body);
     }
-    next();
+
+    return next.handle();
   }
 
   private sanitizeObject(obj: any): any {

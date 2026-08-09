@@ -34,6 +34,7 @@ export class AuthService {
 
     const user = await prisma.user.findUnique({
       where: { username },
+      omit: { password: false },
     });
 
     if (!user) {
@@ -75,8 +76,8 @@ export class AuthService {
     if (!user) {
       throw new Error(`User ${username} not found`);
     }
-    const { password, ...result } = user;
-    return result;
+
+    return user;
   }
 
   async logout(username: string) {
@@ -106,15 +107,14 @@ export class AuthService {
       where: { username: username.toLowerCase() },
       data: { favorites: favorites },
     });
-    const { password, ...result } = updatedUser;
-    return result;
+    return updatedUser;
   }
 
   async updateProfile(
     username: string,
     updates: { email?: string; phoneNumber?: string; theme?: string },
   ) {
-    const updatedUser:any = prisma.user.update({
+    const updatedUser: any = prisma.user.update({
       where: { username: username.toLowerCase() },
       data: {
         email: updates.email,
@@ -122,7 +122,6 @@ export class AuthService {
         theme: updates.theme,
       },
     });
-    const { password, ...result } = updatedUser;
-    return result;
+    return updatedUser;
   }
 }

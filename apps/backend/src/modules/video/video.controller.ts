@@ -1,8 +1,12 @@
 import { Controller, Get, Param, Headers, Res, Req } from '@nestjs/common';
+import { SkipTransform } from '../../decorators/skip-transform.decorator';
 import { Request, Response } from 'express';
 import { VideoService } from './video.service';
 import { Readable } from 'stream';
+import { SkipTimeout } from '../../decorators/skip-timeout.decorator';
 
+@SkipTransform()
+@SkipTimeout()
 @Controller('videos')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
@@ -37,7 +41,10 @@ export class VideoController {
       }
 
       if (!range) {
-        res.status(416).set({ 'Content-Range': `bytes */${videoSize}` }).end();
+        res
+          .status(416)
+          .set({ 'Content-Range': `bytes */${videoSize}` })
+          .end();
         return;
       }
 
@@ -48,12 +55,18 @@ export class VideoController {
         : Math.min(start + 1024 * 1024 - 1, videoSize - 1);
 
       if (isNaN(start) || start < 0 || start >= videoSize) {
-        res.status(416).set({ 'Content-Range': `bytes */${videoSize}` }).end();
+        res
+          .status(416)
+          .set({ 'Content-Range': `bytes */${videoSize}` })
+          .end();
         return;
       }
 
       if (isNaN(end) || end < start) {
-        res.status(416).set({ 'Content-Range': `bytes */${videoSize}` }).end();
+        res
+          .status(416)
+          .set({ 'Content-Range': `bytes */${videoSize}` })
+          .end();
         return;
       }
 

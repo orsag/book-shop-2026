@@ -9,7 +9,7 @@ export class UserDetailService {
   constructor(private prisma: PrismaService) {}
 
   async findOne(userId: string) {
-    const userDetail = await this.prisma.client.userDetail.findUnique({
+    const userDetail = await this.prisma.userDetail.findUnique({
       where: { userId: userId },
     });
 
@@ -21,7 +21,7 @@ export class UserDetailService {
   }
 
   async findPremiumStatus(userId: string) {
-    const userDetail = await this.prisma.client.userDetail.findUnique({
+    const userDetail = await this.prisma.userDetail.findUnique({
       where: { userId: userId },
       // Optimization: Only fetch the columns you actually need
       select: {
@@ -44,7 +44,7 @@ export class UserDetailService {
   }
 
   async update(userId: string, updateData: UpdateUserDetailDto) {
-    return this.prisma.client.userDetail.update({
+    return this.prisma.userDetail.update({
       where: { userId },
       data: {
         ...updateData,
@@ -58,7 +58,7 @@ export class UserDetailService {
   }
 
   async create(createUserDetailDto: CreateUserDetailDto) {
-    return this.prisma.client.userDetail.create({
+    return this.prisma.userDetail.create({
       data: {
         ...createUserDetailDto,
         dateOfBirth: createUserDetailDto.dateOfBirth
@@ -76,7 +76,7 @@ export class UserDetailService {
 
   async remove(userId: string) {
     try {
-      return await this.prisma.client.userDetail.delete({
+      return await this.prisma.userDetail.delete({
         where: { userId },
       });
     } catch (error: unknown) {

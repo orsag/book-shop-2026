@@ -9,3 +9,4 @@ export * from './scroll-service';
 export * from './toast-service';
 export * from './ux-service';
 export * from './initialization.service';
+export * from './api.service';
