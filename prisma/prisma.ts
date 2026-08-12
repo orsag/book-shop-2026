@@ -16,7 +16,20 @@ const prismaClientSingleton = () => {
   });
 };
 
+// 1. Define global type to prevent TypeScript errors
+const globalForPrisma = globalThis as unknown as {
+  prisma: ReturnType<typeof prismaClientSingleton> | undefined;
+};
+
+// 2. Export a single shared instance evaluated lazily
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+
+if (process.env['NODE_ENV'] !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
+
 export {
+  prisma,
   adapter,
   Prisma,
   ProductType,

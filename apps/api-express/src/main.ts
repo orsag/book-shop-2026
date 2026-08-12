@@ -13,6 +13,7 @@ import { orderRouter } from './routes/order.route';
 import { userRouter } from './routes/user.route';
 import { productsRouter } from './routes/products.route';
 import { sanitizeObject } from './utils/purify';
+import { transformResponseMiddleware } from './middleware/transform-response.middleware';
 
 dotenv.config({ path: join(__dirname, '../../../.env') });
 
@@ -51,6 +52,8 @@ app.use((req, res, next) => {
 
 // Create a master router for the API
 const apiRouter = Router();
+// Wrap every successful response in the ApiResponse envelope (NestJS parity)
+apiRouter.use(transformResponseMiddleware);
 // Attach your individual feature routers to the master router
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/order', orderRouter);

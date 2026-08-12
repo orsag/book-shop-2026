@@ -10,6 +10,7 @@ import {
   LucideImagePlus,
   LucideChevronsRight,
 } from '@lucide/angular';
+import { SinglePricePipe } from '@core';
 
 @Component({
   selector: 'app-book-table',
@@ -22,6 +23,7 @@ import {
     LucidePencil,
     LucideImagePlus,
     LucideChevronsRight,
+    SinglePricePipe,
   ],
   templateUrl: './book-table.html',
   styleUrl: './book-table.css',

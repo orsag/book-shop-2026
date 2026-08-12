@@ -6,7 +6,14 @@ import {
 } from '@angular/common/http/testing';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { AuthService, LoginResponse } from './auth-service';
-import { User } from '@store/libs';
+import { User, ApiResponse } from '@store/libs';
+
+/** Wraps a payload in the backend ApiResponse envelope the ApiService unwraps. */
+const envelope = <T>(data: T): ApiResponse<T> => ({
+  data,
+  timestamp: new Date().toISOString(),
+  statusCode: 200,
+});
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -63,7 +70,7 @@ describe('AuthService', () => {
         password: 'testpassword',
       });
 
-      req.flush(mockResponse);
+      req.flush(envelope(mockResponse));
     });
   });
 
@@ -78,7 +85,7 @@ describe('AuthService', () => {
       const req = httpMock.expectOne('/api/auth?username=testuser');
       expect(req.request.method).toBe('GET');
 
-      req.flush(mockUser);
+      req.flush(envelope(mockUser));
     });
   });
 
@@ -94,7 +101,7 @@ describe('AuthService', () => {
       const req = httpMock.expectOne('/api/auth/logout');
       expect(req.request.method).toBe('GET');
 
-      req.flush(mockResponse);
+      req.flush(envelope(mockResponse));
     });
   });
 
@@ -112,7 +119,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('PATCH');
       expect(req.request.body).toEqual({ favorites: updatedFavorites });
 
-      req.flush(mockUpdatedUser);
+      req.flush(envelope(mockUpdatedUser));
     });
   });
 
@@ -132,7 +139,7 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('PATCH');
       expect(req.request.body).toEqual({ updates: profileUpdates });
 
-      req.flush(mockUpdatedUser);
+      req.flush(envelope(mockUpdatedUser));
     });
   });
 });

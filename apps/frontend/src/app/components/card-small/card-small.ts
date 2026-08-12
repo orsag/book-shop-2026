@@ -6,6 +6,7 @@ import { CartStore, UserStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
 import { UXService } from '@service';
+import { SinglePricePipe } from '@core';
 
 @Component({
   selector: 'app-card-small',
@@ -15,6 +16,7 @@ import { UXService } from '@service';
     LucideHeart,
     NgOptimizedImage,
     TranslocoDirective,
+    SinglePricePipe,
   ],
   templateUrl: './card-small.html',
   styleUrl: './card-small.css',

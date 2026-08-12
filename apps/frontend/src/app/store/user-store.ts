@@ -90,49 +90,38 @@ export const UserStore = signalStore(
         ),
       ),
 
-      login: rxMethod<{ username: string; password: string }>(
-        pipe(
-          // 1. Set loading state immediately
-          tap(() => patchState(store, { isLoading: true })),
+      login(credentials: { username: string; password: string }) {
+        patchState(store, { isLoading: true });
 
-          switchMap(({ username, password }) =>
-            authService.login(username, password).pipe(
-              switchMap(({ user, access_token }) => {
-                // 2. Patch store with auth data FIRST so interceptors/state are ready
+        return authService.login(credentials.username, credentials.password).pipe(
+          switchMap(({ user, access_token }) => {
+            patchState(store, { user });
+            appStore.setToken(access_token);
+            localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
+
+            return detailService.findPremiumStatus(user.id).pipe(
+              map((premiumStatus) => {
+                errorService.handleSuccess(SuccessCodes.LOGIN);
                 patchState(store, {
-                  user,
+                  premiumStatus: premiumStatus,
+                  isLoading: false,
                 });
-                appStore.setToken(access_token);
-                localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
-
-                // 3. Now safely call the premium status
-                return detailService.findPremiumStatus(user.id).pipe(
-                  tap((premiumStatus) => {
-                    errorService.handleSuccess(SuccessCodes.LOGIN);
-                    // Update premium status and turn off loading
-                    patchState(store, {
-                      premiumStatus: premiumStatus,
-                      isLoading: false,
-                    });
-                  }),
-                  catchError(() => {
-                    errorService.handleError(ErrorCodes.PREMIUM);
-                    // Turn off loading (user stays logged in thanks to step 2)
-                    patchState(store, { isLoading: false });
-                    return of(null);
-                  }),
-                );
+                return { success: true, user, premiumStatus };
               }),
-              // Catch block for main login failure
               catchError(() => {
-                errorService.handleError(ErrorCodes.LOGIN);
+                errorService.handleError(ErrorCodes.PREMIUM);
                 patchState(store, { isLoading: false });
-                return EMPTY;
+                return of({ success: true, user, premiumStatus: null });
               }),
-            ),
-          ),
-        ),
-      ),
+            );
+          }),
+          catchError(() => {
+            errorService.handleError(ErrorCodes.LOGIN);
+            patchState(store, { isLoading: false });
+            return of({ success: false, user: null, premiumStatus: null });
+          }),
+        );
+      },
 
       logout: rxMethod<void>(
         pipe(
@@ -287,7 +276,9 @@ export const UserStore = signalStore(
 
             // 1. Calculate new favorites array locally
             const isFavorite = currentUser.favorites?.includes(productId);
-            const oldArray = currentUser.favorites ? [...currentUser.favorites] : [];
+            const oldArray = currentUser.favorites
+              ? [...currentUser.favorites]
+              : [];
             const updatedFavorites = isFavorite
               ? currentUser.favorites?.filter((id) => id !== productId)
               : [...oldArray, productId];
@@ -307,7 +298,11 @@ export const UserStore = signalStore(
       ),
 
       invalidateUser() {
-        patchState(store, { user: null, userDetail: null, premiumStatus: null });
+        patchState(store, {
+          user: null,
+          userDetail: null,
+          premiumStatus: null,
+        });
       },
 
       updateStore(

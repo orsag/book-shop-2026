@@ -12,6 +12,7 @@ import authApp from './auth/auth.routes';
 import orderApp from './order/order.routes';
 import userDetailApp from './user-detail/user-detail.routes';
 import uploadsApp from './uploads/uploads.routes';
+import { transformResponseMiddleware } from './guards/transform-response.middleware';
 import { rateLimiter } from 'hono-rate-limiter';
 
 const app = new Hono();
@@ -62,6 +63,9 @@ app.use(
 
 // 2. Simple Health Check
 app.get('/', (c) => c.text('Hono is flying! 🚀'));
+
+// Wrap every successful response in the ApiResponse envelope (NestJS parity)
+app.use('*', transformResponseMiddleware);
 
 // --- Mount Your Resources (Like AppController) ---
 app.route('/api/products', productApp);

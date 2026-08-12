@@ -22,8 +22,7 @@ export class AuthService {
       const user = await prisma.user.create({
         data: { email: dto.email, username: dto.username, password: hash },
       });
-      const { password, ...result } = user;
-      return result;
+      return user;
     } catch (err) {
       throw new Error('Username or email already exists');
     }

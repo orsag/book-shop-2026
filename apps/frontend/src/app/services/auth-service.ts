@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { User } from '@store/libs';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';

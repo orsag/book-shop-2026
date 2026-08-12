@@ -6,12 +6,19 @@ import {
 } from '@angular/common/http/testing';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import { BookService } from './book-service';
-import { DEFAULT_MAX_LIMIT } from '@store/libs';
+import { DEFAULT_MAX_LIMIT, ApiResponse } from '@store/libs';
 import {
   CreateProductDtoProductType as ProductType,
   CreateProductDto,
 } from '@api';
 import { PaginatedProducts } from '../../types';
+
+/** Wraps a payload in the backend ApiResponse envelope the ApiService unwraps. */
+const envelope = <T>(data: T): ApiResponse<T> => ({
+  data,
+  timestamp: new Date().toISOString(),
+  statusCode: 200,
+});
 
 describe('BookService', () => {
   const defaultProductType: ProductType = 'BOOK';
@@ -70,7 +77,7 @@ describe('BookService', () => {
       expect(req.request.method).toBe('GET');
 
       // Flush the mock data to resolve the Observable
-      req.flush(mockResponse);
+      req.flush(envelope(mockResponse));
     });
   });
 
@@ -92,7 +99,7 @@ describe('BookService', () => {
         `/api/products/${defaultProductId}?type=${defaultProductType}`,
       );
       expect(req.request.method).toBe('GET');
-      req.flush(mockProduct);
+      req.flush(envelope(mockProduct));
     });
   });
 
@@ -112,7 +119,7 @@ describe('BookService', () => {
       const req = httpMock.expectOne('/api/products');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(newProduct);
-      req.flush(mockResponse);
+      req.flush(envelope(mockResponse));
     });
   });
 
@@ -130,7 +137,7 @@ describe('BookService', () => {
 
       const req = httpMock.expectOne(`/api/products/${defaultProductId}`);
       expect(req.request.method).toBe('DELETE');
-      req.flush(mockActionResponse);
+      req.flush(envelope(mockActionResponse));
     });
   });
 });

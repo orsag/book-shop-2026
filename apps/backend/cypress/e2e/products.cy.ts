@@ -7,7 +7,7 @@ describe('GET /api/products — findAll', () => {
   const api = { method: 'GET', url: '/api/products' } as const;
 
   it('returns 200 with default query params', () => {
-    cy.request(api).then((res) => {
+    cy.api(api).then((res) => {
       expect(res.status).to.eq(200);
       expect(res.body).to.have.property('data').that.is.an('array');
       expect(res.body).to.have.property('meta');
@@ -20,7 +20,7 @@ describe('GET /api/products — findAll', () => {
   });
 
   it('returns 200 with explicit defaults', () => {
-    cy.request({
+    cy.api({
       ...api,
       qs: { type: 'BOOK', page: 1, limit: 12, isDiscounted: false },
     }).then((res) => {
@@ -31,7 +31,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('type filter', () => {
     it('filters by BOOK', () => {
-      cy.request({ ...api, qs: { type: 'BOOK' } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'BOOK' } }).then((res) => {
         for (const p of res.body.data) {
           expect(p.productType).to.eq('BOOK');
         }
@@ -39,7 +39,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('filters by GAME', () => {
-      cy.request({ ...api, qs: { type: 'GAME' } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'GAME' } }).then((res) => {
         for (const p of res.body.data) {
           expect(p.productType).to.eq('GAME');
         }
@@ -47,7 +47,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('filters by GASTRO', () => {
-      cy.request({ ...api, qs: { type: 'GASTRO' } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'GASTRO' } }).then((res) => {
         for (const p of res.body.data) {
           expect(p.productType).to.eq('GASTRO');
         }
@@ -55,7 +55,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     // it('filters by GIFT_CARD', () => {
-    //   cy.request({ ...api, qs: { type: 'GIFT_CARD' } }).then((res) => {
+    //   cy.api({ ...api, qs: { type: 'GIFT_CARD' } }).then((res) => {
     //     for (const p of res.body.data) {
     //       expect(p.productType).to.eq('GIFT_CARD');
     //     }
@@ -65,16 +65,16 @@ describe('GET /api/products — findAll', () => {
 
   describe('pagination', () => {
     it('respects limit', () => {
-      cy.request({ ...api, qs: { limit: 3 } }).then((res) => {
+      cy.api({ ...api, qs: { limit: 3 } }).then((res) => {
         expect(res.body.data).to.have.length.at.most(3);
       });
     });
 
     it('paginates correctly with page and limit', () => {
-      cy.request({ ...api, qs: { page: 1, limit: 5 } }).then((page1) => {
+      cy.api({ ...api, qs: { page: 1, limit: 5 } }).then((page1) => {
         expect(page1.body.data).to.have.length(5);
 
-        cy.request({ ...api, qs: { page: 2, limit: 5 } }).then((page2) => {
+        cy.api({ ...api, qs: { page: 2, limit: 5 } }).then((page2) => {
           expect(page2.body.data).to.have.length(5);
 
           const ids1 = page1.body.data.map((p: any) => p.id);
@@ -86,7 +86,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('returns meta with pagination info', () => {
-      cy.request({ ...api, qs: { page: 1, limit: 10 } }).then((res) => {
+      cy.api({ ...api, qs: { page: 1, limit: 10 } }).then((res) => {
         const { meta } = res.body;
         expect(meta).to.include.keys('total', 'page', 'lastPage', 'hasMore');
         expect(meta.page).to.eq(1);
@@ -96,7 +96,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('returns empty data for page beyond last', () => {
-      cy.request({ ...api, qs: { page: 9999, limit: 12 } }).then((res) => {
+      cy.api({ ...api, qs: { page: 9999, limit: 12 } }).then((res) => {
         expect(res.body.data).to.be.empty;
         expect(res.body.meta.hasMore).to.be.false;
       });
@@ -105,7 +105,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('isDiscounted', () => {
     it('returns only discounted products when true', () => {
-      cy.request({ ...api, qs: { isDiscounted: true, limit: 5 } }).then(
+      cy.api({ ...api, qs: { isDiscounted: true, limit: 5 } }).then(
         (res) => {
           for (const p of res.body.data) {
             expect(p.discount).to.be.gt(0);
@@ -115,7 +115,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     // it('returns all products when false', () => {
-    //   cy.request({ ...api, qs: { isDiscounted: false } }).then((res) => {
+    //   cy.api({ ...api, qs: { isDiscounted: false } }).then((res) => {
     //     const hasNonDiscounted = res.body.data.some((p: any) => p.discount === 0);
     //     const hasDiscounted = res.body.data.some((p: any) => p.discount > 0);
     //     expect(res.status).to.eq(200);
@@ -125,7 +125,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('search', () => {
     it('finds products by partial name match', () => {
-      cy.request({ ...api, qs: { search: 'Frozen' } }).then((res) => {
+      cy.api({ ...api, qs: { search: 'Frozen' } }).then((res) => {
         expect(res.body.data).to.not.be.empty;
         for (const p of res.body.data) {
           expect(p.name.toLowerCase()).to.include('froz');
@@ -134,7 +134,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('returns empty array for gibberish search', () => {
-      cy.request({ ...api, qs: { search: 'xyznonexistent999' } }).then((res) => {
+      cy.api({ ...api, qs: { search: 'xyznonexistent999' } }).then((res) => {
         expect(res.body.data).to.be.empty;
         expect(res.body.meta.total).to.eq(0);
       });
@@ -143,7 +143,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('category filter', () => {
     it('filters BOOKs by category', () => {
-      cy.request({ ...api, qs: { type: 'BOOK', category: 'Fantasy' } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'BOOK', category: 'Fantasy' } }).then((res) => {
         for (const p of res.body.data) {
           expect(p.bookDetails.category).to.eq('Fantasy');
         }
@@ -151,7 +151,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('returns empty for non-matching category', () => {
-      cy.request({ ...api, qs: { type: 'BOOK', category: 'NONEXISTENT_CAT_XYZ' } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'BOOK', category: 'NONEXISTENT_CAT_XYZ' } }).then((res) => {
         expect(res.body.data).to.be.empty;
       });
     });
@@ -159,7 +159,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('sorting', () => {
     it('sorts by price ascending', () => {
-      cy.request({ ...api, qs: { sortBy: 'price_asc' } }).then((res) => {
+      cy.api({ ...api, qs: { sortBy: 'price_asc' } }).then((res) => {
         const prices = res.body.data.map(
           (p: any) => calculateEffectivePrice(p),
         );
@@ -170,7 +170,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('sorts by price descending', () => {
-      cy.request({ ...api, qs: { sortBy: 'price_desc' } }).then((res) => {
+      cy.api({ ...api, qs: { sortBy: 'price_desc' } }).then((res) => {
         const prices = res.body.data.map((p: any) =>
           calculateEffectivePrice(p),
         );
@@ -183,7 +183,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('combined queries', () => {
     it('combines type, category, search, and sortBy', () => {
-      cy.request({
+      cy.api({
         ...api,
         qs: {
           type: 'BOOK',
@@ -204,7 +204,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('combines type GAME with isDiscounted and sorting', () => {
-      cy.request({
+      cy.api({
         ...api,
         qs: {
           type: 'GAME',
@@ -224,7 +224,7 @@ describe('GET /api/products — findAll', () => {
 
   describe('response structure', () => {
     it('includes rating for each product', () => {
-      cy.request({ ...api, qs: { limit: 5 } }).then((res) => {
+      cy.api({ ...api, qs: { limit: 5 } }).then((res) => {
         for (const p of res.body.data) {
           expect(p).to.have.property('rating');
           expect(p.rating).to.include.keys('ratingValue', 'ratingCount');
@@ -233,7 +233,7 @@ describe('GET /api/products — findAll', () => {
     });
 
     it('includes typed details based on productType', () => {
-      cy.request({ ...api, qs: { type: 'BOOK', limit: 3 } }).then((res) => {
+      cy.api({ ...api, qs: { type: 'BOOK', limit: 3 } }).then((res) => {
         for (const p of res.body.data) {
           expect(p).to.have.property('bookDetails').that.is.an('object');
           expect(p.bookDetails).to.include.keys('author', 'category', 'isbn');
@@ -243,7 +243,7 @@ describe('GET /api/products — findAll', () => {
   });
 
   it('returns 200 with defaults when only type is provided', () => {
-    cy.request({ ...api, qs: { type: 'GAME' } }).then((res) => {
+    cy.api({ ...api, qs: { type: 'GAME' } }).then((res) => {
       expect(res.status).to.eq(200);
       expect(res.body.meta).to.include({ page: 1, limit: 12 });
     });

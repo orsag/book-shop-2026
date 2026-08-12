@@ -19,8 +19,8 @@ describe('Auth controller tests', () => {
     expect(userId).to.not.be.empty;
   });
 
-  it('should get user data (GET /api/auth?username=bossmann)', () => {
-    cy.request({
+  it('should get user data (GET /api/auth?username=testinguser)', () => {
+    cy.api({
       method: 'GET',
       url: '/api/auth', // Maps to AuthController @Get()
       qs: { username: 'testinguser' },

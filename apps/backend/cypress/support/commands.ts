@@ -2,6 +2,24 @@
 
 import Chainable = Cypress.Chainable;
 
+/**
+ * Unwraps the backend ApiResponse envelope ({ data, timestamp, statusCode })
+ * the same way the frontend ApiService does, yielding res.body.data.
+ */
+const unwrap = (body: any): any =>
+  body && typeof body === 'object' && 'data' in body ? body.data : body;
+
+Cypress.Commands.add(
+  'api',
+  (
+    options: Partial<Cypress.RequestOptions>,
+  ): Chainable<Cypress.Response<any>> =>
+    cy.request(options as Cypress.RequestOptions).then((res) => ({
+      ...res,
+      body: unwrap(res.body),
+    })),
+);
+
 Cypress.Commands.add('apiLoginAsTestUser', (): Chainable<{ accessToken: string; userId: string }> => {
   const cachedToken = Cypress.env('testJwtToken');
   if (cachedToken) {
@@ -16,7 +34,7 @@ Cypress.Commands.add('apiLoginAsTestUser', (): Chainable<{ accessToken: string; 
   const password = Cypress.env('TEST_PASSWORD') || 'tester12345';
 
   return cy
-    .request({
+    .api({
       method: 'POST',
       url: '/api/auth/login',
       body: { username, password },
@@ -47,7 +65,7 @@ Cypress.Commands.add('apiLoginAsTestUser', (): Chainable<{ accessToken: string; 
 
 Cypress.Commands.add('getTestProductIds', (): Chainable<string[]> => {
   return cy
-    .request({
+    .api({
       method: 'GET',
       url: '/api/products',
       qs: { type: 'GAME', page: 1, limit: 12, isDiscounted: false },

@@ -20,7 +20,9 @@ test.describe('Profile Route Tests', () => {
     await page.locator('#phone').fill('+421900123456');
 
     // 2. Fill out bio text area
-    await page.locator('#user-bio').fill('Just an avid book reader updating my bio context.');
+    await page
+      .locator('#user-bio')
+      .fill('Just an avid book reader updating my bio context.');
 
     // 3. Fill out address information
     await page.locator('#city').fill('Bratislava');
@@ -30,8 +32,8 @@ test.describe('Profile Route Tests', () => {
     await page.locator('#iban').fill('SK1234567890123456789012');
     await page.locator('#taxId').fill('SK2021222324');
 
-    // 5. Click the primary "Uložiť" (Save) button
-    await page.getByRole('button', { name: 'Uložiť' }).click();
+    // 5. Click the primary Save button
+    await page.getByRole('button', { name: 'Save' }).click();
 
     // 6. Target the dynamic toast component container
     const toastAlert = page.getByTestId('toast-item');

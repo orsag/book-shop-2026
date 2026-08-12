@@ -6,7 +6,7 @@ import { CartStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ToastService, UXService } from '@service';
 import { OverlayComponent } from '../common';
-import { RedFocusDirective } from '@core';
+import { RedFocusDirective, SinglePricePipe } from '@core';
 
 @Component({
   selector: 'app-book-list-item',
@@ -17,6 +17,7 @@ import { RedFocusDirective } from '@core';
     TranslocoDirective,
     OverlayComponent,
     RedFocusDirective,
+    SinglePricePipe,
   ],
   templateUrl: './book-list-item.html',
   styleUrl: './book-list-item.css',

@@ -1,149 +1,156 @@
 <div class="min-h-screen flex items-center justify-center">
   <app-toast />
 
-  <div
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="form-title"
-    class="card w-full rounded-[40px] max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
-    <div class="card-body">
+  @if (userStore.isLoggedIn()) {
+    <div class="flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
+      <h3 class="text-xl font-bold mb-2">Processing Logging out</h3>
+    </div>
+  } @else {
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="form-title"
+      class="card w-full rounded-[40px] max-w-sm bg-base-100/80 shadow-2xl backdrop-blur-md border border-white/20">
+      <div class="card-body">
 
-      <div class="flex justify-center mb-4">
-        <div class="bg-primary/20 p-4 rounded-full">
-          <img src="/images/stack-of-books.png" width="80" height="80" alt="Stack of books" aria-hidden="true" />
+        <div class="flex justify-center mb-4">
+          <div class="bg-primary/20 p-4 rounded-full">
+            <img src="/images/stack-of-books.png" width="80" height="80" alt="Stack of books" aria-hidden="true" />
+          </div>
         </div>
-      </div>
 
-      <!-- 1. Dynamically change Title -->
-      <h3 class="card-title text-xl font-bold justify-center mb-2">
-        {{ registerMode() ? 'Create an Account' : 'Welcome Back' }}
-      </h3>
+        <!-- 1. Dynamically change Title -->
+        <h3 class="card-title text-xl font-bold justify-center mb-2">
+          {{ registerMode() ? 'Create an Account' : 'Welcome Back' }}
+        </h3>
 
-      <!-- 2. Dynamically bind Submit handler -->
-      <form (submit)="registerMode() ? onRegister() : onLogin(); $event.preventDefault()"
-            class="flex flex-col gap-5"
-      >
+        <!-- 2. Dynamically bind Submit handler -->
+        <form (submit)="registerMode() ? onRegister() : onLogin(); $event.preventDefault()"
+              class="flex flex-col gap-5"
+        >
 
-        <!-- 3. Conditionally display Email field when registerMode is active -->
-        @if (registerMode()) {
-          <div class="form-control w-full animate-fade-in">
-            <label for="email" class="label">
-              <span class="label-text font-semibold">Email Address</span>
+          <!-- 3. Conditionally display Email field when registerMode is active -->
+          @if (registerMode()) {
+            <div class="form-control w-full animate-fade-in">
+              <label for="email" class="label">
+                <span class="label-text font-semibold">Email Address</span>
+              </label>
+
+              <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
+                <svg lucideMail size="20" aria-hidden="true"></svg>
+                <input
+                  #emailInput
+                  appBlueFocus
+                  type="email"
+                  class="grow"
+                  placeholder="email@example.com"
+                  [(ngModel)]="email"
+                  name="email"
+                  required
+                  aria-required="true"
+                />
+              </label>
+            </div>
+          }
+
+          <div class="form-control w-full">
+            <label for="username" class="label">
+              <span class="label-text font-semibold">Username</span>
             </label>
 
             <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-              <svg lucideMail size="20" aria-hidden="true"></svg>
+              <svg lucideCircleUserRound size="20" aria-hidden="true"></svg>
               <input
-                #emailInput
+                #firstInput
                 appBlueFocus
-                type="email"
+                type="text"
                 class="grow"
-                placeholder="email@example.com"
-                [(ngModel)]="email"
-                name="email"
+                placeholder="User name"
+                [(ngModel)]="username"
+                name="username"
                 required
                 aria-required="true"
+                minLength="3"
+                maxLength="50"
               />
             </label>
           </div>
-        }
 
-        <div class="form-control w-full">
-          <label for="username" class="label">
-            <span class="label-text font-semibold">Username</span>
-          </label>
+          <div class="form-control w-full">
+            <label for="password" class="label">
+              <span class="label-text font-semibold">Password</span>
+            </label>
 
-          <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-            <svg lucideCircleUserRound size="20" aria-hidden="true"></svg>
-            <input
-              #firstInput
-              appBlueFocus
-              type="text"
-              class="grow"
-              placeholder="User name"
-              [(ngModel)]="username"
-              name="username"
-              required
-              aria-required="true"
-              minLength="3"
-              maxLength="50"
-            />
-          </label>
+            <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
+              <svg lucidePenTool size="20" aria-hidden="true"></svg>
+              <input
+                appBlueFocus
+                type="password"
+                class="grow"
+                placeholder="Password"
+                [(ngModel)]="password"
+                name="password"
+                required
+                aria-required="true"
+                minLength="1"
+                maxLength="20"
+              />
+            </label>
+          </div>
+
+          <!-- 4. Form Action Toggles Between Register or Login Button -->
+          <div class="card-actions mt-8" aria-live="polite">
+            @if (registerMode()) {
+              <button
+                appRedFocus
+                type="submit"
+                name="register"
+                title="submit-register-btn"
+                class="btn btn-primary btn-block text-white"
+                [attr.aria-busy]="userStore.isLoading()"
+                [disabled]="!username() || !password() || !email() || userStore.isLoading()"
+              >
+                @if (userStore.isLoading()) {
+                  <span class="loading loading-spinner" aria-hidden="true"></span>
+                }
+                Register
+              </button>
+            } @else {
+              <button
+                appRedFocus
+                type="submit"
+                name="login"
+                title="submit-login-btn"
+                class="btn btn-primary btn-block text-white"
+                [attr.aria-busy]="userStore.isLoading()"
+                [disabled]="!username() || !password() || userStore.isLoading()"
+              >
+                @if (userStore.isLoading()) {
+                  <span class="loading loading-spinner" aria-hidden="true"></span>
+                }
+                Login
+              </button>
+            }
+          </div>
+        </form>
+
+        <div class="mt-4 text-center text-sm">
+          <button
+            appRedFocus
+            type="button"
+            class="link link-hover link-primary font-medium"
+            [attr.aria-label]="registerMode() ? 'Switch to login form' : 'Switch to registration form'"
+            (click)="handleRegisterMode()"
+          >
+            {{ registerMode() ? 'Already have an account? Login' : "Don't have an account? Register" }}
+          </button>
         </div>
 
-        <div class="form-control w-full">
-          <label for="password" class="label">
-            <span class="label-text font-semibold">Password</span>
-          </label>
-
-          <label appNoFocusJump class="input input-bordered flex items-center gap-2 w-full">
-            <svg lucidePenTool size="20" aria-hidden="true"></svg>
-            <input
-              appBlueFocus
-              type="password"
-              class="grow"
-              placeholder="Password"
-              [(ngModel)]="password"
-              name="password"
-              required
-              aria-required="true"
-              minLength="1"
-              maxLength="20"
-            />
-          </label>
+        <div class="mt-6 text-center text-xs text-base-content/50 uppercase tracking-widest font-medium">
+          <a appRedFocus routerLink="/" class="transition-colors hover:text-base-content hover:underline">Continue without login</a>
         </div>
-
-        <!-- 4. Form Action Toggles Between Register or Login Button -->
-        <div class="card-actions mt-8" aria-live="polite">
-          @if (registerMode()) {
-            <button
-              appRedFocus
-              type="submit"
-              name="register"
-              title="submit-register-btn"
-              class="btn btn-primary btn-block text-white"
-              [attr.aria-busy]="userStore.isLoading()"
-              [disabled]="!username() || !password() || !email() || userStore.isLoading()"
-            >
-              @if (userStore.isLoading()) {
-                <span class="loading loading-spinner" aria-hidden="true"></span>
-              }
-              Register
-            </button>
-          } @else {
-            <button
-              appRedFocus
-              type="submit"
-              name="login"
-              title="submit-login-btn"
-              class="btn btn-primary btn-block text-white"
-              [attr.aria-busy]="userStore.isLoading()"
-              [disabled]="!username() || !password() || userStore.isLoading()"
-            >
-              @if (userStore.isLoading()) {
-                <span class="loading loading-spinner" aria-hidden="true"></span>
-              }
-              Login
-            </button>
-          }
-        </div>
-      </form>
-
-      <div class="mt-4 text-center text-sm">
-        <button
-          appRedFocus
-          type="button"
-          class="link link-hover link-primary font-medium"
-          [attr.aria-label]="registerMode() ? 'Switch to login form' : 'Switch to registration form'"
-          (click)="handleRegisterMode()"
-        >
-          {{ registerMode() ? 'Already have an account? Login' : "Don't have an account? Register" }}
-        </button>
-      </div>
-
-      <div class="mt-6 text-center text-xs text-base-content/50 uppercase tracking-widest font-medium">
-        <a appRedFocus routerLink="/" class="transition-colors hover:text-base-content hover:underline">Continue without login</a>
       </div>
     </div>
-  </div>
+  }
+
 </div>

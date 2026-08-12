@@ -11,7 +11,7 @@ describe('User Detail CRUD', () => {
 
   describe('GET /user-detail/:userId', () => {
     it('returns user detail for the logged-in user', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -29,7 +29,7 @@ describe('User Detail CRUD', () => {
     });
 
     it('returns 401 without auth token', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
         failOnStatusCode: false,
@@ -41,7 +41,7 @@ describe('User Detail CRUD', () => {
 
   describe('GET /user-detail/premium/:userId', () => {
     it('returns premium status fields only', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/user-detail/premium/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -58,7 +58,7 @@ describe('User Detail CRUD', () => {
 
   describe('PATCH /user-detail/:userId', () => {
     it('updates displayName and bio', () => {
-      cy.request({
+      cy.api({
         method: 'PATCH',
         url: `/api/user-detail/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -77,7 +77,7 @@ describe('User Detail CRUD', () => {
 
   describe('DELETE /user-detail/:userId then POST /user-detail', () => {
     it('deletes the user detail record', () => {
-      cy.request({
+      cy.api({
         method: 'DELETE',
         url: `/api/user-detail/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -88,7 +88,7 @@ describe('User Detail CRUD', () => {
     });
 
     it('re-creates user detail via POST after deletion', () => {
-      cy.request({
+      cy.api({
         method: 'POST',
         url: '/api/user-detail',
         headers: { Authorization: `Bearer ${authToken}` },
@@ -108,7 +108,7 @@ describe('User Detail CRUD', () => {
     });
 
     it('confirm the re-created detail is readable via GET', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },

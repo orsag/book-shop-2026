@@ -25,6 +25,7 @@ export const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunctio
 
     // Mimic the AuthenticatedUser construction
     const authenticatedUser: AuthenticatedUser = {
+      email: decoded.email,
       userId: decoded.sub,     // Maps sub to userId
       username: decoded.username,
     isAdmin: decoded.isAdmin,

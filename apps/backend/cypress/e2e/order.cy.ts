@@ -17,7 +17,7 @@ describe('Order CRUD', () => {
 
   describe('POST /order', () => {
     it('creates an order with valid product', () => {
-      cy.request({
+      cy.api({
         method: 'POST',
         url: '/api/order',
         headers: { Authorization: `Bearer ${authToken}` },
@@ -34,7 +34,7 @@ describe('Order CRUD', () => {
     });
 
     it('returns 400 for non-existent product', () => {
-      cy.request({
+      cy.api({
         method: 'POST',
         url: '/api/order',
         headers: { Authorization: `Bearer ${authToken}` },
@@ -53,7 +53,7 @@ describe('Order CRUD', () => {
     });
 
     it('returns 401 without auth token', () => {
-      cy.request({
+      cy.api({
         method: 'POST',
         url: '/api/order',
         body: { items: [{ productId: productIds[0], quantity: 1 }] },
@@ -66,7 +66,7 @@ describe('Order CRUD', () => {
 
   describe('GET /order/user/:userId', () => {
     it('returns orders for the authenticated user', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/order/user/${userId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -82,7 +82,7 @@ describe('Order CRUD', () => {
 
   describe('GET /order/:id', () => {
     it('returns the order by ID with items', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: `/api/order/${orderId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -98,7 +98,7 @@ describe('Order CRUD', () => {
 
   describe('PATCH /order/:id/cancel', () => {
     it('cancels the order within 14-day window', () => {
-      cy.request({
+      cy.api({
         method: 'PATCH',
         url: `/api/order/${orderId}/cancel`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -111,7 +111,7 @@ describe('Order CRUD', () => {
 
   describe('PATCH /order/:id/status', () => {
     it('updates order status to PAID', () => {
-      cy.request({
+      cy.api({
         method: 'PATCH',
         url: `/api/order/${orderId}/status`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -125,7 +125,7 @@ describe('Order CRUD', () => {
 
   describe('DELETE /order/:id', () => {
     it('deletes the order', () => {
-      cy.request({
+      cy.api({
         method: 'DELETE',
         url: `/api/order/${orderId}`,
         headers: { Authorization: `Bearer ${authToken}` },
@@ -138,7 +138,7 @@ describe('Order CRUD', () => {
 
   describe('GET /order/all', () => {
     it('returns all orders as admin', () => {
-      cy.request({
+      cy.api({
         method: 'GET',
         url: '/api/order/all',
         headers: { Authorization: `Bearer ${authToken}` },

@@ -34,6 +34,7 @@ export class AuthService {
     const username = dto.username.toLowerCase();
     const user = await this.prisma.user.findUnique({
       where: { username },
+      omit: { password: false },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
 

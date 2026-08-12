@@ -8,6 +8,12 @@ setup('Authenticate and save storage state', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/login');
 
+  // 4. Target the native dialog element
+  const dialog = page.getByRole('dialog');
+
+  // 5. Verify that the modal element state switches to visible
+  await expect(dialog).toBeVisible({timeout: 20000 });
+
   // Fill Login Form and Click Login
   await page.getByPlaceholder('User name').fill(TEST_USER);
   await page.getByPlaceholder('Password').fill(TEST_PASSWORD);

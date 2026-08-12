@@ -140,7 +140,11 @@ export class Profile {
     });
   });
 
-  userForm = form(this.userModel);
+  userForm = form(this.userModel, (schemaPath) => {
+    required(schemaPath.email, {
+      message: 'Email is required',
+    })
+  });
 
   isPremium = computed(() => this.userStore.userDetail()?.isPremium ?? false);
 
