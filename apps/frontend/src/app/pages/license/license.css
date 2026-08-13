@@ -1,0 +1,6 @@
+/* Register how the browser styles our search match */
+::highlight(search-match) {
+    background-color: #fde047; /* Standard clear yellow highlight */
+    color: #1f2937;            /* Dark text for contrast */
+    border-radius: 0.2rem;
+}

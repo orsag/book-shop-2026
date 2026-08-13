@@ -40,8 +40,8 @@ export class BlueFocusDirective implements OnInit, OnDestroy {
   private applyStyles() {
     const el = this.elementRef.nativeElement;
     this.renderer.addClass(el, 'outline-none');
-    this.renderer.addClass(el, 'bg-sky-200');
-    this.renderer.addClass(el, 'dark:bg-slate-700');
+    // this.renderer.addClass(el, 'bg-sky-200');
+    // this.renderer.addClass(el, 'dark:bg-slate-700');
     this.renderer.addClass(el, 'text-slate-900');
     this.renderer.addClass(el, 'dark:text-slate-100');
   }
@@ -49,8 +49,8 @@ export class BlueFocusDirective implements OnInit, OnDestroy {
   private removeStyles() {
     const el = this.elementRef.nativeElement;
     this.renderer.removeClass(el, 'outline-none');
-    this.renderer.removeClass(el, 'bg-sky-200');
-    this.renderer.removeClass(el, 'dark:bg-slate-700');
+    // this.renderer.removeClass(el, 'bg-sky-200');
+    // this.renderer.removeClass(el, 'dark:bg-slate-700');
     this.renderer.removeClass(el, 'text-slate-900');
     this.renderer.removeClass(el, 'dark:text-slate-100');
   }

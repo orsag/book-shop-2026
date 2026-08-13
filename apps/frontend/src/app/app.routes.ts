@@ -10,6 +10,7 @@ import { Shopping } from './pages/shopping/shopping';
 import { Success } from './pages/success/success';
 import { LoginPage } from './pages/login/login';
 import { VideosComponent } from './pages/videos/videos';
+import { License } from './pages/license/license';
 // ======================================================================
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
@@ -53,6 +54,7 @@ export const appRoutes: Route[] = [
       { path: 'success/:id', component: Success },
       { path: 'videos', component: VideosComponent },
       { path: 'wip', component: PageNotFound },
+      { path: 'license', component: License },
       { path: '**', component: PageNotFound },
     ],
   },

@@ -1,0 +1,33 @@
+<div class="max-w-4xl mx-auto md:p-6">
+  <header class="mb-8 flex flex-col md:flex-row items-center justify-between border-b border-base-300 pb-4 gap-4">
+    <div>
+      <h1 class="text-3xl font-bold">License agreement</h1>
+    </div>
+
+    <!-- DaisyUI Search Input Bar -->
+    <div class="flex items-center gap-2 w-full md:w-72">
+      <div class="relative w-full">
+        <input
+          appBlueFocus
+          type="text"
+          placeholder="Search terms..."
+          class="input input-bordered input-primary w-full pr-16"
+          (input)="onSearch($event)"
+        />
+        <!-- Match Counter Badge -->
+        @if (matchCount() > 0) {
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 badge badge-sm badge-ghost">
+        {{ matchCount() }} found
+      </span>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Section wrapped with a template reference variable -->
+  <section #contentSection>
+    @for (item of paragraphs; track $index) {
+      <p [title]="$index" class="mb-6">{{ item }}</p>
+    }
+  </section>
+</div>
