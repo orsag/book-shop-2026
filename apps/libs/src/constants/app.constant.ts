@@ -1,7 +1,7 @@
 import { CreateProductDtoProductType } from '@api';
 
 export const DEFAULT_LOADER_DELAY = 1000;
-export const DEFAULT_MAX_LIMIT = 12;
+export const DEFAULT_MAX_LIMIT = 100;
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_TYPE = 'BOOK' as CreateProductDtoProductType;
 export const DEFAULT_SEARCH = '';

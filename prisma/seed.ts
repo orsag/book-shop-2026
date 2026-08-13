@@ -19,14 +19,14 @@ async function main() {
   await prisma.user.deleteMany();
   console.log(' ✅ Deleted users successfully');
 
-  for (let i = 0; i < 300; i++) {
-    const type = faker.helpers.arrayElement(['BOOK', 'GAME', 'GASTRO']);
+  for (let i = 0; i < 1200; i++) {
+    const type = faker.helpers.arrayElement(['BOOK', 'GAME']); // 'GASTRO'
     // 1. Create the Base Product
     const createInput: Prisma.ProductCreateInput = createProduct(type);
     // database create
     await prisma.product.create({ data: createInput });
   }
-  console.log(' ✅ Seeded 300 products successfully');
+  console.log(' ✅ Seeded 1200 products successfully');
 
   const freshAdmin = await createAdmin();
   await prisma.user.create({

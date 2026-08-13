@@ -1,7 +1,7 @@
-import { Component, computed, inject, output, Signal } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
@@ -11,10 +11,15 @@ import {
   LucideChevronsRight,
 } from '@lucide/angular';
 import { SinglePricePipe } from '@core';
+import { PaginationAccumulatorService } from '@service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-book-table',
   imports: [
+    CommonModule,
+    ScrollingModule,
     RouterLink,
     CurrencyPipe,
     DatePipe,
@@ -29,15 +34,30 @@ import { SinglePricePipe } from '@core';
   styleUrl: './book-table.css',
 })
 export class BookTable {
-  store = inject(AppStore);
+  appStore = inject(AppStore);
   edit = output<CreateProductDto>();
   remove = output<CreateProductDto>();
   editCover = output<CreateProductDto>();
 
-  products: Signal<CreateProductDto[]> = this.store.products;
+  private accumulator = inject(PaginationAccumulatorService);
+
+  // 🚀 Single line declaration for accumulated products!
+  accumulatedProducts = this.accumulator.accumulate(
+    this.appStore.productsResource,
+    computed(() => this.appStore.filters().page),
+    computed(() => this.appStore.appendMode()),
+    (res) => res?.data ?? [],
+  );
+
+  // 2. Expose it as an Observable for cdkVirtualFor
+  accumulatedProducts$ = toObservable(this.accumulatedProducts);
+
+  trackByProductId(index: number, product: CreateProductDto): string | number {
+    return product.id; // Assuming each product has a unique identifier
+  }
 
   dynamicColumns = computed(() => {
-    if (this.store.isBook()) {
+    if (this.appStore.isBook()) {
       return {
         columnOne: 'book_table.publisher',
         columnTwo: 'book_table.isbn',

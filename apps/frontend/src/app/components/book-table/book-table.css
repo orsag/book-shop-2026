@@ -1,1 +1,16 @@
+/* Ensure your layout root takes up full height */
+:host {
+    display: block;
+    height: 100vh; /* Or adjust to your dashboard layout container */
+}
 
+.viewport {
+    display: block;
+    height: 100%;
+}
+
+/* Force table rows inside virtual scroll to respect the exact itemSize height */
+cdk-virtual-scroll-viewport tr.item {
+    height: 54px;
+    box-sizing: border-box;
+}
