@@ -70,6 +70,6 @@ describe('Profile Route Tests', () => {
       .parent()
       .should('contain.text', 'Street is required');
     cy.get('#iban').parent().should('contain.text', 'Iban is required');
-    cy.get('#phone').parent().should('contain.text', 'Phone is required');
+    cy.get('#phone').parent().should('contain.text', 'Phone number is required');
   });
 });

@@ -57,29 +57,12 @@
       </button>
     </div>
 
-    @if (store.hasMorePage()) {
-      <button
-        appRedFocus
-        data-testid="load-more"
-        (click)="store.loadMore()"
-        class="group btn btn-primary rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
-      >
-        <div class="flex items-center justify-center gap-2">
-          <svg lucideChevronDown
-               size="18"
-               class="group-hover:translate-y-0.5 transition-transform duration-300">
-          </svg>
-          <span class="uppercase tracking-wider text-xs font-black">Load More</span>
-        </div>
-      </button>
-    }
-
     <div
       aria-hidden="true"
       class="badge badge-outline border-base-content/10 py-5 px-5 gap-4 opacity-60 rounded-full">
       <div class="size-4 rounded-full bg-success animate-pulse"></div>
       <span class="font-medium font-bold uppercase">
-        Showing {{ store.products().length }} of {{ store.totalProducts() }} Items
+        Showing {{ loadedCount() }} of {{ store.totalProducts() }} Items
       </span>
     </div>
   }

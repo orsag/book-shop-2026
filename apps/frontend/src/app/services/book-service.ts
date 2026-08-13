@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ActionResponse } from '@store/libs';
 import { CreateProductDto as IProduct } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '@store';
 import { ApiService } from './api.service';
@@ -29,7 +29,9 @@ export class BookService {
       fromObject: cleanParams as Record<string, string>,
     });
 
-    return this.api.get<PaginatedProducts>(this.apiUrl, { params });
+    return this.api
+      .get<PaginatedProducts>(this.apiUrl, { params })
+      .pipe(delay(2000));
   }
 
   getOne(id: string, type: ProductType): Observable<IProduct> {

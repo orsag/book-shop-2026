@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { LucideArrowBigUp } from '@lucide/angular';
 import { ConfigurationService } from '@service';
+import { AppStore } from '@store';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -30,6 +31,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class ScrollBtn {
   isVisible = signal(false);
   private config = inject(ConfigurationService);
+  private store = inject(AppStore);
   showFilter = computed(() => this.config.flags().SHOW_FILTER);
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
@@ -45,10 +47,13 @@ export class ScrollBtn {
       if (!scrollArea) return; // Safety check
 
       const onScroll = () => {
-        if (!this.showFilter()) {
-          // 2. Use .scrollTop instead of window.scrollY
-          this.isVisible.set(scrollArea.scrollTop > 300);
+        // Only hide while the full-screen mobile filter overlay is open;
+        // on desktop the filter is a sidebar and never covers this button.
+        if (this.store.isMobile() && this.showFilter()) {
+          this.isVisible.set(false);
+          return;
         }
+        this.isVisible.set(scrollArea.scrollTop > 300);
       };
 
       // 3. Attach the event listener to the div, not the window

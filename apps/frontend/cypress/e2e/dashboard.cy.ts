@@ -24,7 +24,9 @@ describe('Dashboard Layout & Components', () => {
       .should('be.oneOf', [200, 304]);
 
     // 3. Assert updated count
-    cy.get('app-book-list-item').should('have.length', 2 * DEFAULT_MAX_LIMIT);
+    cy.get('app-book-list-item').should('have.length', 2 * DEFAULT_MAX_LIMIT, {
+      timeout: 20000,
+    });
   });
 
   it('should add the first item to the cart', () => {

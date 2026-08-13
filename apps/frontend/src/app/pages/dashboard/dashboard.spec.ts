@@ -147,4 +147,122 @@ describe('Dashboard Component', () => {
     const bookCards = gridElement.queryAll(By.css('app-book-card'));
     expect(bookCards.length).toBe(DEFAULT_MAX_LIMIT);
   });
+
+  it('auto-loads the next page when infinite scroll is enabled and Load More becomes visible', async () => {
+    // Arrange
+    mockAppStore.loadMore = vi.fn();
+    mockAppStore.isLoading.set(false);
+    mockAppStore.isEmpty.set(false);
+    mockAppStore.viewLayout.set('grid');
+    mockConfigService.flags = vi.fn().mockReturnValue({
+      INFINITE_SCROLL_GRID: true,
+      INFINITE_SCROLL_LIST: false,
+    });
+
+    let observerCallback:
+      | ((entries: Array<{ isIntersecting: boolean }>) => void)
+      | undefined;
+    const g = globalThis as { IntersectionObserver?: unknown };
+    const originalIO = g.IntersectionObserver;
+    g.IntersectionObserver = class MockIntersectionObserver {
+      constructor(
+        cb: (entries: Array<{ isIntersecting: boolean }>) => void,
+      ) {
+        observerCallback = cb;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      observe() {}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      disconnect() {}
+    };
+
+    // Act
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    observerCallback?.([{ isIntersecting: true }]);
+
+    // Assert
+    expect(mockAppStore.loadMore).toHaveBeenCalledTimes(1);
+
+    // Cleanup
+    if (originalIO === undefined) {
+      delete g.IntersectionObserver;
+    } else {
+      g.IntersectionObserver = originalIO;
+    }
+  });
+
+  it('does NOT auto-load when the infinite scroll flag is disabled', async () => {
+    // Arrange
+    mockAppStore.loadMore = vi.fn();
+    mockAppStore.isLoading.set(false);
+    mockAppStore.isEmpty.set(false);
+    mockAppStore.viewLayout.set('list');
+    mockConfigService.flags = vi.fn().mockReturnValue({
+      INFINITE_SCROLL_GRID: true,
+      INFINITE_SCROLL_LIST: false,
+    });
+
+    let observerCallback:
+      | ((entries: Array<{ isIntersecting: boolean }>) => void)
+      | undefined;
+    const g = globalThis as { IntersectionObserver?: unknown };
+    const originalIO = g.IntersectionObserver;
+    g.IntersectionObserver = class MockIntersectionObserver {
+      constructor(
+        cb: (entries: Array<{ isIntersecting: boolean }>) => void,
+      ) {
+        observerCallback = cb;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      observe() {}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      disconnect() {}
+    };
+
+    // Act
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    observerCallback?.([{ isIntersecting: true }]);
+
+    // Assert
+    expect(mockAppStore.loadMore).not.toHaveBeenCalled();
+
+    // Cleanup
+    if (originalIO === undefined) {
+      delete g.IntersectionObserver;
+    } else {
+      g.IntersectionObserver = originalIO;
+    }
+  });
+
+  it('keeps the append skeleton visible for at least 1 second after loading finishes', async () => {
+    // Arrange: loading starts while items are already on screen
+    vi.useFakeTimers();
+    mockAppStore.isLoading.set(true);
+    mockAppStore.isEmpty.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const skeletonCount = () =>
+      fixture.nativeElement.querySelectorAll('.skeleton').length;
+    expect(skeletonCount()).toBeGreaterThan(0);
+
+    // Act: the fetch resolves almost instantly (0ms)
+    mockAppStore.isLoading.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // Assert: skeleton is still up right after loading ends
+    expect(skeletonCount()).toBeGreaterThan(0);
+
+    // ...and disappears once the 1s minimum window elapses
+    vi.advanceTimersByTime(1000);
+    fixture.detectChanges();
+    expect(skeletonCount()).toBe(0);
+
+    vi.useRealTimers();
+  });
 });

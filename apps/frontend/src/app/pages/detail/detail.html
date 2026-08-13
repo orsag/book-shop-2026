@@ -70,6 +70,24 @@
               }}
             </span>
             </button>
+            @if (ux.isInCart(data)) {
+              <button
+              appRedFocus
+              routerLink="/"
+              class="btn btn-sm md:btn-lg md:px-12 font-bold btn-soft btn-primary"
+            >
+              Späť na zoznam
+            </button>
+            }
+            @if (ux.isInCart(data)) {
+              <button
+                appRedFocus
+                routerLink="/shopping"
+                class="btn btn-sm md:btn-lg md:px-12 font-bold btn-soft btn-primary"
+              >
+                Košík
+              </button>
+            }
           </div>
         </div>
 

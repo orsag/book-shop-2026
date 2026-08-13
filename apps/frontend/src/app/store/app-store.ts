@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import { ActionResponse } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tap, delay } from 'rxjs';
+import { tap } from 'rxjs';
 import { pipe, switchMap } from 'rxjs';
 import { BookService } from '@service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
@@ -112,7 +112,7 @@ export const AppStore = signalStore(
         append: store.appendMode(),
       }),
       stream: ({ params }) => {
-        return bookService.fetchProducts(params.filters).pipe(delay(1000));
+        return bookService.fetchProducts(params.filters);
       },
     }),
   })),

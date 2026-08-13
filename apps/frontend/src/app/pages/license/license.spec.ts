@@ -49,7 +49,7 @@ describe('License', () => {
     expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
-      block: 'center',
+      block: 'start',
     });
     // The scroll target must be the <p> holding the first match
     expect(scrollIntoView.mock.instances[0]).toBe(firstParagraph);

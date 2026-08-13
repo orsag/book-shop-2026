@@ -1,11 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AppStore } from '@store';
 import {
   LucideChevronLeft,
   LucideChevronsLeft,
   LucideChevronRight,
   LucideChevronsRight,
-  LucideChevronDown,
 } from '@lucide/angular';
 import { RedFocusDirective } from '@core';
 
@@ -16,7 +15,6 @@ import { RedFocusDirective } from '@core';
     LucideChevronsLeft,
     LucideChevronRight,
     LucideChevronsRight,
-    LucideChevronDown,
     RedFocusDirective,
   ],
   templateUrl: './pagination.html',
@@ -24,4 +22,7 @@ import { RedFocusDirective } from '@core';
 })
 export class Pagination {
   store = inject(AppStore);
+
+  // Number of items actually rendered (grows with infinite scroll / Load More)
+  loadedCount = input(0);
 }

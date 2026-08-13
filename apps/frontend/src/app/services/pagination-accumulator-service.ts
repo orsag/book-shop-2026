@@ -7,6 +7,7 @@ import {
   Resource,
   ResourceSnapshot,
   untracked,
+  ResourceStatus,
 } from '@angular/core';
 
 /**
@@ -67,11 +68,13 @@ export class PaginationAccumulatorService {
           .flatMap((p) => pageMap.get(p) ?? []);
       }
 
-      if (isAppend) {
-        pageMap.set(currentPage, freshItems);
-      } else {
-        pageMap.clear();
-        pageMap.set(currentPage, freshItems);
+      if (stableResource.status() === 'resolved' as ResourceStatus) {
+        if (isAppend) {
+          pageMap.set(currentPage, freshItems);
+        } else {
+          pageMap.clear();
+          pageMap.set(currentPage, freshItems);
+        }
       }
 
       return Array.from(pageMap.keys())

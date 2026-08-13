@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
 import { BookService } from '@service';
@@ -39,6 +39,7 @@ import { OverlayComponent } from '@component';
     OverlayComponent,
     RedFocusDirective,
     SinglePricePipe,
+    RouterLink,
   ],
   templateUrl: './detail.html',
 })

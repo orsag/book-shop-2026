@@ -62,27 +62,23 @@ describe('Pagination', () => {
       page: 2,
     });
 
+    // Simulate 24 items accumulated on screen (infinite scroll / Load More)
+    fixture.componentRef.setInput('loadedCount', 24);
+
     // 2. Act: Trigger change detection to re-render the DOM layout
     fixture.detectChanges();
     await fixture.whenStable();
 
     // 3. Assertions:
 
-    // A. Check if the "Load More Books" button is visible
-    const loadMoreBtn = fixture.nativeElement.querySelector(
-      '[data-testid="load-more"]',
-    );
-    expect(loadMoreBtn).toBeTruthy();
-    expect(loadMoreBtn.textContent).toContain('Load More');
-
-    // B. Verify the Page Indicators (Current Page / Total Pages)
+    // A. Verify the Page Indicators (Current Page / Total Pages)
     const pageContainer =
       fixture.nativeElement.querySelector('.items-baseline');
     expect(pageContainer.textContent).toContain('2'); // Current Page
     expect(pageContainer.textContent).toContain('/');
     expect(pageContainer.textContent).toContain('3'); // Total Pages
 
-    // C. Verify the Summary Text Badge at the bottom
+    // B. Verify the Summary Text Badge at the bottom
     const summaryBadge = fixture.nativeElement.querySelector('.badge');
     expect(summaryBadge.textContent).toContain('Showing 24 of 36 Items');
   });

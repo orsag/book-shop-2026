@@ -32,6 +32,7 @@ import {
 import { CardSmall, FieldErrorComponent } from '@component';
 import { delay } from 'rxjs';
 import { UpdateUserDetailDto } from '@api';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -50,6 +51,7 @@ import { UpdateUserDetailDto } from '@api';
     RedFocusDirective,
     BlueFocusDirective,
     FieldErrorComponent,
+    RouterLink,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
@@ -143,7 +145,10 @@ export class Profile {
   userForm = form(this.userModel, (schemaPath) => {
     required(schemaPath.email, {
       message: 'Email is required',
-    })
+    });
+    required(schemaPath.phoneNumber, {
+      message: 'Phone number is required',
+    });
   });
 
   isPremium = computed(() => this.userStore.userDetail()?.isPremium ?? false);

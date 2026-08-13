@@ -14,8 +14,9 @@ import { isPlatformBrowser, NgClass, NgTemplateOutlet } from '@angular/common';
 import { BookCard, BookListItem, Pagination, FilterBar } from '@component';
 import { ConfigurationService, PaginationAccumulatorService } from '@service';
 import { AppStore, CartStore } from '@store';
-import { LucideSearchX } from '@lucide/angular';
+import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
+import { RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +28,8 @@ import { VIEW_LAYOUTS } from '@store/libs';
     FilterBar,
     LucideSearchX,
     NgTemplateOutlet,
+    LucideChevronDown,
+    RedFocusDirective,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

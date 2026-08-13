@@ -1,13 +1,13 @@
 <main class="container mx-auto">
   <app-filter-bar></app-filter-bar>
   <!-- Main Loading Spinner: Only shows on initial load or fresh searches -->
-  @if (store.isLoading()) {
+  @if (store.isLoading() && accumulatedProducts().length === 0) {
     @if (store.viewLayout() === 'list') {
       <ng-container *ngTemplateOutlet="listSkeleton"></ng-container>
     } @else {
       <ng-container *ngTemplateOutlet="gridSkeleton"></ng-container>
     }
-  } @else if (store.isEmpty()) {
+  } @else if (accumulatedProducts().length === 0) {
     <div class="flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
 
       <div class="text-error mb-4 bg-error/10 p-4 rounded-full">
@@ -20,7 +20,8 @@
       </p>
     </div>
   } @else {
-    <app-pagination />
+    <app-pagination [loadedCount]="accumulatedProducts().length" />
+
     <!-- Render Grid or List -->
     @switch (store.viewLayout()) {
       @case (VIEW_LAYOUTS[0]) {
@@ -54,6 +55,30 @@
           }
         </div>
       }
+    }
+
+
+    @if (store.isLoading()) {
+      <div class="flex flex-col items-center justify-center p-12 text-center">
+        <h3 class="text-xl font-bold">Načítavanie produktov...</h3>
+      </div>
+    } @else if (store.hasMorePage()) {
+      <div class="flex w-full justify-center items-center my-12">
+        <button
+          appRedFocus
+          data-testid="load-more"
+          (click)="store.loadMore()"
+          class="group btn btn-primary rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+        >
+          <div class="flex items-center justify-center gap-2">
+            <svg lucideChevronDown
+                 size="18"
+                 class="group-hover:translate-y-0.5 transition-transform duration-300">
+            </svg>
+            <span class="uppercase tracking-wider text-xs font-black">Load More</span>
+          </div>
+        </button>
+      </div>
     }
   }
 </main>
