@@ -20,7 +20,7 @@
       </p>
     </div>
   } @else {
-    <app-pagination [loadedCount]="accumulatedProducts().length" />
+    <div class="mt-5 w-full"></div>
 
     <!-- Render Grid or List -->
     @switch (store.viewLayout()) {
@@ -63,7 +63,8 @@
         <h3 class="text-xl font-bold">Načítavanie produktov...</h3>
       </div>
     } @else if (store.hasMorePage()) {
-      <div class="flex w-full justify-center items-center my-12">
+      <div class="flex w-full justify-center items-center gap-6 my-12">
+        <app-pagination [loadedCount]="accumulatedProducts().length" />
         <button
           appRedFocus
           data-testid="load-more"

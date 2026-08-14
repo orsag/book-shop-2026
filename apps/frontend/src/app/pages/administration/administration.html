@@ -5,14 +5,27 @@
       <p class="text-sm text-base-content/60">{{ t('administration.subtitle') }}</p>
     </div>
 
-    <button
-      appRedFocus
-      type="button"
-      class="btn btn-primary gap-2 shadow-md"
-      (click)="openCreateModal()">
-      <svg lucidePlus size="20"></svg>
-      {{ t('administration.add_product') }}
-    </button>
+
+    <div class="flex gap-3">
+      <button
+        appRedFocus
+        type="button"
+        routerLink="/"
+        class="btn btn-soft btn-primary"
+      >
+        {{ t('common.back') }}
+      </button>
+      <button
+        appRedFocus
+        type="button"
+        class="btn btn-primary gap-2 shadow-md"
+        (click)="openCreateModal()"
+      >
+        <svg lucidePlus size="20"></svg>
+        {{ t('administration.add_product') }}
+      </button>
+    </div>
+
   </div>
 
   <div class="w-full bg-base-100 shadow-sm">

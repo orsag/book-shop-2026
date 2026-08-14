@@ -18,7 +18,7 @@
 
     @if (isHovered()) {
       <div class="absolute inset-0 z-10 pointer-events-none rounded-xl overflow-hidden bg-transparent">
-        <app-overlay [product]="product" />
+        <app-overlay [product]="product" [hidden]="true" />
       </div>
     }
   </div>

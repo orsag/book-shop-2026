@@ -31,7 +31,6 @@ export class LoggingInterceptor implements NestInterceptor {
         next: () =>
           this.pinoLogger.info(
             {
-              method: req.method,
               url: `[HTTP] ${method} ${url} - ${Date.now() - now}ms`,
               status: res.statusCode,
             },
@@ -40,7 +39,6 @@ export class LoggingInterceptor implements NestInterceptor {
         error: (err) =>
           this.pinoLogger.info(
             {
-              method: req.method,
               url: `[HTTP] ${method} ${url} - ${Date.now() - now}ms`,
               status: err.statusCode,
             },

@@ -7,8 +7,9 @@ import { EditBookModalComponent } from './edit-book-modal';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
-import { LucideFrown, LucidePlus } from '@lucide/angular';
+import { LucidePlus } from '@lucide/angular';
 import { RedFocusDirective } from '@core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-administration',
@@ -21,8 +22,8 @@ import { RedFocusDirective } from '@core';
     TranslocoDirective,
     CoverModalComponent,
     DeleteModalComponent,
-    LucideFrown,
     RedFocusDirective,
+    RouterLink,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',
@@ -91,9 +92,8 @@ export class Administration implements OnInit {
   }) {
     const id = event.id;
     const dataToSave = event.dataToSave;
-    dataToSave.createdAt = dataToSave.createdAt ?? new Date().toISOString();
-    dataToSave.updatedAt = dataToSave.updatedAt ?? new Date().toISOString();
 
     this.store.saveBook({ id, data: dataToSave });
+    this.closeModals();
   }
 }

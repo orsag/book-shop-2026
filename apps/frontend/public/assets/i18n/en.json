@@ -1,5 +1,6 @@
 {
   "common": {
+    "back": "Back",
     "success_logout": "Logout successful.",
     "success_login": "Login successful.",
     "failed_login": "Login failed, try again.",

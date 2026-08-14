@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 })
 export class OverlayComponent {
   @Input({ required: true }) product!: CreateProductDto;
+  @Input({ required: false }) hidden!: boolean;
   /*
     id: string
   sku: string

@@ -1,5 +1,6 @@
 {
   "common": {
+    "back": "Späť",
     "success_logout": "Logout úspešný.",
     "success_login": "Login úspešný.",
     "failed_login": "Login neúspešný, skúste znova.",

@@ -26,6 +26,7 @@ import {
 } from './form-rules.shared';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { RedFocusDirective } from '@core';
+import { ToastService } from '@service';
 
 @Component({
   selector: 'app-edit-book-modal',
@@ -159,14 +160,11 @@ import { RedFocusDirective } from '@core';
         </div>
 
         <div class="modal-action">
-          <button 
-            appRedFocus 
-            class="btn btn-ghost" 
-            (click)="handleClose()">
+          <button appRedFocus class="btn btn-ghost" (click)="handleClose()">
             {{ t('edit_modal.cancel') }}
           </button>
           <button
-            appRedFocus 
+            appRedFocus
             class="btn btn-info"
             (click)="handleGenerateFields()"
           >
@@ -207,6 +205,7 @@ export class EditBookModalComponent {
   }>();
   readonly selectedBook = input.required<IProduct | null>();
   store = inject(AppStore);
+  toast = inject(ToastService);
 
   editModel = signal<UpdateProductDtoFrontend>({
     ...(EMPTY_BOOK as UpdateProductDtoFrontend),
@@ -258,13 +257,20 @@ export class EditBookModalComponent {
     maxLength(schemaPath.bookDetails.isbn, 20, {
       message: 'ISBN must be max 20 chars',
     });
+    required(schemaPath.bookDetails.pageCount, {
+      message: 'Page count is required',
+    });
     min(schemaPath.bookDetails.pageCount, 1, {
       message: 'Page count must be min 1 pages',
     });
   });
 
   handleSave() {
-    if (this.editForm().invalid()) return;
+    if (this.editForm().invalid()) {
+      console.log(this.editForm().value);
+      this.toast.alert('Invalid form');
+      return;
+    }
     this.commonSave.emit({
       id: this.idBook(),
       dataToSave: this.editForm().value(),
