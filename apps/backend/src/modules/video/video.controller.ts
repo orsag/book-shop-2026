@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Headers, Res, Req } from '@nestjs/common';
 import { SkipTransform } from '../../decorators/skip-transform.decorator';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { VideoService } from './video.service';
 import { Readable } from 'stream';
 import { SkipTimeout } from '../../decorators/skip-timeout.decorator';

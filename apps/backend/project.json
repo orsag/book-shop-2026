@@ -6,15 +6,29 @@
   "tags": ["scope:api"],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "command": "webpack-cli build",
-        "args": ["--mode=production"],
-        "cwd": "apps/backend"
+        "outputPath": "dist/apps/backend",
+        "main": "apps/backend/src/main.ts",
+        "tsConfig": "apps/backend/tsconfig.app.json",
+        "assets": ["apps/backend/src/assets"],
+        "platform": "node",
+        "format": ["esm"],
+        "bundle": true,
+        "generatePackageJson": true,
+        "sourcemap": true,
+        "esbuildConfig": "apps/backend/esbuild.config.cjs",
+        "external": ["@prisma/client", "@prisma/adapter-pg", ".prisma"]
       },
       "configurations": {
         "development": {
-          "args": ["--mode=development"]
+          "sourcemap": true,
+          "optimization": false
+        },
+        "production": {
+          "sourcemap": false,
+          "optimization": true
         }
       }
     },
