@@ -7,7 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // Load .env from the root of the monorepo
-dotenv.config({ path: join(__dirname, '../../.env') });
+dotenv.config({ path: join(process.cwd(), '.env') });
 
 /**
  * Custom logger to suppress verbose route mapping and dependency loading logs

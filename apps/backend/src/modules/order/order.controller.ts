@@ -13,7 +13,7 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { RequestWithUser } from '@store/libs';
+import type { RequestWithUser } from '@book-store-2026/libs';
 import { AdminGuard } from '../../guards/admin.guard';
 
 @Controller('order')

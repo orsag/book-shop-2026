@@ -6,7 +6,7 @@ import {
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { OrderStatus } from '@store/libs';
+import { OrderStatus } from '@book-store-2026/libs';
 
 type OrderItemDto = {
   productId: string;

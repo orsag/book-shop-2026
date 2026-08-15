@@ -49,8 +49,10 @@ Thumbs.db
 
 vitest.config.*.timestamp*
 /generated/prisma
+/prisma/generated
 prisma/*.db
 prisma/*.db-journal
+/apps/libs/src/**/*.d.ts
 .env
 
 __screenshots__/

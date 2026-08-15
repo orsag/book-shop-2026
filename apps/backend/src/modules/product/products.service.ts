@@ -5,10 +5,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import {
   ProductsControllerFindAllParams,
   CreateProductDtoProductType,
-} from '@api';
+} from '@book-store-2026/libs';
 import { Prisma } from '@prismalib';
 import { ProductWhereInput } from '@prismalib';
-import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
+import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@book-store-2026/libs';
 
 @Injectable()
 export class ProductsService {

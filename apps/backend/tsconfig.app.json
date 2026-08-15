@@ -4,7 +4,7 @@
     "composite": false,
     "declaration": false,
     "outDir": "../../dist/out-tsc",
-    "module": "esnext",
+    "module": "commonjs",
     "types": [
       "vitest/globals",
       "vitest/importMeta",
@@ -23,7 +23,7 @@
   "include": [
     "src/**/*.ts",
     "../../libs/src/**/*.ts",
-    "../../generated/prisma/client.ts",
+    "../../prisma/generated/prisma/client.ts",
     "../../prisma/prisma.ts"
   ],
   "exclude": [

@@ -1,7 +1,7 @@
 import {
   CreateProductDto as ICreateProductDto,
   CreateProductDtoProductType,
-} from '@api';
+} from '@book-store-2026/libs';
 import {
   IsString,
   IsNumber,

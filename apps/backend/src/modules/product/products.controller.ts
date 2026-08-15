@@ -22,8 +22,8 @@ import {
   DEFAULT_TYPE,
   DEFAULT_PAGE,
   DEFAULT_MAX_LIMIT,
-} from '@store/libs';
-import { CreateProductDtoProductType } from '@api';
+} from '@book-store-2026/libs';
+import { CreateProductDtoProductType } from '@book-store-2026/libs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { SanitizeInterceptor } from '../../interceptors/sanitize.interceptor';

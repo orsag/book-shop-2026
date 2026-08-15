@@ -1,4 +1,4 @@
-import { CreateProductDtoProductType } from '@api';
+import { CreateProductDtoProductType } from '@book-store-2026/libs';
 import {
   IsString,
   IsNumber,

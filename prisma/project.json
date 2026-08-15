@@ -1,5 +1,21 @@
 {
   "name": "prisma",
   "projectType": "library",
-  "tags": ["type:config", "scope:prisma"]
+  "tags": ["type:config", "scope:prisma"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/prisma",
+        "main": "prisma/prisma.ts",
+        "tsConfig": "prisma/tsconfig.json",
+        "clean": true,
+        "skipTypeCheck": true,
+        "generateLockfile": false,
+        "generatePackageJson": true,
+        "sourceRoot": "prisma"
+      }
+    }
+  }
 }

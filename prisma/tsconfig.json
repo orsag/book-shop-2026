@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "module": "commonjs",
+    "outDir": "../dist/out-tsc",
+    "moduleResolution": "bundler"
+  },
+  "include": ["prisma.ts", "generated/**/*.ts"]
+}

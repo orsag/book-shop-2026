@@ -133,7 +133,6 @@
     "daisyui": "5.7.17",
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.27.0",
-    "esbuild-plugin-tsc": "^0.6.0",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^7.0.0",

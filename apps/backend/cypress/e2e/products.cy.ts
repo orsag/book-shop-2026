@@ -245,7 +245,7 @@ describe('GET /api/products — findAll', () => {
   it('returns 200 with defaults when only type is provided', () => {
     cy.api({ ...api, qs: { type: 'GAME' } }).then((res) => {
       expect(res.status).to.eq(200);
-      expect(res.body.meta).to.include({ page: 1, limit: 12 });
+      expect(res.body.meta).to.include({ page: 1, limit: 20 });
     });
   });
 });

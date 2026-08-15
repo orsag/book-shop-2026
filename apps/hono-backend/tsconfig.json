@@ -3,7 +3,7 @@
   "files": [],
   "include": [
     "../../libs/src/**/*.ts",
-    "../../generated/prisma/client.ts",
+    "../../prisma/generated/prisma/client.ts",
     "../../prisma/prisma.ts"
   ],
   "references": [
