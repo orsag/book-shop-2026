@@ -255,7 +255,7 @@ export const UserStore = signalStore(
               tap((updatedUser) => {
                 patchState(store, { user: updatedUser });
                 // Persistence sync
-                localStorage.setItem('user', JSON.stringify(updatedUser));
+                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
               }),
               catchError((err) => {
                 errorService.handleError(ErrorCodes.REFRESH);

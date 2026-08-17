@@ -1,5 +1,7 @@
 import { inject, Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { AppStore, UserStore } from '@store';
+import { AuthService } from '@service';
 
 const USER_STORAGE_KEY = 'currentUser';
 const TOKEN_STORAGE_KEY = 'accessToken';
@@ -12,6 +14,7 @@ const SEARCH_HISTORY_KEY = 'searchHistory';
 export class InitializationService {
   private userStore = inject(UserStore);
   private appStore = inject(AppStore);
+  private authService = inject(AuthService);
 
   private readonly savedUser: string | null;
   private readonly savedToken: string | null;
@@ -25,15 +28,28 @@ export class InitializationService {
     this.searchHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
   }
 
-  main() {
+  async main(): Promise<boolean> {
     if (!this.savedToken) {
       this.userStore.invalidateUser();
-    } else {
-      this.userInitialization();
+      return false;
+    }
+
+    this.restoreFromStorage();
+
+    try {
+      const username = JSON.parse(this.savedUser!).username;
+      const validUser = await firstValueFrom(this.authService.getUser(username));
+      if (validUser) {
+        this.userStore.updateStore(validUser, null, null);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
     }
   }
 
-  userInitialization() {
+  private restoreFromStorage() {
     if (this.savedUser && this.savedToken) {
       this.userStore.updateStore(JSON.parse(this.savedUser), null, null);
       this.appStore.setToken(this.savedToken);

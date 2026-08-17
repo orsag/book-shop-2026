@@ -1,16 +1,14 @@
 // auth.interceptor.ts
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AppStore, UserStore } from '@store';
-import { catchError, throwError, finalize } from 'rxjs';
+import { AppStore } from '@store';
+import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
-  const userStore = inject(UserStore);
   const token = store.token();
   const router = inject(Router);
-  let isError401 = false;
 
   // 1. Skip video/media stream endpoints
   if (req.url.includes('/videos/')) {
@@ -27,30 +25,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        isError401 = true;
-        // 1. Check if the failed request was actually the login attempt itself
-        const isLoginRequest = authReq.url.includes('/login'); // Adjust this path to match your actual API route
+        const isLoginRequest = authReq.url.includes('/login');
 
-        if (isLoginRequest) {
-          // --- 🔒 FAILED LOGIN ATTEMPT ---
-          // Do NOT force logout or navigate. Just pass the error back to the AppStore
-          console.log('Invalid credentials entered.');
-        } else {
-          // --- 🚨 TOKEN EXPIRED OR INVALID (Session expired) ---
-          console.warn('Session expired. Logging out...');
-
-          // Send them back to login
+        if (!isLoginRequest) {
+          console.warn('Session expired. Redirecting to login...');
           router.navigateByUrl('/login');
         }
       }
 
       return throwError(() => error);
     }),
-    finalize(() => {
-      if (isError401) {
-        // Wipe the store and LocalStorage
-        userStore.logout();
-      }
-    }),
   );
-};;;
+};;
