@@ -1,0 +1,23 @@
+{
+  "jsc": {
+    "target": "es2021",
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "keepClassNames": true,
+    "externalHelpers": true,
+    "loose": true
+  },
+  "module": {
+    "type": "commonjs"
+  },
+  "sourceMaps": true,
+  "exclude": [
+    ".*\\.spec.tsx?$",
+    ".*\\.test.tsx?$",
+    ".*.js$",
+    ".*.d.ts$"
+  ]
+}

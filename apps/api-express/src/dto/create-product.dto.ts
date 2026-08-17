@@ -1,4 +1,4 @@
-import type { Product, ProductType } from '@store/libs';
+import type { Product, ProductType } from '@book-store-2026/libs';
 import {
   IsString,
   IsNumber,

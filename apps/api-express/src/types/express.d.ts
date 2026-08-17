@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { ProductType } from '@store/libs';
+import { ProductType } from '@book-store-2026/libs';
 
 export interface UserPayload extends JwtPayload {
   userId: string;

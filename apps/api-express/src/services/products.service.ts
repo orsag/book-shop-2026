@@ -2,7 +2,7 @@ import { prisma, Prisma, ProductWhereInput } from '@prismalib';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { FindAllParams } from '../types/express';
-import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@store/libs';
+import { DEFAULT_MAX_LIMIT, DEFAULT_PAGE, DEFAULT_TYPE } from '@book-store-2026/libs';
 
 export class ProductsService {
   async findAll({

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '@store/libs';
+import { ApiResponse } from '@book-store-2026/libs';
 
 const isAlreadyWrapped = (body: unknown): boolean =>
   typeof body === 'object' &&

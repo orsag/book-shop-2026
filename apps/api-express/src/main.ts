@@ -15,7 +15,7 @@ import { productsRouter } from './routes/products.route';
 import { sanitizeObject } from './utils/purify';
 import { transformResponseMiddleware } from './middleware/transform-response.middleware';
 
-dotenv.config({ path: join(__dirname, '../../../.env') });
+dotenv.config({ path: join(process.cwd(), '.env') });
 
 const app = express();
 

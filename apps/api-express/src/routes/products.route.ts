@@ -8,7 +8,7 @@ import {
   DEFAULT_PAGE,
   DEFAULT_MAX_LIMIT,
   ProductType,
-} from '@store/libs';
+} from '@book-store-2026/libs';
 
 const router = Router();
 const productsService = new ProductsService();

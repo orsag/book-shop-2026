@@ -5,6 +5,22 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/api-express",
+        "main": "apps/api-express/src/main.ts",
+        "tsConfig": "apps/api-express/tsconfig.app.json",
+        "assets": ["apps/api-express/src/assets"],
+        "clean": true,
+        "skipTypeCheck": true
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
     "prune-lockfile": {
       "dependsOn": ["build"],
       "cache": true,
