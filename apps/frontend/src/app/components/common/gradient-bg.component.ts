@@ -3,13 +3,16 @@ import {
   NgZone,
   inject,
   ElementRef,
-  afterNextRender, DestroyRef,
+  afterNextRender,
+  DestroyRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ConfigurationService } from '@service';
 
 @Component({
   selector: 'app-gradient-bg',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="gradient-bg" [class.is-dark-theme]="config.isDarkTheme()">
       <svg xmlns="http://www.w3.org/2000/svg" class="goo-svg">

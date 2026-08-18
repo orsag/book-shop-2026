@@ -12,6 +12,7 @@ import {
 import { vi } from 'vitest';
 import { MockComponent } from 'ng-mocks';
 import { OrderTable, BookTable } from '@component';
+import { provideRouter } from '@angular/router';
 
 describe('Administration', () => {
   let component: Administration;
@@ -59,6 +60,7 @@ describe('Administration', () => {
     await TestBed.configureTestingModule({
       imports: [Administration, getTranslocoModule()],
       providers: [
+        provideRouter([]),
         { provide: AppStore, useValue: mockAppStore },
         { provide: UserStore, useValue: mockUserStore },
         { provide: CartStore, useValue: mockCartStore },

@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
 import { UserStore } from '@store';
+import { of } from 'rxjs';
 
 describe('Login', () => {
   let component: LoginPage;
@@ -14,7 +15,7 @@ describe('Login', () => {
     mockUserStore = {
       isLoggedIn: signal(false),
       isLoading: signal(false),
-      login: vi.fn(),
+      login: vi.fn().mockReturnValue(of({ success: true })),
     };
 
     await TestBed.configureTestingModule({
@@ -75,7 +76,7 @@ describe('Login', () => {
     expect(spinner).toBeTruthy();
   });
 
-  it('should be called login when name is filled', async () => {
+  it('should be called onLogin when name is filled', async () => {
     component.username.set('knihomol123');
     component.password.set('password');
     fixture.detectChanges();

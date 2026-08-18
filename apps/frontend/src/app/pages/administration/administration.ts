@@ -7,9 +7,10 @@ import { EditBookModalComponent } from './edit-book-modal';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
-import { LucidePlus } from '@lucide/angular';
+import { LucideFaceSlightlyFrowning, LucidePlus } from '@lucide/angular';
 import { RedFocusDirective } from '@core';
 import { RouterLink } from '@angular/router';
+import { EditBookReactiveComponent } from './edit-book-reactive';
 
 @Component({
   selector: 'app-administration',
@@ -24,6 +25,8 @@ import { RouterLink } from '@angular/router';
     DeleteModalComponent,
     RedFocusDirective,
     RouterLink,
+    EditBookReactiveComponent,
+    LucideFaceSlightlyFrowning,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',

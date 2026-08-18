@@ -47,8 +47,8 @@ export class Detail {
   private route = inject(ActivatedRoute);
   private bookService = inject(BookService);
   private cartStore = inject(CartStore);
-  errorService = inject(ErrorService);
   readonly store = inject(AppStore);
+  errorService = inject(ErrorService);
   ux = inject(UXService);
   isHovered = signal(false);
 

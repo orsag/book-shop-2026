@@ -92,7 +92,7 @@
 
   @if (store.isEmpty()) {
     <div class="flex flex-col items-center justify-center min-h-[40vh]">
-      <svg lucideFrown size="80" class="text-gray-400 dark:text-gray-800"></svg>
+      <svg lucideFaceSlightlyFrowning size="80" class="text-gray-400 dark:text-gray-800"></svg>
       <h1 class="mt-4 text-3xl font-bold text-base-content/50">Nothing found in: {{ category() }}</h1>
     </div>
   } @else {
@@ -117,10 +117,17 @@
 
 @if (isEditModalOpen()) {
   @if (store.isBook()) {
-    <app-edit-book-modal
+    <app-edit-book-reactive
       [selectedBook]="selectedProduct()"
       (closeModal)="closeModals()"
       (commonSave)="handleProductSave($event)" />
+
+<!--@if (isEditModalOpen()) {-->
+<!--  @if (store.isBook()) {-->
+<!--    <app-edit-book-modal-->
+<!--      [selectedBook]="selectedProduct()"-->
+<!--      (closeModal)="closeModals()"-->
+<!--      (commonSave)="handleProductSave($event)" />-->
 
   }
 <!--  @else if (store.isGame()) {-->

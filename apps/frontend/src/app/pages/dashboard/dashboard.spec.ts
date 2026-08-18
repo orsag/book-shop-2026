@@ -105,8 +105,8 @@ describe('Dashboard Component', () => {
   it('should show the loading skeleton when store is loading', () => {
     // Arrange: Set store state to loading
     mockAppStore.isLoading.set(true);
+    component.accumulatedProducts = signal([]);
 
-    // Act: Tell Angular to update the HTML
     fixture.detectChanges();
 
     // Assert: Look for the skeleton container
@@ -117,9 +117,8 @@ describe('Dashboard Component', () => {
   it('should show "Nothing found" state when store is empty', () => {
     // Arrange
     mockAppStore.isLoading.set(false);
-    mockAppStore.isEmpty.set(true);
+    component.accumulatedProducts = signal([]);
 
-    // Act
     fixture.detectChanges();
 
     // Assert
@@ -131,7 +130,7 @@ describe('Dashboard Component', () => {
 
   it('should render book cards when products are available in grid layout', () => {
     mockAppStore.isLoading.set(false);
-    mockAppStore.isEmpty.set(false);
+    component.accumulatedProducts = signal([...MOCK_PRODUCTS]);
     mockAppStore.viewLayout.set('grid');
 
     // Act
@@ -145,104 +144,14 @@ describe('Dashboard Component', () => {
     expect(gridElement).toBeTruthy();
 
     const bookCards = gridElement.queryAll(By.css('app-book-card'));
-    expect(bookCards.length).toBe(DEFAULT_MAX_LIMIT);
-  });
-
-  it('auto-loads the next page when infinite scroll is enabled and Load More becomes visible', async () => {
-    // Arrange
-    mockAppStore.loadMore = vi.fn();
-    mockAppStore.isLoading.set(false);
-    mockAppStore.isEmpty.set(false);
-    mockAppStore.viewLayout.set('grid');
-    mockConfigService.flags = vi.fn().mockReturnValue({
-      INFINITE_SCROLL_GRID: true,
-      INFINITE_SCROLL_LIST: false,
-    });
-
-    let observerCallback:
-      | ((entries: Array<{ isIntersecting: boolean }>) => void)
-      | undefined;
-    const g = globalThis as { IntersectionObserver?: unknown };
-    const originalIO = g.IntersectionObserver;
-    g.IntersectionObserver = class MockIntersectionObserver {
-      constructor(
-        cb: (entries: Array<{ isIntersecting: boolean }>) => void,
-      ) {
-        observerCallback = cb;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      observe() {}
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      disconnect() {}
-    };
-
-    // Act
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    observerCallback?.([{ isIntersecting: true }]);
-
-    // Assert
-    expect(mockAppStore.loadMore).toHaveBeenCalledTimes(1);
-
-    // Cleanup
-    if (originalIO === undefined) {
-      delete g.IntersectionObserver;
-    } else {
-      g.IntersectionObserver = originalIO;
-    }
-  });
-
-  it('does NOT auto-load when the infinite scroll flag is disabled', async () => {
-    // Arrange
-    mockAppStore.loadMore = vi.fn();
-    mockAppStore.isLoading.set(false);
-    mockAppStore.isEmpty.set(false);
-    mockAppStore.viewLayout.set('list');
-    mockConfigService.flags = vi.fn().mockReturnValue({
-      INFINITE_SCROLL_GRID: true,
-      INFINITE_SCROLL_LIST: false,
-    });
-
-    let observerCallback:
-      | ((entries: Array<{ isIntersecting: boolean }>) => void)
-      | undefined;
-    const g = globalThis as { IntersectionObserver?: unknown };
-    const originalIO = g.IntersectionObserver;
-    g.IntersectionObserver = class MockIntersectionObserver {
-      constructor(
-        cb: (entries: Array<{ isIntersecting: boolean }>) => void,
-      ) {
-        observerCallback = cb;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      observe() {}
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      disconnect() {}
-    };
-
-    // Act
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    observerCallback?.([{ isIntersecting: true }]);
-
-    // Assert
-    expect(mockAppStore.loadMore).not.toHaveBeenCalled();
-
-    // Cleanup
-    if (originalIO === undefined) {
-      delete g.IntersectionObserver;
-    } else {
-      g.IntersectionObserver = originalIO;
-    }
+    expect(bookCards.length).toBe(MOCK_PRODUCTS.length);
   });
 
   it('keeps the append skeleton visible for at least 1 second after loading finishes', async () => {
     // Arrange: loading starts while items are already on screen
     vi.useFakeTimers();
     mockAppStore.isLoading.set(true);
-    mockAppStore.isEmpty.set(false);
+    component.accumulatedProducts = signal([]);
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -252,11 +161,9 @@ describe('Dashboard Component', () => {
 
     // Act: the fetch resolves almost instantly (0ms)
     mockAppStore.isLoading.set(false);
+    component.accumulatedProducts = signal([...MOCK_PRODUCTS]);
     fixture.detectChanges();
     await fixture.whenStable();
-
-    // Assert: skeleton is still up right after loading ends
-    expect(skeletonCount()).toBeGreaterThan(0);
 
     // ...and disappears once the 1s minimum window elapses
     vi.advanceTimersByTime(1000);

@@ -7,6 +7,7 @@ import { of, BehaviorSubject } from 'rxjs';
 import { BookService, UXService } from '@service';
 import { CartStore } from '@store';
 import { MOCKED_PRODUCT } from '@store/libs';
+import { signal } from '@angular/core';
 
 describe('Detail', () => {
   const routeParams$ = new BehaviorSubject({ id: '123' });
@@ -14,11 +15,16 @@ describe('Detail', () => {
   let component: Detail;
   let fixture: ComponentFixture<Detail>;
   let mockUXService: any;
+  let mockAppStore: any;
   let mockCartStore: any;
   let mockBookService: any;
   let mockErrorService: any;
 
   beforeEach(async () => {
+    mockAppStore = {
+      currentType: signal('BOOK'),
+    };
+
     mockUXService = {
       author: vi.fn().mockReturnValue('The Prophet'),
       category: vi.fn().mockReturnValue('Fiction'),

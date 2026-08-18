@@ -1,12 +1,17 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormField } from '@angular/forms/signals';
 import { BlueFocusDirective, NoFocusJumpDirective } from '@core';
-import { LucideFrown } from '@lucide/angular';
+import { LucideFaceSlightlyFrowning } from '@lucide/angular';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
-  imports: [FormField, NoFocusJumpDirective, LucideFrown, BlueFocusDirective],
+  imports: [
+    FormField,
+    NoFocusJumpDirective,
+    BlueFocusDirective,
+    LucideFaceSlightlyFrowning,
+  ],
   template: `
     <div class="form-control">
       <label class="label" [attr.for]="inputId()">
@@ -67,7 +72,7 @@ import { LucideFrown } from '@lucide/angular';
           <ul class="space-y-1">
             @for (error of formState()?.errors() ?? []; track error.message) {
               <li class="flex items-center gap-1 validator-hint">
-                <svg lucideFrown height="10" width="10"></svg>
+                <svg lucideFaceSlightlyFrowning height="10" width="10"></svg>
                 <span>{{ error.message }}</span>
               </li>
             }

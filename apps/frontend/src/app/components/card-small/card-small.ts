@@ -1,4 +1,9 @@
-import { Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
@@ -18,6 +23,7 @@ import { SinglePricePipe } from '@core';
     TranslocoDirective,
     SinglePricePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './card-small.html',
   styleUrl: './card-small.css',
 })

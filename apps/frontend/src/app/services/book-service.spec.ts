@@ -73,7 +73,7 @@ describe('BookService', () => {
       });
 
       // Expect a GET request to the URL with specific params
-      const req = httpMock.expectOne('/api/products?type=BOOK&search=Pizza&page=1&limit=12');
+      const req = httpMock.expectOne('/api/products?type=BOOK&search=Pizza&page=1&limit=20');
       expect(req.request.method).toBe('GET');
 
       // Flush the mock data to resolve the Observable

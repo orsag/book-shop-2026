@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AppStore, UserStore } from '@store';
-import { AuthService } from '@service';
+import { AuthService, ToastService } from '@service';
 
 const USER_STORAGE_KEY = 'currentUser';
 const TOKEN_STORAGE_KEY = 'accessToken';
@@ -15,6 +15,7 @@ export class InitializationService {
   private userStore = inject(UserStore);
   private appStore = inject(AppStore);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   private readonly savedUser: string | null;
   private readonly savedToken: string | null;
@@ -31,6 +32,7 @@ export class InitializationService {
   async main(): Promise<boolean> {
     if (!this.savedToken) {
       this.userStore.invalidateUser();
+      this.toastService.alert('Token is missing!');
       return false;
     }
 
@@ -43,8 +45,10 @@ export class InitializationService {
         this.userStore.updateStore(validUser, null, null);
         return true;
       }
+      this.toastService.alert('Token is invalid!');
       return false;
     } catch {
+      this.toastService.alert('Token is invalid!');
       return false;
     }
   }

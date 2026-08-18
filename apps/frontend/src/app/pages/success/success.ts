@@ -5,9 +5,8 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { TotalPricePipe, SinglePricePipe, RedFocusDirective } from '@core';
 import {
   LucideChessQueen,
-  LucideFrown,
   LucideShoppingBasket,
-  LucideCircleUserRound,
+  LucideCircleUserRound, LucideFaceSlightlyFrowning,
 } from '@lucide/angular';
 
 @Component({
@@ -16,13 +15,13 @@ import {
     CommonModule,
     RouterModule,
     LucideChessQueen,
-    LucideFrown,
     LucideShoppingBasket,
     LucideCircleUserRound,
     CurrencyPipe,
     TotalPricePipe,
     SinglePricePipe,
     RedFocusDirective,
+    LucideFaceSlightlyFrowning,
   ],
   templateUrl: './success.html',
   styleUrl: './success.css',

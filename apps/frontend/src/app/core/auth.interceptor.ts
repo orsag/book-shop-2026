@@ -10,7 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = store.token();
   const router = inject(Router);
 
-  // 1. Skip video/media stream endpoints
+  // Skip video/media stream endpoints
   if (req.url.includes('/videos/')) {
     return next(req);
   }
@@ -36,4 +36,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       return throwError(() => error);
     }),
   );
-};;
+};

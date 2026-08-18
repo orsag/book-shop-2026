@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { VideoPlayer } from '@component';
-import { LucidePlay, LucideFilm, LucideFrown } from '@lucide/angular';
+import { LucidePlay, LucideFilm, LucideFaceSlightlyFrowning } from '@lucide/angular';
 
 interface VideoItem {
   id: string;
@@ -13,7 +13,12 @@ interface VideoItem {
 @Component({
   selector: 'app-videos',
   standalone: true,
-  imports: [VideoPlayer, LucidePlay, LucideFilm, LucideFrown],
+  imports: [
+    VideoPlayer,
+    LucidePlay,
+    LucideFilm,
+    LucideFaceSlightlyFrowning,
+  ],
   templateUrl: './videos.html',
 })
 export class VideosComponent {
@@ -24,7 +29,8 @@ export class VideosComponent {
     {
       id: 'c9b1f2e0-2804-4b52-9df7-08d1e2e12810',
       title: 'Sun salutations',
-      description: 'Yoga class, sun salutations for a morning quick workout without props.',
+      description:
+        'Yoga class, sun salutations for a morning quick workout without props.',
       duration: '0:30',
       badge: 'HD Stream',
     },

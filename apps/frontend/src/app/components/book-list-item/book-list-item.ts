@@ -1,4 +1,10 @@
-import { Component, inject, Input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+  signal,
+} from '@angular/core';
 import { CreateProductDto } from '@api';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -19,6 +25,7 @@ import { RedFocusDirective, SinglePricePipe } from '@core';
     RedFocusDirective,
     SinglePricePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './book-list-item.html',
   styleUrl: './book-list-item.css',
 })
