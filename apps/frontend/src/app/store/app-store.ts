@@ -16,6 +16,7 @@ import {
   resourceFromSnapshots,
   ResourceSnapshot,
 } from '@angular/core';
+import { AppComputedSignals as ACS } from '../../types';
 import { ActionResponse } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap } from 'rxjs';
@@ -41,18 +42,18 @@ import {
 // Key for LocalStorage
 const SEARCH_HISTORY_KEY = 'searchHistory';
 
-export interface AppState {
-  token: string | null;
-  _isMobile: boolean;
-  _isTablet: boolean;
+export type AppState = {
+  readonly token: string | null;
+  readonly _isMobile: boolean;
+  readonly _isTablet: boolean;
   // --- 📚 Book State ---
-  favoriteProducts: IProduct[];
-  viewLayout: ViewLayout;
-  searchHistory: string[];
-  appendMode: boolean;
-  booksVersion: number;
+  readonly favoriteProducts: IProduct[];
+  readonly viewLayout: ViewLayout;
+  readonly searchHistory: string[];
+  readonly appendMode: boolean;
+  readonly booksVersion: number;
   // --- 🔍 Filter State ---
-  filters: {
+  readonly filters: {
     type: ProductType;
     page: number;
     limit: number;
@@ -61,7 +62,7 @@ export interface AppState {
     sortBy: string | null;
     isDiscounted: boolean;
   };
-}
+};
 
 const initialState: AppState = {
   _isMobile: false,
@@ -118,7 +119,7 @@ export const AppStore = signalStore(
   })),
 
   // 1. Computed Values (Like Selectors)
-  withComputed(({ productsResource, filters, _isMobile, _isTablet }) => {
+  withComputed(({ productsResource, filters, _isMobile, _isTablet }): ACS => {
     return {
       isMobile: computed(() => _isMobile()),
       isTablet: computed(() => _isTablet()),

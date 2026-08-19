@@ -1,4 +1,5 @@
 import { PLATFORM_ID, inject, computed, effect } from '@angular/core';
+import { UserComputedSignals } from '../../types';
 import {
   signalStore,
   withState,
@@ -22,12 +23,12 @@ const USER_STORAGE_KEY = 'currentUser';
 const TOKEN_STORAGE_KEY = 'accessToken';
 const DETAIL_STORAGE_KEY = 'currentStatus';
 
-export interface UserState {
-  user: User | null;
-  userDetail: CreateUserDetailDto | null;
-  premiumStatus: PremiumStatus | null;
-  isLoading: boolean;
-}
+export type UserState = {
+  readonly user: User | null;
+  readonly userDetail: CreateUserDetailDto | null;
+  readonly premiumStatus: PremiumStatus | null;
+  readonly isLoading: boolean;
+};
 
 const initialState: UserState = {
   user: null,
@@ -39,7 +40,7 @@ const initialState: UserState = {
 export const UserStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ user, premiumStatus }) => ({
+  withComputed(({ user, premiumStatus }): UserComputedSignals => ({
     isLoggedIn: computed(() => !!user()),
     isAdmin: computed(() => user()?.isAdmin ?? false),
     isPremium: computed(() => premiumStatus()?.isPremium ?? false),
@@ -93,34 +94,36 @@ export const UserStore = signalStore(
       login(credentials: { username: string; password: string }) {
         patchState(store, { isLoading: true });
 
-        return authService.login(credentials.username, credentials.password).pipe(
-          switchMap(({ user, access_token }) => {
-            patchState(store, { user });
-            appStore.setToken(access_token);
-            localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
+        return authService
+          .login(credentials.username, credentials.password)
+          .pipe(
+            switchMap(({ user, access_token }) => {
+              patchState(store, { user });
+              appStore.setToken(access_token);
+              localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
 
-            return detailService.findPremiumStatus(user.id).pipe(
-              map((premiumStatus) => {
-                errorService.handleSuccess(SuccessCodes.LOGIN);
-                patchState(store, {
-                  premiumStatus: premiumStatus,
-                  isLoading: false,
-                });
-                return { success: true, user, premiumStatus };
-              }),
-              catchError(() => {
-                errorService.handleError(ErrorCodes.PREMIUM);
-                patchState(store, { isLoading: false });
-                return of({ success: true, user, premiumStatus: null });
-              }),
-            );
-          }),
-          catchError(() => {
-            errorService.handleError(ErrorCodes.LOGIN);
-            patchState(store, { isLoading: false });
-            return of({ success: false, user: null, premiumStatus: null });
-          }),
-        );
+              return detailService.findPremiumStatus(user.id).pipe(
+                map((premiumStatus) => {
+                  errorService.handleSuccess(SuccessCodes.LOGIN);
+                  patchState(store, {
+                    premiumStatus: premiumStatus,
+                    isLoading: false,
+                  });
+                  return { success: true, user, premiumStatus };
+                }),
+                catchError(() => {
+                  errorService.handleError(ErrorCodes.PREMIUM);
+                  patchState(store, { isLoading: false });
+                  return of({ success: true, user, premiumStatus: null });
+                }),
+              );
+            }),
+            catchError(() => {
+              errorService.handleError(ErrorCodes.LOGIN);
+              patchState(store, { isLoading: false });
+              return of({ success: false, user: null, premiumStatus: null });
+            }),
+          );
       },
 
       logout: rxMethod<void>(
@@ -255,7 +258,10 @@ export const UserStore = signalStore(
               tap((updatedUser) => {
                 patchState(store, { user: updatedUser });
                 // Persistence sync
-                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+                localStorage.setItem(
+                  USER_STORAGE_KEY,
+                  JSON.stringify(updatedUser),
+                );
               }),
               catchError((err) => {
                 errorService.handleError(ErrorCodes.REFRESH);
@@ -310,14 +316,11 @@ export const UserStore = signalStore(
         userDetail?: CreateUserDetailDto | null,
         premiumStatus?: PremiumStatus | null,
       ) {
-        const partialState: Partial<UserState> = {};
-
-        if (user !== undefined) partialState.user = user;
-        if (userDetail !== undefined) partialState.userDetail = userDetail;
-        if (premiumStatus !== undefined)
-          partialState.premiumStatus = premiumStatus;
-
-        patchState(store, partialState);
+        patchState(store, {
+          ...(user !== undefined && { user }),
+          ...(userDetail !== undefined && { userDetail }),
+          ...(premiumStatus !== undefined && { premiumStatus }),
+        });
       },
     }),
   ),

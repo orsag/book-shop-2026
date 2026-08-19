@@ -1,5 +1,6 @@
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { OrderStatus } from '@store/shared-models';
+import { CartComputedSignals as CCS } from '../../types';
 import { CreateProductDto } from '@api';
 import {
   signalStore,
@@ -20,11 +21,11 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface CartState {
-  itemsMap: Record<string, CartItem>;
-  isLoading: boolean;
-  orders: CreatedOrder[];
-}
+export type CartState = {
+  readonly itemsMap: Record<string, CartItem>;
+  readonly isLoading: boolean;
+  readonly orders: CreatedOrder[];
+};
 
 const initialState: CartState = {
   itemsMap: {},
@@ -40,7 +41,7 @@ export const CartStore = signalStore(
   withState(initialState),
 
   // 1. Computed Selectors (derived state)
-  withComputed(({ itemsMap }) => ({
+  withComputed(({ itemsMap }): CCS => ({
     items: computed(() => Object.values(itemsMap())),
 
     // Opravený subtotal, ktorý berie do úvahy zľavu

@@ -40,6 +40,7 @@ export class Administration implements OnInit {
   isCoverModalOpen = signal<boolean>(false);
   isDeleteModalOpen = signal(false);
   isEditModalOpen = signal(false);
+  newVersion = signal(false);
 
   ngOnInit() {
     if (this.userStore.isAdmin()) {

@@ -115,24 +115,22 @@
   <app-cover-modal [selectedBook]="selectedProduct()" (closeModal)="closeModals()"></app-cover-modal>
 }
 
-@if (isEditModalOpen()) {
-  @if (store.isBook()) {
-    <app-edit-book-reactive
-      [selectedBook]="selectedProduct()"
-      (closeModal)="closeModals()"
-      (commonSave)="handleProductSave($event)" />
+@if (store.isBook() && isEditModalOpen() && !newVersion()) {
+  <app-edit-book-reactive
+    [selectedBook]="selectedProduct()"
+    (closeModal)="closeModals()"
+    (commonSave)="handleProductSave($event)" />
+}
 
-<!--@if (isEditModalOpen()) {-->
-<!--  @if (store.isBook()) {-->
-<!--    <app-edit-book-modal-->
-<!--      [selectedBook]="selectedProduct()"-->
-<!--      (closeModal)="closeModals()"-->
-<!--      (commonSave)="handleProductSave($event)" />-->
-
-  }
+@if (store.isBook() && isEditModalOpen() && newVersion()) {
+  <app-edit-book-modal
+    [selectedBook]="selectedProduct()"
+    (closeModal)="closeModals()"
+    (commonSave)="handleProductSave($event)" />
+}
 <!--  @else if (store.isGame()) {-->
 <!--    <app-edit-game-modal-->
 <!--      [selectedBook]=" selectedProduct()"-->
 <!--      (closeModal)="closeModals()"-->
 <!--      (commonSave)="handleProductSave($event)" />-->
-}
+<!--}-->
