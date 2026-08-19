@@ -4,11 +4,13 @@ import { inject } from '@angular/core';
 import { AppStore } from '@store';
 import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { LOGGER } from './logger.token';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(AppStore);
   const token = store.token();
   const router = inject(Router);
+  const logger = inject(LOGGER);
 
   // Skip video/media stream endpoints
   if (req.url.includes('/videos/')) {
@@ -28,7 +30,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         const isLoginRequest = authReq.url.includes('/login');
 
         if (!isLoginRequest) {
-          console.warn('Session expired. Redirecting to login...');
+          logger.error('Session expired. Redirecting to login...');
           router.navigateByUrl('/login');
         }
       }

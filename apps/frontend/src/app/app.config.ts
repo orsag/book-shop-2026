@@ -23,6 +23,8 @@ import { StopEventPlugin } from './plugins/stop-event.plugin';
 import localeSk from '@angular/common/locales/sk';
 import { registerLocaleData } from '@angular/common';
 import { InitializationService } from '@service';
+import { LOGGER } from './core/logger.token';
+import { ConsoleLogger, NoopLogger } from './core/logger';
 
 // Register locale data globally before configuration initialization
 registerLocaleData(localeSk, 'sk-SK');
@@ -53,6 +55,10 @@ export const appConfig: ApplicationConfig = {
       provide: EVENT_MANAGER_PLUGINS,
       useClass: StopEventPlugin,
       multi: true,
+    },
+    {
+      provide: LOGGER,
+      useClass: isDevMode() ? ConsoleLogger : NoopLogger,
     },
     provideAppInitializer(() => {
       const initialService = inject(InitializationService);

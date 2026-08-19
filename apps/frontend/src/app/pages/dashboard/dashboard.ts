@@ -17,6 +17,7 @@ import { AppStore, CartStore } from '@store';
 import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
 import { RedFocusDirective } from '@core';
+import { LOGGER } from '../../core/logger.token';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,6 +42,7 @@ export class Dashboard implements OnInit, AfterViewInit {
   cart = inject(CartStore);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
+  private logger = inject(LOGGER);
   private accumulator = inject(PaginationAccumulatorService);
 
   // 🚀 Single line declaration for accumulated products!
@@ -98,7 +100,7 @@ export class Dashboard implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // You can subscribe to changes if the array is dynamic
     this.listElements.changes.subscribe((elements) => {
-      console.log('List updated, new count:', elements.length);
+      this.logger.log('List updated, new count:', elements.length);
     });
   }
 }
