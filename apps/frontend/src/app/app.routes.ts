@@ -1,19 +1,15 @@
 import { authGuard, adminGuard } from '@core';
 import { Route } from '@angular/router';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { PageNotFound } from './pages/page-not-found/page-not-found';
-import { Profile } from './pages/profile/profile';
-import { Detail } from './pages/detail/detail';
-import { Features } from './pages/features/features';
-import { Administration } from './pages/administration/administration';
-import { Shopping } from './pages/shopping/shopping';
-import { Success } from './pages/success/success';
-import { LoginPage } from './pages/login/login';
-import { VideosComponent } from './pages/videos/videos';
-import { License } from './pages/license/license';
-// ======================================================================
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
+import { LoginPage } from './pages/login/login';
+
+const pageNotFoundRoute: Route = {
+  loadComponent: () =>
+    import('./pages/page-not-found/page-not-found').then(
+      (m) => m.PageNotFound,
+    ),
+};
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
@@ -24,7 +20,8 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: '',
-        component: Dashboard,
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'home',
@@ -33,29 +30,65 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'administration',
-        component: Administration,
+        loadComponent: () =>
+          import('./pages/administration/administration').then(
+            (m) => m.Administration,
+          ),
         canActivate: [adminGuard],
       },
     ],
   },
+
   // Routes that should be SIMPLE (No sidebar)
   {
     path: '',
     component: SimpleLayoutComponent,
     children: [
-      { path: 'product/:id', component: Detail },
+      {
+        path: 'product/:id',
+        loadComponent: () =>
+          import('./pages/detail/detail').then((m) => m.Detail),
+      },
       {
         path: 'profile',
-        component: Profile,
+        loadComponent: () =>
+          import('./pages/profile/profile').then((m) => m.Profile),
         canActivate: [authGuard],
       },
-      { path: 'features', component: Features, canActivate: [authGuard] },
-      { path: 'shopping', component: Shopping },
-      { path: 'success/:id', component: Success },
-      { path: 'videos', component: VideosComponent },
-      { path: 'wip', component: PageNotFound },
-      { path: 'license', component: License },
-      { path: '**', component: PageNotFound },
+      {
+        path: 'features',
+        loadComponent: () =>
+          import('./pages/features/features').then((m) => m.Features),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'shopping',
+        loadComponent: () =>
+          import('./pages/shopping/shopping').then((m) => m.Shopping),
+      },
+      {
+        path: 'success/:id',
+        loadComponent: () =>
+          import('./pages/success/success').then((m) => m.Success),
+      },
+      {
+        path: 'videos',
+        loadComponent: () =>
+          import('./pages/videos/videos').then((m) => m.VideosComponent),
+      },
+      {
+        path: 'wip',
+        ...pageNotFoundRoute,
+      },
+      {
+        path: 'license',
+        loadComponent: () =>
+          import('./pages/license/license').then((m) => m.License),
+      },
+      {
+        path: '**',
+        ...pageNotFoundRoute,
+      },
     ],
   },
 ];

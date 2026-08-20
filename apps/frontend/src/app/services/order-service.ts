@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { OrderStatus, Order } from '@store/shared-models';
 import { Observable } from 'rxjs';
 import { CreateProductDto as IProduct, CreateOrderDto } from '@api';

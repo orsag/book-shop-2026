@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ActionResponse } from '@store/libs';
 import { CreateProductDto as IProduct } from '@api';

@@ -12,7 +12,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
 import { getTranslocoModule } from '@core';
 import { MockComponent } from 'ng-mocks';
-import { DEFAULT_MAX_LIMIT, MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
+import { MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
 
 describe('Dashboard Component', () => {

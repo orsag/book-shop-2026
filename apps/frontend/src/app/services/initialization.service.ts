@@ -39,11 +39,15 @@ export class InitializationService {
     this.restoreFromStorage();
 
     try {
-      const username = JSON.parse(this.savedUser!).username;
-      const validUser = await firstValueFrom(this.authService.getUser(username));
-      if (validUser) {
-        this.userStore.updateStore(validUser, null, null);
-        return true;
+      if (this.savedUser) {
+        const username = JSON.parse(this.savedUser).username;
+        const validUser = await firstValueFrom(
+          this.authService.getUser(username),
+        );
+        if (validUser) {
+          this.userStore.updateStore(validUser, null, null);
+          return true;
+        }
       }
       this.toastService.alert('Token is invalid!');
       return false;

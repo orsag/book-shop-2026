@@ -37,7 +37,7 @@ describe('License', () => {
 
     const section = component['contentSection']()?.nativeElement as HTMLElement;
     const firstParagraph = section.querySelector('p') as HTMLParagraphElement;
-    const query = firstParagraph.textContent!.trim().split(/\s+/)[0]!;
+    const query = firstParagraph.textContent.trim().split(/\s+/)[0];
 
     const input = document.createElement('input');
     input.value = query;
