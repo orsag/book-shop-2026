@@ -12,7 +12,6 @@ import {
 } from '@lucide/angular';
 import { SinglePricePipe } from '@core';
 import { PaginationAccumulatorService } from '@service';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
@@ -42,15 +41,12 @@ export class BookTable {
   private accumulator = inject(PaginationAccumulatorService);
 
   // 🚀 Single line declaration for accumulated products!
-  accumulatedProducts = this.accumulator.accumulate(
+  accumulatedProducts$ = this.accumulator.accumulate(
     this.appStore.productsResource,
     computed(() => this.appStore.filters().page),
     computed(() => this.appStore.appendMode()),
     (res) => res?.data ?? [],
   );
-
-  // 2. Expose it as an Observable for cdkVirtualFor
-  accumulatedProducts$ = toObservable(this.accumulatedProducts);
 
   trackByProductId(index: number, product: CreateProductDto): string | number {
     return product.id; // Assuming each product has a unique identifier

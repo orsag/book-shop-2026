@@ -1,14 +1,15 @@
 import {
   Injectable,
   Signal,
-  computed,
   linkedSignal,
   resourceFromSnapshots,
   Resource,
   ResourceSnapshot,
-  untracked,
   ResourceStatus,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Observable, combineLatest } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 
 /**
  * Helper to preserve previous resource values while re-fetching
@@ -42,44 +43,49 @@ export class PaginationAccumulatorService {
    * @param pageSignal Signal emitting the current page number
    * @param appendModeSignal Signal indicating whether to append or replace
    * @param extractDataFn Function to extract the items array from response object
-   * @returns Signal of accumulated items array
+   * @returns Observable of accumulated items array
    */
   accumulate<TResource, TItem>(
     resource: Resource<TResource>,
     pageSignal: Signal<number>,
     appendModeSignal: Signal<boolean>,
     extractDataFn: (data: TResource | undefined) => TItem[],
-  ): Signal<TItem[]> {
+  ): Observable<TItem[]> {
     const stableResource = withPreviousValue(resource);
     const pageMap = new Map<number, TItem[]>();
 
-    return computed(() => {
-      const res = stableResource.value();
-      const freshItems = extractDataFn(res);
-      const currentPage = pageSignal();
-      const isAppend = untracked(() => appendModeSignal());
+    const value$ = toObservable(stableResource.value);
+    const page$ = toObservable(pageSignal);
+    const appendMode$ = toObservable(appendModeSignal);
+    const status$ = toObservable(stableResource.status);
 
-      if (!freshItems || freshItems.length === 0) {
-        if (!isAppend && currentPage === 1) {
-          pageMap.clear();
+    return combineLatest([value$, page$, appendMode$, status$]).pipe(
+      map(([value, currentPage, isAppend, status]) => {
+        const freshItems = extractDataFn(value);
+
+        if (!freshItems || freshItems.length === 0) {
+          if (!isAppend && currentPage === 1) {
+            pageMap.clear();
+          }
+          return Array.from(pageMap.keys())
+            .sort((a, b) => a - b)
+            .flatMap((p) => pageMap.get(p) ?? []);
         }
+
+        if (status === ('resolved' as ResourceStatus)) {
+          if (isAppend) {
+            pageMap.set(currentPage, freshItems);
+          } else {
+            pageMap.clear();
+            pageMap.set(currentPage, freshItems);
+          }
+        }
+
         return Array.from(pageMap.keys())
           .sort((a, b) => a - b)
           .flatMap((p) => pageMap.get(p) ?? []);
-      }
-
-      if (stableResource.status() === 'resolved' as ResourceStatus) {
-        if (isAppend) {
-          pageMap.set(currentPage, freshItems);
-        } else {
-          pageMap.clear();
-          pageMap.set(currentPage, freshItems);
-        }
-      }
-
-      return Array.from(pageMap.keys())
-        .sort((a, b) => a - b)
-        .flatMap((p) => pageMap.get(p) ?? []);
-    });
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
   }
 }

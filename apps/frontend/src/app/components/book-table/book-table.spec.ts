@@ -8,6 +8,7 @@ import { PaginationAccumulatorService } from '@service';
 import { vi } from 'vitest';
 import { MOCK_PRODUCTS } from '@store/libs';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('BookTable', () => {
   let component: BookTable;
@@ -17,7 +18,7 @@ describe('BookTable', () => {
 
   beforeEach(async () => {
     mockPaginationAccumulatorService = {
-      accumulate: vi.fn().mockReturnValue(signal(MOCK_PRODUCTS)),
+      accumulate: vi.fn().mockReturnValue(of(MOCK_PRODUCTS)),
     };
 
     mockAppStore = {

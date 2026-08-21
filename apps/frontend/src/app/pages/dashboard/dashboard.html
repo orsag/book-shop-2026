@@ -1,13 +1,13 @@
 <main class="container mx-auto">
   <app-filter-bar></app-filter-bar>
   <!-- Main Loading Spinner: Only shows on initial load or fresh searches -->
-  @if (store.isLoading() && accumulatedProducts().length === 0) {
+  @if (store.isLoading() && isProductsEmpty()) {
     @if (store.viewLayout() === 'list') {
       <ng-container *ngTemplateOutlet="listSkeleton"></ng-container>
     } @else {
       <ng-container *ngTemplateOutlet="gridSkeleton"></ng-container>
     }
-  } @else if (accumulatedProducts().length === 0) {
+  } @else if (isProductsEmpty()) {
     <div class="flex flex-col items-center justify-center p-8 text-center min-h-[400px]">
 
       <div class="text-error mb-4 bg-error/10 p-4 rounded-full">
@@ -32,7 +32,7 @@
              [class.md:grid-cols-4]="animatedGridExpanded()"
              [class.lg:grid-cols-6]="animatedGridExpanded()"
              [ngClass]="isTransitioning() ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'">
-          @for (book of accumulatedProducts(); track book.id) {
+          @for (book of accumulatedProducts$ | async; track book.id) {
             <app-book-card [product]="book"></app-book-card>
           }
         </div>
@@ -43,13 +43,13 @@
              [class.md:grid-cols-1]="isOpenedFilter()"
              [class.md:grid-cols-2]="!isOpenedFilter()"
         >
-          @for (book of accumulatedProducts(); track book.id; let i = $index) {
+          @for (book of accumulatedProducts$ | async; track book.id; let i = $index) {
             <app-book-list-item #listItem [product]="book"></app-book-list-item>
 
-            @if (i !== accumulatedProducts().length - 1) {
+            @if (i !== (productsCount()) - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>
             }
-            @if (i % 2 === 1 && i !== accumulatedProducts().length - 1) {
+            @if (i % 2 === 1 && i !== productsCount() - 1) {
               <div class="divider col-span-full hidden md:flex my-0"></div>
             }
           }
@@ -64,7 +64,7 @@
       </div>
     } @else if (store.hasMorePage()) {
       <div class="flex w-full justify-center items-center gap-6 my-12">
-        <app-pagination [loadedCount]="accumulatedProducts().length" />
+        <app-pagination [loadedCount]="productsCount()" />
         <button
           appRedFocus
           data-testid="load-more"

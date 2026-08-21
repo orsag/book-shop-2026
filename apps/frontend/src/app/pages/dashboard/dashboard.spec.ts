@@ -14,6 +14,8 @@ import { getTranslocoModule } from '@core';
 import { MockComponent } from 'ng-mocks';
 import { MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { LOGGER } from '../../core/logger.token';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;
@@ -62,7 +64,7 @@ describe('Dashboard Component', () => {
     };
 
     mockPaginationAccumulatorService = {
-      accumulate: vi.fn().mockReturnValue(signal(MOCK_PRODUCTS)),
+      accumulate: vi.fn().mockReturnValue(of(MOCK_PRODUCTS)),
     };
 
     TestBed.overrideComponent(Dashboard, {
@@ -84,6 +86,7 @@ describe('Dashboard Component', () => {
           provide: PaginationAccumulatorService,
           useValue: mockPaginationAccumulatorService,
         },
+        { provide: LOGGER, useValue: { log: vi.fn(), error: vi.fn() } },
       ],
     }).compileComponents();
 
@@ -105,7 +108,7 @@ describe('Dashboard Component', () => {
   it('should show the loading skeleton when store is loading', () => {
     // Arrange: Set store state to loading
     mockAppStore.isLoading.set(true);
-    component.accumulatedProducts = signal([]);
+    component.accumulatedProducts$ = of([]);
 
     fixture.detectChanges();
 
@@ -117,7 +120,7 @@ describe('Dashboard Component', () => {
   it('should show "Nothing found" state when store is empty', () => {
     // Arrange
     mockAppStore.isLoading.set(false);
-    component.accumulatedProducts = signal([]);
+    component.accumulatedProducts$ = of([]);
 
     fixture.detectChanges();
 
@@ -130,7 +133,7 @@ describe('Dashboard Component', () => {
 
   it('should render book cards when products are available in grid layout', () => {
     mockAppStore.isLoading.set(false);
-    component.accumulatedProducts = signal([...MOCK_PRODUCTS]);
+    component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
     mockAppStore.viewLayout.set('grid');
 
     // Act
@@ -151,7 +154,7 @@ describe('Dashboard Component', () => {
     // Arrange: loading starts while items are already on screen
     vi.useFakeTimers();
     mockAppStore.isLoading.set(true);
-    component.accumulatedProducts = signal([]);
+    component.accumulatedProducts$ = of([]);
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -161,7 +164,7 @@ describe('Dashboard Component', () => {
 
     // Act: the fetch resolves almost instantly (0ms)
     mockAppStore.isLoading.set(false);
-    component.accumulatedProducts = signal([...MOCK_PRODUCTS]);
+    component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
     fixture.detectChanges();
     await fixture.whenStable();
 

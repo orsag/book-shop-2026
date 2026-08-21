@@ -6,9 +6,6 @@ import {
   PLATFORM_ID,
   ViewChild,
   ElementRef,
-  effect,
-  untracked,
-  debounced,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -19,14 +16,15 @@ import {
 import { ThemePicker } from '../theme-picker/theme-picker';
 import { ConfigurationService, ScrollService } from '@service';
 import { AppStore, CartStore, UserStore } from '@store';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import {
   TooltipDirective,
   NoBtnHoverDirective,
-  RedFocusDirective, BlueFocusDirective,
+  RedFocusDirective,
+  BlueFocusDirective,
 } from '@core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucideLogIn,
   LucideLogOut,
@@ -38,6 +36,7 @@ import {
   LucideX,
   LucideMenu,
 } from '@lucide/angular';
+import { debounceTime, distinctUntilChanged, filter, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -46,7 +45,7 @@ import {
     RouterLink,
     ThemePicker,
     NgOptimizedImage,
-    FormsModule,
+    ReactiveFormsModule,
     TranslocoDirective,
     LucideLogIn,
     LucideLogOut,
@@ -80,7 +79,9 @@ export class Navbar {
   currentTheme = this.config.theme;
 
   currentNavbarBackground = computed(() =>
-    this.config.isDarkTheme() ? '/images/navbarDark.svg' : '/images/navbarLight.svg',
+    this.config.isDarkTheme()
+      ? '/images/navbarDark.svg'
+      : '/images/navbarLight.svg',
   );
 
   // Existing signals
@@ -89,9 +90,8 @@ export class Navbar {
 
   userName = this.userStore.user;
   isAdmin = this.userStore.isAdmin;
-  searchQuery = signal('');
-  debouncedSearchQuery = debounced(this.searchQuery, 500);
-  showSearchbar = computed(() => this.config.flags().SHOW_SEARCHBAR_HEADER);
+  searchControl = new FormControl('', { nonNullable: true });
+  showSearchbar = computed(() => true); // this.config.flags().SHOW_SEARCHBAR_HEADER
 
   // Convert the lang changes to a signal
   activeLang = toSignal(this.translocoService.langChanges$, {
@@ -99,19 +99,17 @@ export class Navbar {
   });
 
   constructor() {
-    // 3. React to debounced changes safely
-    effect(() => {
-      const query = this.debouncedSearchQuery.value();
+    this.searchControl.valueChanges
+      .pipe(
+        map((search) => search.trim()),
+        debounceTime(500),
+        distinctUntilChanged(),
+        filter((search) => search !== this.store.filters().search),
+        tap((search) => {
+          this.store.updateFilters({ search });
 
-      untracked(() => {
-        const storeSearch = this.store.filters().search;
-
-        // Compare against store to avoid redundant updates/navigations
-        if (query !== storeSearch) {
-          this.store.updateFilters({ search: query });
-
-          if (query.trim()) {
-            this.store.addToHistory(query);
+          if (search) {
+            this.store.addToHistory(search);
           }
 
           const allowedRoutes = ['/', '/home', '/administration'];
@@ -120,9 +118,10 @@ export class Navbar {
           } else {
             this.router.navigate(['/']);
           }
-        }
-      });
-    });
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
   }
 
   // Toggle function
@@ -188,16 +187,8 @@ export class Navbar {
     this.router.navigate(['/']);
   }
 
-  // Handle the input event
-  onSearchChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchQuery.set(input.value);
-  }
-
   onClearSearchbar(): void {
-    this.searchQuery.set('');
-    this.store.updateFilters({
-      search: this.searchQuery(),
-    });
+    this.searchControl.setValue('');
+    this.store.updateFilters({ search: '' });
   }
 }
