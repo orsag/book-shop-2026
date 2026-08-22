@@ -1,5 +1,6 @@
 export * from './admin.guard';
 export * from './auth.guard';
+export * from './profile.guard';
 export * from './auth.interceptor';
 export * from './duplicate.interceptor';
 export * from './error.handler';

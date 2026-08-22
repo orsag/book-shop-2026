@@ -24,6 +24,7 @@ describe('Profile Component (Vitest)', () => {
       refreshUser: vi.fn(),
       updateUserDetail: vi.fn(),
       loadUserDetail: vi.fn(),
+      updateStore: vi.fn(),
       user: signal({
         id: 'user-123',
         username: 'john_doe',

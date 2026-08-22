@@ -109,6 +109,8 @@ describe('Dashboard Component', () => {
     // Arrange: Set store state to loading
     mockAppStore.isLoading.set(true);
     component.accumulatedProducts$ = of([]);
+    (component as any).productsCount = signal(0);
+    (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
 
     fixture.detectChanges();
 
@@ -121,6 +123,8 @@ describe('Dashboard Component', () => {
     // Arrange
     mockAppStore.isLoading.set(false);
     component.accumulatedProducts$ = of([]);
+    (component as any).productsCount = signal(0);
+    (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
 
     fixture.detectChanges();
 
@@ -134,6 +138,8 @@ describe('Dashboard Component', () => {
   it('should render book cards when products are available in grid layout', () => {
     mockAppStore.isLoading.set(false);
     component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
+    (component as any).productsCount = signal(MOCK_PRODUCTS.length);
+    (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
     mockAppStore.viewLayout.set('grid');
 
     // Act
@@ -155,6 +161,8 @@ describe('Dashboard Component', () => {
     vi.useFakeTimers();
     mockAppStore.isLoading.set(true);
     component.accumulatedProducts$ = of([]);
+    (component as any).productsCount = signal(0);
+    (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -165,6 +173,8 @@ describe('Dashboard Component', () => {
     // Act: the fetch resolves almost instantly (0ms)
     mockAppStore.isLoading.set(false);
     component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
+    (component as any).productsCount = signal(MOCK_PRODUCTS.length);
+    (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
     fixture.detectChanges();
     await fixture.whenStable();
 

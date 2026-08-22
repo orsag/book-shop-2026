@@ -98,6 +98,13 @@ export class Profile {
         });
       }
     });
+
+    effect(() => {
+      const isDirty = this.form().dirty() || this.userForm().dirty();
+      untracked(() => {
+        this.userStore.updateStore('isDirtyForm', isDirty);
+      });
+    });
   }
 
   // 5. Update handleCancelOrder to use the new method

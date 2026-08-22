@@ -45,7 +45,7 @@ export class InitializationService {
           this.authService.getUser(username),
         );
         if (validUser) {
-          this.userStore.updateStore(validUser, null, null);
+          this.userStore.updateStore('user', validUser);
           return true;
         }
       }
@@ -59,7 +59,7 @@ export class InitializationService {
 
   private restoreFromStorage() {
     if (this.savedUser && this.savedToken) {
-      this.userStore.updateStore(JSON.parse(this.savedUser), null, null);
+      this.userStore.updateStore('user', JSON.parse(this.savedUser));
       this.appStore.setToken(this.savedToken);
 
       if (this.searchHistory) {
@@ -67,7 +67,7 @@ export class InitializationService {
       }
 
       if (this.savedDetail) {
-        this.userStore.updateStore(null, JSON.parse(this.savedDetail), null);
+        this.userStore.updateStore('userDetail', JSON.parse(this.savedDetail));
       }
     }
   }

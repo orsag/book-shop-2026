@@ -28,6 +28,7 @@ export type UserState = {
   readonly userDetail: CreateUserDetailDto | null;
   readonly premiumStatus: PremiumStatus | null;
   readonly isLoading: boolean;
+  readonly isDirtyForm: boolean;
 };
 
 const initialState: UserState = {
@@ -35,6 +36,7 @@ const initialState: UserState = {
   userDetail: null,
   premiumStatus: null,
   isLoading: false,
+  isDirtyForm: false,
 };
 
 export const UserStore = signalStore(
@@ -311,15 +313,9 @@ export const UserStore = signalStore(
         });
       },
 
-      updateStore(
-        user?: User | null,
-        userDetail?: CreateUserDetailDto | null,
-        premiumStatus?: PremiumStatus | null,
-      ) {
+      updateStore<K extends keyof UserState>(key: K, value: UserState[K]) {
         patchState(store, {
-          ...(user !== undefined && { user }),
-          ...(userDetail !== undefined && { userDetail }),
-          ...(premiumStatus !== undefined && { premiumStatus }),
+          [key]: value,
         });
       },
     }),

@@ -1,4 +1,4 @@
-import { authGuard, adminGuard } from '@core';
+import { authGuard, adminGuard, profileGuard } from '@core';
 import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
@@ -54,6 +54,7 @@ export const appRoutes: Route[] = [
         loadComponent: () =>
           import('./pages/profile/profile').then((m) => m.Profile),
         canActivate: [authGuard],
+        canDeactivate: [profileGuard],
       },
       {
         path: 'features',
