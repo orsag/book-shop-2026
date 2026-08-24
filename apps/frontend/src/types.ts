@@ -16,7 +16,6 @@ export type AppComputedSignals = {
   readonly totalProducts: Signal<number>;
   readonly products: Signal<IProduct[]>;
   readonly hasError: Signal<boolean>;
-  readonly isLoading: Signal<boolean>;
   readonly hasMorePage: Signal<boolean>;
 };
 

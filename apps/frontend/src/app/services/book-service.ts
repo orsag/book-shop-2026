@@ -7,6 +7,7 @@ import { delay, Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '@store';
 import { ApiService } from './api.service';
+import { withLoadingKey } from '../core/loading.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,10 @@ export class BookService {
     });
 
     return this.api
-      .get<PaginatedProducts>(this.apiUrl, { params })
+      .get<PaginatedProducts>(this.apiUrl, {
+        params,
+        context: withLoadingKey('products'),
+      })
       .pipe(delay(2000));
   }
 
@@ -54,6 +58,8 @@ export class BookService {
 
   // Fetches multiple books by their IDs for the favorites list
   getFavorites(ids: string[]): Observable<IProduct[]> {
-    return this.api.post<IProduct[]>(`${this.apiUrl}/list`, { ids });
+    return this.api.post<IProduct[]>(`${this.apiUrl}/list`, { ids }, {
+      context: withLoadingKey('cart-sync'),
+    });
   }
 }

@@ -1,7 +1,7 @@
 <main class="container mx-auto">
   <app-filter-bar></app-filter-bar>
   <!-- Main Loading Spinner: Only shows on initial load or fresh searches -->
-  @if (store.isLoading() && isProductsEmpty()) {
+  @if (loading.isLoading('products') && isProductsEmpty()) {
     @if (store.viewLayout() === 'list') {
       <ng-container *ngTemplateOutlet="listSkeleton"></ng-container>
     } @else {
@@ -58,7 +58,7 @@
     }
 
 
-    @if (store.isLoading()) {
+    @if (loading.isLoading('products')) {
       <div class="flex flex-col items-center justify-center p-12 text-center">
         <h3 class="text-xl font-bold">Načítavanie produktov...</h3>
       </div>

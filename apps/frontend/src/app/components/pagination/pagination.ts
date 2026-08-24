@@ -7,6 +7,7 @@ import {
   LucideChevronsRight,
 } from '@lucide/angular';
 import { RedFocusDirective } from '@core';
+import { LoadingService } from '../../core/loading.service';
 
 @Component({
   selector: 'app-pagination',
@@ -22,6 +23,7 @@ import { RedFocusDirective } from '@core';
 })
 export class Pagination {
   store = inject(AppStore);
+  loading = inject(LoadingService);
 
   // Number of items actually rendered (grows with infinite scroll / Load More)
   loadedCount = input(0);

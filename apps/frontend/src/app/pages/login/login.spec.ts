@@ -4,17 +4,18 @@ import { provideRouter } from '@angular/router';
 import { signal } from '@angular/core';
 import { vi, describe, beforeEach, it, expect } from 'vitest';
 import { UserStore } from '@store';
+import { LoadingService } from '@core';
 import { of } from 'rxjs';
 
 describe('Login', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
   let mockUserStore: any;
+  let loadingService: LoadingService;
 
   beforeEach(async () => {
     mockUserStore = {
       isLoggedIn: signal(false),
-      isLoading: signal(false),
       login: vi.fn().mockReturnValue(of({ success: true })),
     };
 
@@ -28,6 +29,7 @@ describe('Login', () => {
 
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
+    loadingService = TestBed.inject(LoadingService);
     await fixture.whenStable();
   });
 
@@ -60,10 +62,12 @@ describe('Login', () => {
     expect(submitBtn.disabled).toBe(false);
   });
 
-  it('should be disabled if store.isLoading() is active', () => {
+  it('should be disabled if loading service reports an active login request', () => {
     component.username.set('testuser');
     component.password.set('password');
-    mockUserStore.isLoading.set(true);
+
+    // simulate a tagged HTTP request in flight (as loadingInterceptor would)
+    loadingService.track('login');
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;

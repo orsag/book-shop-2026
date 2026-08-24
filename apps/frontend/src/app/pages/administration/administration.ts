@@ -11,6 +11,7 @@ import { LucideFaceSlightlyFrowning, LucidePlus } from '@lucide/angular';
 import { RedFocusDirective } from '@core';
 import { RouterLink } from '@angular/router';
 import { EditBookReactiveComponent } from './edit-book-reactive';
+import { LoadingService } from '../../core/loading.service';
 
 @Component({
   selector: 'app-administration',
@@ -35,6 +36,7 @@ export class Administration implements OnInit {
   store = inject(AppStore);
   userStore = inject(UserStore);
   cartStore = inject(CartStore);
+  loading = inject(LoadingService);
 
   selectedProduct = signal<IProduct | null>(null);
   isCoverModalOpen = signal<boolean>(false);

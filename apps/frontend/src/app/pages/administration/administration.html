@@ -32,7 +32,7 @@
     <app-order-table></app-order-table>
   </div>
 
-  @if (!store.isLoading()) {
+  @if (!loading.isLoading('products')) {
     <div class="flex flex-col gap-6">
       <div class="flex items-center gap-4">
         <h2 class="text-2xl font-black uppercase tracking-tight text-base-content">

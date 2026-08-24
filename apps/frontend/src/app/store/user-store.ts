@@ -27,7 +27,6 @@ export type UserState = {
   readonly user: User | null;
   readonly userDetail: CreateUserDetailDto | null;
   readonly premiumStatus: PremiumStatus | null;
-  readonly isLoading: boolean;
   readonly isDirtyForm: boolean;
 };
 
@@ -35,7 +34,6 @@ const initialState: UserState = {
   user: null,
   userDetail: null,
   premiumStatus: null,
-  isLoading: false,
   isDirtyForm: false,
 };
 
@@ -63,28 +61,19 @@ export const UserStore = signalStore(
         email: string;
       }>(
         pipe(
-          // 1. Set the loading state when the action is triggered
-          tap(() => patchState(store, { isLoading: true })),
-
-          // 2. Cancel previous requests if a user spams clicks
           switchMap((credentials) =>
             authService.register(credentials).pipe(
               tapResponse({
                 next: ({ user }) => {
                   if (user) {
                     errorService.handleSuccess(SuccessCodes.REGISTER);
-                    patchState(store, {
-                      user,
-                      isLoading: false,
-                    });
+                    patchState(store, { user });
                   } else {
                     errorService.handleError(ErrorCodes.REGISTER);
-                    patchState(store, { isLoading: false });
                   }
                 },
                 error: () => {
                   errorService.handleError(ErrorCodes.REGISTER);
-                  patchState(store, { isLoading: false });
                   return EMPTY;
                 },
               }),
@@ -94,8 +83,6 @@ export const UserStore = signalStore(
       ),
 
       login(credentials: { username: string; password: string }) {
-        patchState(store, { isLoading: true });
-
         return authService
           .login(credentials.username, credentials.password)
           .pipe(
@@ -107,22 +94,17 @@ export const UserStore = signalStore(
               return detailService.findPremiumStatus(user.id).pipe(
                 map((premiumStatus) => {
                   errorService.handleSuccess(SuccessCodes.LOGIN);
-                  patchState(store, {
-                    premiumStatus: premiumStatus,
-                    isLoading: false,
-                  });
+                  patchState(store, { premiumStatus });
                   return { success: true, user, premiumStatus };
                 }),
                 catchError(() => {
                   errorService.handleError(ErrorCodes.PREMIUM);
-                  patchState(store, { isLoading: false });
                   return of({ success: true, user, premiumStatus: null });
                 }),
               );
             }),
             catchError(() => {
               errorService.handleError(ErrorCodes.LOGIN);
-              patchState(store, { isLoading: false });
               return of({ success: false, user: null, premiumStatus: null });
             }),
           );
@@ -130,16 +112,9 @@ export const UserStore = signalStore(
 
       logout: rxMethod<void>(
         pipe(
-          // 1. Immediately drop the request if another logout execution is already active
-          filter(() => !store.isLoading()),
           map(() => appStore.token()),
           filter((token): token is string => !!token),
-
-          // 2. exhaustMap blocks any subsequent clicks until the inner stream completes
           exhaustMap(() => {
-            // Set a local loading guard state flag (Optional, but excellent UX)
-            patchState(store, { isLoading: true });
-
             return authService.logout().pipe(
               tap(() => {
                 errorService.handleSuccess(SuccessCodes.LOGOUT);
@@ -149,11 +124,10 @@ export const UserStore = signalStore(
                 return of(null);
               }),
               finalize(() => {
-                // 3. ALWAYS clean local disk footprint and turn off execution guard
+                // ALWAYS clean local disk footprint
                 patchState(store, {
                   user: null,
                   premiumStatus: null,
-                  isLoading: false, // Reset your guard block
                 });
                 appStore.setToken(null);
                 localStorage.removeItem(DETAIL_STORAGE_KEY);
@@ -168,14 +142,12 @@ export const UserStore = signalStore(
       // Inside AppStore withMethods
       updateUserProfile: rxMethod<{ updates: Partial<User> }>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
           switchMap(({ updates }) => {
             const currentUser = store.user();
             const token = appStore.token();
 
             // Guard: Ensure we have a user and a token before proceeding
             if (!currentUser || !token) {
-              patchState(store, { isLoading: false });
               return EMPTY;
             }
 
@@ -190,11 +162,10 @@ export const UserStore = signalStore(
             return authService.updateProfile(safeUpdates).pipe(
               tap((updatedUser) => {
                 errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
-                patchState(store, { user: updatedUser, isLoading: false });
+                patchState(store, { user: updatedUser });
               }),
               catchError(() => {
                 errorService.handleError(ErrorCodes.UPDATE_PROFILE);
-                patchState(store, { isLoading: false });
                 return EMPTY;
               }),
             );
@@ -208,19 +179,14 @@ export const UserStore = signalStore(
         user: Partial<User>;
       }>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
           switchMap(({ userId, updates }) => {
             return detailService.updateUserDetail(userId, updates).pipe(
               tap((updatedDetail: CreateUserDetailDto) => {
                 errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
-                patchState(store, {
-                  userDetail: updatedDetail,
-                  isLoading: false,
-                });
+                patchState(store, { userDetail: updatedDetail });
               }),
               catchError(() => {
                 errorService.handleError(ErrorCodes.UPDATE_PROFILE);
-                patchState(store, { isLoading: false });
                 return EMPTY;
               }),
             );
@@ -230,18 +196,13 @@ export const UserStore = signalStore(
 
       loadUserDetail: rxMethod<{ userId: string }>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
           switchMap(({ userId }) =>
             detailService.getUserDetailById(userId).pipe(
               tap((userDetail: CreateUserDetailDto) => {
-                patchState(store, {
-                  userDetail: userDetail,
-                  isLoading: false,
-                });
+                patchState(store, { userDetail });
               }),
               catchError(() => {
                 errorService.handleError(ErrorCodes.LOAD_PROFILE);
-                patchState(store, { isLoading: false });
                 return EMPTY;
               }),
             ),

@@ -7,19 +7,11 @@ import {
   withHooks,
   withProps,
 } from '@ngrx/signals';
-import {
-  computed,
-  inject,
-  linkedSignal,
-  PLATFORM_ID,
-  Resource,
-  resourceFromSnapshots,
-  ResourceSnapshot,
-} from '@angular/core';
-import { AppComputedSignals as ACS } from '../../types';
+import { computed, inject, PLATFORM_ID } from '@angular/core';
+import { AppComputedSignals as ACS, PaginatedProducts } from '../../types';
 import { ActionResponse } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tap } from 'rxjs';
+import { tap, Observable } from 'rxjs';
 import { pipe, switchMap } from 'rxjs';
 import { BookService } from '@service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
@@ -52,6 +44,7 @@ export type AppState = {
   readonly searchHistory: string[];
   readonly appendMode: boolean;
   readonly booksVersion: number;
+  readonly customProducts: PaginatedProducts | null;
   // --- 🔍 Filter State ---
   readonly filters: {
     type: ProductType;
@@ -73,6 +66,7 @@ const initialState: AppState = {
   searchHistory: [],
   appendMode: false,
   booksVersion: 0,
+  customProducts: null,
   filters: {
     type: DEFAULT_TYPE,
     page: DEFAULT_PAGE,
@@ -83,20 +77,6 @@ const initialState: AppState = {
     isDiscounted: false,
   },
 };
-
-// RESOURCE FIX
-export function withPreviousValue<T>(resource: Resource<T>): Resource<T> {
-  const derivedResource = linkedSignal({
-    source: resource.snapshot,
-    computation: (snap, prev): ResourceSnapshot<T> => {
-      if (snap.status == 'loading' && prev && prev.value.status !== 'error') {
-        return { ...snap, value: prev.value.value };
-      }
-      return snap;
-    },
-  });
-  return resourceFromSnapshots(derivedResource);
-}
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
@@ -138,7 +118,6 @@ export const AppStore = signalStore(
       totalProducts: computed(() => productsResource.value()?.meta.total ?? 0),
       products: computed(() => productsResource.value()?.data ?? []),
       hasError: computed(() => !!productsResource.error()),
-      isLoading: computed(() => productsResource.isLoading()),
       hasMorePage: computed(
         () =>
           filters.page() <
@@ -229,6 +208,15 @@ export const AppStore = signalStore(
           appendMode: true,
           filters: { ...state.filters, page: state.filters.page + 1 },
         }));
+      },
+
+      loadCustomProducts(
+        filters?: Partial<AppState['filters']>,
+      ): Observable<PaginatedProducts> {
+        const params = { ...store.filters(), ...filters };
+        return bookService.fetchProducts(params).pipe(
+          tap((res) => patchState(store, { customProducts: res })),
+        );
       },
 
       setPage(page: number) {

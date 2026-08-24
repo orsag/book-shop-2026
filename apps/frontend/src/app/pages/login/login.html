@@ -107,10 +107,10 @@
                 name="register"
                 title="submit-register-btn"
                 class="btn btn-primary btn-block text-white"
-                [attr.aria-busy]="userStore.isLoading()"
-                [disabled]="!username() || !password() || !email() || userStore.isLoading()"
+                [attr.aria-busy]="loading.isLoading('register')"
+                [disabled]="!username() || !password() || !email() || loading.isLoading('register')"
               >
-                @if (userStore.isLoading()) {
+                @if (loading.isLoading('register')) {
                   <span class="loading loading-spinner" aria-hidden="true"></span>
                 }
                 Register
@@ -122,10 +122,10 @@
                 name="login"
                 title="submit-login-btn"
                 class="btn btn-primary btn-block text-white"
-                [attr.aria-busy]="userStore.isLoading()"
-                [disabled]="!username() || !password() || userStore.isLoading()"
+                [attr.aria-busy]="loading.isLoading('login')"
+                [disabled]="!username() || !password() || loading.isLoading('login')"
               >
-                @if (userStore.isLoading()) {
+                @if (loading.isLoading('login')) {
                   <span class="loading loading-spinner" aria-hidden="true"></span>
                 }
                 Login

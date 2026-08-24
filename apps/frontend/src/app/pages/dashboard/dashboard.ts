@@ -18,6 +18,7 @@ import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
 import { RedFocusDirective } from '@core';
 import { LOGGER } from '../../core/logger.token';
+import { LoadingService } from '../../core/loading.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
@@ -43,6 +44,7 @@ export class Dashboard implements OnInit, AfterViewInit {
   @ViewChildren('listItem') listElements!: QueryList<BookListItem>;
   store = inject(AppStore);
   cart = inject(CartStore);
+  loading = inject(LoadingService);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
   private logger = inject(LOGGER);

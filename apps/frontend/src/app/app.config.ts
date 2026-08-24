@@ -14,7 +14,11 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideTransloco } from '@jsverse/transloco';
-import { authInterceptor, TranslationsHttpLoader } from '@core';
+import {
+  authInterceptor,
+  loadingInterceptor,
+  TranslationsHttpLoader,
+} from '@core';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import {
   EVENT_MANAGER_PLUGINS,
@@ -34,7 +38,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(
-      withInterceptors([authInterceptor]),
+      withInterceptors([loadingInterceptor, authInterceptor]),
       withInterceptorsFromDi(),
     ),
     provideTransloco({

@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.1.12",
+  "version": "3.13",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -47,8 +47,10 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.1.0",
     "@nestjs/swagger": "^11.4.6",
+    "@ngrx/effects": "^21.1.1",
     "@ngrx/operators": "^21.1.1",
     "@ngrx/signals": "^21.1.1",
+    "@ngrx/store": "^21.1.1",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@tailwindcss/postcss": "^4.3.0",

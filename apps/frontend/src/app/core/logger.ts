@@ -1,7 +1,6 @@
 // loggers.ts
 import { Logger } from './logger.token';
 
-// Vývojová verzia (loguje do konzoly)
 export class ConsoleLogger implements Logger {
   log(message: string, ...optionalParams: unknown[]): void {
     console.log(`[DEV LOG]: ${message}`, ...optionalParams);

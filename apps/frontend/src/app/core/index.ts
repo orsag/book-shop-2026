@@ -3,6 +3,8 @@ export * from './auth.guard';
 export * from './profile.guard';
 export * from './auth.interceptor';
 export * from './duplicate.interceptor';
+export * from './loading.interceptor';
+export * from './loading.service';
 export * from './error.handler';
 export * from './no-btn-hover.directive';
 export * from './no-focus-jump.directive';

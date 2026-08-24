@@ -16,10 +16,12 @@ import { MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { LOGGER } from '../../core/logger.token';
+import { LoadingService } from '@core';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;
   let fixture: ComponentFixture<Dashboard>;
+  let loadingService: LoadingService;
 
   // 1. Create mock structures using Angular Signals
   let mockAppStore: any;
@@ -32,7 +34,6 @@ describe('Dashboard Component', () => {
   beforeEach(async () => {
     // Reset mocks before each test
     mockAppStore = {
-      isLoading: signal(false),
       isEmpty: signal(false),
       viewLayout: signal('grid'),
       products: signal([]),
@@ -92,6 +93,7 @@ describe('Dashboard Component', () => {
 
     fixture = TestBed.createComponent(Dashboard);
     component = fixture.componentInstance;
+    loadingService = TestBed.inject(LoadingService);
 
     (component as any).VIEW_LAYOUTS = ['grid', 'list'];
   });
@@ -105,9 +107,9 @@ describe('Dashboard Component', () => {
   //
   // // --- Template State Tests ---
   //
-  it('should show the loading skeleton when store is loading', () => {
-    // Arrange: Set store state to loading
-    mockAppStore.isLoading.set(true);
+  it('should show the loading skeleton when products are loading', () => {
+    // Arrange: simulate a tagged 'products' request in flight
+    loadingService.track('products');
     component.accumulatedProducts$ = of([]);
     (component as any).productsCount = signal(0);
     (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
@@ -121,7 +123,6 @@ describe('Dashboard Component', () => {
 
   it('should show "Nothing found" state when store is empty', () => {
     // Arrange
-    mockAppStore.isLoading.set(false);
     component.accumulatedProducts$ = of([]);
     (component as any).productsCount = signal(0);
     (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
@@ -136,7 +137,6 @@ describe('Dashboard Component', () => {
   });
 
   it('should render book cards when products are available in grid layout', () => {
-    mockAppStore.isLoading.set(false);
     component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
     (component as any).productsCount = signal(MOCK_PRODUCTS.length);
     (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
@@ -159,7 +159,7 @@ describe('Dashboard Component', () => {
   it('keeps the append skeleton visible for at least 1 second after loading finishes', async () => {
     // Arrange: loading starts while items are already on screen
     vi.useFakeTimers();
-    mockAppStore.isLoading.set(true);
+    loadingService.track('products');
     component.accumulatedProducts$ = of([]);
     (component as any).productsCount = signal(0);
     (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);
@@ -171,7 +171,7 @@ describe('Dashboard Component', () => {
     expect(skeletonCount()).toBeGreaterThan(0);
 
     // Act: the fetch resolves almost instantly (0ms)
-    mockAppStore.isLoading.set(false);
+    loadingService.untrack('products');
     component.accumulatedProducts$ = of([...MOCK_PRODUCTS]);
     (component as any).productsCount = signal(MOCK_PRODUCTS.length);
     (component as any).isProductsEmpty = computed(() => component.productsCount() === 0);

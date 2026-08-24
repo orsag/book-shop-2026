@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { PremiumStatus, UserDetailSmall } from '@store/libs';
 import { CreateUserDetailDto as UserDetail } from '@api';
 import { ApiService } from './api.service';
+import { withLoadingKey } from '../core/loading.interceptor';
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +16,22 @@ export class DetailService {
     userId: string,
     updated: Partial<UserDetailSmall>,
   ): Observable<UserDetail> {
-    return this.api.patch<UserDetail>(`${this.API_URL}/${userId}`, updated);
+    return this.api.patch<UserDetail>(
+      `${this.API_URL}/${userId}`,
+      updated,
+      { context: withLoadingKey('profile') },
+    );
   }
 
   getUserDetailById(userId: string): Observable<UserDetail> {
-    return this.api.get<UserDetail>(`${this.API_URL}/${userId}`);
+    return this.api.get<UserDetail>(`${this.API_URL}/${userId}`, {
+      context: withLoadingKey('profile'),
+    });
   }
 
   findPremiumStatus(userId: string): Observable<PremiumStatus> {
-    return this.api.get<PremiumStatus>(`${this.API_URL}/premium/${userId}`);
+    return this.api.get<PremiumStatus>(`${this.API_URL}/premium/${userId}`, {
+      context: withLoadingKey('login'),
+    });
   }
 }

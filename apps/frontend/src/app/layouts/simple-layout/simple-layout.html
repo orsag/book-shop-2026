@@ -1,6 +1,9 @@
 <!-- 1. The main wrapper locks to exactly the window height and prevents body scrolling -->
 <div class="h-screen w-full flex flex-col overflow-hidden">
 
+  <!-- Global HTTP progress bar: self-contained, always mounted (hidden via CSS) -->
+  <app-progress />
+
   <!-- 2. Navbar is no longer 'sticky', it's just a static block that sits at the top of the flex column -->
   <app-navbar class="z-50 shrink-0"></app-navbar>
 

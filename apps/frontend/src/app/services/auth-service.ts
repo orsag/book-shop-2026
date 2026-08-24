@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { User } from '@store/libs';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
+import { withLoadingKey } from '../core/loading.interceptor';
 
 export interface LoginResponse {
   user: User;
@@ -19,6 +20,8 @@ export class AuthService {
     return this.api.post<LoginResponse>(`${this.apiUrl}/login`, {
       username,
       password,
+    }, {
+      context: withLoadingKey('login'),
     });
   }
 
@@ -32,9 +35,12 @@ export class AuthService {
       email,
       username,
       password,
+    }, {
+      context: withLoadingKey('register'),
     });
   }
 
+  // NOTE: intentionally untagged - silent background refresh
   getUser(username: string): Observable<User> {
     return this.api.get<User>(`${this.apiUrl}`, {
       params: { username },
@@ -42,14 +48,19 @@ export class AuthService {
   }
 
   logout(): Observable<object> {
-    return this.api.get(`${this.apiUrl}/logout`);
+    return this.api.get(`${this.apiUrl}/logout`, {
+      context: withLoadingKey('logout'),
+    });
   }
 
   updateUserFavorites(favorites: string[]): Observable<User> {
+    // optimistic UI handles feedback; not tracked globally
     return this.api.patch<User>(`${this.apiUrl}/favorites`, { favorites });
   }
 
   updateProfile(updates: Partial<User>): Observable<User> {
-    return this.api.patch<User>(`${this.apiUrl}/update`, { updates });
+    return this.api.patch<User>(`${this.apiUrl}/update`, { updates }, {
+      context: withLoadingKey('profile'),
+    });
   }
 }

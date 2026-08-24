@@ -3,6 +3,7 @@ import { OrderStatus, Order } from '@store/shared-models';
 import { Observable } from 'rxjs';
 import { CreateProductDto as IProduct, CreateOrderDto } from '@api';
 import { ApiService } from './api.service';
+import { withLoadingKey } from '../core/loading.interceptor';
 
 export interface CreatedOrderItem {
   productId: string;
@@ -36,7 +37,9 @@ export class OrderService {
   }
 
   getUserOrders(userId: string): Observable<CreatedOrder[]> {
-    return this.api.get<CreatedOrder[]>(`${this.API_URL}/user/${userId}`);
+    return this.api.get<CreatedOrder[]>(`${this.API_URL}/user/${userId}`, {
+      context: withLoadingKey('orders'),
+    });
   }
 
   cancelOrder(orderId: string): Observable<CreatedOrder> {

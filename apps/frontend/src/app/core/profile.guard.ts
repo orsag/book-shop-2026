@@ -15,7 +15,5 @@ export const profileGuard: CanDeactivateFn<any> = () => {
     return false;
   }
 
-  console.log(userStore.isDirtyForm());
-
   return true;
 };

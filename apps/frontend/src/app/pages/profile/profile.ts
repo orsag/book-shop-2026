@@ -175,6 +175,8 @@ export class Profile {
           updates: updatedData,
           user: updatedUserData,
         });
+        this.form().reset(); // pristine + untouched again
+        this.userForm().reset(); // same for the user form
       }
     } else {
       this.handleNextInvalidField();

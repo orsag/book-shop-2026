@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Footer, Navbar, Toast, ScrollBtn } from '@component';
+import { Footer, Navbar, Toast, ScrollBtn, ProgressComponent } from '@component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -10,6 +10,7 @@ import { RouterOutlet } from '@angular/router';
     RouterOutlet,
     ScrollBtn,
     Toast,
+    ProgressComponent,
   ],
   templateUrl: './simple-layout.html',
   styleUrl: './simple-layout.css',

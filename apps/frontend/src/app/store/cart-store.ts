@@ -13,7 +13,7 @@ import {
 import { BookService, CreatedOrder, OrderService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 
 export interface CartItem {
@@ -23,13 +23,11 @@ export interface CartItem {
 
 export type CartState = {
   readonly itemsMap: Record<string, CartItem>;
-  readonly isLoading: boolean;
   readonly orders: CreatedOrder[];
 };
 
 const initialState: CartState = {
   itemsMap: {},
-  isLoading: false,
   orders: [],
 };
 
@@ -130,8 +128,6 @@ export const CartStore = signalStore(
 
         if (ids.length === 0) return;
 
-        patchState(store, { isLoading: true });
-
         bookService.getFavorites(ids).subscribe({
           next: (freshBooks) => {
             const currentMap = { ...store.itemsMap() };
@@ -162,9 +158,8 @@ export const CartStore = signalStore(
             if (hasChanges) {
               patchState(store, { itemsMap: currentMap });
             }
-            patchState(store, { isLoading: false });
           },
-          error: () => patchState(store, { isLoading: false }),
+          error: () => undefined, // swallow: cart keeps its local state
         });
       },
 
@@ -184,19 +179,15 @@ export const CartStore = signalStore(
 
       reloadOrders: rxMethod<{ userId: string }>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
           switchMap(({ userId }) =>
             orderService.getUserOrders(userId).pipe(
               tapResponse({
                 next: (orders) => {
                   patchState(store, {
                     orders: orders,
-                    isLoading: false,
                   });
                 },
-                error: () => {
-                  patchState(store, { isLoading: false });
-                },
+                error: () => undefined, // swallow: orders stay as-is
               }),
             ),
           ),

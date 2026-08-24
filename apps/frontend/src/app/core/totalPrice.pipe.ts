@@ -10,7 +10,7 @@ type Item = {
 
 @Pipe({
   name: 'totalPrice',
-  pure: true, // This is true by default, meaning it memoizes!
+  pure: true, // This is true by default
 })
 export class TotalPricePipe implements PipeTransform {
   transform(item: Item): number {

@@ -24,7 +24,6 @@ describe('MainLayout', () => {
     mockAppStore = {
       isMobile: signal(false),
       token: signal('mockToken'),
-      isLoading: signal(false),
     };
 
     mockConfigService = {
@@ -59,7 +58,6 @@ describe('MainLayout', () => {
 
     fixture = TestBed.createComponent(MainLayout);
     component = fixture.componentInstance;
-    (component as any).DEFAULT_LOADER_DELAY = 1000;
     await fixture.whenStable();
   });
 
