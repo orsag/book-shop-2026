@@ -15,12 +15,10 @@ import { EMPTY, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { AuthService, DetailService } from '@service';
-import { AppStore } from './app-store';
 import { isPlatformBrowser } from '@angular/common';
 import { CreateUserDetailDto } from '@api';
 
 const USER_STORAGE_KEY = 'currentUser';
-const TOKEN_STORAGE_KEY = 'accessToken';
 const DETAIL_STORAGE_KEY = 'currentStatus';
 
 export type UserState = {
@@ -50,7 +48,6 @@ export const UserStore = signalStore(
   withMethods(
     (
       store,
-      appStore = inject(AppStore),
       authService = inject(AuthService),
       detailService = inject(DetailService),
       errorService = inject(ErrorService),
@@ -86,10 +83,8 @@ export const UserStore = signalStore(
         return authService
           .login(credentials.username, credentials.password)
           .pipe(
-            switchMap(({ user, access_token }) => {
+            switchMap(({ user }) => {
               patchState(store, { user });
-              appStore.setToken(access_token);
-              localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
 
               return detailService.findPremiumStatus(user.id).pipe(
                 map((premiumStatus) => {
@@ -112,8 +107,8 @@ export const UserStore = signalStore(
 
       logout: rxMethod<void>(
         pipe(
-          map(() => appStore.token()),
-          filter((token): token is string => !!token),
+          map(() => store.user()),
+          filter((user): user is User => !!user),
           exhaustMap(() => {
             return authService.logout().pipe(
               tap(() => {
@@ -129,25 +124,22 @@ export const UserStore = signalStore(
                   user: null,
                   premiumStatus: null,
                 });
-                appStore.setToken(null);
                 localStorage.removeItem(DETAIL_STORAGE_KEY);
                 localStorage.removeItem(USER_STORAGE_KEY);
-                localStorage.removeItem(TOKEN_STORAGE_KEY);
               }),
             );
           }),
         ),
       ),
 
-      // Inside AppStore withMethods
+      // Inside UserStore withMethods
       updateUserProfile: rxMethod<{ updates: Partial<User> }>(
         pipe(
           switchMap(({ updates }) => {
             const currentUser = store.user();
-            const token = appStore.token();
 
-            // Guard: Ensure we have a user and a token before proceeding
-            if (!currentUser || !token) {
+            // Guard: Ensure we have a user before proceeding
+            if (!currentUser) {
               return EMPTY;
             }
 
@@ -240,8 +232,7 @@ export const UserStore = signalStore(
         pipe(
           switchMap((productId) => {
             const currentUser = store.user();
-            const token = appStore.token();
-            if (!currentUser || !token) return EMPTY;
+            if (!currentUser) return EMPTY;
 
             // 1. Calculate new favorites array locally
             const isFavorite = currentUser.favorites?.includes(productId);
@@ -284,7 +275,6 @@ export const UserStore = signalStore(
   withHooks({
     onInit(
       store,
-      appStore = inject(AppStore),
       platformId = inject(PLATFORM_ID),
     ) {
       const isBrowser = isPlatformBrowser(platformId);
@@ -298,10 +288,8 @@ export const UserStore = signalStore(
               JSON.stringify(userDetail()),
             );
           }
-          const _token = appStore.token();
-          if (user() && _token) {
+          if (user()) {
             localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
-            localStorage.setItem(TOKEN_STORAGE_KEY, _token);
           }
         });
       }

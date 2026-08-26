@@ -1,14 +1,10 @@
-// auth.interceptor.ts
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AppStore } from '@store';
-import { catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { LOGGER } from './logger.token';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const store = inject(AppStore);
-  const token = store.token();
   const router = inject(Router);
   const logger = inject(LOGGER);
 
@@ -17,12 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  let authReq = req;
-  if (token) {
-    authReq = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` },
-    });
-  }
+  const authReq = req.clone({ withCredentials: true });
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {

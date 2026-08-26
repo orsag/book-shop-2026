@@ -56,7 +56,6 @@ describe('AuthService', () => {
     it('should send a POST request with the username and return a LoginResponse', () => {
       const mockResponse: LoginResponse = {
         user: mockUser,
-        access_token: 'mock-jwt-token',
       };
 
       service.login('testuser', 'testpassword').subscribe((response) => {

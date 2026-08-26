@@ -6,7 +6,6 @@ import { withLoadingKey } from '../core/loading.interceptor';
 
 export interface LoginResponse {
   user: User;
-  access_token: string;
 }
 
 @Injectable({

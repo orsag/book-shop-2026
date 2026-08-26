@@ -35,7 +35,6 @@ import {
 const SEARCH_HISTORY_KEY = 'searchHistory';
 
 export type AppState = {
-  readonly token: string | null;
   readonly _isMobile: boolean;
   readonly _isTablet: boolean;
   // --- 📚 Book State ---
@@ -60,7 +59,6 @@ export type AppState = {
 const initialState: AppState = {
   _isMobile: false,
   _isTablet: false,
-  token: null,
   favoriteProducts: [],
   viewLayout: VIEW_LAYOUTS[1],
   searchHistory: [],
@@ -227,10 +225,6 @@ export const AppStore = signalStore(
             page: page,
           },
         }));
-      },
-
-      setToken(token: string | null) {
-        patchState(store, { token });
       },
 
       setHistory(searchHistory: string[]) {

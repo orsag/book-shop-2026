@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 // Load .env from the root of the monorepo
 dotenv.config({ path: join(process.cwd(), '.env') });
@@ -37,6 +38,8 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
+  app.use(cookieParser());
+
   // 1. Get the path from .env (e.g., "../../development/images")
   const rawLocation = process.env['UPLOAD_LOCATION'];
 
@@ -57,7 +60,10 @@ async function bootstrap() {
   );
 
   // Enable CORS so your Angular app can talk to the backend
-  app.enableCors();
+  app.enableCors({
+    origin: process.env['FRONTEND_ORIGIN'] || 'http://localhost:4200',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('BookStore API')

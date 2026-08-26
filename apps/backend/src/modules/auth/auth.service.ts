@@ -101,6 +101,16 @@ export class AuthService {
     return result;
   }
 
+  async signToken(user: { id: string; email: string; username: string; isAdmin: boolean }) {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      username: user.username,
+      isAdmin: user.isAdmin,
+    };
+    return this.jwtService.signAsync(payload);
+  }
+
   async updateProfile(
     username: string,
     updates: { email?: string; phoneNumber?: string; theme?: string },

@@ -4,7 +4,6 @@ import { AppStore, UserStore } from '@store';
 import { AuthService, ToastService } from '@service';
 
 const USER_STORAGE_KEY = 'currentUser';
-const TOKEN_STORAGE_KEY = 'accessToken';
 const DETAIL_STORAGE_KEY = 'currentStatus';
 const SEARCH_HISTORY_KEY = 'searchHistory';
 
@@ -18,57 +17,56 @@ export class InitializationService {
   private toastService = inject(ToastService);
 
   private readonly savedUser: string | null;
-  private readonly savedToken: string | null;
   private readonly savedDetail: string | null;
   private readonly searchHistory: string | null;
 
   constructor() {
     this.savedUser = localStorage.getItem(USER_STORAGE_KEY);
-    this.savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
     this.savedDetail = localStorage.getItem(DETAIL_STORAGE_KEY);
     this.searchHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
   }
 
   async main(): Promise<boolean> {
-    if (!this.savedToken) {
+    if (!this.savedUser) {
       this.userStore.invalidateUser();
-      this.toastService.alert('Token is missing!');
       return false;
     }
 
-    this.restoreFromStorage();
+    const parsed = JSON.parse(this.savedUser);
 
     try {
-      if (this.savedUser) {
-        const username = JSON.parse(this.savedUser).username;
-        const validUser = await firstValueFrom(
-          this.authService.getUser(username),
-        );
-        if (validUser) {
-          this.userStore.updateStore('user', validUser);
-          return true;
-        }
+      const validUser = await firstValueFrom(
+        this.authService.getUser(parsed.username),
+      );
+      if (validUser) {
+        this.userStore.updateStore('user', validUser);
+        this.restoreFromStorage();
+        return true;
       }
-      this.toastService.alert('Token is invalid!');
-      return false;
     } catch {
-      this.toastService.alert('Token is invalid!');
+      this.toastService.alert('Session expired. Please log in again.');
+      // this.clearStorage();
+      this.userStore.invalidateUser();
       return false;
     }
+
+    this.userStore.invalidateUser();
+    return false;
   }
 
   private restoreFromStorage() {
-    if (this.savedUser && this.savedToken) {
-      this.userStore.updateStore('user', JSON.parse(this.savedUser));
-      this.appStore.setToken(this.savedToken);
-
-      if (this.searchHistory) {
-        this.appStore.setHistory(JSON.parse(this.searchHistory));
-      }
-
-      if (this.savedDetail) {
-        this.userStore.updateStore('userDetail', JSON.parse(this.savedDetail));
-      }
+    if (this.searchHistory) {
+      this.appStore.setHistory(JSON.parse(this.searchHistory));
     }
+
+    if (this.savedDetail) {
+      this.userStore.updateStore('userDetail', JSON.parse(this.savedDetail));
+    }
+  }
+
+  private clearStorage() {
+    localStorage.removeItem(USER_STORAGE_KEY);
+    localStorage.removeItem(DETAIL_STORAGE_KEY);
+    localStorage.removeItem(SEARCH_HISTORY_KEY);
   }
 }
