@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BookCard } from './book-card';
+import { ProductItem } from './product-item';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { CartStore } from '@store';
+import { CartStore, UserStore } from '@store';
 import { UXService } from '@service';
-import { BOOK_GRADIENT, MOCKED_PRODUCT } from '@store/libs';
+import { MOCKED_PRODUCT, BOOK_GRADIENT } from '@store/libs';
+import { signal } from '@angular/core';
 
-describe('BookCard', () => {
-  let component: BookCard;
+describe('ProductItem', () => {
+  let component: ProductItem;
   let mockCartStore: any;
   let mockUXService: any;
-  let fixture: ComponentFixture<BookCard>;
+  let mockUserStore: any;
+  let fixture: ComponentFixture<ProductItem>;
 
   beforeEach(async () => {
     mockUXService = {
@@ -21,35 +23,37 @@ describe('BookCard', () => {
       isGradientClass: vi.fn().mockReturnValue(BOOK_GRADIENT),
       isInCart: vi.fn().mockReturnValue(false),
     };
-
     mockCartStore = {
       addToCart: vi.fn(),
       removeItem: vi.fn(),
     };
+    mockUserStore = {
+      isLoggedIn: signal(false),
+      toggleFavorite: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [BookCard, getTranslocoModule()],
+      imports: [ProductItem, getTranslocoModule()],
       providers: [
         provideRouter([]),
         { provide: CartStore, useValue: mockCartStore },
         { provide: UXService, useValue: mockUXService },
+        { provide: UserStore, useValue: mockUserStore },
       ],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(BookCard);
+    fixture = TestBed.createComponent(ProductItem);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('product', MOCKED_PRODUCT);
-    fixture.detectChanges(); // Triggers ngOnInit, etc.
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
   it('should receive the required product input', () => {
-    // Set the required input safely before running initial change detection
-    // fixture.componentRef.setInput('product', MOCKED_PRODUCT);
+    expect(component.product?.id).toEqual(MOCKED_PRODUCT['id']);
+  });
 
-    // fixture.detectChanges(); // Triggers ngOnInit, etc.
-
-    const mocked_id = component.product?.id;
-    expect(mocked_id).toEqual(MOCKED_PRODUCT['id']);
+  it('should not toggle favorite when user is not logged in', () => {
+    component.toggleFavorite('book-1');
+    expect(mockUserStore.toggleFavorite).not.toHaveBeenCalled();
   });
 });

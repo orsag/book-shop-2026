@@ -1,21 +1,24 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   Input,
+  signal,
 } from '@angular/core';
 import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { CartStore, UserStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
-import { CurrencyPipe } from '@angular/common';
 import { UXService } from '@service';
 import { RedFocusDirective, SinglePricePipe } from '@core';
+import { OverlayComponent } from '../common';
+import { AppStore } from '@store';
 
 @Component({
-  selector: 'app-book-card',
+  selector: 'app-product-item',
   imports: [
     CommonModule,
     RouterLink,
@@ -25,32 +28,34 @@ import { RedFocusDirective, SinglePricePipe } from '@core';
     CurrencyPipe,
     RedFocusDirective,
     SinglePricePipe,
+    OverlayComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './book-card.html',
-  styleUrl: './book-card.css',
+  templateUrl: './product-item.html',
+  styleUrl: './product-item.css',
 })
-export class BookCard {
+export class ProductItem {
   @Input({ required: true }) product!: CreateProductDto;
+
   private readonly cartStore = inject(CartStore);
+  private readonly appStore = inject(AppStore);
   readonly userStore = inject(UserStore);
-  ux = inject(UXService);
+  readonly ux = inject(UXService);
+  readonly isHovered = signal(false);
+
+  readonly isGrid = computed(() => this.appStore.viewLayout() === 'grid');
 
   toggleFavorite(productId: string) {
     if (!this.userStore.isLoggedIn()) {
-      // Show a common or redirect to login
       return;
     }
-    // We will build this method in the Store next!
     this.userStore.toggleFavorite(productId);
   }
 
   handleCartAction() {
     if (this.ux.isInCart(this.product)) {
-      // If it's there, remove it
       this.cartStore.removeItem(this.product.id);
-    } else {
-      // If it's not, add it
+    } else if (this.product.availableCount > 0) {
       this.cartStore.addToCart(this.product);
     }
   }

@@ -1,11 +1,10 @@
-import { PLATFORM_ID, inject, computed, effect } from '@angular/core';
+import { inject, computed } from '@angular/core';
 import { UserComputedSignals } from '../../types';
 import {
   signalStore,
   withState,
   withComputed,
   withMethods,
-  withHooks,
   patchState,
 } from '@ngrx/signals';
 import { PremiumStatus, User, UserDetailSmall } from '@store/libs';
@@ -15,7 +14,6 @@ import { EMPTY, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
 import { AuthService, DetailService } from '@service';
-import { isPlatformBrowser } from '@angular/common';
 import { CreateUserDetailDto } from '@api';
 
 const USER_STORAGE_KEY = 'currentUser';
@@ -85,6 +83,7 @@ export const UserStore = signalStore(
           .pipe(
             switchMap(({ user }) => {
               patchState(store, { user });
+              localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 
               return detailService.findPremiumStatus(user.id).pipe(
                 map((premiumStatus) => {
@@ -119,7 +118,6 @@ export const UserStore = signalStore(
                 return of(null);
               }),
               finalize(() => {
-                // ALWAYS clean local disk footprint
                 patchState(store, {
                   user: null,
                   premiumStatus: null,
@@ -150,7 +148,6 @@ export const UserStore = signalStore(
               theme: updates.theme,
             };
 
-            // Pass the token to the authService instead of (or in addition to) the username
             return authService.updateProfile(safeUpdates).pipe(
               tap((updatedUser) => {
                 errorService.handleSuccess(SuccessCodes.UPDATE_PROFILE);
@@ -192,6 +189,10 @@ export const UserStore = signalStore(
             detailService.getUserDetailById(userId).pipe(
               tap((userDetail: CreateUserDetailDto) => {
                 patchState(store, { userDetail });
+                localStorage.setItem(
+                  DETAIL_STORAGE_KEY,
+                  JSON.stringify(userDetail),
+                );
               }),
               catchError(() => {
                 errorService.handleError(ErrorCodes.LOAD_PROFILE);
@@ -272,27 +273,4 @@ export const UserStore = signalStore(
       },
     }),
   ),
-  withHooks({
-    onInit(
-      store,
-      platformId = inject(PLATFORM_ID),
-    ) {
-      const isBrowser = isPlatformBrowser(platformId);
-
-      if (isBrowser) {
-        effect(() => {
-          const { user, userDetail } = store;
-          if (userDetail()) {
-            localStorage.setItem(
-              DETAIL_STORAGE_KEY,
-              JSON.stringify(userDetail()),
-            );
-          }
-          if (user()) {
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user()));
-          }
-        });
-      }
-    },
-  }),
 );

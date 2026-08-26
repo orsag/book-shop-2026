@@ -46,7 +46,7 @@ test.describe('Filter Component Tests', () => {
     await page.locator('.skeleton').first().waitFor({ state: 'hidden' });
     // await page.waitForTimeout(1000);
 
-    const listItems = page.locator('app-book-list-item');
+    const listItems = page.locator('app-product-item');
 
     // Extract raw text strings hidden inside the title="pricing" span for the first two items
     const firstItemPriceText = await listItems
@@ -81,7 +81,7 @@ test.describe('Filter Component Tests', () => {
 
     // Grab the first item and verify it contains a visible discount span element
     const firstItemDiscountSpan = page
-      .locator('app-book-list-item')
+      .locator('app-product-item')
       .nth(0)
       .locator('span[title="discount"]');
 

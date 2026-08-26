@@ -40,7 +40,7 @@ describe('Filter Component Tests', () => {
     cy.get('.skeleton').should('not.exist');
 
     // Extract price spans from the first two list items and compare as numbers
-    cy.get('app-book-list-item').then(($items) => {
+    cy.get('app-product-item').then(($items) => {
       const firstItemPriceText = $items
         .eq(0)
         .find('span[title="pricing"]')
@@ -70,7 +70,7 @@ describe('Filter Component Tests', () => {
     cy.get('.skeleton').should('not.exist');
 
     // Grab the first item and verify it contains a visible discount span element
-    cy.get('app-book-list-item')
+    cy.get('app-product-item')
       .first()
       .find('span[title="discount"]')
       .should('be.visible');

@@ -1,6 +1,4 @@
 export * from './banner/banner';
-export * from './book-card/book-card';
-export * from './book-list-item/book-list-item';
 export * from './book-table/book-table';
 export * from './card-small/card-small';
 export * from './common/index';
@@ -11,5 +9,6 @@ export * from './form-field/form-field';
 export * from './navbar/navbar';
 export * from './order-table/order-table';
 export * from './pagination/pagination';
+export * from './product-item/product-item';
 export * from './theme-picker/theme-picker';
 export * from './video-player/video-player';

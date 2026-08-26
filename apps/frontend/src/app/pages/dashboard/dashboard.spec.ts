@@ -15,7 +15,6 @@ import { MockComponent } from 'ng-mocks';
 import { MOCK_PRODUCTS, BOOK_GRADIENT } from '@store/libs';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { LOGGER } from '../../core/logger.token';
 import { LoadingService } from '@core';
 
 describe('Dashboard Component', () => {
@@ -87,7 +86,6 @@ describe('Dashboard Component', () => {
           provide: PaginationAccumulatorService,
           useValue: mockPaginationAccumulatorService,
         },
-        { provide: LOGGER, useValue: { log: vi.fn(), error: vi.fn() } },
       ],
     }).compileComponents();
 
@@ -152,7 +150,7 @@ describe('Dashboard Component', () => {
 
     expect(gridElement).toBeTruthy();
 
-    const bookCards = gridElement.queryAll(By.css('app-book-card'));
+    const bookCards = gridElement.queryAll(By.css('app-product-item'));
     expect(bookCards.length).toBe(MOCK_PRODUCTS.length);
   });
 

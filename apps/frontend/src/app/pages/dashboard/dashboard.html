@@ -33,7 +33,7 @@
              [class.lg:grid-cols-6]="animatedGridExpanded()"
              [ngClass]="isTransitioning() ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'">
           @for (book of accumulatedProducts$ | async; track book.id) {
-            <app-book-card [product]="book"></app-book-card>
+            <app-product-item [product]="book"></app-product-item>
           }
         </div>
       }
@@ -44,7 +44,7 @@
              [class.md:grid-cols-2]="!isOpenedFilter()"
         >
           @for (book of accumulatedProducts$ | async; track book.id; let i = $index) {
-            <app-book-list-item #listItem [product]="book"></app-book-list-item>
+            <app-product-item [product]="book"></app-product-item>
 
             @if (i !== (productsCount()) - 1) {
               <div class="divider col-span-1 my-0 md:hidden"></div>

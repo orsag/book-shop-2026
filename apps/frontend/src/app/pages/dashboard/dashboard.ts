@@ -1,23 +1,24 @@
 import {
-  AfterViewInit,
   Component,
   computed,
   effect,
   inject,
   OnInit,
   PLATFORM_ID,
-  QueryList,
   signal,
-  ViewChildren,
 } from '@angular/core';
-import { isPlatformBrowser, AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { BookCard, BookListItem, Pagination, FilterBar } from '@component';
+import {
+  isPlatformBrowser,
+  AsyncPipe,
+  NgClass,
+  NgTemplateOutlet,
+} from '@angular/common';
+import { ProductItem, Pagination, FilterBar } from '@component';
 import { ConfigurationService, PaginationAccumulatorService } from '@service';
 import { AppStore, CartStore } from '@store';
 import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
 import { RedFocusDirective } from '@core';
-import { LOGGER } from '../../core/logger.token';
 import { LoadingService } from '../../core/loading.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -27,8 +28,7 @@ import { map } from 'rxjs';
   imports: [
     NgClass,
     AsyncPipe,
-    BookCard,
-    BookListItem,
+    ProductItem,
     Pagination,
     FilterBar,
     LucideSearchX,
@@ -39,15 +39,12 @@ import { map } from 'rxjs';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit, AfterViewInit {
-  // Grabs ALL elements marked with #listItem as a QueryList
-  @ViewChildren('listItem') listElements!: QueryList<BookListItem>;
+export class Dashboard implements OnInit {
   store = inject(AppStore);
   cart = inject(CartStore);
   loading = inject(LoadingService);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
-  private logger = inject(LOGGER);
   private accumulator = inject(PaginationAccumulatorService);
 
   // 🚀 Single line declaration for accumulated products!
@@ -107,12 +104,5 @@ export class Dashboard implements OnInit, AfterViewInit {
     if (isPlatformBrowser(this.platformId)) {
       this.cart.syncCartWithServer();
     }
-  }
-
-  ngAfterViewInit() {
-    // You can subscribe to changes if the array is dynamic
-    this.listElements.changes.subscribe((elements) => {
-      this.logger.log('List updated, new count:', elements.length);
-    });
   }
 }

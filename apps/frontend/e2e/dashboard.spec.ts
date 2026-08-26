@@ -11,7 +11,7 @@ test.describe('Dashboard Layout & Components', () => {
     page,
   }) => {
     // 1. Verify number of app-book-list-item is equal to DEFAULT_MAX_LIMIT
-    const listItems = page.locator('app-book-list-item');
+    const listItems = page.locator('app-product-item');
     await expect(listItems).toHaveCount(DEFAULT_MAX_LIMIT);
 
     // 2. Verify number of app-book-card is zero[cite: 1]
@@ -34,12 +34,12 @@ test.describe('Dashboard Layout & Components', () => {
     await responsePromise;
 
     // 4. Assert updated count (Playwright automatically retries to match target count)
-    const listItems = page.locator('app-book-list-item');
+    const listItems = page.locator('app-product-item');
     await expect(listItems).toHaveCount(2 * DEFAULT_MAX_LIMIT);
   });
 
   test('should add the first item to the cart', async ({ page }) => {
-    const listItems = page.locator('app-book-list-item');
+    const listItems = page.locator('app-product-item');
     const ADD_LABEL = 'Do košíka';
     const REMOVE_LABEL = 'Odobrať';
 
