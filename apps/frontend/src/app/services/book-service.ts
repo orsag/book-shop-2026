@@ -30,12 +30,10 @@ export class BookService {
       fromObject: cleanParams as Record<string, string>,
     });
 
-    return this.api
-      .get<PaginatedProducts>(this.apiUrl, {
-        params,
-        context: withLoadingKey('products'),
-      })
-      .pipe(delay(2000));
+    return this.api.get<PaginatedProducts>(this.apiUrl, {
+      params,
+      context: withLoadingKey('products'),
+    });
   }
 
   getOne(id: string, type: ProductType): Observable<IProduct> {
@@ -58,8 +56,12 @@ export class BookService {
 
   // Fetches multiple books by their IDs for the favorites list
   getFavorites(ids: string[]): Observable<IProduct[]> {
-    return this.api.post<IProduct[]>(`${this.apiUrl}/list`, { ids }, {
-      context: withLoadingKey('cart-sync'),
-    });
+    return this.api.post<IProduct[]>(
+      `${this.apiUrl}/list`,
+      { ids },
+      {
+        context: withLoadingKey('cart-sync'),
+      },
+    );
   }
 }

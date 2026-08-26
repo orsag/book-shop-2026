@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.13",
+  "version": "3.14",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -39,7 +39,7 @@
     "@hono/node-server": "^2.1.1",
     "@hono/zod-validator": "^0.9.0",
     "@jsverse/transloco": "^8.4.0",
-    "@lucide/angular": "^1.31.0",
+    "@lucide/angular": "^1.34.0",
     "@nestjs/common": "^11.1.0",
     "@nestjs/core": "^11.1.0",
     "@nestjs/jwt": "^11.0.2",
@@ -68,7 +68,7 @@
     "hono-rate-limiter": "^0.5.3",
     "jsonwebtoken": "^9.0.3",
     "lorem-ipsum": "^3.0.0",
-    "lucide": "^1.31.0",
+    "lucide": "^1.34.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pino": "^10.3.1",
@@ -132,7 +132,7 @@
     "daisyui": "5.7.19",
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.27.0",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^7.0.0",
     "eslint-plugin-playwright": "^2.11.0",
@@ -147,7 +147,7 @@
     "tslib": "^2.3.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.67.0",
-    "vite": "^8.2.1",
+    "vite": "^8.2.2",
     "vite-plugin-static-copy": "^4.1.1",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "4.1.10",

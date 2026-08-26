@@ -13,6 +13,7 @@ import { BookService, ImageUploadService } from '@service';
 import { ErrorCodes, ErrorService, NoFocusJumpDirective, RedFocusDirective } from '@core';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { LucideImageUp } from '@lucide/angular';
+import { environment } from '@env';
 
 @Component({
   selector: 'app-cover-modal',
@@ -160,8 +161,7 @@ export class CoverModalComponent {
 
     this.uploadService.uploadImage(file).subscribe({
       next: (res) => {
-        // Prepend localhost as required by your current backend validator
-        const absoluteUrl = `http://localhost:3000${res.url}`;
+        const absoluteUrl = `${environment.mediaBaseUrl}${res.url}`;
 
         this.bookService.update(bookId, { coverUrl: absoluteUrl }).subscribe({
           next: (updatedBook) => {

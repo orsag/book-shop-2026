@@ -20,6 +20,7 @@ export default [
             '@component',
             '@store',
             '@store/libs',
+            '@env',
             '../../eslint.base.config.mjs',
             '../../../../../../prisma/createProduct',
           ],

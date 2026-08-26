@@ -18,6 +18,9 @@ export default [
             '../generated/**',
             '**/eslint.config.js',
             '**/eslint.base.config.ts',
+            // '@env' is the app's own environments folder (same project),
+            // aliased so any file can read build config without deep paths
+            '@env',
           ],
           depConstraints: [
             {
