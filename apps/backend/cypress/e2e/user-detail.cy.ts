@@ -1,10 +1,8 @@
 describe('User Detail CRUD', () => {
-  let authToken: string;
   let userId: string;
 
-  before(() => {
-    cy.apiLoginAsTestUser().then(({ accessToken, userId: id }) => {
-      authToken = accessToken;
+  beforeEach(() => {
+    cy.apiLoginAsTestUser().then(({ userId: id }) => {
       userId = id;
     });
   });
@@ -14,7 +12,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('userId', userId);
@@ -28,7 +25,8 @@ describe('User Detail CRUD', () => {
       });
     });
 
-    it('returns 401 without auth token', () => {
+    it('returns 401 without an authenticated session', () => {
+      cy.clearCookies();
       cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
@@ -44,7 +42,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'GET',
         url: `/api/user-detail/premium/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.all.keys(
@@ -61,7 +58,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'PATCH',
         url: `/api/user-detail/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
         body: {
           displayName: 'Updated Test Display Name',
           bio: 'This bio was updated via E2E test.',
@@ -80,7 +76,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'DELETE',
         url: `/api/user-detail/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('userId', userId);
@@ -91,7 +86,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'POST',
         url: '/api/user-detail',
-        headers: { Authorization: `Bearer ${authToken}` },
         body: {
           userId,
           displayName: 'Recreated Test User',
@@ -111,7 +105,6 @@ describe('User Detail CRUD', () => {
       cy.api({
         method: 'GET',
         url: `/api/user-detail/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('userId', userId);

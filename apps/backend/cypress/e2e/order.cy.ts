@@ -1,17 +1,17 @@
 describe('Order CRUD', () => {
-  let authToken: string;
   let userId: string;
   let orderId: string;
   let productIds: string[];
 
   before(() => {
-    cy.apiLoginAsTestUser().then(({ accessToken, userId: id }) => {
-      authToken = accessToken;
-      userId = id;
-    });
-
     cy.getTestProductIds().then((ids) => {
       productIds = ids;
+    });
+  });
+
+  beforeEach(() => {
+    cy.apiLoginAsTestUser().then(({ userId: id }) => {
+      userId = id;
     });
   });
 
@@ -20,7 +20,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'POST',
         url: '/api/order',
-        headers: { Authorization: `Bearer ${authToken}` },
         body: { items: [{ productId: productIds[0], quantity: 1 }] },
       }).then((res) => {
         expect(res.status).to.eq(201);
@@ -37,7 +36,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'POST',
         url: '/api/order',
-        headers: { Authorization: `Bearer ${authToken}` },
         body: {
           items: [
             {
@@ -52,7 +50,8 @@ describe('Order CRUD', () => {
       });
     });
 
-    it('returns 401 without auth token', () => {
+    it('returns 401 without an authenticated session', () => {
+      cy.clearCookies();
       cy.api({
         method: 'POST',
         url: '/api/order',
@@ -69,7 +68,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'GET',
         url: `/api/order/user/${userId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.be.an('array');
@@ -85,7 +83,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'GET',
         url: `/api/order/${orderId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('id', orderId);
@@ -101,7 +98,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'PATCH',
         url: `/api/order/${orderId}/cancel`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('status', 'CANCELLED');
@@ -114,7 +110,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'PATCH',
         url: `/api/order/${orderId}/status`,
-        headers: { Authorization: `Bearer ${authToken}` },
         body: { status: 'PAID' },
       }).then((res) => {
         expect(res.status).to.eq(200);
@@ -128,7 +123,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'DELETE',
         url: `/api/order/${orderId}`,
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('id', orderId);
@@ -141,7 +135,6 @@ describe('Order CRUD', () => {
       cy.api({
         method: 'GET',
         url: '/api/order/all',
-        headers: { Authorization: `Bearer ${authToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.be.an('array');

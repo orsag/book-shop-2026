@@ -16,8 +16,7 @@ export default [
           enforceBuildableLibDependency: false,
           allow: [
             '../generated/**',
-            '**/eslint.config.js',
-            '**/eslint.base.config.ts',
+            '../../eslint.base.config.mjs',
             // '@env' is the app's own environments folder (same project),
             // aliased so any file can read build config without deep paths
             '@env',

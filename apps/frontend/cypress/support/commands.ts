@@ -41,11 +41,8 @@ Cypress.Commands.add('login', () => {
       },
       {
         validate() {
-          cy.getAllLocalStorage().then((storage) => {
-            const baseUrl = env['BASE_URL'];
-            const originStorage = storage[baseUrl] || {};
-            expect(originStorage).to.have.property('accessToken');
-          });
+          // Auth is now httpOnly-cookie based; the JWT never touches localStorage.
+          cy.getCookie('access_token').should('exist');
         },
       },
     );

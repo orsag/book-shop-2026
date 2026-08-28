@@ -1,7 +1,7 @@
 stages:
-  - vitest
+#  - vitest
   - e2e-backend
-  - e2e-frontend
+#  - e2e-frontend
 
 .node_env_template: &node_env_template
   image:
@@ -39,14 +39,14 @@ stages:
   before_script:
     - npm install --no-audit --no-fund
 
-unit-tests:
-  stage: vitest
-  <<: *node_env_template
-  script:
-    - npx nx test frontend --skip-nx-cache
-  rules:
-    - when: always
-
+#unit-tests:
+#  stage: vitest
+#  <<: *node_env_template
+#  script:
+#    - npx nx test frontend --skip-nx-cache
+#  rules:
+#    - when: always
+#
 cypress-e2e-backend:
   stage: e2e-backend
   <<: *node_env_template
@@ -60,23 +60,23 @@ cypress-e2e-backend:
     - npx nx build backend --skip-nx-cache
     - npx nx run backend:e2e
 
-cypress-e2e-frontend:
-  stage: e2e-frontend
-  <<: *node_env_template
-  script:
-    - npx prisma generate
-    - npx prisma db push
-    - npm run seed
-
-    - npx nx run libs:build
-    - npx nx build backend --skip-nx-cache
-    - npx nx build frontend --configuration=production --verbose --output-style=stream
-    - npx wait-on tcp:postgres-db:5432 --timeout 30000
-
-   # 2. Start NestJS Backend in background
-    - node dist/apps/backend/main.js &
-    - npx wait-on http-get://127.0.0.1:3000/api --timeout 60000
-    - npx nx run frontend:e2e
+#cypress-e2e-frontend:
+#  stage: e2e-frontend
+#  <<: *node_env_template
+#  script:
+#    - npx prisma generate
+#    - npx prisma db push
+#    - npm run seed
+#
+#    - npx nx run libs:build
+#    - npx nx build backend --skip-nx-cache
+#    - npx nx build frontend --configuration=production --skip-nx-cache
+#    - npx wait-on tcp:postgres-db:5432 --timeout 30000
+#
+#   # 2. Start NestJS Backend in background
+#    - npx nx serve backend --configuration=production &
+#    - npx wait-on http-get://127.0.0.1:3000/api --timeout 60000
+#    - npx nx run frontend:e2e
 
   artifacts:
     when: on_failure

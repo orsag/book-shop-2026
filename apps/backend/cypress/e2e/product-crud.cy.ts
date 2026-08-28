@@ -1,17 +1,16 @@
 describe('GET /api/products/:id | POST /api/products/list | DELETE /api/products/:id', () => {
   let productIds: string[];
   let singleId: string;
-  let adminToken: string;
 
   before(() => {
     cy.getTestProductIds().then((ids) => {
       productIds = ids;
       singleId = ids[0];
     });
+  });
 
-    cy.apiLoginAsTestUser().then(({ accessToken, userId: id }) => {
-      adminToken = accessToken;
-    });
+  beforeEach(() => {
+    cy.apiLoginAsTestUser();
   });
 
   describe('GET /api/products/:id', () => {
@@ -85,7 +84,6 @@ describe('GET /api/products/:id | POST /api/products/list | DELETE /api/products
       cy.api({
         method: 'DELETE',
         url: `/api/products/${deleteId}`,
-        headers: { Authorization: `Bearer ${adminToken}` },
       }).then((res) => {
         expect(res.status).to.eq(200);
         expect(res.body).to.have.property('success');
@@ -93,7 +91,8 @@ describe('GET /api/products/:id | POST /api/products/list | DELETE /api/products
       });
     });
 
-    it('returns 401 without auth token', () => {
+    it('returns 401 without an authenticated session', () => {
+      cy.clearCookies();
       cy.api({
         method: 'DELETE',
         url: `/api/products/${singleId}`,

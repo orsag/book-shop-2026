@@ -6,7 +6,7 @@ declare namespace Cypress {
       options: Partial<Cypress.RequestOptions>,
     ): Chainable<Cypress.Response<any>>;
 
-    apiLoginAsTestUser(): Chainable<{ accessToken: string; userId: string }>;
+    apiLoginAsTestUser(): Chainable<{ userId: string }>;
 
     getTestProductIds(): Chainable<string[]>;
   }

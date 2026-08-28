@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.16",
+  "version": "3.17",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -47,10 +47,10 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.1.0",
     "@nestjs/swagger": "^11.4.6",
-    "@ngrx/effects": "^21.1.1",
-    "@ngrx/operators": "^21.1.1",
-    "@ngrx/signals": "^21.1.1",
-    "@ngrx/store": "^21.1.1",
+    "@ngrx/effects": "^22.0.0",
+    "@ngrx/operators": "^22.0.0",
+    "@ngrx/signals": "^22.0.0",
+    "@ngrx/store": "^22.0.0",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@tailwindcss/postcss": "^4.3.0",
@@ -168,9 +168,6 @@
       "@angular/build": "^22.0.0",
       "@schematics/angular": "^22.0.0",
       "@angular/compiler": "^22.0.0"
-    },
-    "@ngrx/signals": {
-      "@angular/core": "^22.0.0"
     }
   }
 }
