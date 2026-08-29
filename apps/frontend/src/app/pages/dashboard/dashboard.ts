@@ -50,8 +50,10 @@ export class Dashboard implements OnInit {
   // 🚀 Single line declaration for accumulated products!
   accumulatedProducts$ = this.accumulator.accumulate(
     this.store.productsResource,
-    computed(() => this.store.filters().page),
-    computed(() => this.store.appendMode()),
+    computed(() => ({
+      page: this.store.filters().page,
+      append: this.store.appendMode(),
+    })),
     (res) => res?.data ?? [],
   );
 

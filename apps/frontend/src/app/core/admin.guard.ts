@@ -1,17 +1,12 @@
 import { inject } from '@angular/core';
-import {
-  Router,
-  CanActivateFn,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { Router, CanActivateFn } from '@angular/router';
 import { ToastService } from '@service';
 import { UserStore } from '@store';
 import { LOGGER } from './logger.token';
 
 export const adminGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
+  // route: ActivatedRouteSnapshot,
+  // state: RouterStateSnapshot,
 ) => {
   const userStore = inject(UserStore);
   const router = inject(Router);

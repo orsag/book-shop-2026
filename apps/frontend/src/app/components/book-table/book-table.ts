@@ -43,8 +43,10 @@ export class BookTable {
   // 🚀 Single line declaration for accumulated products!
   accumulatedProducts$ = this.accumulator.accumulate(
     this.appStore.productsResource,
-    computed(() => this.appStore.filters().page),
-    computed(() => this.appStore.appendMode()),
+    computed(() => ({
+      page: this.appStore.filters().page,
+      append: this.appStore.appendMode(),
+    })),
     (res) => res?.data ?? [],
   );
 

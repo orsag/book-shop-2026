@@ -12,6 +12,15 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 /**
+ * Describes a single page request. `append` is `true` when the request
+ * continues the previous results (Load More) instead of replacing them.
+ */
+export type AccumulatorRequest = {
+  page: number;
+  append: boolean;
+};
+
+/**
  * Helper to preserve previous resource values while re-fetching
  */
 export function withPreviousValue<T>(input: Resource<T>): Resource<T> {
@@ -40,31 +49,32 @@ export class PaginationAccumulatorService {
    * Accumulates resource data based on pagination and appendMode state.
    *
    * @param resource Raw Angular Resource containing paginated response
-   * @param pageSignal Signal emitting the current page number
-   * @param appendModeSignal Signal indicating whether to append or replace
+   * @param requestSignal Signal emitting the current request descriptor
+   *   ({@link AccumulatorRequest}) - page number AND append flag atomically,
+   *   so the accumulator never observes a `page` change while the previous
+   *   `append` value is still active.
    * @param extractDataFn Function to extract the items array from response object
    * @returns Observable of accumulated items array
    */
   accumulate<TResource, TItem>(
     resource: Resource<TResource>,
-    pageSignal: Signal<number>,
-    appendModeSignal: Signal<boolean>,
+    requestSignal: Signal<AccumulatorRequest>,
     extractDataFn: (data: TResource | undefined) => TItem[],
   ): Observable<TItem[]> {
     const stableResource = withPreviousValue(resource);
     const pageMap = new Map<number, TItem[]>();
 
     const value$ = toObservable(stableResource.value);
-    const page$ = toObservable(pageSignal);
-    const appendMode$ = toObservable(appendModeSignal);
+    const request$ = toObservable(requestSignal);
     const status$ = toObservable(stableResource.status);
 
-    return combineLatest([value$, page$, appendMode$, status$]).pipe(
-      map(([value, currentPage, isAppend, status]) => {
+    return combineLatest([value$, request$, status$]).pipe(
+      map(([value, request, status]) => {
         const freshItems = extractDataFn(value);
+        const { page, append } = request;
 
         if (!freshItems || freshItems.length === 0) {
-          if (!isAppend && currentPage === 1) {
+          if (!append && page === 1) {
             pageMap.clear();
           }
           return Array.from(pageMap.keys())
@@ -73,11 +83,11 @@ export class PaginationAccumulatorService {
         }
 
         if (status === ('resolved' as ResourceStatus)) {
-          if (isAppend) {
-            pageMap.set(currentPage, freshItems);
+          if (append) {
+            pageMap.set(page, freshItems);
           } else {
             pageMap.clear();
-            pageMap.set(currentPage, freshItems);
+            pageMap.set(page, freshItems);
           }
         }
 

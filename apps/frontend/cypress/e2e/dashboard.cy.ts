@@ -6,9 +6,6 @@ describe('Dashboard Layout & Components', () => {
     cy.get('.skeleton', { timeout: 20000 }).should('not.exist');
     // 1. Verify number of app-book-list-item is equal to DEFAULT_MAX_LIMIT
     cy.get('app-product-item').should('have.length', DEFAULT_MAX_LIMIT);
-
-    // 2. Verify number of app-book-card is zero
-    cy.get('app-product-item').should('not.exist'); // or .should('have.length', 0)
   });
 
   it('should display double of products when Load more books', () => {

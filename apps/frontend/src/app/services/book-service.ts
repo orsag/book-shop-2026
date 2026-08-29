@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ActionResponse } from '@store/libs';
 import { CreateProductDto as IProduct } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
-import { delay, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PaginatedProducts } from '../../types';
 import { AppState } from '@store';
 import { ApiService } from './api.service';
