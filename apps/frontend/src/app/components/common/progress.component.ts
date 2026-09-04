@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ConfigurationService } from '@service';
 import { isPlatformBrowser } from '@angular/common';
-import { LoadingService } from '../../core/loading.service';
+import { LoadingService } from '@core';
 import { DEFAULT_LOADER_DELAY } from '@store/libs';
 
 /**

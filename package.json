@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.18",
+  "version": "3.20",
   "license": "MIT",
   "workspaces": [
     "apps/*"
@@ -32,6 +32,7 @@
     "@angular/compiler": "~22.1.2",
     "@angular/core": "~22.1.2",
     "@angular/forms": "~22.1.2",
+    "@angular/material": "^22.1.5",
     "@angular/platform-browser": "~22.1.2",
     "@angular/platform-server": "~22.1.2",
     "@angular/router": "~22.1.2",
@@ -84,8 +85,11 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "~2.6.0",
+    "@analogjs/vitest-angular": "~2.6.0",
     "@angular-devkit/architect": "^0.2200.6",
     "@angular-devkit/core": "^22.1.4",
+    "@angular-devkit/schematics": "~22.1.4",
     "@angular/build": "~22.1.4",
     "@angular/cli": "~22.1.4",
     "@angular/compiler-cli": "~22.1.2",
@@ -109,6 +113,7 @@
     "@nx/vitest": "23.1.0",
     "@nx/web": "23.1.0",
     "@nx/workspace": "23.1.0",
+    "@oxc-project/runtime": "^0.115.0",
     "@playwright/test": "^1.62.1",
     "@schematics/angular": "~22.1.4",
     "@swc-node/register": "~1.12.1",

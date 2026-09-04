@@ -18,8 +18,7 @@ import { ConfigurationService, PaginationAccumulatorService } from '@service';
 import { AppStore, CartStore } from '@store';
 import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { VIEW_LAYOUTS } from '@store/libs';
-import { RedFocusDirective } from '@core';
-import { LoadingService } from '../../core/loading.service';
+import { LoadingService, RedFocusDirective } from '@core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 

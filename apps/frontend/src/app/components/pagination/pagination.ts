@@ -6,8 +6,7 @@ import {
   LucideChevronRight,
   LucideChevronsRight,
 } from '@lucide/angular';
-import { RedFocusDirective } from '@core';
-import { LoadingService } from '../../core/loading.service';
+import { LoadingService, RedFocusDirective } from '@core';
 
 @Component({
   selector: 'app-pagination',

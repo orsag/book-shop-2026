@@ -8,10 +8,9 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { CoverModalComponent } from './cover-modal';
 import { DeleteModalComponent } from './delete-modal';
 import { LucideFaceSlightlyFrowning, LucidePlus } from '@lucide/angular';
-import { RedFocusDirective } from '@core';
+import { LoadingService, RedFocusDirective } from '@core';
 import { RouterLink } from '@angular/router';
 import { EditBookReactiveComponent } from './edit-book-reactive';
-import { LoadingService } from '../../core/loading.service';
 
 @Component({
   selector: 'app-administration',

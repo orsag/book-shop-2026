@@ -15,13 +15,13 @@ import {
   LucidePenTool,
 } from '@lucide/angular';
 import {
+  LoadingService,
   BlueFocusDirective,
   NoFocusJumpDirective,
   RedFocusDirective,
 } from '@core';
 import { Toast } from '@component';
 import { CartStore, UserStore } from '@store';
-import { LoadingService } from '../../core/loading.service';
 
 @Component({
   selector: 'app-login',
