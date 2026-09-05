@@ -1,0 +1,15 @@
+<div class="main-layout">
+  <div class="main-layout-navbar" aria-label="Main Navigation"></div>
+
+  <mat-sidenav-container class="main-layout-sidenav">
+    <mat-sidenav mode="side" opened class="main-layout-sidebar">
+      <!-- Sidebar content (filter etc.) will be added later -->
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-layout-content">
+      <main class="main-layout-page">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

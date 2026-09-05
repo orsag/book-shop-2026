@@ -1,0 +1,33 @@
+<main class="not-found" *transloco="let t">
+  <div class="hero">
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">{{ t('administration.not_found') }}</h1>
+      <p class="hero-subtitle">{{ t('administration.sorry') }}</p>
+
+      <div class="hero-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          class="hero-btn"
+          routerLink="/"
+        >
+          {{ t('administration.back_home') }}
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="hero-btn"
+          matTooltip="Work in progress"
+          aria-label="Work in progress"
+          (click)="$event.preventDefault()"
+        >
+          {{ t('administration.support') }}
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
