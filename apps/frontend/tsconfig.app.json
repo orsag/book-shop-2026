@@ -2,13 +2,14 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "composite": true,
+    "declaration": true,
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "exclude": [
     "public/**/*",
     "src/app/pages/administration/edit-game-modal.ts",
-    "src/app/core/transloco-testing.module.ts",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "vite.config.ts",
@@ -22,5 +23,13 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/test-setup.ts"
+  ],
+  "references": [
+    {
+      "path": "../../prisma"
+    },
+    {
+      "path": "../libs/tsconfig.lib.json"
+    }
   ]
 }

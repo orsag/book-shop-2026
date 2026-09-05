@@ -1,5 +1,6 @@
 import { Component, HostListener, inject, OnInit, Signal } from '@angular/core';
-import { CartItem, CartStore } from '@store';
+import { CartStore } from '@store';
+import { CartItem } from '@store/libs';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { OrderService, CreatedOrder, ToastService } from '@service';

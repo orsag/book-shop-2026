@@ -2,6 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "composite": true,
+    "declaration": true,
     "types": []
   },
   "include": ["src/**/*.ts"],
@@ -19,5 +21,10 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/test-setup.ts"
+  ],
+  "references": [
+    {
+      "path": "../libs/tsconfig.lib.json"
+    }
   ]
 }

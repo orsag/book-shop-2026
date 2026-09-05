@@ -33,5 +33,13 @@
     "src/**/*.spec.js",
     "src/**/*.test.ts",
     "src/**/*.spec.ts"
+  ],
+  "references": [
+    {
+      "path": "../libs/tsconfig.lib.json"
+    },
+    {
+      "path": "../../prisma"
+    }
   ]
 }

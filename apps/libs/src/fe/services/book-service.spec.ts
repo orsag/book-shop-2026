@@ -11,7 +11,7 @@ import {
   CreateProductDtoProductType as ProductType,
   CreateProductDto,
 } from '@api';
-import { PaginatedProducts } from '../../types';
+import { PaginatedProducts } from '../types';
 
 /** Wraps a payload in the backend ApiResponse envelope the ApiService unwraps. */
 const envelope = <T>(data: T): ApiResponse<T> => ({

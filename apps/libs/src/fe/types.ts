@@ -1,7 +1,11 @@
 import { CreateProductDto as IProduct } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
 import { Signal } from '@angular/core';
-import { CartItem } from '@store';
+
+export interface CartItem {
+  product: IProduct;
+  quantity: number;
+}
 
 export type AppComputedSignals = {
   readonly isMobile: Signal<boolean>;

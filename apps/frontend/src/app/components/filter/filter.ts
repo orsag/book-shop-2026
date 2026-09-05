@@ -10,7 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ConfigurationService, ScrollService } from '@service';
 import { inject, debounced, SimpleChanges } from '@angular/core';
-import { BookFilters } from '../../../types';
+import { BookFilters } from '@store/libs';
 import { AppStore } from '@store';
 import { CATEGORIES, VIEW_LAYOUTS } from '@store/shared-models';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';

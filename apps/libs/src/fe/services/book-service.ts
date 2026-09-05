@@ -4,7 +4,7 @@ import { ActionResponse } from '@store/libs';
 import { CreateProductDto as IProduct } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
 import { Observable } from 'rxjs';
-import { PaginatedProducts } from '../../types';
+import { PaginatedProducts } from '../types';
 import { AppState } from '@store';
 import { ApiService } from './api.service';
 import { withLoadingKey } from '../core/loading.interceptor';

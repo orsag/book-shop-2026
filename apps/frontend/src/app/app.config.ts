@@ -27,8 +27,8 @@ import { StopEventPlugin } from './plugins/stop-event.plugin';
 import localeSk from '@angular/common/locales/sk';
 import { registerLocaleData } from '@angular/common';
 import { InitializationService } from '@service';
-import { LOGGER } from './core/logger.token';
-import { ConsoleLogger, NoopLogger } from './core/logger';
+import { LOGGER } from '@core';
+import { ConsoleLogger, NoopLogger } from '@core';
 
 // Register locale data globally before configuration initialization
 registerLocaleData(localeSk, 'sk-SK');

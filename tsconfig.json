@@ -24,10 +24,10 @@
       "@store/libs": ["./apps/libs/src/index.ts"],
       "@prisma-client": ["./prisma/generated/prisma/client"],
       "@prismalib": ["./prisma/prisma.ts"],
-      "@core": ["./apps/frontend/src/app/core"],
-      "@service": ["./apps/frontend/src/app/services"],
+      "@core": ["./apps/libs/src/fe/core"],
+      "@service": ["./apps/libs/src/fe/services"],
       "@component": ["./apps/frontend/src/app/components"],
-      "@store": ["./apps/frontend/src/app/store"],
+      "@store": ["./apps/libs/src/fe/store"],
       "@env": ["./apps/frontend/src/environments"],
       "@api": ["./apps/libs/src/api-interfaces/generated/models"]
     }
@@ -42,11 +42,8 @@
   "include": ["apps/**/*.ts", "libs/**/*.ts", "src/**/*.ts"],
   "references": [
     {
-      "path": "./tsconfig.app.json",
-    },
-    {
-      "path": "./tsconfig.spec.json",
-    },
+      "path": "./prisma"
+    }
   ],
   "compileOnSave": false,
   "exclude": ["node_modules", "tmp"]

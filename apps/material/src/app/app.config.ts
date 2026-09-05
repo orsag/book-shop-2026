@@ -7,7 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideTransloco } from '@jsverse/transloco';
 import { appRoutes } from './app.routes';
-import { TranslationsHttpLoader } from './transloco-loader';
+import { TranslationsHttpLoader } from '@core';
 
 export const appConfig: ApplicationConfig = {
   providers: [

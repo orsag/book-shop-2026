@@ -2,6 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "composite": true,
+    "declaration": true,
     "types": [
       "@playwright/test",
       "vitest/globals",
@@ -26,5 +28,16 @@
     "src/**/*.spec.jsx",
     "src/**/*.d.ts"
   ],
-  "files": ["src/test-setup.ts"]
+  "files": ["src/test-setup.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "../libs/tsconfig.lib.json"
+    },
+    {
+      "path": "../../prisma"
+    }
+  ]
 }

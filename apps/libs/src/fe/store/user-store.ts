@@ -1,5 +1,5 @@
 import { inject, computed } from '@angular/core';
-import { UserComputedSignals } from '../../types';
+import { UserComputedSignals } from '../types';
 import {
   signalStore,
   withState,

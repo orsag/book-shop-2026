@@ -24,6 +24,11 @@
             "output": "."
           },
           {
+            "glob": "**/*.json",
+            "input": "apps/libs/src/assets/i18n",
+            "output": "assets/i18n"
+          },
+          {
             "glob": "serve.json",
             "input": "apps/frontend",
             "output": "browser"

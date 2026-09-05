@@ -1,8 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "composite": false,
-    "declaration": false,
+    "composite": true,
+    "declaration": true,
     "module": "commonjs",
     "outDir": "../dist/out-tsc",
     "moduleResolution": "bundler"

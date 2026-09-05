@@ -8,7 +8,7 @@ import {
   withProps,
 } from '@ngrx/signals';
 import { computed, inject, PLATFORM_ID } from '@angular/core';
-import { AppComputedSignals as ACS, PaginatedProducts } from '../../types';
+import { AppComputedSignals as ACS, PaginatedProducts } from '../types';
 import { ActionResponse } from '@store/shared-models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tap, Observable } from 'rxjs';

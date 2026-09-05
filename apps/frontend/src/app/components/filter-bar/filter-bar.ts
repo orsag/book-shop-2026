@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { AppStore, UserStore } from '@store';
-import { BookFilters } from '../../../types';
+import { BookFilters } from '@store/libs';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { RedFocusDirective } from '@core';

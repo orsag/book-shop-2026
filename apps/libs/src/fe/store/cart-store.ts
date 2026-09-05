@@ -1,6 +1,6 @@
 import { computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { OrderStatus } from '@store/shared-models';
-import { CartComputedSignals as CCS } from '../../types';
+import { CartItem, CartComputedSignals as CCS } from '../types';
 import { CreateProductDto } from '@api';
 import {
   signalStore,
@@ -15,11 +15,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-
-export interface CartItem {
-  product: CreateProductDto;
-  quantity: number;
-}
 
 export type CartState = {
   readonly itemsMap: Record<string, CartItem>;

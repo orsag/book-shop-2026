@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/material/src",
-  "tags": [],
+  "tags": ["scope:client"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
@@ -18,6 +18,11 @@
           {
             "glob": "**/*",
             "input": "apps/material/public"
+          },
+          {
+            "glob": "**/*.json",
+            "input": "apps/libs/src/assets/i18n",
+            "output": "assets/i18n"
           }
         ],
         "styles": ["apps/material/src/styles.css"]

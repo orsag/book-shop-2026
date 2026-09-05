@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslocoTestingModule } from '@jsverse/transloco';
 import { provideRouter } from '@angular/router';
-import en from '../../../../public/assets/i18n/en.json';
-import sk from '../../../../public/assets/i18n/sk.json';
+import { getTranslocoModule } from '@core';
 import { PageNotFound } from './page-not-found';
 
 describe('PageNotFound', () => {
@@ -11,17 +9,7 @@ describe('PageNotFound', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        PageNotFound,
-        TranslocoTestingModule.forRoot({
-          langs: { en, sk },
-          translocoConfig: {
-            availableLangs: ['en', 'sk'],
-            defaultLang: 'sk',
-          },
-          preloadLangs: true,
-        }),
-      ],
+      imports: [PageNotFound, getTranslocoModule()],
       providers: [provideRouter([])],
     }).compileComponents();
 

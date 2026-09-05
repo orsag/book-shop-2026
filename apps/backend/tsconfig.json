@@ -9,5 +9,10 @@
   ],
   "compilerOptions": {
     "esModuleInterop": true
-  }
+  },
+  "references": [
+    {
+      "path": "../../prisma"
+    }
+  ]
 }

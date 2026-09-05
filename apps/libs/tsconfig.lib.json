@@ -1,11 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": false,
-    "declaration": false,
+    "composite": true,
+    "declaration": true,
     "rootDir": "../../",
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/assets/i18n/*.json"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/test-setup.ts"]
 }
