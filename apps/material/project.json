@@ -1,9 +1,9 @@
 {
   "name": "material",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "material/src",
+  "sourceRoot": "apps/material/src",
   "tags": [],
   "targets": {
     "build": {
@@ -11,16 +11,16 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/material",
-        "browser": "material/src/main.ts",
-        "tsConfig": "material/tsconfig.app.json",
+        "outputPath": "dist/apps/material",
+        "browser": "apps/material/src/main.ts",
+        "tsConfig": "apps/material/tsconfig.app.json",
         "assets": [
           {
             "glob": "**/*",
-            "input": "material/public"
+            "input": "apps/material/public"
           }
         ],
-        "styles": ["material/src/styles.css"]
+        "styles": ["apps/material/src/styles.css"]
       },
       "configurations": {
         "production": {
@@ -65,7 +65,7 @@
       "executor": "@nx/vitest:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "coverage/material"
+        "reportsDirectory": "coverage/apps/material"
       }
     },
     "serve-static": {
@@ -73,7 +73,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "material:build",
-        "staticFilePath": "dist/material/browser",
+        "staticFilePath": "dist/apps/material/browser",
         "spa": true
       }
     }
