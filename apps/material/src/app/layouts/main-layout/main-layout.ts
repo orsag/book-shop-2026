@@ -5,10 +5,17 @@ import {
   MatSidenavContainer,
   MatSidenavContent,
 } from '@angular/material/sidenav';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterOutlet, MatSidenavContainer, MatSidenav, MatSidenavContent],
+  imports: [
+    RouterOutlet,
+    MatSidenavContainer,
+    MatSidenav,
+    MatSidenavContent,
+    Navbar,
+  ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })

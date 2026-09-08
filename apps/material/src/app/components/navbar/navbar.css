@@ -1,0 +1,333 @@
+@keyframes bee-buzz {
+  0% {
+    transform: scale(1.05) translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) translate(1px, -2px) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.05) translate(-1px, 1px) rotate(2deg);
+  }
+  75% {
+    transform: scale(1.05) translate(1px, 1px) rotate(-1deg);
+  }
+  100% {
+    transform: scale(1.05) translate(-1px, -2px) rotate(1deg);
+  }
+}
+
+@keyframes fly-star-html {
+  0% {
+    transform: translate(0, 0) rotate(4deg);
+    opacity: 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  20% {
+    transform: translate(2200px, 15px) rotate(4deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(2200px, 15px) rotate(4deg);
+    opacity: 0;
+  }
+}
+
+.navbar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 6.25rem;
+  flex-shrink: 0;
+  background-color: #2a323c;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.navbar-backdrop-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shooting-star-html {
+  position: absolute;
+  left: -150px;
+  top: 15px;
+  width: 120px;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  will-change: transform, opacity;
+  animation: fly-star-html 6s linear infinite;
+}
+
+.navbar-toolbar {
+  position: relative;
+  z-index: 10;
+  height: 6.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  background-color: transparent;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.navbar-logo-btn {
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo-btn:hover {
+  transform: scale(1.1);
+}
+
+.navbar-logo-btn.mat-mdc-icon-button {
+  width: 48px;
+  height: 48px;
+  padding: 0; /* Ensures the image uses the full button area */
+
+  .navbar-logo {
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: contain; /* Prevents image distortion */
+  }
+}
+
+/* Base state: No transition, so it resets to 0 instantly */
+.logo-base {
+  transform: rotate(0deg);
+}
+
+/* Active state: Smoothly rotates to 360 */
+.logo-spin {
+  transform: rotate(360deg);
+  transition: transform 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  line-height: 1.2;
+  padding: 0 0.5rem;
+}
+
+/* Bee-buzz hover: wiggle + 10% scale, like a hovering bee */
+.navbar-title:hover {
+  animation: bee-buzz 0.45s ease-in-out infinite;
+}
+
+.navbar-title-dark {
+  color: #ffffff;
+}
+
+.navbar-title-light {
+  color: #143b22;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.navbar-icon-btn {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+/* Dark theme: light icons on the dark bar */
+.navbar-theme-dark .navbar-icon-btn,
+.navbar-theme-dark .navbar-icon-btn svg.lucide,
+.navbar-theme-dark .navbar-search-clear {
+  color: #ffffff;
+}
+
+/* Light theme: dark icons */
+.navbar-theme-light .navbar-icon-btn,
+.navbar-theme-light .navbar-icon-btn svg.lucide,
+.navbar-theme-light .navbar-search-clear {
+  color: #334155;
+}
+
+.navbar-search {
+  display: none;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .navbar-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.navbar-search-input {
+  width: 240px;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 0 2.5rem 0 1rem;
+  outline: none;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.navbar-theme-light .navbar-search-input {
+  color: #111827;
+  border-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar-theme-light .navbar-search-input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.navbar-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-search-input:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.navbar-search-clear {
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  ::ng-deep svg[lucideX],
+  ::ng-deep .lucide-x {
+    width: 16px !important;
+    height: 16px !important;
+    margin-left: 0.5rem;
+  }
+}
+
+.mat-mdc-icon-button img {
+  vertical-align: middle;
+}
+
+.navbar-lang-btn {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .navbar-lang-btn {
+    display: inline-flex;
+  }
+}
+
+.navbar-lang-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-lang-label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.navbar-auth-btn {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .navbar-auth-btn {
+    display: inline-flex;
+  }
+}
+
+.navbar-cart-btn {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.navbar-cart-btn:hover {
+  transform: scale(1.1);
+}
+
+.navbar-btn-disabled {
+  opacity: 0.5;
+}
+
+.navbar-theme {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.navbar-theme:hover {
+  transform: scale(1.1);
+}
+
+.navbar-profile-menu .mat-mdc-menu-item {
+  gap: 0.5rem;
+}
+
+.navbar-profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.navbar-profile-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.navbar-profile-email {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.navbar-admin-badge {
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background-color: #f44336;
+  color: #ffffff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

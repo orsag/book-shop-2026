@@ -1,0 +1,16 @@
+<button
+  mat-icon-button
+  class="theme-picker-button"
+  [class.theme-picker-dark]="isChecked()"
+  [matTooltip]="isChecked() ? 'Light theme' : 'Dark theme'"
+  (click)="toggleTheme()"
+  aria-label="Toggle theme"
+>
+  <span class="theme-picker-swap">
+    <!-- sun icon -->
+    <svg class="theme-picker-icon theme-picker-sun" lucideSun />
+
+    <!-- moon icon -->
+    <svg class="theme-picker-icon theme-picker-moon" lucideMoon />
+  </span>
+</button>

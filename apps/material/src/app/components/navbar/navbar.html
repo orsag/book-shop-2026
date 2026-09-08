@@ -1,0 +1,194 @@
+@let logo = '/images/logo.svg';
+
+<div
+  class="navbar"
+  aria-label="Main Navigation"
+  [class.navbar-theme-dark]="currentTheme() === 'dark'"
+  [class.navbar-theme-light]="currentTheme() !== 'dark'"
+>
+  <div
+    class="navbar-backdrop"
+    [style.background-image]="`url(${currentNavbarBackground()})`"
+  ></div>
+
+  @if (currentTheme() === 'dark') {
+    <div class="navbar-backdrop-stars">
+      <div class="shooting-star-html"></div>
+    </div>
+  }
+
+  <mat-toolbar class="navbar-toolbar">
+    <div class="navbar-left">
+      <button
+        mat-icon-button
+        class="navbar-logo-btn"
+        type="button"
+        data-testid="logo-btn"
+        [attr.aria-expanded]="config.getFilterValue()"
+        [matTooltip]="config.getFilterValue() ? 'Hide filter' : 'Open filter'"
+        aria-label="Toggle filter panel"
+        (click)="handleButtonClick(false)"
+      >
+        <img
+          [src]="logo"
+          width="40"
+          height="40"
+          class="navbar-logo logo-base"
+          [class.logo-spin]="isRotating()"
+          alt="Bookshop logo"
+          aria-hidden="true"
+        />
+      </button>
+
+      <a
+        mat-button
+        routerLink="/"
+        class="navbar-title"
+        [ngClass]="
+          currentTheme() === 'dark' ? 'navbar-title-dark' : 'navbar-title-light'
+        "
+      >
+        Golden Bee Bookshop
+      </a>
+    </div>
+
+    <div class="navbar-actions">
+      @if (showSearchbar()) {
+        <div class="navbar-search" *transloco="let t">
+          <input
+            type="text"
+            class="navbar-search-input"
+            [formControl]="searchControl"
+            [placeholder]="t('filters.placeholders.search')"
+          />
+
+          @if (searchControl.value) {
+            <button
+              mat-icon-button
+              class="navbar-search-clear"
+              (click)="onClearSearchbar()"
+              [matTooltip]="'Clear search query'"
+              aria-label="Clear search query"
+            >
+              <svg lucideX height="16" width="16"></svg>
+            </button>
+          }
+        </div>
+      }
+
+      <button
+        mat-icon-button
+        class="navbar-icon-btn navbar-lang-btn"
+        (click)="toggleLang()"
+        data-testid="language-btn"
+        [matTooltip]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'"
+        [title]="activeLang() === 'en' ? 'Prepnúť do slovenčiny' : 'Switch to English'"
+
+        aria-label="Switch language"
+      >
+        <span class="navbar-lang-inner">
+          <svg lucideLanguages></svg>
+          <span title="language" class="navbar-lang-label">
+            {{ activeLang() === 'en' ? 'SK' : 'EN' }}
+          </span>
+        </span>
+      </button>
+
+      @if (!isLoggedIn()) {
+        <button
+          mat-icon-button
+          class="navbar-icon-btn navbar-auth-btn"
+
+          (click)="handleAuthAction()"
+          [matTooltip]="'Login'"
+          aria-label="Log in"
+        >
+          <svg lucideLogIn></svg>
+        </button>
+      } @else {
+        <button
+          mat-icon-button
+          class="navbar-icon-btn navbar-auth-btn"
+
+          (click)="handleLogout()"
+          [matTooltip]="'Logout'"
+          aria-label="Log out"
+        >
+          <svg lucideLogOut></svg>
+        </button>
+      }
+
+      <button
+        mat-icon-button
+        class="navbar-icon-btn navbar-cart-btn"
+        [class.navbar-btn-disabled]="cartStore.itemCount() === 0"
+
+        [disabled]="cartStore.itemCount() === 0"
+        [matBadge]="cartStore.itemCount()"
+        [matBadgeHidden]="cartStore.itemCount() === 0"
+        [matBadgeOverlap]="false"
+        [routerLink]="cartStore.itemCount() > 0 ? ['/shopping'] : null"
+        [matTooltip]="'Shopping cart'"
+        aria-label="View Shopping Cart"
+      >
+        <svg lucideShoppingBasket></svg>
+      </button>
+
+      <div class="navbar-theme">
+        <app-theme-picker></app-theme-picker>
+      </div>
+
+      @if (isLoggedIn()) {
+        <button
+          mat-icon-button
+          class="navbar-icon-btn"
+
+          [matMenuTriggerFor]="profileMenu"
+          #profileTrigger="matMenuTrigger"
+          data-testid="profile-btn"
+          [matTooltip]="'Profile'"
+          [attr.aria-expanded]="profileTrigger.menuOpen"
+          [attr.aria-haspopup]="'menu'"
+          [attr.aria-label]="
+            profileTrigger.menuOpen ? 'Close profile menu' : 'Open profile menu'
+          "
+        >
+          @if (profileTrigger.menuOpen) {
+            <svg lucideX></svg>
+          } @else {
+            <svg lucideMenu></svg>
+          }
+        </button>
+
+        <mat-menu #profileMenu="matMenu" class="navbar-profile-menu">
+          <div class="navbar-profile-header">
+            <span class="navbar-profile-name">{{ userName()?.username }}</span>
+            <span class="navbar-profile-email">{{ userStore.user()?.email }}</span>
+            @if (isAdmin()) {
+              <span class="navbar-admin-badge">Administrator</span>
+            }
+          </div>
+
+          @if (isAdmin()) {
+            <button mat-menu-item routerLink="/administration">
+              <svg lucideLayoutDashboard size="16"></svg>
+              Administration
+            </button>
+          }
+          <button mat-menu-item routerLink="/profile">
+            <svg lucideUser size="16"></svg>
+            Edit Profile
+          </button>
+          <button mat-menu-item routerLink="/features">
+            <svg lucideSparkles size="16"></svg>
+            Features
+          </button>
+          <button mat-menu-item (click)="logoutMenuItem($event)">
+            <svg lucideLogOut size="16"></svg>
+            Logout
+          </button>
+        </mat-menu>
+      }
+    </div>
+  </mat-toolbar>
+</div>

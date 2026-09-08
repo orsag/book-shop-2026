@@ -5,12 +5,6 @@
   overflow: hidden;
 }
 
-.simple-layout-navbar {
-  height: 6.25rem;
-  flex-shrink: 0;
-  background-color: #2a323c;
-}
-
 .simple-layout-content {
   flex: 1;
   min-height: 0;

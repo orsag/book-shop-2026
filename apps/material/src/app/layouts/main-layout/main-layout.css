@@ -5,12 +5,6 @@
   overflow: hidden;
 }
 
-.main-layout-navbar {
-  height: 6.25rem;
-  flex-shrink: 0;
-  background-color: #2a323c;
-}
-
 .main-layout-sidenav {
   flex: 1;
   min-height: 0;
