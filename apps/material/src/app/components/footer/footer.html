@@ -1,0 +1,139 @@
+<div
+  class="footer"
+  *transloco="let t"
+  [class.footer-dark]="config.isDarkTheme()"
+>
+  <div class="footer-inner">
+    <!-- ================= TOP SECTION: ICONS ================= -->
+    <div class="footer-icons">
+      @for (item of footerItems; track item.translationKey) {
+        <button
+          type="button"
+          class="footer-item"
+          (click)="openWipModal(item, wipDialog)"
+        >
+          <img
+            [src]="item.image"
+            [alt]="item.alt"
+            width="40"
+            height="40"
+            class="footer-item-img"
+          />
+          <span class="footer-item-label">
+            @if (item.isSplit) {
+              @for (line of t(item.translationKey).split('|'); track $index) {
+                <span class="footer-item-label-line">{{ line }}</span>
+              }
+            } @else {
+              {{ t(item.translationKey) }}
+            }
+          </span>
+        </button>
+      }
+    </div>
+
+    <!-- DIVIDER -->
+    <hr class="footer-divider" />
+
+    <!-- ================= BOTTOM SECTION: COLUMNS ================= -->
+    <div class="footer-columns">
+      <div class="footer-row">
+        <span class="footer-row-title">{{ t('footer.about_us.about_us') }}:</span>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.about_us.about_bookshop') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.about_us.careers_at_bookshop') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.about_us.bookshop_inc') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.about_us.bookshop_kitchen') }}
+        </a>
+      </div>
+
+      <div class="footer-row">
+        <span class="footer-row-title">{{ t('footer.services.services') }}:</span>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.affiliate_program') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.publisher_author_guidelines') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.bulk_order_discounts') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.mobile_apps') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.membership') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.services.bookfairs') }}
+        </a>
+      </div>
+
+      <div class="footer-row">
+        <span class="footer-row-title">{{ t('footer.quick_help.quick_help') }}:</span>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.help_center') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.shipping_returns') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.store_pickup') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.order_status') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.product_recalls') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.corrections_updates') }}
+        </a>
+        <a routerLink="wip" class="footer-link">
+          {{ t('footer.quick_help.gift_cards') }}
+        </a>
+      </div>
+
+      <div class="footer-row">
+        <span class="footer-legal">
+          Ⓒ 2026-{{ currentYear }} Golden Bee Bookshop, Námestie SNP 2497/24,
+          Zvolen, Slovakia
+        </span>
+        <a routerLink="license" class="footer-link">License agreement</a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #wipDialog>
+    <h2 mat-dialog-title>
+      @if (selectedItem(); as activeItem) {
+        {{ t(activeItem.translationKey).replace('|', ' ') }}
+      } @else {
+        Funkcia je v príprave!
+      }
+    </h2>
+    <mat-dialog-content>
+      <div class="footer-dialog-body">
+        @if (selectedItem(); as activeItem) {
+          <img
+            [src]="activeItem.image"
+            [alt]="activeItem.alt"
+            width="56"
+            height="56"
+            class="footer-dialog-img"
+          />
+        }
+        <p class="footer-dialog-text">{{ dummyText }}</p>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Zatvoriť</button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

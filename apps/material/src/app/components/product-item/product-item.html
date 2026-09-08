@@ -1,0 +1,99 @@
+<ng-container *transloco="let t">
+  <div
+    class="product-item"
+    [class.product-item-dark]="config.isDarkTheme()"
+    [class.product-item-hovered]="isHovered()"
+  >
+  <div
+    tabindex="-1"
+    class="product-cover"
+    [routerLink]="['/product', product.id]"
+    (mouseenter)="isHovered.set(true)"
+    (mouseleave)="isHovered.set(false)"
+  >
+    <img
+      [src]="product.coverUrl || 'images/placeholder.webp'"
+      width="120"
+      height="188"
+      [alt]="t('list_item.cover', { title: product.name })"
+    />
+  </div>
+
+  <div class="product-body">
+    <div class="product-badges">
+      @if (product.discount > 0) {
+        <span class="product-badge product-badge-sale">
+          {{ t('list_item.sale') }}
+        </span>
+      }
+      <span class="product-badge product-gradient" [class]="gradientClass()">
+        {{ ux.category(product) }}
+      </span>
+    </div>
+
+    <h3 class="product-title" [routerLink]="['/product', product.id]">
+      {{ product.name }}
+    </h3>
+    <p class="product-author">{{ ux.author(product) }}</p>
+
+    @if (product.bookDetails) {
+      <div class="product-meta">
+        <span>{{ product.bookDetails.pageCount }} {{ t('list_item.pages') }}</span>
+        <span class="product-meta-sep">•</span>
+        <span>ISBN: {{ product.bookDetails.isbn }}</span>
+      </div>
+    }
+
+    <p class="product-description">{{ product.description }}</p>
+
+    <div class="product-footer">
+      <div class="product-price">
+        @if (product.discount > 0) {
+          <span class="product-price-old" title="discount">
+            {{ product.price | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+          </span>
+        }
+        <span class="product-price-current" title="pricing">
+          {{ product | singlePrice | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+        </span>
+        <span
+          class="product-stock"
+          [class.product-stock-in]="product.availableCount > 0"
+          [class.product-stock-out]="product.availableCount === 0"
+        >
+          {{
+            product.availableCount > 0
+              ? t('list_item.stock', { items: product.availableCount })
+              : t('list_item.soldOut')
+          }}
+        </span>
+      </div>
+
+      @if (product.availableCount !== 0) {
+        <button
+          mat-flat-button
+          class="product-cart-btn"
+          data-testid="add-to-cart"
+          [color]="ux.isInCart(product) ? 'warn' : 'primary'"
+          (click)="handleCartAction()"
+        >
+          @if (ux.isInCart(product)) {
+            {{ t('cart.remove_from_cart') }}
+          } @else {
+            {{ t('cart.add_to_cart') }}
+          }
+        </button>
+      } @else {
+        <button
+          mat-stroked-button
+          disabled
+          class="product-cart-btn"
+          [matTooltip]="t('common.sold_out_tooltip')"
+        >
+          {{ t('common.sold_out') }}
+        </button>
+      }
+    </div>
+  </div>
+  </div>
+</ng-container>

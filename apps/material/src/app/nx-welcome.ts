@@ -1,9 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FilterBar } from './components/filter-bar/filter-bar';
+import { Pagination } from './components/pagination/pagination';
+import { Footer } from './components/footer/footer';
 
 @Component({
   selector: 'app-nx-welcome',
-  imports: [CommonModule],
+  imports: [CommonModule, FilterBar, Pagination, Footer],
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -553,6 +556,9 @@ import { CommonModule } from '@angular/common';
         <!--  MIDDLE CONTENT  -->
         <div id="middle-content">
           <div id="middle-left-content">
+            <app-filter-bar />
+            <app-pagination [loadedCount]="0" />
+
             <div id="learning-materials" class="rounded shadow">
               <h2>Learning materials</h2>
               <a
@@ -857,11 +863,11 @@ import { CommonModule } from '@angular/common';
               Build, test and lint your app
             </summary>
             <pre><span># Build</span>
-nx build 
+nx build
 <span># Test</span>
-nx test 
+nx test
 <span># Lint</span>
-nx lint 
+nx lint
 <span># Run them together!</span>
 nx run-many -t build test lint</pre>
           </details>
@@ -945,6 +951,8 @@ nx g &#64;nx/angular:component ui/src/lib/button</pre>
           </svg>
         </p>
       </div>
+
+      <app-footer />
     </div>
   `,
   styles: [],

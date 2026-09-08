@@ -1,0 +1,77 @@
+.filter-bar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* ---------- pill buttons ---------- */
+
+.filter-pill {
+  --mat-button-text-container-shape: 9999px;
+  --mat-button-text-horizontal-padding: 1rem;
+  --mat-button-text-touch-target-display: none;
+  --mat-button-text-label-text-color: var(--pill-color);
+  --mat-button-text-state-layer-color: var(--pill-color);
+  --mat-button-text-hover-state-layer-opacity: 1;
+  --mat-button-text-focus-state-layer-opacity: 1;
+  --mat-button-text-pressed-state-layer-opacity: 1;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--pill-color) 40%, transparent);
+  background-color: color-mix(in srgb, var(--pill-color) 10%, transparent);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease;
+}
+
+.filter-pill:hover {
+  --mat-button-text-label-text-color: #ffffff;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.filter-pill-pink {
+  --pill-color: #ec4899;
+}
+
+.filter-pill-sky {
+  --pill-color: #0ea5e9;
+}
+
+.filter-pill-amber {
+  --pill-color: #f59e0b;
+}
+
+.filter-pill-red {
+  --pill-color: #ef4444;
+}
+
+.filter-pill-indigo {
+  --pill-color: #6366f1;
+}
+
+.filter-bar-dark .filter-pill-pink {
+  --pill-color: #f472b6;
+}
+
+.filter-bar-dark .filter-pill-sky {
+  --pill-color: #38bdf8;
+}
+
+.filter-bar-dark .filter-pill-amber {
+  --pill-color: #fbbf24;
+}
+
+.filter-bar-dark .filter-pill-red {
+  --pill-color: #f87171;
+}
+
+.filter-bar-dark .filter-pill-indigo {
+  --pill-color: #818cf8;
+}

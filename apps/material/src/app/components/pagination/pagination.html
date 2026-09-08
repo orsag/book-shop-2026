@@ -1,0 +1,68 @@
+<div class="pagination" [class.pagination-dark]="config.isDarkTheme()">
+  @if (loading.isLoading('products')) {
+    <div class="pagination-loading">
+      <mat-progress-spinner
+        diameter="28"
+        strokeWidth="3"
+        aria-label="Loading"
+      ></mat-progress-spinner>
+      <p class="pagination-loading-text">Fetching library...</p>
+    </div>
+  } @else {
+    <div class="pagination-controls">
+      <button
+        mat-icon-button
+        title="First Page"
+        data-testid="first-page"
+        (click)="store.setPage(1)"
+        [disabled]="store.filters().page <= 1"
+      >
+        <svg lucideChevronsLeft size="18"></svg>
+      </button>
+
+      <button
+        mat-icon-button
+        data-testid="prev-page"
+        (click)="store.setPage(store.filters().page - 1)"
+        [disabled]="store.filters().page <= 1"
+      >
+        <svg lucideChevronLeft size="18"></svg>
+      </button>
+
+      <div class="pagination-page">
+        <span class="pagination-label">Page</span>
+        <div class="pagination-current">
+          <span class="pagination-current-value">{{ store.filters().page }}</span>
+          <span class="pagination-slash">/</span>
+          <span class="pagination-total">{{ store.totalPages() }}</span>
+        </div>
+      </div>
+
+      <button
+        mat-icon-button
+        data-testid="next-page"
+        (click)="store.setPage(store.filters().page + 1)"
+        [disabled]="!store.hasMorePage()"
+      >
+        <svg lucideChevronRight size="18"></svg>
+      </button>
+
+      <button
+        mat-icon-button
+        title="Last Page"
+        data-testid="last-page"
+        (click)="store.setPage(store.totalPages())"
+        [disabled]="!store.hasMorePage()"
+      >
+        <svg lucideChevronsRight size="18"></svg>
+      </button>
+    </div>
+
+    <div class="pagination-summary" aria-hidden="true">
+      <span class="pagination-summary-dot"></span>
+      <span class="pagination-summary-text">
+        Showing {{ loadedCount() }} of {{ store.totalProducts() }} Items
+      </span>
+    </div>
+  }
+</div>

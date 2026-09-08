@@ -1,0 +1,41 @@
+<nav
+  class="filter-bar"
+  *transloco="let t"
+  [class.filter-bar-dark]="config.isDarkTheme()"
+>
+  <button
+    mat-button
+    class="filter-pill filter-pill-pink"
+    (click)="updateFilter('type', 'BOOK')"
+  >
+    Books
+  </button>
+
+  <button
+    mat-button
+    class="filter-pill filter-pill-sky"
+    (click)="updateFilter('type', 'GAME')"
+  >
+    Games
+  </button>
+
+  <a mat-button class="filter-pill filter-pill-amber" routerLink="/videos">
+    Videos
+  </a>
+
+  @if (userStore.isLoggedIn()) {
+    <a mat-button class="filter-pill filter-pill-red" routerLink="/profile">
+      {{ t('filters.bar.profile') }}
+    </a>
+  }
+
+  @if (userStore.isAdmin()) {
+    <a
+      mat-button
+      class="filter-pill filter-pill-indigo"
+      routerLink="/administration"
+    >
+      {{ t('filters.bar.admin') }}
+    </a>
+  }
+</nav>
