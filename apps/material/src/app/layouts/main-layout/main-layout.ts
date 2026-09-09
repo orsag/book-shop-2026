@@ -8,6 +8,7 @@ import {
 import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
 import { ProgressBarComponent } from '../../components/progress-bar/progress-bar';
+import { Filter } from '../../components/filter/filter';
 
 @Component({
   selector: 'app-main-layout',
@@ -19,6 +20,7 @@ import { ProgressBarComponent } from '../../components/progress-bar/progress-bar
     Navbar,
     Footer,
     ProgressBarComponent,
+    Filter,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',

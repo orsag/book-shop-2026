@@ -1,0 +1,198 @@
+.filter {
+  --filter-text: rgba(0, 0, 0, 0.87);
+  --filter-muted: rgba(0, 0, 0, 0.5);
+  --filter-hover: rgba(0, 0, 0, 0.06);
+  --filter-border: rgba(0, 0, 0, 0.12);
+  --filter-bg: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  color: var(--filter-text);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.filter::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.filter {
+  -ms-overflow-style: none;
+}
+
+.filter-dark {
+  --filter-text: rgba(255, 255, 255, 0.92);
+  --filter-muted: rgba(255, 255, 255, 0.55);
+  --filter-hover: rgba(255, 255, 255, 0.08);
+  --filter-border: rgba(255, 255, 255, 0.18);
+  --filter-bg: #27272a;
+}
+
+/* ---------- section headers ---------- */
+
+.filter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 1.25rem;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.filter-section-header h3,
+.filter-legend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--filter-muted);
+  margin: 0;
+}
+
+.filter-badge {
+  font-size: 0.625rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.125rem 0.375rem;
+  margin-left: 0.5rem;
+  background: var(--filter-hover);
+}
+
+.filter-clear-btn {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--filter-muted);
+  min-width: 0;
+  line-height: 1;
+  padding: 0.375rem 0.5rem;
+}
+
+.filter-clear-btn:hover {
+  color: var(--filter-text);
+}
+
+/* ---------- product type ---------- */
+
+.filter-type-group {
+  width: 100%;
+  display: flex;
+}
+
+.filter-type-group mat-button-toggle {
+  flex: 1 1 0;
+}
+
+/* ---------- search ---------- */
+
+.filter-search-wrap {
+  position: relative;
+}
+
+.filter-search {
+  width: 100%;
+}
+
+.filter-history {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% - 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--filter-bg);
+  border: 1px solid var(--filter-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.filter-history li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.filter-history li:hover,
+.filter-history-active {
+  background: var(--filter-hover);
+}
+
+.filter-history svg {
+  color: var(--filter-muted);
+}
+
+/* ---------- sort actions ---------- */
+
+.filter-sort-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.filter-sort-active {
+  --mat-icon-button-icon-color: #3f51b5;
+}
+
+/* ---------- categories ---------- */
+
+.filter-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.filter-legend {
+  padding: 0;
+}
+
+.filter-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.filter-categories {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-categories mat-radio-button {
+  margin: 0 0 0.125rem;
+}
+
+.filter-category-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ---------- submit ---------- */
+
+.filter-footer {
+  padding-top: 0.5rem;
+}
+
+.filter-submit {
+  --mat-button-filled-container-shape: 9999px;
+  width: 100%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}

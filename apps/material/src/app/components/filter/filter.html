@@ -1,0 +1,187 @@
+<div
+  *transloco="let t;"
+  data-testid="filter-component"
+  class="filter"
+  [class.filter-dark]="config.isDarkTheme()"
+>
+  @if (isContentVisible()) {
+
+    @if (store.isMobile()) {
+      <section>
+        <div class="filter-section-header">
+          <h3>{{ t('filters.sections.type') }}</h3>
+        </div>
+        <mat-button-toggle-group
+          class="filter-type-group"
+          (change)="updateFilter('type', $event.value)"
+          [value]="filters().type"
+        >
+          <mat-button-toggle value="BOOK">Books</mat-button-toggle>
+          <mat-button-toggle value="GAME">Games</mat-button-toggle>
+          <mat-button-toggle value="GASTRO">Gastro</mat-button-toggle>
+        </mat-button-toggle-group>
+      </section>
+    }
+
+    <section>
+      <div class="filter-section-header">
+        <h3>{{ t('filters.sections.search') }}</h3>
+        <button
+          mat-button
+          type="button"
+          class="filter-clear-btn"
+          (click)="updateFilter('search', '')"
+        >
+          {{ t('filters.actions.clear') }}
+        </button>
+      </div>
+
+      <div class="filter-search-wrap">
+        <mat-form-field appearance="fill" class="filter-search">
+<!--          <svg matPrefix lucideSearch size="18"></svg>-->
+          <input
+            matInput
+            type="text"
+            role="combobox"
+            aria-autocomplete="list"
+            maxlength="256"
+            placeholder="Search product"
+            [attr.aria-expanded]="showHistory() && store.searchHistory().length > 0"
+            aria-controls="search-history-list"
+            [value]="filters().search"
+            (input)="updateFilter('search', $any($event.target).value)"
+            (focus)="showHistory.set(true)"
+            (blur)="showHistory.set(false)"
+            (keydown)="onKeyDown($event)"
+          />
+          <mat-hint align="start"><strong>Test</strong> </mat-hint>
+          <mat-hint align="end">{{filters().search.length}} / 256</mat-hint>
+        </mat-form-field>
+
+        @if (showHistory() && store.searchHistory().length > 0) {
+          <ul
+            class="filter-history"
+            role="listbox"
+            id="search-history-list"
+          >
+            @for (item of store.searchHistory(); track item; let i = $index) {
+              <li
+                role="option"
+                [attr.aria-selected]="i === activeIndex()"
+                [class.filter-history-active]="i === activeIndex()"
+                (mousedown)="selectHistory(item)"
+              >
+                <svg lucideSearch size="14"></svg>
+                {{ item }}
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+
+    <section>
+      <div class="filter-section-header">
+        <h3>{{ t('filters.sections.sort') }}</h3>
+        <button
+          mat-button
+          type="button"
+          (click)="store.toggleSort(null)"
+          class="filter-clear-btn"
+        >
+          {{ t('filters.actions.clear') }}
+        </button>
+      </div>
+
+      <!-- Kept layout static and uniform since it only exists while fully open -->
+      <div class="filter-sort-actions">
+        <button
+          mat-icon-button
+          data-testid="layout-btn"
+          aria-label="Toggle view layout"
+          [class.filter-sort-active]="store.viewLayout() === VIEW_LAYOUTS[1]"
+          (click)="store.setViewLayout(store.viewLayout() === VIEW_LAYOUTS[0] ? VIEW_LAYOUTS[1] : VIEW_LAYOUTS[0])"
+        >
+          @if (store.viewLayout() === VIEW_LAYOUTS[1]) {
+            <svg lucideGrid3x3 size="20"></svg>
+          } @else {
+            <svg lucideList size="20"></svg>
+          }
+        </button>
+
+        <button
+          mat-icon-button
+          data-testid="price-btn"
+          aria-label="Sort by price"
+          [class.filter-sort-active]="store.filters().sortBy?.startsWith('price')"
+          (click)="store.toggleSort('price')"
+        >
+          @if (store.filters().sortBy === 'price_desc') {
+            <svg lucideArrowDownNarrowWide size="20"></svg>
+          } @else {
+            <svg lucideArrowUpWideNarrow size="20"></svg>
+          }
+        </button>
+
+        <button
+          mat-icon-button
+          data-testid="discount-btn"
+          aria-label="Filter discounted items"
+          [class.filter-sort-active]="filters().isDiscounted"
+          (click)="updateFilter('isDiscounted', !filters().isDiscounted)"
+        >
+          <svg lucidePercent size="20"></svg>
+        </button>
+      </div>
+    </section>
+
+    @if (store.isBook()) {
+      <section>
+        <fieldset class="filter-fieldset">
+          <div class="filter-section-header">
+            <legend class="filter-legend">
+              {{ t('filters.sections.categories') }}
+              <span class="filter-badge" aria-hidden="true">
+                {{ store.products().length }} / {{ store.totalProducts() }}
+              </span>
+            </legend>
+            <button
+              mat-button
+              type="button"
+              class="filter-clear-btn"
+              (click)="updateFilter('category', null)"
+            >
+              {{ t('filters.actions.clear') }}
+            </button>
+          </div>
+
+          <!-- Screen reader announcement for product count -->
+          <span class="filter-sr-only">
+            Showing {{ store.products().length }} of {{ store.totalProducts() }}
+            products
+          </span>
+
+          <mat-radio-group
+            class="filter-categories"
+            (change)="updateFilter('category', $event.value)"
+          >
+            @for (cat of bookCategories; track cat) {
+              <mat-radio-button
+                [value]="cat"
+                [checked]="filters().category === cat"
+              >
+                <span class="filter-category-label">{{ cat }}</span>
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        </fieldset>
+      </section>
+    }
+
+    <div class="filter-footer" role="region" aria-label="Filter actions">
+      <button mat-flat-button color="primary" class="filter-submit" (click)="onSubmit()">
+        {{ t('filters.actions.submit') }}
+      </button>
+    </div>
+  }
+</div>
