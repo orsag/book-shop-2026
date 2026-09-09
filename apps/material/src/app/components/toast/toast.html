@@ -1,0 +1,43 @@
+@if (toastService.toasts().length > 0) {
+  <div data-testid="toast" class="toast">
+    @for (toast of toastService.toasts(); track toast.id) {
+      <mat-card
+        data-testid="toast-item"
+        role="alert"
+        appearance="outlined"
+        class="toast-card"
+      >
+        <div class="toast-icon" [ngClass]="typeCircleClasses[toast.type]">
+          <div
+            class="toast-progress"
+            [style.--value]="remaining(toast)"
+            aria-hidden="true"
+          ></div>
+          @switch (toast.type) {
+            @case ('success') {
+              <svg lucideCircleCheck class="toast-badge-icon"></svg>
+            }
+            @case ('warning') {
+              <svg lucideTriangleAlert class="toast-badge-icon"></svg>
+            }
+            @case ('danger') {
+              <svg lucideCircleX class="toast-badge-icon"></svg>
+            }
+            @default {
+              <svg lucideInfo class="toast-badge-icon"></svg>
+            }
+          }
+        </div>
+        <p class="toast-text">{{ toast.text }}</p>
+        <button
+          mat-icon-button
+          class="toast-close btn-with-icon"
+          (click)="toastService.dismiss(toast.id)"
+          aria-label="Close notification"
+        >
+          <svg lucideX></svg>
+        </button>
+      </mat-card>
+    }
+  </div>
+}

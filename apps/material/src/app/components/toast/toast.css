@@ -1,0 +1,107 @@
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(100% - 2rem, 24rem);
+}
+
+.toast-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--mat-sys-level3, 0 10px 20px rgba(0, 0, 0, 0.2));
+  animation: toast-in 0.5s ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.toast-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+}
+
+.toast-progress {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: conic-gradient(
+    currentColor calc(var(--value) * 1%),
+    color-mix(in srgb, currentColor 20%, transparent) 0
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3px),
+    #000 calc(100% - 2px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3px),
+    #000 calc(100% - 2px)
+  );
+}
+
+.toast-badge-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.toast-type-simple {
+  color: #2563eb;
+  background: color-mix(in srgb, #2563eb 12%, transparent);
+}
+
+.toast-type-success {
+  color: #059669;
+  background: color-mix(in srgb, #059669 12%, transparent);
+}
+
+.toast-type-warning {
+  color: #d97706;
+  background: color-mix(in srgb, #d97706 12%, transparent);
+}
+
+.toast-type-danger {
+  color: #dc2626;
+  background: color-mix(in srgb, #dc2626 12%, transparent);
+}
+
+.toast-text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface, rgba(17, 24, 39, 0.87));
+  text-align: left;
+  white-space: pre-line;
+}
+
+.toast-close {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+}

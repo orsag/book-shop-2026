@@ -9,6 +9,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
 import { ProgressBarComponent } from '../../components/progress-bar/progress-bar';
 import { Filter } from '../../components/filter/filter';
+import { Toast } from '../../components/toast/toast';
 
 @Component({
   selector: 'app-main-layout',
@@ -21,6 +22,7 @@ import { Filter } from '../../components/filter/filter';
     Footer,
     ProgressBarComponent,
     Filter,
+    Toast,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
