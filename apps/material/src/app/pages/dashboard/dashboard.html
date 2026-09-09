@@ -1,0 +1,52 @@
+<main class="dashboard" [class.dashboard-dark]="config.isDarkTheme()">
+  <app-filter-bar></app-filter-bar>
+
+  <!-- Main Loading Spinner: Only shows on initial load or fresh searches -->
+  @if (loading.isLoading('products') && isProductsEmpty()) {
+    <div class="dashboard-loading">
+      <mat-progress-spinner diameter="40" strokeWidth="3" aria-label="Loading"></mat-progress-spinner>
+    </div>
+  } @else if (isProductsEmpty()) {
+    <div class="dashboard-empty">
+      <div class="dashboard-empty-icon">
+        <svg lucideSearchX size="48" strokeWidth="1.5"></svg>
+      </div>
+      <h3>Nothing found in our shop</h3>
+      <p>
+        We couldn't find any products matching your current filters. Try
+        adjusting your search or category selection.
+      </p>
+    </div>
+  } @else {
+    <!-- Always render the LIST layout -->
+    <div
+      class="dashboard-list"
+      data-testid="main-layout-list"
+      [class.dashboard-list-filter-open]="isOpenedFilter()"
+    >
+      @for (book of accumulatedProducts$ | async; track book.id) {
+        <app-product-item [product]="book"></app-product-item>
+      }
+    </div>
+
+    @if (loading.isLoading('products')) {
+      <div class="dashboard-loading-products">
+        <h3>Načítavanie produktov...</h3>
+      </div>
+    } @else if (store.hasMorePage()) {
+      <div class="dashboard-pagination">
+        <app-pagination [loadedCount]="productsCount()" />
+        <button
+          mat-flat-button
+          color="primary"
+          class="dashboard-load-more"
+          data-testid="load-more"
+          (click)="store.loadMore()"
+        >
+          <svg lucideChevronDown size="18"></svg>
+          <span>Load More</span>
+        </button>
+      </div>
+    }
+  }
+</main>

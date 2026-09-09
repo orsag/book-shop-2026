@@ -6,6 +6,7 @@ import {
   MatSidenavContent,
 } from '@angular/material/sidenav';
 import { Navbar } from '../../components/navbar/navbar';
+import { Footer } from '../../components/footer/footer';
 
 @Component({
   selector: 'app-main-layout',
@@ -15,6 +16,7 @@ import { Navbar } from '../../components/navbar/navbar';
     MatSidenav,
     MatSidenavContent,
     Navbar,
+    Footer,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',

@@ -9,7 +9,6 @@ import {
 import { LoadingService } from '@core';
 import { ConfigurationService } from '@service';
 import { MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
@@ -20,7 +19,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     LucideChevronRight,
     LucideChevronsRight,
     MatIconButton,
-    MatTooltip,
     MatProgressSpinner,
   ],
   templateUrl: './pagination.html',

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable, combineLatest } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 
 /**
  * Describes a single page request. `append` is `true` when the request
@@ -67,6 +67,14 @@ export class PaginationAccumulatorService {
     const value$ = toObservable(stableResource.value);
     const request$ = toObservable(requestSignal);
     const status$ = toObservable(stableResource.status);
+
+    // value$
+    //   .pipe(
+    //     filter((val) => val !== undefined), // Wait until data is loaded
+    //   )
+    //   .subscribe((val) => {
+    //     console.log('Loaded value:', val);
+    //   });
 
     return combineLatest([value$, request$, status$]).pipe(
       map(([value, request, status]) => {

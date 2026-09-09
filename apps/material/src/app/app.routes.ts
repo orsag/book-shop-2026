@@ -13,8 +13,18 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./nx-welcome').then((m) => m.NxWelcome),
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard').then((m) => m.Dashboard),
       },
+      {
+        path: 'home',
+        redirectTo: '',
+        pathMatch: 'full',
+      },
+      // {
+      //   path: '',
+      //   loadComponent: () => import('./nx-welcome').then((m) => m.NxWelcome),
+      // },
       {
         path: '**',
         ...pageNotFoundRoute,
