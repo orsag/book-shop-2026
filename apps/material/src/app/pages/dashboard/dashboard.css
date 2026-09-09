@@ -110,25 +110,3 @@
   gap: 1.5rem;
   margin: 3rem 0;
 }
-
-.dashboard-load-more {
-  --mat-button-filled-container-shape: 9999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.dashboard-load-more span {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 900;
-  font-size: 0.75rem;
-}
-
-.dashboard-load-more svg {
-  transition: transform 0.3s ease;
-}
-
-.dashboard-load-more:hover svg {
-  transform: translateY(2px);
-}

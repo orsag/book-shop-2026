@@ -1,0 +1,30 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+// The Material theme sets these tokens on the element itself, so the mixin
+// must target <mat-progress-bar> directly - inherited values would lose.
+.progress-bar mat-progress-bar {
+  @include mat.progress-bar-overrides((
+    active-indicator-color: orange,
+    active-indicator-height: 8px,
+    track-height: 8px,
+  ));
+}
+
+.progress-bar-hidden {
+  opacity: 0;
+}

@@ -7,6 +7,7 @@ import {
 } from '@angular/material/sidenav';
 import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
+import { ProgressBarComponent } from '../../components/progress-bar/progress-bar';
 
 @Component({
   selector: 'app-main-layout',
@@ -17,6 +18,7 @@ import { Footer } from '../../components/footer/footer';
     MatSidenavContent,
     Navbar,
     Footer,
+    ProgressBarComponent,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',

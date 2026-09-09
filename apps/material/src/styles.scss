@@ -1,0 +1,70 @@
+@import '../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #fafafa;
+}
+
+/* Global utility class for buttons with leading icons */
+.btn-with-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px; // Controls spacing between the icon and text
+
+    /* Ensures the SVG scales properly and doesn't collapse */
+  svg, mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.dashboard-load-more {
+  --mat-button-filled-container-shape: 9999px;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem;
+
+  .mdc-button__label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  span {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 900;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+}
+
+.dashboard-load-more:hover svg {
+  transform: translateY(2px);
+}

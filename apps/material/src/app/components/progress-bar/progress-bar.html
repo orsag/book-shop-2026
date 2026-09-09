@@ -1,0 +1,10 @@
+<div
+  class="progress-bar"
+  [class.progress-bar-hidden]="!isVisible()"
+  [attr.aria-hidden]="!isVisible()"
+>
+  <mat-progress-bar
+    mode="indeterminate"
+    aria-label="Loading"
+  ></mat-progress-bar>
+</div>

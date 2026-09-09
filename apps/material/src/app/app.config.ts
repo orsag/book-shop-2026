@@ -6,14 +6,19 @@ import {
   inject,
   LOCALE_ID,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideRouter, withViewTransitions } from '@angular/router';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localeSk from '@angular/common/locales/sk';
 import { provideTransloco } from '@jsverse/transloco';
 import { appRoutes } from './app.routes';
 import {
-  ConsoleLogger,
+  authInterceptor,
+  ConsoleLogger, loadingInterceptor,
   LOGGER,
   NoopLogger,
   TranslationsHttpLoader,
@@ -29,8 +34,11 @@ registerLocaleData(localeSk, 'sk-SK');
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes),
-    provideHttpClient(),
+    provideRouter(appRoutes, withViewTransitions()),
+    provideHttpClient(
+      withInterceptors([loadingInterceptor, authInterceptor]),
+      withInterceptorsFromDi(),
+    ),
     provideTransloco({
       config: {
         availableLangs: ['en', 'sk'],

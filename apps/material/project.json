@@ -25,7 +25,7 @@
             "output": "assets/i18n"
           }
         ],
-        "styles": ["apps/material/src/styles.css"]
+        "styles": ["apps/material/src/styles.scss"]
       },
       "configurations": {
         "production": {
