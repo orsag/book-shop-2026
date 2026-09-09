@@ -38,6 +38,16 @@ export const appRoutes: Route[] = [
           import('./pages/detail/detail').then((m) => m.Detail),
       },
       {
+        path: 'shopping',
+        loadComponent: () =>
+          import('./pages/shopping/shopping').then((m) => m.Shopping),
+      },
+      // {
+      //   path: 'success/:id',
+      //   loadComponent: () =>
+      //     import('./pages/success/success').then((m) => m.Success),
+      // },
+      {
         path: '**',
         ...pageNotFoundRoute,
       },

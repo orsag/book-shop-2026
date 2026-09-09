@@ -1,0 +1,137 @@
+<div class="shopping" [class.shopping-dark]="config.isDarkTheme()">
+  <section class="shopping-list">
+    <mat-card class="shopping-card">
+      <mat-card-content>
+        <div class="shopping-header">
+          <h2 class="shopping-title">Tvoj košík</h2>
+          @if (cartStore.items().length > 0) {
+            <button
+              mat-stroked-button
+              color="warn"
+              title="clear-btn"
+              (click)="handleClearCart()"
+            >
+              Vyprázdniť košík
+            </button>
+          }
+        </div>
+
+        @if (cartStore.items().length === 0) {
+          <div class="shopping-empty">
+            <div class="shopping-empty-icon">🛒</div>
+            <p class="shopping-empty-text">Empty cart</p>
+            <a mat-flat-button color="primary" routerLink="/">
+              Späť k nákupu
+            </a>
+          </div>
+        } @else {
+          <div class="shopping-items">
+            @for (item of items(); track item.product.id) {
+              <div class="shopping-row">
+                <div class="shopping-row-main">
+                  <a
+                    [routerLink]="['/product', item.product.id]"
+                    class="shopping-name"
+                  >
+                    {{ item.product.name }}
+                  </a>
+
+                  <div class="shopping-price-row">
+                    <p class="shopping-price">
+                      {{
+                        (item.product.price * (1 - item.product.discount))
+                          | currency: 'EUR'
+                      }}
+                    </p>
+                    @if (item.product.discount > 0) {
+                      <p class="shopping-price-old">
+                        {{ item.product.price | currency: 'EUR' }}
+                      </p>
+                    }
+                  </div>
+
+                  <p class="shopping-stock">
+                    {{ item.product.availableCount }} na sklade
+                  </p>
+                </div>
+
+                <div class="shopping-actions">
+                  <div class="shopping-qty">
+                    <button
+                      mat-stroked-button
+                      title="minus-btn"
+                      (click)="handleUpdateMinus(item)"
+                    >
+                      −
+                    </button>
+                    <span class="shopping-qty-count">{{ item.quantity }}</span>
+                    <button
+                      mat-stroked-button
+                      title="plus-btn"
+                      [disabled]="item.quantity >= item.product.availableCount"
+                      (click)="handleUpdatePlus(item)"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    title="remove-btn"
+                    (click)="handleRemoveItem(item)"
+                  >
+                    <svg lucideTrash2></svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <mat-divider class="shopping-divider"></mat-divider>
+
+          <div class="shopping-totals">
+            @if (cartStore.totalSavings() > 0) {
+              <div class="shopping-total-row shopping-total-savings">
+                <span>Ušetríte:</span>
+                <span>
+                  -{{ cartStore.totalSavings() | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+                </span>
+              </div>
+            }
+
+            <div class="shopping-total-row">
+              <span class="shopping-total-label">Cena</span>
+              <span class="shopping-total-value">
+                {{ cartStore.subtotal() | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+              </span>
+            </div>
+
+            <div class="shopping-total-row">
+              <span class="shopping-total-label">VAT (5%)</span>
+              <span class="shopping-total-value">
+                {{ cartStore.tax() | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+              </span>
+            </div>
+
+            <div class="shopping-total-row shopping-total-grand">
+              <span>Spolu</span>
+              <span>
+                {{ cartStore.grandTotal() | currency: 'EUR' : 'symbol' : '1.2-2' : 'sk-SK' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="shopping-checkout-row">
+            <a mat-stroked-button color="primary" routerLink="/">
+              Pokračovať v nákupe
+            </a>
+            <button mat-flat-button color="primary" (click)="handleCheckout()">
+              Objednať &amp; Zaplatiť
+            </button>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+</div>

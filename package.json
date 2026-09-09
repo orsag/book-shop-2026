@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.28",
+  "version": "3.29",
   "license": "MIT",
   "workspaces": [
     "apps/*"
