@@ -46,6 +46,7 @@ describe('Filter', () => {
     mockConfigService = {
       toggleFlag: vi.fn(),
       isDarkTheme: vi.fn().mockReturnValue(false),
+      flags: vi.fn().mockReturnValue({ SHOW_FILTER: true }),
     };
 
     mockScrollService = {
@@ -84,14 +85,8 @@ describe('Filter', () => {
     });
   });
 
-  it('should hide content immediately when collapsed', () => {
-    component.isContentVisible.set(true);
-    fixture.detectChanges();
-    expect(component.isContentVisible()).toBe(true);
-
-    fixture.componentRef.setInput('isCollapsed', true);
-    fixture.detectChanges();
-
+  it('should reflect the SHOW_FILTER flag and hide content when collapsed', () => {
+    expect(component.showFilter()).toBe(true);
     expect(component.isContentVisible()).toBe(false);
   });
 

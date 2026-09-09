@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { SimpleLayoutComponent } from './simple-layout';
 import { Navbar } from '../../components/navbar/navbar';
+import { Footer } from '../../components/footer/footer';
 import { MockComponent } from 'ng-mocks';
 
 describe('SimpleLayout', () => {
@@ -10,8 +11,10 @@ describe('SimpleLayout', () => {
 
   beforeEach(async () => {
     TestBed.overrideComponent(SimpleLayoutComponent, {
-      remove: { imports: [Navbar] },
-      add: { imports: [MockComponent(Navbar)] },
+      remove: { imports: [Navbar, Footer] },
+      add: {
+        imports: [MockComponent(Navbar), MockComponent(Footer)],
+      },
     });
 
     await TestBed.configureTestingModule({

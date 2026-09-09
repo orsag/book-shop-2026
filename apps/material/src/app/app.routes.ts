@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
+import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 
 const pageNotFoundRoute: Route = {
   loadComponent: () =>
@@ -25,6 +26,17 @@ export const appRoutes: Route[] = [
       //   path: '',
       //   loadComponent: () => import('./nx-welcome').then((m) => m.NxWelcome),
       // },
+    ],
+  },
+  {
+    path: '',
+    component: SimpleLayoutComponent,
+    children: [
+      {
+        path: 'product/:id',
+        loadComponent: () =>
+          import('./pages/detail/detail').then((m) => m.Detail),
+      },
       {
         path: '**',
         ...pageNotFoundRoute,

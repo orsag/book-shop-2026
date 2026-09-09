@@ -11,6 +11,7 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
 
 interface FooterItem {
   translationKey: string;
@@ -28,6 +29,7 @@ interface FooterItem {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
+    MatButton,
   ],
   templateUrl: './footer.html',
   styleUrl: './footer.css',

@@ -1,0 +1,164 @@
+<div
+  *transloco="let t;"
+  class="detail"
+  [class.detail-dark]="config.isDarkTheme()"
+>
+  @if (book() === null) {
+    <div class="detail-empty">
+      <div class="detail-empty-icon">
+        <svg lucideSearchX size="48" strokeWidth="1.5"></svg>
+      </div>
+      <h1 class="detail-empty-title">Not found products</h1>
+    </div>
+  } @else if (book(); as data) {
+    <div class="detail-hero">
+      <div class="detail-cover">
+        <div
+          class="detail-cover-inner"
+          (mouseenter)="isHovered.set(true)"
+          (mouseleave)="isHovered.set(false)"
+        >
+          <img
+            [src]="data.coverUrl || 'images/placeholder.webp'"
+            [alt]="data.name"
+            class="detail-cover-img"
+          />
+        </div>
+      </div>
+
+      <div class="detail-info">
+        <div>
+          <span class="detail-badge">{{ ux.category(data) }}</span>
+          <h1 class="detail-title">{{ data.name }}</h1>
+          <p class="detail-author">od {{ ux.author(data) }}</p>
+        </div>
+
+        <p class="detail-description">
+          {{ data.description || 'Popis k tejto knihe momentálne nie je k dispozícii.' }}
+        </p>
+
+        <div class="detail-price-card">
+          <div>
+            <p class="detail-price">{{ data | singlePrice | currency: 'EUR' }}</p>
+            <p class="detail-price-label">Cena s DPH</p>
+          </div>
+
+          <div class="detail-buttons">
+            <button
+              mat-flat-button
+              [color]="ux.isInCart(data) ? 'warn' : 'primary'"
+              [disabled]="!data.isAvailable"
+              (click)="handleCartAction()"
+            >
+              {{
+                ux.isInCart(data) ? t('cart.remove_from_cart') : t('cart.add_to_cart')
+              }}
+            </button>
+            @if (ux.isInCart(data)) {
+              <a mat-stroked-button color="primary" routerLink="/">
+                Späť na zoznam
+              </a>
+              <a mat-stroked-button color="primary" routerLink="/shopping">
+                Košík
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (data.bookDetails) {
+      <div class="detail-details">
+        <div class="detail-card detail-card-publisher">
+          <div class="detail-card-body">
+            <span class="detail-card-label">Vydavateľstvo</span>
+            <span class="detail-card-value">{{ data.bookDetails.publisher }}</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-icon detail-icon-secondary">
+            <svg lucideBookOpenText size="24" strokeWidth="2"></svg>
+          </div>
+          <div class="detail-card-body">
+            <span class="detail-card-label">Rozsah</span>
+            <span class="detail-card-value">{{ data.bookDetails.pageCount }} strán</span>
+            <span class="detail-card-sub detail-text-secondary">
+              ~ {{ ux.readingHours(data) }}h čítania
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-icon detail-icon-accent">
+            <svg lucideCalendarDays size="24" strokeWidth="2"></svg>
+          </div>
+          <div class="detail-card-body">
+            <span class="detail-card-label">Rok vydania</span>
+            <span class="detail-card-value">{{ data.bookDetails.publishedDate | date: 'yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="detail-card" [class.detail-card-audio]="data.bookDetails.audioBook">
+          <div
+            class="detail-card-icon"
+            [class.detail-icon-success]="data.bookDetails.audioBook"
+            [class.detail-icon-muted]="!data.bookDetails.audioBook"
+          >
+            <svg lucideHeadphones size="24" strokeWidth="2"></svg>
+            @if (data.bookDetails.audioBook) {
+              <span class="detail-live">
+                <span class="detail-live-ping"></span>
+                <span class="detail-live-core"></span>
+              </span>
+            }
+          </div>
+          <div class="detail-card-body">
+            <span class="detail-card-label">Formát Audio</span>
+            <span
+              class="detail-card-value detail-card-uppercase"
+              [class.detail-text-success]="data.bookDetails.audioBook"
+              [class.detail-text-muted]="!data.bookDetails.audioBook"
+            >
+              {{ data.bookDetails.audioBook ? 'Dostupná nahrávka' : 'Iba tlačená verzia' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-icon detail-icon-primary">
+            <svg lucideClock size="24" strokeWidth="2"></svg>
+          </div>
+          <div class="detail-card-body">
+            <span class="detail-card-label">Dĺžka počúvania</span>
+            <span class="detail-card-value">
+              @if (data.bookDetails.audioBook && data.bookDetails.audioLength) {
+                {{ data.bookDetails.audioLength }}
+                <span class="detail-card-unit">min</span>
+              } @else {
+                —
+              }
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-icon detail-icon-info">
+            <svg lucideLanguages size="24" strokeWidth="2"></svg>
+          </div>
+          <div class="detail-card-body">
+            <span class="detail-card-label">Jazyk hovoreného slova</span>
+            <span class="detail-card-value detail-card-uppercase">
+              {{ data.bookDetails.audioBook ? data.bookDetails.audioLanguage : '—' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="detail-loading">
+      <mat-progress-spinner diameter="48" strokeWidth="4"></mat-progress-spinner>
+      <p>Načítavam detaily knihy...</p>
+    </div>
+  }
+</div>

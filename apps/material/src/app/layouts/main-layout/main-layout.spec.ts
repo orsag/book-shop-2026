@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { MainLayoutComponent } from './main-layout';
 import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
+import { Filter } from '../../components/filter/filter';
 import { MockComponent } from 'ng-mocks';
 
 describe('MainLayout', () => {
@@ -11,8 +12,14 @@ describe('MainLayout', () => {
 
   beforeEach(async () => {
     TestBed.overrideComponent(MainLayoutComponent, {
-      remove: { imports: [Navbar, Footer] },
-      add: { imports: [MockComponent(Navbar), MockComponent(Footer)] },
+      remove: { imports: [Navbar, Footer, Filter] },
+      add: {
+        imports: [
+          MockComponent(Navbar),
+          MockComponent(Footer),
+          MockComponent(Filter),
+        ],
+      },
     });
 
     await TestBed.configureTestingModule({
