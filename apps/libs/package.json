@@ -16,6 +16,8 @@
     "@jsverse/transloco": "^8.4.0",
     "@ngrx/signals": "^22.0.0",
     "@ngrx/operators": "^22.0.0",
+    "@ngrx/store": "^22.0.0",
+    "@ngrx/effects": "^22.0.0",
     "@angular/compiler": "~22.1.2",
     "@analogjs/vitest-angular": "~2.6.0",
     "vite": "^8.2.2",

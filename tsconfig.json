@@ -28,6 +28,7 @@
       "@service": ["./apps/libs/src/fe/services"],
       "@component": ["./apps/frontend/src/app/components"],
       "@store": ["./apps/libs/src/fe/store"],
+      "@ngrx": ["./apps/libs/src/fe/ngrx"],
       "@env": ["./apps/frontend/src/environments"],
       "@api": ["./apps/libs/src/api-interfaces/generated/models"]
     }

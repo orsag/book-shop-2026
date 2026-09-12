@@ -14,6 +14,7 @@ export default [
             '@core',
             '@service',
             '@store',
+            '@ngrx',
             '@store/libs',
             '@store/shared-models',
             '@book-store-2026/libs',

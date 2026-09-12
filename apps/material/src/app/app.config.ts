@@ -27,6 +27,19 @@ import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { StopEventPlugin } from './plugins/stop-event.plugin';
 import { InitializationService } from '@service';
+import { provideStore, provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import {
+  appFeatureKey,
+  appReducer,
+  cartFeatureKey,
+  cartReducer,
+  userFeatureKey,
+  userReducer,
+  AppEffects,
+  CartEffects,
+  UserEffects,
+} from '@ngrx';
 
 // Register locale data globally before configuration initialization
 registerLocaleData(localeSk, 'sk-SK');
@@ -35,6 +48,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes, withViewTransitions()),
+    provideStore(),
+    provideState(appFeatureKey, appReducer),
+    provideState(cartFeatureKey, cartReducer),
+    provideState(userFeatureKey, userReducer),
+    provideEffects(AppEffects, CartEffects, UserEffects),
     provideHttpClient(
       withInterceptors([loadingInterceptor, authInterceptor]),
       withInterceptorsFromDi(),
