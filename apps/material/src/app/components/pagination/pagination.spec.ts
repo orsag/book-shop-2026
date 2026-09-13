@@ -1,8 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pagination } from './pagination';
-import { AppStore } from '@store';
 import { ConfigurationService } from '@service';
-import { computed, signal } from '@angular/core';
+import { signal } from '@angular/core';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import {
+  selectAppFilters,
+  selectHasMorePage,
+  selectTotalPages,
+  selectTotalProducts,
+} from '@ngrx';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -13,29 +19,21 @@ import { vi } from 'vitest';
 
 describe('Pagination', () => {
   let component: Pagination;
-  let mockAppStore: any;
   let mockConfigService: any;
+  let mockStore: MockStore;
   let fixture: ComponentFixture<Pagination>;
 
+  const defaultFilters = {
+    type: DEFAULT_TYPE,
+    page: DEFAULT_PAGE,
+    limit: DEFAULT_MAX_LIMIT,
+    search: DEFAULT_SEARCH,
+    category: null,
+    sortBy: null,
+    isDiscounted: false,
+  };
+
   beforeEach(async () => {
-    mockAppStore = {
-      filters: signal({
-        type: DEFAULT_TYPE,
-        page: DEFAULT_PAGE,
-        limit: DEFAULT_MAX_LIMIT,
-        search: DEFAULT_SEARCH,
-        category: null,
-        sortBy: null,
-        isDiscounted: false,
-      }),
-      products: signal([]),
-      totalProducts: computed(() => 12),
-      loadMore: vi.fn(),
-      isLoading: signal(false),
-      hasMorePage: computed(() => true),
-      totalPages: computed(() => 1),
-      setPage: vi.fn(),
-    };
     mockConfigService = {
       theme: signal('light'),
       isDarkTheme: vi.fn().mockReturnValue(false),
@@ -44,11 +42,19 @@ describe('Pagination', () => {
     await TestBed.configureTestingModule({
       imports: [Pagination],
       providers: [
-        { provide: AppStore, useValue: mockAppStore },
+        provideMockStore({
+          selectors: [
+            { selector: selectAppFilters, value: defaultFilters },
+            { selector: selectTotalProducts, value: 12 },
+            { selector: selectTotalPages, value: 1 },
+            { selector: selectHasMorePage, value: true },
+          ],
+        }),
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();
 
+    mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(Pagination);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -59,17 +65,15 @@ describe('Pagination', () => {
   });
 
   it('should correctly render pagination elements when there are multiple pages', async () => {
-    // 1. Arrange: Update mockAppStore signals to simulate a higher page setup
-    mockAppStore.products = signal(Array(24).fill({ id: 1 })); // Mocking 12 loaded products
-    mockAppStore.totalProducts = computed(() => 36); // 36 total items
-    mockAppStore.totalPages = computed(() => 3); // 3 total pages
-    mockAppStore.hasMorePage = computed(() => true); // There are more pages remaining
-
-    // Set the current active page to page 2 (so previous and next buttons are both active)
-    mockAppStore.filters.set({
-      ...mockAppStore.filters(),
+    // 1. Arrange: Override selectors to simulate a higher page setup
+    mockStore.overrideSelector(selectAppFilters, {
+      ...defaultFilters,
       page: 2,
     });
+    mockStore.overrideSelector(selectTotalPages, 3);
+    mockStore.overrideSelector(selectTotalProducts, 36);
+    mockStore.overrideSelector(selectHasMorePage, true);
+    mockStore.refreshState();
 
     // Simulate 24 items accumulated on screen (infinite scroll / Load More)
     fixture.componentRef.setInput('loadedCount', 24);

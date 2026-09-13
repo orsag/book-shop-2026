@@ -9,10 +9,22 @@ import {
 } from '@angular/core';
 import { debounced } from '@angular/core';
 import { ConfigurationService, ScrollService } from '@service';
-import { AppStore } from '@store';
-import { BookFilters, CATEGORIES, VIEW_LAYOUTS } from '@store/libs';
+import { BookFilters, CATEGORIES, VIEW_LAYOUTS, ViewLayout } from '@store/libs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import {
+  AppActions,
+  AppStateRoot,
+  Filters,
+  selectAppFilters,
+  selectIsBook,
+  selectIsMobile,
+  selectProducts,
+  selectSearchHistory,
+  selectTotalProducts,
+  selectViewLayout,
+} from '@ngrx';
 import {
   LucideArrowDownNarrowWide,
   LucideArrowUpWideNarrow,
@@ -26,11 +38,7 @@ import {
   MatButtonToggle,
   MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
-import {
-  MatFormField, MatHint,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
+import { MatFormField, MatHint, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 
@@ -59,11 +67,29 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
   styleUrl: './filter.css',
 })
 export class Filter {
-  store = inject(AppStore);
   router = inject(Router);
   config = inject(ConfigurationService);
   scroller = inject(ScrollService);
+  private readonly appStore = inject(Store<AppStateRoot>);
   bookCategories = CATEGORIES;
+
+  readonly store = {
+    filters: this.appStore.selectSignal(selectAppFilters),
+    isMobile: this.appStore.selectSignal(selectIsMobile),
+    isBook: this.appStore.selectSignal(selectIsBook),
+    viewLayout: this.appStore.selectSignal(selectViewLayout),
+    searchHistory: this.appStore.selectSignal(selectSearchHistory),
+    products: this.appStore.selectSignal(selectProducts),
+    totalProducts: this.appStore.selectSignal(selectTotalProducts),
+    updateFilters: (partial: Partial<Filters>) =>
+      this.appStore.dispatch(AppActions.updateFilters({ partial })),
+    addToHistory: (searchTerm: string) =>
+      this.appStore.dispatch(AppActions.addToHistory({ searchTerm })),
+    setViewLayout: (layout: ViewLayout) =>
+      this.appStore.dispatch(AppActions.setViewLayout({ layout })),
+    toggleSort: (sortType: 'price' | null) =>
+      this.appStore.dispatch(AppActions.toggleSort({ sortType })),
+  };
 
   showHistory = signal(false);
   activeIndex = signal(-1); // For keyboard navigation

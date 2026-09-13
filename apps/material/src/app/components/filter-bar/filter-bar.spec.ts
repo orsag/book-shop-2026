@@ -2,26 +2,25 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FilterBar } from './filter-bar';
 import { getTranslocoModule } from '@core';
 import { computed } from '@angular/core';
-import { AppStore, UserStore } from '@store';
+import { UserStore } from '@store';
 import { ConfigurationService } from '@service';
 import { provideRouter } from '@angular/router';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { AppActions } from '@ngrx';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
 
 describe('FilterBar', () => {
   let component: FilterBar;
-  let mockAppStore: any;
   let mockUserStore: any;
   let mockConfigService: any;
+  let mockStore: MockStore;
   let fixture: ComponentFixture<FilterBar>;
 
   beforeEach(async () => {
     mockUserStore = {
       isLoggedIn: computed(() => true),
       isAdmin: computed(() => true),
-    };
-    mockAppStore = {
-      updateFilters: vi.fn(),
     };
     mockConfigService = {
       theme: signal('light'),
@@ -32,12 +31,13 @@ describe('FilterBar', () => {
       imports: [FilterBar, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: AppStore, useValue: mockAppStore },
+        provideMockStore(),
         { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();
 
+    mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(FilterBar);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -47,20 +47,26 @@ describe('FilterBar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the type filter when a pill is clicked', () => {
+  it('should dispatch updateFilters when a pill is clicked', () => {
     fixture.detectChanges();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
+
     const booksBtn = Array.from(
       fixture.nativeElement.querySelectorAll('button'),
     ).find((b: any) => b.textContent?.includes('Books'));
     (booksBtn as HTMLButtonElement).click();
     fixture.detectChanges();
 
-    expect(mockAppStore.updateFilters).toHaveBeenCalledWith({
-      type: 'BOOK',
-      search: '',
-      category: null,
-      isDiscounted: false,
-    });
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      AppActions.updateFilters({
+        partial: {
+          type: 'BOOK',
+          search: '',
+          category: null,
+          isDiscounted: false,
+        },
+      }),
+    );
   });
 
   it('should show profile and administration buttons when user is logged in and an admin', async () => {

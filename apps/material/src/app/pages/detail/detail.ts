@@ -12,7 +12,9 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { ErrorCodes, ErrorService, RedFocusDirective, SinglePricePipe } from '@core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BookService, ConfigurationService, UXService } from '@service';
-import { AppStore, CartStore } from '@store';
+import { CartStore } from '@store';
+import { Store } from '@ngrx/store';
+import { AppStateRoot, selectProductType } from '@ngrx';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of, switchMap } from 'rxjs';
 import { MatButton } from '@angular/material/button';
@@ -44,7 +46,7 @@ export class Detail {
   private route = inject(ActivatedRoute);
   private bookService = inject(BookService);
   private cartStore = inject(CartStore);
-  readonly store = inject(AppStore);
+  private readonly appStore = inject(Store<AppStateRoot>);
   config = inject(ConfigurationService);
   errorService = inject(ErrorService);
   ux = inject(UXService);
@@ -53,7 +55,10 @@ export class Detail {
   book = toSignal(
     this.route.params.pipe(
       switchMap((params) =>
-        this.bookService.getOne(params['id'], this.store.currentType()).pipe(
+        this.bookService.getOne(
+          params['id'],
+          this.appStore.selectSignal(selectProductType)(),
+        ).pipe(
           catchError(() => {
             this.errorService.handleError(ErrorCodes.FETCH_PRODUCT);
             return of(null); // Return null so the UI can show an error state

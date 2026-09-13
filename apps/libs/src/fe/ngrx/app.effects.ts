@@ -34,8 +34,20 @@ export class AppEffects {
   private errorService = inject(ErrorService);
   private breakpointObserver = inject(BreakpointObserver);
 
-  /** Mirrors the legacy onInit BreakpointObserver wiring — starts automatically on bootstrap.
-   *  The switchMap keeps the observe() stream alive, so it reacts to every breakpoint change. */
+  /**
+   * NOTE on the trigger: starts on the built-in `ROOT_EFFECTS_INIT` action,
+   * which NgRx dispatches once when root effects are registered — the NgRx
+   * equivalent of a signal-store `onInit`. The `switchMap` then subscribes to
+   * the `observe()` stream and keeps it alive, so this reacts to every
+   * breakpoint change, not just the bootstrap one.
+   *
+   * This effect CANNOT be `{ dispatch: false }`: it output-dispatches
+   * `setDeviceInfo`, which the reducer needs to update the store so
+   * `selectIsMobile`/`selectIsTablet` stay correct. Compare with
+   * `cart.effects.persistCart$`, which has no output action and therefore
+   * uses `dispatch: false` (no `ofType` needed there).
+   */
+  /** Mirrors the legacy onInit BreakpointObserver wiring — starts automatically on bootstrap. */
   initDeviceInfo$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ROOT_EFFECTS_INIT),
@@ -136,6 +148,31 @@ export class AppEffects {
   reloadProductsOnMutation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AppActions.productDeleted, AppActions.productSaved),
+      map(() => AppActions.loadProducts()),
+    ),
+  );
+
+  /** Boots the products fetch when root effects initialize (the NgRx
+   *  replacement for the signal store's initial rxResource request). */
+  loadProductsOnBootstrap$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ROOT_EFFECTS_INIT),
+      map(() => AppActions.loadProducts()),
+    ),
+  );
+
+  /** Mirrors the signal store's auto-refetch on filter/page/append changes:
+   *  any request-mutating action re-runs the products fetch. The storage
+   *  reducers set `productsLoading: true` atomically with those actions, so
+   *  the accumulator gate stays closed (no stale pages) while fetching. */
+  reloadProductsOnRequest$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        AppActions.updateFilters,
+        AppActions.loadMore,
+        AppActions.setPage,
+        AppActions.toggleSort,
+      ),
       map(() => AppActions.loadProducts()),
     ),
   );

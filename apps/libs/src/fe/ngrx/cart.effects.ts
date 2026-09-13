@@ -92,6 +92,19 @@ export class CartEffects {
     ),
   );
 
+  /**
+   * NOTE on `{ dispatch: false }`: valid here because this effect has NO output
+   * action — it only performs the localStorage side effect via `tap(...)`.
+   * Compare with `app.effects.initDeviceInfo$`, which MUST keep the default
+   * `dispatch: true`: it maps to `setDeviceInfo` and needs that action to reach
+   * the reducer so `selectIsMobile`/`selectIsTablet` stay in sync.
+   *
+   * Being `dispatch: false`, it needs no `ofType(...)` trigger — it subscribes
+   * eagerly on provider registration and lives for the app lifetime, reacting to
+   * every change of the `itemsMap` selector. The `skip(1)` (not
+   * `ROOT_EFFECTS_INIT`) is what prevents the empty bootstrap state from
+   * wiping stored cart data before `hydrateCart$` reads it back.
+   */
   /** Persists the cart items to LocalStorage after hydration (browser only). */
   persistCart$ = createEffect(
     () =>

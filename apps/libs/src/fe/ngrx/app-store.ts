@@ -106,18 +106,24 @@ export const appReducer = createReducer(
   on(AppActions.updateFilters, (state, { partial }) => ({
     ...state,
     appendMode: false,
+    productsLoading: true,
+    productsError: null,
     filters: { ...state.filters, ...partial, page: 1 },
   })),
 
   on(AppActions.loadMore, (state) => ({
     ...state,
     appendMode: true,
+    productsLoading: true,
+    productsError: null,
     filters: { ...state.filters, page: state.filters.page + 1 },
   })),
 
   on(AppActions.setPage, (state, { page }) => ({
     ...state,
     appendMode: false,
+    productsLoading: true,
+    productsError: null,
     filters: { ...state.filters, page },
   })),
 
@@ -146,6 +152,8 @@ export const appReducer = createReducer(
     return {
       ...state,
       appendMode: false,
+      productsLoading: true,
+      productsError: null,
       filters: { ...state.filters, sortBy: next, page: 1 },
     };
   }),
@@ -183,6 +191,7 @@ export const appReducer = createReducer(
 
   on(AppActions.productsLoadError, (state, { error }) => ({
     ...state,
+    productsResponse: null,
     productsLoading: false,
     productsError: error,
   })),
@@ -212,6 +221,11 @@ export const selectAppState = (state: AppStateRoot): AppState =>
 export const selectAppFilters = createSelector(
   selectAppState,
   (state) => state.filters,
+);
+
+export const selectAppendMode = createSelector(
+  selectAppState,
+  (state) => state.appendMode,
 );
 
 export const selectIsMobile = createSelector(

@@ -8,7 +8,9 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemePicker } from '../theme-picker/theme-picker';
 import { ConfigurationService, ScrollService } from '@service';
-import { AppStore, CartStore, UserStore } from '@store';
+import { CartStore, UserStore } from '@store';
+import { Store } from '@ngrx/store';
+import { AppActions, AppStateRoot, Filters, selectAppFilters } from '@ngrx';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -67,9 +69,17 @@ export class Navbar {
   config = inject(ConfigurationService);
   scroller = inject(ScrollService);
   router = inject(Router);
-  store = inject(AppStore);
   userStore = inject(UserStore);
   cartStore = inject(CartStore);
+  private readonly appStore = inject(Store<AppStateRoot>);
+
+  readonly store = {
+    filters: this.appStore.selectSignal(selectAppFilters),
+    updateFilters: (partial: Partial<Filters>) =>
+      this.appStore.dispatch(AppActions.updateFilters({ partial })),
+    addToHistory: (searchTerm: string) =>
+      this.appStore.dispatch(AppActions.addToHistory({ searchTerm })),
+  };
 
   currentTheme = this.config.theme;
 

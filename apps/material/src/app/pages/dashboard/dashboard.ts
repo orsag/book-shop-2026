@@ -4,6 +4,7 @@ import {
   inject,
   OnInit,
   PLATFORM_ID,
+  Signal,
 } from '@angular/core';
 import { isPlatformBrowser, AsyncPipe } from '@angular/common';
 import { ProductItem } from '../../components/product-item/product-item';
@@ -12,8 +13,19 @@ import { FilterBar } from '../../components/filter-bar/filter-bar';
 import {
   ConfigurationService,
   PaginationAccumulatorService,
+  AccumulatorRequest,
 } from '@service';
-import { AppStore, CartStore } from '@store';
+import { CartStore } from '@store';
+import { Store } from '@ngrx/store';
+import {
+  AppActions,
+  AppStateRoot,
+  selectAppendMode,
+  selectAppFilters,
+  selectHasMorePage,
+  selectProductsLoading,
+  selectProductsResponse,
+} from '@ngrx';
 import { LucideChevronDown, LucideSearchX } from '@lucide/angular';
 import { LoadingService } from '@core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -37,20 +49,36 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  store = inject(AppStore);
   cart = inject(CartStore);
   loading = inject(LoadingService);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
-  private accumulator = inject(PaginationAccumulatorService);
 
-  // 🚀 Single line declaration for accumulated products!
-  accumulatedProducts$ = this.accumulator.accumulate(
-    this.store.productsResource,
-    computed(() => ({
-      page: this.store.filters().page,
-      append: this.store.appendMode(),
-    })),
+  private readonly appStore = inject(Store<AppStateRoot>);
+  private readonly accumulator = inject(PaginationAccumulatorService);
+
+  // Facade keeping the template API (store.hasMorePage() / store.loadMore()).
+  readonly store: {
+    hasMorePage: Signal<boolean>;
+    loadMore: () => void;
+  } = {
+    hasMorePage: this.appStore.selectSignal(selectHasMorePage),
+    loadMore: () => this.appStore.dispatch(AppActions.loadMore()),
+  };
+
+  readonly request = computed<AccumulatorRequest>(() => {
+    const filters = this.appStore.selectSignal(selectAppFilters)();
+    return {
+      page: filters.page,
+      append: this.appStore.selectSignal(selectAppendMode)(),
+    };
+  });
+
+  // Accumulates the NgRx products pipeline (Observable source) page by page.
+  accumulatedProducts$ = this.accumulator.accumulateFrom(
+    this.appStore.select(selectProductsResponse),
+    this.request,
+    this.appStore.select(selectProductsLoading),
     (res) => res?.data ?? [],
   );
 

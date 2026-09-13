@@ -3,26 +3,22 @@ import { of } from 'rxjs';
 import { Detail } from './detail';
 import { ActivatedRoute } from '@angular/router';
 import { BookService, ConfigurationService, UXService } from '@service';
-import { AppStore, CartStore } from '@store';
+import { CartStore } from '@store';
 import { ErrorService } from '@core';
-import { computed } from '@angular/core';
 import { DEFAULT_TYPE, MOCKED_PRODUCT } from '@store/libs';
 import { vi } from 'vitest';
 import { getTranslocoModule } from '@core';
+import { provideMockStore } from '@ngrx/store/testing';
+import { selectProductType } from '@ngrx';
 
 describe('Detail', () => {
   let component: Detail;
   let mockBookService: any;
   let mockCartStore: any;
   let mockUxService: any;
-  let mockAppStore: any;
   let fixture: ComponentFixture<Detail>;
 
   beforeEach(async () => {
-    mockAppStore = {
-      currentType: computed(() => DEFAULT_TYPE),
-    };
-
     mockBookService = {
       getOne: vi.fn().mockReturnValue(of(MOCKED_PRODUCT)),
     };
@@ -43,9 +39,11 @@ describe('Detail', () => {
       imports: [Detail, getTranslocoModule()],
       providers: [
         { provide: ActivatedRoute, useValue: { params: of({ id: '1' }) } },
+        provideMockStore({
+          selectors: [{ selector: selectProductType, value: DEFAULT_TYPE }],
+        }),
         { provide: BookService, useValue: mockBookService },
         { provide: CartStore, useValue: mockCartStore },
-        { provide: AppStore, useValue: mockAppStore },
         { provide: UXService, useValue: mockUxService },
         { provide: ConfigurationService, useValue: { isDarkTheme: vi.fn().mockReturnValue(false) } },
         { provide: ErrorService, useValue: { handleError: vi.fn() } },

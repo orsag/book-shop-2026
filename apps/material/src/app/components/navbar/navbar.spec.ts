@@ -5,8 +5,9 @@ import { provideRouter } from '@angular/router';
 import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
 import { computed, signal } from '@angular/core';
-import { AppStore, CartStore, UserStore } from '@store';
-import { CreateProductDtoProductType as ProductType } from '@api';
+import { CartStore, UserStore } from '@store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { selectAppFilters } from '@ngrx';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -18,12 +19,21 @@ import { MockComponent } from 'ng-mocks';
 
 describe('Navbar', () => {
   let component: Navbar;
-  let mockAppStore: any;
   let mockUserStore: any;
   let mockCartStore: any;
   let mockConfigService: any;
   let mockScrollService: any;
   let fixture: ComponentFixture<Navbar>;
+
+  const defaultFilters = {
+    type: DEFAULT_TYPE,
+    page: DEFAULT_PAGE,
+    limit: DEFAULT_MAX_LIMIT,
+    search: DEFAULT_SEARCH,
+    category: null,
+    sortBy: null,
+    isDiscounted: false,
+  };
 
   beforeEach(async () => {
     mockUserStore = {
@@ -33,21 +43,6 @@ describe('Navbar', () => {
       isAdmin: signal(true),
       logout: vi.fn(),
       login: vi.fn(),
-    };
-
-    mockAppStore = {
-      currentType: computed(() => 'BOOK' as ProductType),
-      updateFilters: vi.fn(),
-      addToHistory: vi.fn(),
-      filters: signal({
-        type: DEFAULT_TYPE,
-        page: DEFAULT_PAGE,
-        limit: DEFAULT_MAX_LIMIT,
-        search: DEFAULT_SEARCH,
-        category: null,
-        sortBy: null,
-        isDiscounted: false,
-      }),
     };
 
     mockCartStore = {
@@ -77,7 +72,9 @@ describe('Navbar', () => {
       imports: [Navbar, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: AppStore, useValue: mockAppStore },
+        provideMockStore({
+          selectors: [{ selector: selectAppFilters, value: defaultFilters }],
+        }),
         { provide: CartStore, useValue: mockCartStore },
         { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
