@@ -1,0 +1,140 @@
+<div
+  class="login"
+  [class.login-dark]="config.isDarkTheme()"
+>
+  @if (isLoggedIn()) {
+    <div class="login-processing">
+      <h3>Processing Logging out</h3>
+    </div>
+  } @else {
+    <mat-card class="login-card">
+      <mat-card-content>
+        <div class="login-card-header">
+          <div class="login-brand-icon">
+            <img
+              src="/images/stack-of-books.png"
+              width="80"
+              height="80"
+              alt="Stack of books"
+              aria-hidden="true"
+            />
+          </div>
+          <h3 class="login-title">
+            {{ registerMode() ? 'Create an Account' : 'Welcome Back' }}
+          </h3>
+        </div>
+
+        <form
+          class="login-form"
+          (submit)="registerMode() ? onRegister() : onLogin(); $event.preventDefault()"
+        >
+          @if (registerMode()) {
+            <mat-form-field appearance="outline" class="login-field">
+              <mat-label>Email Address</mat-label>
+              <input
+                #emailInput
+                matInput
+                type="email"
+                placeholder="email@example.com"
+                [(ngModel)]="email"
+                name="email"
+                required
+                aria-required="true"
+              />
+              <svg lucideMail matPrefix size="20" aria-hidden="true" class="prefix-icon"></svg>
+            </mat-form-field>
+          }
+
+          <mat-form-field appearance="outline" class="login-field">
+            <mat-label>Username</mat-label>
+            <input
+              #firstInput
+              matInput
+              type="text"
+              placeholder="User name"
+              [(ngModel)]="username"
+              name="username"
+              required
+              aria-required="true"
+              minlength="3"
+              maxlength="50"
+            />
+            <svg lucideCircleUserRound matPrefix size="20" aria-hidden="true" class="prefix-icon"></svg>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="login-field">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              placeholder="Password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              aria-required="true"
+              minlength="1"
+              maxlength="20"
+            />
+            <svg lucidePenTool matPrefix size="20" aria-hidden="true" class="prefix-icon"></svg>
+          </mat-form-field>
+
+          <div class="login-actions" aria-live="polite">
+            @if (registerMode()) {
+              <button
+                type="submit"
+                name="register"
+                title="submit-register-btn"
+                mat-flat-button
+                color="primary"
+                class="login-submit"
+                [attr.aria-busy]="loading.isLoading('register')"
+                [disabled]="!username() || !password() || !email() || loading.isLoading('register')"
+              >
+                @if (loading.isLoading('register')) {
+                  <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
+                }
+                Register
+              </button>
+            } @else {
+              <button
+                type="submit"
+                name="login"
+                title="submit-login-btn"
+                mat-flat-button
+                color="primary"
+                class="login-submit"
+                [attr.aria-busy]="loading.isLoading('login')"
+                [disabled]="!username() || !password() || loading.isLoading('login')"
+              >
+                @if (loading.isLoading('login')) {
+                  <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
+                }
+                Login
+              </button>
+            }
+          </div>
+        </form>
+
+        <div class="login-toggle">
+          <button
+            type="button"
+            mat-button
+            color="primary"
+            [attr.aria-label]="registerMode() ? 'Switch to login form' : 'Switch to registration form'"
+            (click)="handleRegisterMode()"
+          >
+            {{
+              registerMode()
+                ? 'Already have an account? Login'
+                : "Don't have an account? Register"
+            }}
+          </button>
+        </div>
+
+        <div class="login-ghost">
+          <a routerLink="/">Continue without login</a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

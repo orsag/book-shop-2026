@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
+import { Login as LoginPage } from '../app/pages/login/login';
 
 const pageNotFoundRoute: Route = {
   loadComponent: () =>
@@ -8,6 +9,7 @@ const pageNotFoundRoute: Route = {
 };
 
 export const appRoutes: Route[] = [
+  { path: 'login', component: LoginPage },
   {
     path: '',
     component: MainLayoutComponent,
