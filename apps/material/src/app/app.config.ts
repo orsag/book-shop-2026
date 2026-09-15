@@ -18,7 +18,8 @@ import { provideTransloco } from '@jsverse/transloco';
 import { appRoutes } from './app.routes';
 import {
   authInterceptor,
-  ConsoleLogger, loadingInterceptor,
+  ConsoleLogger,
+  loadingInterceptor,
   LOGGER,
   NoopLogger,
   TranslationsHttpLoader,
@@ -26,7 +27,6 @@ import {
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { DebounceEventManagerPlugin } from './plugins/debounce-event.plugin';
 import { StopEventPlugin } from './plugins/stop-event.plugin';
-import { InitializationService } from '@service';
 import { provideStore, provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import {
@@ -40,6 +40,7 @@ import {
   CartEffects,
   UserEffects,
 } from '@ngrx';
+import { InitializationService } from './services/initialization.service';
 
 // Register locale data globally before configuration initialization
 registerLocaleData(localeSk, 'sk-SK');
