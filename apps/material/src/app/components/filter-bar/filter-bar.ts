@@ -1,12 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { UserStore } from '@store';
 import { BookFilters } from '@store/libs';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ConfigurationService } from '@service';
 import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
-import { AppActions, AppStateRoot } from '@ngrx';
+import {
+  AppActions,
+  AppStateRoot,
+  UserStateRoot,
+  selectIsAdmin,
+  selectIsLoggedIn,
+} from '@ngrx';
 
 @Component({
   selector: 'app-filter-bar',
@@ -15,9 +20,12 @@ import { AppActions, AppStateRoot } from '@ngrx';
   styleUrl: './filter-bar.css',
 })
 export class FilterBar {
-  userStore = inject(UserStore);
+  private readonly appStore = inject(Store<AppStateRoot & UserStateRoot>);
+  readonly userStore = {
+    isLoggedIn: this.appStore.selectSignal(selectIsLoggedIn),
+    isAdmin: this.appStore.selectSignal(selectIsAdmin),
+  };
   config = inject(ConfigurationService);
-  private readonly appStore = inject(Store<AppStateRoot>);
   filters = signal<BookFilters>({
     type: 'BOOK',
     search: '',

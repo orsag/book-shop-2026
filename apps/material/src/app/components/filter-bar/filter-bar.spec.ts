@@ -1,27 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FilterBar } from './filter-bar';
 import { getTranslocoModule } from '@core';
-import { computed } from '@angular/core';
-import { UserStore } from '@store';
 import { ConfigurationService } from '@service';
 import { provideRouter } from '@angular/router';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { AppActions } from '@ngrx';
+import { AppActions, selectIsAdmin, selectIsLoggedIn } from '@ngrx';
 import { signal } from '@angular/core';
 import { vi } from 'vitest';
 
 describe('FilterBar', () => {
   let component: FilterBar;
-  let mockUserStore: any;
   let mockConfigService: any;
   let mockStore: MockStore;
   let fixture: ComponentFixture<FilterBar>;
 
   beforeEach(async () => {
-    mockUserStore = {
-      isLoggedIn: computed(() => true),
-      isAdmin: computed(() => true),
-    };
     mockConfigService = {
       theme: signal('light'),
       isDarkTheme: vi.fn().mockReturnValue(false),
@@ -31,8 +24,12 @@ describe('FilterBar', () => {
       imports: [FilterBar, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        provideMockStore(),
-        { provide: UserStore, useValue: mockUserStore },
+        provideMockStore({
+          selectors: [
+            { selector: selectIsLoggedIn, value: true },
+            { selector: selectIsAdmin, value: true },
+          ],
+        }),
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();

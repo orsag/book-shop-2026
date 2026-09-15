@@ -1,5 +1,5 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { isPlatformBrowser } from '@angular/common';
 import {
@@ -65,6 +65,17 @@ export class CartEffects {
           catchError(() => EMPTY), // swallow: orders stay as-is
         ),
       ),
+    ),
+  );
+
+  /** Boots the cart hydration when root effects initialize: dispatches
+   *  `hydrate` so `hydrateCart$` can read the persisted LocalStorage cart
+   *  state back before any `cartSynced` sync overwrites it. Mirrors the
+   *  `loadProductsOnBootstrap$` pattern in app.effects.ts. */
+  hydrateCartOnBootstrap$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ROOT_EFFECTS_INIT),
+      map(() => CartActions.hydrate()),
     ),
   );
 

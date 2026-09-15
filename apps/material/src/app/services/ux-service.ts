@@ -2,9 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { DEFAULT_TYPE } from '@store/shared-models';
 import { CreateProductDto } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
-import { UserStore } from '@store';
 import { Store } from '@ngrx/store';
-import { CartStateRoot, selectItemsMap } from '@ngrx';
+import { CartStateRoot, selectItemsMap, selectUser, UserStateRoot } from '@ngrx';
 
 const productGradients: Record<ProductType, string> = {
   BOOK: 'bg-gradient-to-br from-red-100 via-pink-100 to-purple-100 text-purple-900',
@@ -19,8 +18,7 @@ const productGradients: Record<ProductType, string> = {
   providedIn: 'root',
 })
 export class UXService {
-  userStore = inject(UserStore);
-  private readonly appStore = inject(Store<CartStateRoot>);
+  private readonly appStore = inject(Store<CartStateRoot & UserStateRoot>);
 
   isGradientClass(product: CreateProductDto) {
     const productType = product.productType;
@@ -34,7 +32,7 @@ export class UXService {
   isFavorite(product: CreateProductDto) {
     const id = product.id;
     if (id) {
-      return this.userStore.user()?.favorites?.includes(id);
+      return this.appStore.selectSignal(selectUser)()?.favorites?.includes(id);
     } else {
       return false;
     }

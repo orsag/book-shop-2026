@@ -3,19 +3,17 @@ import { ProductItem } from './product-item';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { UserStore } from '@store';
 import { UXService } from '../../services/ux-service';
 import { ConfigurationService } from '@service';
 import { MOCKED_PRODUCT } from '@store/libs';
 import { signal } from '@angular/core';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { CartActions } from '@ngrx';
+import { CartActions, UserActions, selectIsLoggedIn } from '@ngrx';
 
 describe('ProductItem', () => {
   let component: ProductItem;
   let mockStore: MockStore;
   let mockUXService: any;
-  let mockUserStore: any;
   let mockConfigService: any;
   let fixture: ComponentFixture<ProductItem>;
 
@@ -27,10 +25,6 @@ describe('ProductItem', () => {
       isGradientClass: vi.fn(),
       isInCart: vi.fn().mockReturnValue(false),
     };
-    mockUserStore = {
-      isLoggedIn: signal(false),
-      toggleFavorite: vi.fn(),
-    };
     mockConfigService = {
       theme: signal('light'),
       isDarkTheme: vi.fn().mockReturnValue(false),
@@ -40,9 +34,10 @@ describe('ProductItem', () => {
       imports: [ProductItem, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        provideMockStore(),
+        provideMockStore({
+          selectors: [{ selector: selectIsLoggedIn, value: false }],
+        }),
         { provide: UXService, useValue: mockUXService },
-        { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();
@@ -59,8 +54,21 @@ describe('ProductItem', () => {
   });
 
   it('should not toggle favorite when user is not logged in', () => {
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
     component.toggleFavorite('book-1');
-    expect(mockUserStore.toggleFavorite).not.toHaveBeenCalled();
+    expect(dispatchSpy).not.toHaveBeenCalled();
+  });
+
+  it('should dispatch toggleFavorite when user is logged in', () => {
+    mockStore.overrideSelector(selectIsLoggedIn, true);
+    mockStore.refreshState();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
+
+    component.toggleFavorite('book-1');
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      UserActions.toggleFavorite({ productId: 'book-1' }),
+    );
   });
 
   it('should add the product to the cart', () => {

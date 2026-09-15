@@ -8,7 +8,6 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemePicker } from '../theme-picker/theme-picker';
 import { ConfigurationService, ScrollService } from '@service';
-import { UserStore } from '@store';
 import { Store } from '@ngrx/store';
 import {
   AppActions,
@@ -16,8 +15,14 @@ import {
   CartActions,
   CartStateRoot,
   Filters,
+  UserActions,
+  UserStateRoot,
   selectAppFilters,
+  selectIsAdmin,
+  selectIsLoggedIn,
   selectItemCount,
+  selectPremiumStatus,
+  selectUser,
 } from '@ngrx';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -77,8 +82,9 @@ export class Navbar {
   config = inject(ConfigurationService);
   scroller = inject(ScrollService);
   router = inject(Router);
-  userStore = inject(UserStore);
-  private readonly appStore = inject(Store<AppStateRoot & CartStateRoot>);
+  private readonly appStore = inject(
+    Store<AppStateRoot & CartStateRoot & UserStateRoot>,
+  );
 
   readonly store = {
     filters: this.appStore.selectSignal(selectAppFilters),
@@ -91,6 +97,14 @@ export class Navbar {
   readonly cartStore = {
     itemCount: this.appStore.selectSignal(selectItemCount),
     clearCart: () => this.appStore.dispatch(CartActions.clearCart()),
+  };
+
+  readonly userStore = {
+    user: this.appStore.selectSignal(selectUser),
+    isLoggedIn: this.appStore.selectSignal(selectIsLoggedIn),
+    isAdmin: this.appStore.selectSignal(selectIsAdmin),
+    premiumStatus: this.appStore.selectSignal(selectPremiumStatus),
+    logout: () => this.appStore.dispatch(UserActions.logout()),
   };
 
   currentTheme = this.config.theme;

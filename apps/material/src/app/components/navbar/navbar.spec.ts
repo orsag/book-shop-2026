@@ -4,10 +4,16 @@ import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
-import { computed, signal } from '@angular/core';
-import { UserStore } from '@store';
+import { signal } from '@angular/core';
 import { provideMockStore } from '@ngrx/store/testing';
-import { selectAppFilters, selectItemCount } from '@ngrx';
+import {
+  selectAppFilters,
+  selectIsAdmin,
+  selectIsLoggedIn,
+  selectItemCount,
+  selectPremiumStatus,
+  selectUser,
+} from '@ngrx';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -19,7 +25,6 @@ import { MockComponent } from 'ng-mocks';
 
 describe('Navbar', () => {
   let component: Navbar;
-  let mockUserStore: any;
   let mockConfigService: any;
   let mockScrollService: any;
   let fixture: ComponentFixture<Navbar>;
@@ -35,15 +40,6 @@ describe('Navbar', () => {
   };
 
   beforeEach(async () => {
-    mockUserStore = {
-      isLoggedIn: vi.fn().mockReturnValue(true),
-      premiumStatus: signal({ isPremium: true }),
-      user: signal({}),
-      isAdmin: signal(true),
-      logout: vi.fn(),
-      login: vi.fn(),
-    };
-
     mockConfigService = {
       theme: signal('light'),
       isDarkTheme: vi.fn().mockReturnValue(false),
@@ -70,9 +66,12 @@ describe('Navbar', () => {
           selectors: [
             { selector: selectAppFilters, value: defaultFilters },
             { selector: selectItemCount, value: 0 },
+            { selector: selectIsLoggedIn, value: true },
+            { selector: selectIsAdmin, value: true },
+            { selector: selectPremiumStatus, value: null },
+            { selector: selectUser, value: {} },
           ],
         }),
-        { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: ScrollService, useValue: mockScrollService },
       ],
