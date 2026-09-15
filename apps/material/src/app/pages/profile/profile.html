@@ -1,0 +1,217 @@
+<div class="profile" [class.profile-dark]="config.isDarkTheme()">
+  <div class="profile-container">
+    <header class="profile-header">
+      <div>
+        <h1 class="profile-title">Editácia profilu</h1>
+        <p class="profile-subtitle">Spravujte svoje osobné údaje a obľúbené knihy</p>
+      </div>
+
+      <button mat-stroked-button routerLink="/">Späť na zoznam</button>
+    </header>
+
+    <section class="profile-section">
+      <h3 class="profile-section-title">
+        Moje objednávky
+        <span class="profile-count">{{ orders().length }}</span>
+      </h3>
+
+      @if (orders().length > 0) {
+        <mat-card class="material-card">
+          <div class="table-scroll">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>ID Objednávky</th>
+                  <th>Dátum</th>
+                  <th>Suma</th>
+                  <th>Status</th>
+                  <th class="text-right">Akcie</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of orders(); track order.id) {
+                  <tr>
+                    <td>
+                      <button
+                        type="button"
+                        title="copy-id-btn"
+                        (click)="copyToClipboard(order.id)"
+                        class="copy-btn"
+                      >
+                        <span class="copy-id">{{ order.id }}</span>
+                        <svg lucideClipboardCopy size="20"></svg>
+                      </button>
+                    </td>
+                    <td>{{ order.createdAt | date:'shortDate' }}</td>
+                    <td class="order-amount">{{ order.totalAmount | currency:'EUR' }}</td>
+                    <td>
+                      <span
+                        class="status-badge"
+                        [ngClass]="{
+                          'status-paid': order.status === OrderStatus.PAID,
+                          'status-pending': order.status === OrderStatus.PENDING,
+                          'status-cancelled': order.status === OrderStatus.CANCELLED,
+                        }"
+                      >{{ order.status }}</span>
+                    </td>
+                    <td class="text-right">
+                      @if (order.status !== OrderStatus.CANCELLED && canCancel(order.createdAt)) {
+                        <button
+                          mat-button
+                          color="warn"
+                          (click)="handleCancelOrder(order.id)"
+                          title="cancel-order-btn"
+                        >
+                          Zrušiť do 14 dní
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg lucideShoppingBag size="32" strokeWidth="1.5"></svg>
+          </div>
+          <p class="empty-title">Zatiaľ ste nevytvorili žiadne objednávky.</p>
+          <p class="empty-hint">Akonáhle si niečo vyberiete z nášho obchodu, vaša história nákupov sa zobrazí tu.</p>
+        </div>
+      }
+    </section>
+
+    @if (favoriteProducts().length > 0) {
+      <section class="profile-section">
+        <h3 class="profile-section-title">
+          Moje obľúbené
+          <span class="profile-count">{{ favoriteCount() }}</span>
+        </h3>
+        <div class="favorites-grid">
+          @for (book of favoriteProducts(); track book.id) {
+            <a class="favorite-card" [routerLink]="['/product', book.id]">
+              <img
+                [src]="book.coverUrl || 'images/placeholder.webp'"
+                [alt]="`Book Cover ${book.name}`"
+              />
+              <span class="favorite-name">{{ book.name }}</span>
+              <span class="favorite-price">{{ book.price | currency:'EUR' }}</span>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    <section class="profile-section">
+      <mat-card class="material-card profile-form-card">
+        <h3 class="profile-section-title">Osobné údaje</h3>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Používateľské meno</mat-label>
+            <input matInput type="text" [value]="user()?.username ?? ''" readonly />
+            <svg lucideLock matSuffix size="20" class="prefix-icon"></svg>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Zobrazované meno</mat-label>
+            <input matInput id="displayname" type="text" [formField]="form.displayName" />
+            @if (form.displayName().invalid() && (form.displayName().touched() || form.displayName().dirty())) {
+              <mat-error>{{ form.displayName().errors()?.[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput id="email" type="email" [formField]="userForm.email" />
+            @if (userForm.email().invalid() && (userForm.email().touched() || userForm.email().dirty())) {
+              <mat-error>{{ userForm.email().errors()?.[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Telefón</mat-label>
+            <input matInput id="phone" type="text" [formField]="userForm.phoneNumber" />
+            @if (userForm.phoneNumber().invalid() && (userForm.phoneNumber().touched() || userForm.phoneNumber().dirty())) {
+              <mat-error>{{ userForm.phoneNumber().errors()?.[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>O mne</mat-label>
+            <textarea
+              matInput
+              id="user-bio"
+              [formField]="form.bio"
+              rows="4"
+              placeholder="Povedzte nám niečo o sebe..."
+            ></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Mesto</mat-label>
+            <input matInput id="city" type="text" [formField]="form.city" />
+            @if (form.city().invalid() && (form.city().touched() || form.city().dirty())) {
+              <mat-error>{{ form.city().errors()?.[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Ulica</mat-label>
+            <input matInput id="addressLine1" type="text" [formField]="form.addressLine1" />
+            @if (form.addressLine1().invalid() && (form.addressLine1().touched() || form.addressLine1().dirty())) {
+              <mat-error>{{ form.addressLine1().errors()?.[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="billing-box">
+            <h4 class="billing-title">
+              <svg lucideCreditCard size="20"></svg>
+              Fakturačné údaje
+            </h4>
+            <div class="billing-grid">
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>IBAN</mat-label>
+                <input
+                  matInput
+                  id="iban"
+                  type="text"
+                  [formField]="form.iban"
+                  class="field-mono"
+                  placeholder="SK..."
+                />
+                @if (form.iban().invalid() && (form.iban().touched() || form.iban().dirty())) {
+                  <mat-error>{{ form.iban().errors()?.[0]?.message }}</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>DIČ (Tax ID)</mat-label>
+                <input matInput id="taxId" type="text" [formField]="form.taxId" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Dátum narodenia</mat-label>
+                <input matInput id="dateOfBirth" type="date" [formField]="form.dateOfBirth" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-stroked-button (click)="handleReset()" title="cancel-profile-btn">Reset</button>
+            <button mat-flat-button (click)="handleNextInvalidField()" title="next-invalid-btn">Next Field</button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="handleSave()"
+              title="save-profile-btn"
+              class="btn-save"
+            >Save</button>
+          </div>
+        </div>
+      </mat-card>
+    </section>
+  </div>
+</div>

@@ -44,6 +44,11 @@ export const appRoutes: Route[] = [
         loadComponent: () =>
           import('./pages/shopping/shopping').then((m) => m.Shopping),
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/profile/profile').then((m) => m.Profile),
+      },
       // {
       //   path: 'success/:id',
       //   loadComponent: () =>
