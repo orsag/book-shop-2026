@@ -15,11 +15,12 @@ import {
   PaginationAccumulatorService,
   AccumulatorRequest,
 } from '@service';
-import { CartStore } from '@store';
 import { Store } from '@ngrx/store';
 import {
   AppActions,
   AppStateRoot,
+  CartActions,
+  CartStateRoot,
   selectAppendMode,
   selectAppFilters,
   selectHasMorePage,
@@ -49,12 +50,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  cart = inject(CartStore);
   loading = inject(LoadingService);
   platformId = inject(PLATFORM_ID);
   config = inject(ConfigurationService);
 
-  private readonly appStore = inject(Store<AppStateRoot>);
+  private readonly appStore = inject(Store<AppStateRoot & CartStateRoot>);
   private readonly accumulator = inject(PaginationAccumulatorService);
 
   // Facade keeping the template API (store.hasMorePage() / store.loadMore()).
@@ -93,7 +93,7 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.cart.syncCartWithServer();
+      this.appStore.dispatch(CartActions.syncCartWithServer());
     }
   }
 }

@@ -5,9 +5,9 @@ import { provideRouter } from '@angular/router';
 import { ConfigurationService, ScrollService } from '@service';
 import { vi } from 'vitest';
 import { computed, signal } from '@angular/core';
-import { CartStore, UserStore } from '@store';
+import { UserStore } from '@store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { selectAppFilters } from '@ngrx';
+import { selectAppFilters, selectItemCount } from '@ngrx';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -20,7 +20,6 @@ import { MockComponent } from 'ng-mocks';
 describe('Navbar', () => {
   let component: Navbar;
   let mockUserStore: any;
-  let mockCartStore: any;
   let mockConfigService: any;
   let mockScrollService: any;
   let fixture: ComponentFixture<Navbar>;
@@ -43,11 +42,6 @@ describe('Navbar', () => {
       isAdmin: signal(true),
       logout: vi.fn(),
       login: vi.fn(),
-    };
-
-    mockCartStore = {
-      clearCart: vi.fn(),
-      itemCount: computed(() => 0),
     };
 
     mockConfigService = {
@@ -73,9 +67,11 @@ describe('Navbar', () => {
       providers: [
         provideRouter([]),
         provideMockStore({
-          selectors: [{ selector: selectAppFilters, value: defaultFilters }],
+          selectors: [
+            { selector: selectAppFilters, value: defaultFilters },
+            { selector: selectItemCount, value: 0 },
+          ],
         }),
-        { provide: CartStore, useValue: mockCartStore },
         { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: ScrollService, useValue: mockScrollService },

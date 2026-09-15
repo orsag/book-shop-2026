@@ -2,20 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { Detail } from './detail';
 import { ActivatedRoute } from '@angular/router';
-import { BookService, ConfigurationService, UXService } from '@service';
-import { CartStore } from '@store';
+import { BookService, ConfigurationService } from '@service';
+import { UXService } from '../../services/ux-service';
 import { ErrorService } from '@core';
 import { DEFAULT_TYPE, MOCKED_PRODUCT } from '@store/libs';
 import { vi } from 'vitest';
 import { getTranslocoModule } from '@core';
-import { provideMockStore } from '@ngrx/store/testing';
-import { selectProductType } from '@ngrx';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { AppStateRoot, CartActions, CartStateRoot, selectProductType } from '@ngrx';
 
 describe('Detail', () => {
   let component: Detail;
+  let mockStore: MockStore;
   let mockBookService: any;
-  let mockCartStore: any;
-  let mockUxService: any;
+  let mockUXService: any;
   let fixture: ComponentFixture<Detail>;
 
   beforeEach(async () => {
@@ -23,12 +23,7 @@ describe('Detail', () => {
       getOne: vi.fn().mockReturnValue(of(MOCKED_PRODUCT)),
     };
 
-    mockCartStore = {
-      addToCart: vi.fn(),
-      removeItem: vi.fn(),
-    };
-
-    mockUxService = {
+    mockUXService = {
       isInCart: vi.fn().mockReturnValue(false),
       category: vi.fn().mockReturnValue(MOCKED_PRODUCT.bookDetails?.category ?? ''),
       author: vi.fn().mockReturnValue(MOCKED_PRODUCT.bookDetails?.author ?? ''),
@@ -43,13 +38,13 @@ describe('Detail', () => {
           selectors: [{ selector: selectProductType, value: DEFAULT_TYPE }],
         }),
         { provide: BookService, useValue: mockBookService },
-        { provide: CartStore, useValue: mockCartStore },
-        { provide: UXService, useValue: mockUxService },
+        { provide: UXService, useValue: mockUXService },
         { provide: ConfigurationService, useValue: { isDarkTheme: vi.fn().mockReturnValue(false) } },
         { provide: ErrorService, useValue: { handleError: vi.fn() } },
       ],
     }).compileComponents();
 
+    mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(Detail);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -89,6 +84,7 @@ describe('Detail', () => {
   it('should add the book to the cart when it is not in the cart', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
     const button = fixture.nativeElement.querySelector(
       'button[mat-flat-button]',
     ) as HTMLButtonElement;
@@ -96,14 +92,19 @@ describe('Detail', () => {
     button.click();
     fixture.detectChanges();
 
-    expect(mockCartStore.addToCart).toHaveBeenCalledWith(MOCKED_PRODUCT);
-    expect(mockCartStore.removeItem).not.toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.addToCart({ product: MOCKED_PRODUCT }),
+    );
+    expect(dispatchSpy).not.toHaveBeenCalledWith(
+      CartActions.removeItem({ productId: MOCKED_PRODUCT.id }),
+    );
   });
 
   it('should remove the book from the cart when it is already in the cart', async () => {
-    mockUxService.isInCart.mockReturnValue(true);
+    mockUXService.isInCart.mockReturnValue(true);
     fixture.detectChanges();
     await fixture.whenStable();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
     const button = fixture.nativeElement.querySelector(
       '.detail-buttons button[mat-flat-button]',
     ) as HTMLButtonElement;
@@ -111,7 +112,11 @@ describe('Detail', () => {
     button.click();
     fixture.detectChanges();
 
-    expect(mockCartStore.removeItem).toHaveBeenCalledWith(MOCKED_PRODUCT.id);
-    expect(mockCartStore.addToCart).not.toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.removeItem({ productId: MOCKED_PRODUCT.id }),
+    );
+    expect(dispatchSpy).not.toHaveBeenCalledWith(
+      CartActions.addToCart({ product: MOCKED_PRODUCT }),
+    );
   });
 });

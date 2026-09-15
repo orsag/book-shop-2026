@@ -3,15 +3,17 @@ import { ProductItem } from './product-item';
 import { getTranslocoModule } from '@core';
 import { provideRouter } from '@angular/router';
 import { vi } from 'vitest';
-import { CartStore, UserStore } from '@store';
-import { UXService } from '@service';
+import { UserStore } from '@store';
+import { UXService } from '../../services/ux-service';
 import { ConfigurationService } from '@service';
 import { MOCKED_PRODUCT } from '@store/libs';
 import { signal } from '@angular/core';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { CartActions } from '@ngrx';
 
 describe('ProductItem', () => {
   let component: ProductItem;
-  let mockCartStore: any;
+  let mockStore: MockStore;
   let mockUXService: any;
   let mockUserStore: any;
   let mockConfigService: any;
@@ -24,10 +26,6 @@ describe('ProductItem', () => {
       category: vi.fn().mockReturnValue('Fantasy'),
       isGradientClass: vi.fn(),
       isInCart: vi.fn().mockReturnValue(false),
-    };
-    mockCartStore = {
-      addToCart: vi.fn(),
-      removeItem: vi.fn(),
     };
     mockUserStore = {
       isLoggedIn: signal(false),
@@ -42,12 +40,13 @@ describe('ProductItem', () => {
       imports: [ProductItem, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: CartStore, useValue: mockCartStore },
+        provideMockStore(),
         { provide: UXService, useValue: mockUXService },
         { provide: UserStore, useValue: mockUserStore },
         { provide: ConfigurationService, useValue: mockConfigService },
       ],
     }).compileComponents();
+    mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(ProductItem);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('product', MOCKED_PRODUCT);
@@ -65,12 +64,15 @@ describe('ProductItem', () => {
   });
 
   it('should add the product to the cart', () => {
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
     const button = fixture.nativeElement.querySelector(
       'button[data-testid="add-to-cart"]',
     ) as HTMLButtonElement;
     button.click();
     fixture.detectChanges();
-    expect(mockCartStore.addToCart).toHaveBeenCalledWith(MOCKED_PRODUCT);
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.addToCart({ product: MOCKED_PRODUCT }),
+    );
   });
 
   it('should render the product name while hovering toggling the hover state', () => {

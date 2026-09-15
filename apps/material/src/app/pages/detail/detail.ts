@@ -11,10 +11,10 @@ import {
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ErrorCodes, ErrorService, RedFocusDirective, SinglePricePipe } from '@core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BookService, ConfigurationService, UXService } from '@service';
-import { CartStore } from '@store';
+import { BookService, ConfigurationService } from '@service';
+import { UXService } from '../../services/ux-service';
 import { Store } from '@ngrx/store';
-import { AppStateRoot, selectProductType } from '@ngrx';
+import { AppStateRoot, CartActions, CartStateRoot, selectProductType } from '@ngrx';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of, switchMap } from 'rxjs';
 import { MatButton } from '@angular/material/button';
@@ -45,8 +45,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export class Detail {
   private route = inject(ActivatedRoute);
   private bookService = inject(BookService);
-  private cartStore = inject(CartStore);
-  private readonly appStore = inject(Store<AppStateRoot>);
+  private readonly appStore = inject(Store<AppStateRoot & CartStateRoot>);
   config = inject(ConfigurationService);
   errorService = inject(ErrorService);
   ux = inject(UXService);
@@ -72,9 +71,11 @@ export class Detail {
     const currentBook = this.book();
     if (currentBook) {
       if (this.ux.isInCart(currentBook)) {
-        this.cartStore.removeItem(currentBook.id);
+        this.appStore.dispatch(
+          CartActions.removeItem({ productId: currentBook.id }),
+        );
       } else {
-        this.cartStore.addToCart(currentBook);
+        this.appStore.dispatch(CartActions.addToCart({ product: currentBook }));
       }
     }
   }

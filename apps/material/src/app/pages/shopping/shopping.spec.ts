@@ -1,13 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Shopping } from './shopping';
-import { CartStore } from '@store';
 import { OrderService, ToastService, ConfigurationService } from '@service';
 import { ErrorService } from '@core';
-import { computed, signal } from '@angular/core';
 import { MOCKED_PRODUCT } from '@store/libs';
 import { vi } from 'vitest';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import {
+  CartActions,
+  selectGrandTotal,
+  selectItems,
+  selectSubtotal,
+  selectTax,
+  selectTotalSavings,
+} from '@ngrx';
 
 const CART_ITEM = {
   product: MOCKED_PRODUCT,
@@ -16,25 +23,13 @@ const CART_ITEM = {
 
 describe('Shopping', () => {
   let component: Shopping;
-  let mockCartStore: any;
+  let mockStore: MockStore;
   let mockOrderService: any;
   let mockErrorService: any;
   let mockToast: any;
   let fixture: ComponentFixture<Shopping>;
 
   beforeEach(async () => {
-    mockCartStore = {
-      items: signal([CART_ITEM]),
-      totalSavings: computed(() => 0),
-      subtotal: computed(() => 100),
-      tax: computed(() => 5),
-      grandTotal: computed(() => 105),
-      syncCartWithServer: vi.fn(),
-      clearCart: vi.fn(),
-      removeItem: vi.fn(),
-      updateQuantity: vi.fn(),
-    };
-
     mockOrderService = {
       createOrder: vi.fn().mockReturnValue(of({ id: 'order-1' })),
     };
@@ -51,7 +46,15 @@ describe('Shopping', () => {
     await TestBed.configureTestingModule({
       imports: [Shopping],
       providers: [
-        { provide: CartStore, useValue: mockCartStore },
+        provideMockStore({
+          selectors: [
+            { selector: selectItems, value: [CART_ITEM] },
+            { selector: selectTotalSavings, value: 0 },
+            { selector: selectSubtotal, value: 100 },
+            { selector: selectTax, value: 5 },
+            { selector: selectGrandTotal, value: 105 },
+          ],
+        }),
         { provide: OrderService, useValue: mockOrderService },
         { provide: ErrorService, useValue: mockErrorService },
         { provide: ToastService, useValue: mockToast },
@@ -63,6 +66,7 @@ describe('Shopping', () => {
       ],
     }).compileComponents();
 
+    mockStore = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(Shopping);
     component = fixture.componentInstance;
     await fixture.whenStable();
@@ -72,9 +76,16 @@ describe('Shopping', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should sync the cart with the server on init', () => {
+  it('should dispatch syncCartWithServer on init', () => {
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
+
+    fixture = TestBed.createComponent(Shopping);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    expect(mockCartStore.syncCartWithServer).toHaveBeenCalled();
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.syncCartWithServer(),
+    );
   });
 
   it('should render cart items with routes', () => {
@@ -88,7 +99,8 @@ describe('Shopping', () => {
   });
 
   it('should render the empty state when there are no items', async () => {
-    mockCartStore.items.set([]);
+    mockStore.overrideSelector(selectItems, []);
+    mockStore.refreshState();
 
     fixture = TestBed.createComponent(Shopping);
     component = fixture.componentInstance;
@@ -101,6 +113,7 @@ describe('Shopping', () => {
 
   it('should remove an item and toast a danger message', () => {
     fixture.detectChanges();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
 
     const removeBtn = fixture.nativeElement.querySelector(
       '[title="remove-btn"]',
@@ -108,12 +121,15 @@ describe('Shopping', () => {
     removeBtn.click();
     fixture.detectChanges();
 
-    expect(mockCartStore.removeItem).toHaveBeenCalledWith(MOCKED_PRODUCT.id);
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.removeItem({ productId: MOCKED_PRODUCT.id }),
+    );
     expect(mockToast.danger).toHaveBeenCalled();
   });
 
   it('should update quantity on plus', () => {
     fixture.detectChanges();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
 
     const plusBtn = fixture.nativeElement.querySelector(
       '[title="plus-btn"]',
@@ -121,15 +137,18 @@ describe('Shopping', () => {
     plusBtn.click();
     fixture.detectChanges();
 
-    expect(mockCartStore.updateQuantity).toHaveBeenCalledWith(
-      MOCKED_PRODUCT.id,
-      1,
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.updateQuantity({
+        productId: MOCKED_PRODUCT.id,
+        delta: 1,
+      }),
     );
   });
 
   it('should check out and navigate to success', async () => {
     fixture.detectChanges();
     await fixture.whenStable();
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
 
     const checkoutBtn = fixture.nativeElement.querySelector(
       '.shopping-checkout-row button',
@@ -141,7 +160,7 @@ describe('Shopping', () => {
       items: [{ productId: MOCKED_PRODUCT.id, quantity: 2 }],
     });
     expect(mockErrorService.handleSuccess).toHaveBeenCalled();
-    expect(mockCartStore.clearCart).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledWith(CartActions.clearCart());
   });
 
   it('should handle checkout errors', () => {

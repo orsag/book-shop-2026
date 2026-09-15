@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { Dashboard } from './dashboard';
-import { CartStore } from '@store';
 import { ConfigurationService, PaginationAccumulatorService } from '@service';
-import { computed, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import {
   DEFAULT_MAX_LIMIT,
   DEFAULT_PAGE,
@@ -14,6 +13,7 @@ import {
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import {
   AppActions,
+  CartActions,
   selectAppendMode,
   selectAppFilters,
   selectHasMorePage,
@@ -27,7 +27,6 @@ import { ProductItem } from '../../components/product-item/product-item';
 
 describe('Dashboard', () => {
   let component: Dashboard;
-  let mockCartStore: any;
   let mockConfigService: any;
   let mockAccumulator: any;
   let mockStore: MockStore;
@@ -44,10 +43,6 @@ describe('Dashboard', () => {
   };
 
   beforeEach(async () => {
-    mockCartStore = {
-      syncCartWithServer: vi.fn(),
-    };
-
     mockConfigService = {
       theme: signal('light'),
       isDarkTheme: vi.fn().mockReturnValue(false),
@@ -80,7 +75,6 @@ describe('Dashboard', () => {
             { selector: selectHasMorePage, value: false },
           ],
         }),
-        { provide: CartStore, useValue: mockCartStore },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: PaginationAccumulatorService, useValue: mockAccumulator },
       ],
@@ -96,9 +90,16 @@ describe('Dashboard', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should sync the cart with the server on init', () => {
+  it('should dispatch syncCartWithServer on init', () => {
+    const dispatchSpy = vi.spyOn(mockStore, 'dispatch');
+
+    fixture = TestBed.createComponent(Dashboard);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    expect(mockCartStore.syncCartWithServer).toHaveBeenCalled();
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      CartActions.syncCartWithServer(),
+    );
   });
 
   it('should show the empty state when there are no products', async () => {

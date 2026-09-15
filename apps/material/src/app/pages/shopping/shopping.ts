@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
-import { CartStore } from '@store';
 import { CartItem } from '@store/libs';
 import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
@@ -9,6 +8,16 @@ import { LucideTrash2 } from '@lucide/angular';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { Store } from '@ngrx/store';
+import {
+  CartActions,
+  CartStateRoot,
+  selectGrandTotal,
+  selectItems,
+  selectSubtotal,
+  selectTax,
+  selectTotalSavings,
+} from '@ngrx';
 
 @Component({
   selector: 'app-shopping',
@@ -26,14 +35,29 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   styleUrl: './shopping.css',
 })
 export class Shopping implements OnInit {
-  protected cartStore = inject(CartStore);
+  config = inject(ConfigurationService);
   private orderService = inject(OrderService);
   private errorService = inject(ErrorService);
   private toast = inject(ToastService);
   private router = inject(Router);
-  config = inject(ConfigurationService);
+  private readonly cartStoreRef = inject(Store<CartStateRoot>);
 
-  items: Signal<CartItem[]> = this.cartStore.items;
+  items: Signal<CartItem[]> = this.cartStoreRef.selectSignal(selectItems);
+
+  protected readonly cartStore = {
+    items: this.items,
+    totalSavings: this.cartStoreRef.selectSignal(selectTotalSavings),
+    subtotal: this.cartStoreRef.selectSignal(selectSubtotal),
+    tax: this.cartStoreRef.selectSignal(selectTax),
+    grandTotal: this.cartStoreRef.selectSignal(selectGrandTotal),
+    syncCartWithServer: () =>
+      this.cartStoreRef.dispatch(CartActions.syncCartWithServer()),
+    clearCart: () => this.cartStoreRef.dispatch(CartActions.clearCart()),
+    removeItem: (productId: string) =>
+      this.cartStoreRef.dispatch(CartActions.removeItem({ productId })),
+    updateQuantity: (productId: string, delta: number) =>
+      this.cartStoreRef.dispatch(CartActions.updateQuantity({ productId, delta })),
+  };
 
   ngOnInit() {
     this.cartStore.syncCartWithServer();

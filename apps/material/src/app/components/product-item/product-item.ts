@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, inject, Input, signal } f
 import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { CartStore, UserStore } from '@store';
+import { UserStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { UXService } from '@service';
+import { UXService } from '../../services/ux-service';
 import { ConfigurationService } from '@service';
 import { SinglePricePipe } from '@core';
 import { MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { Store } from '@ngrx/store';
+import { CartActions, CartStateRoot } from '@ngrx';
 
 @Component({
   selector: 'app-product-item',
@@ -28,7 +30,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 export class ProductItem {
   @Input({ required: true }) product!: CreateProductDto;
 
-  private readonly cartStore = inject(CartStore);
+  private readonly cartStore = inject(Store<CartStateRoot>);
   readonly userStore = inject(UserStore);
   readonly ux = inject(UXService);
   readonly config = inject(ConfigurationService);
@@ -53,9 +55,11 @@ export class ProductItem {
 
   handleCartAction() {
     if (this.ux.isInCart(this.product)) {
-      this.cartStore.removeItem(this.product.id);
+      this.cartStore.dispatch(
+        CartActions.removeItem({ productId: this.product.id }),
+      );
     } else if (this.product.availableCount > 0) {
-      this.cartStore.addToCart(this.product);
+      this.cartStore.dispatch(CartActions.addToCart({ product: this.product }));
     }
   }
 }
