@@ -7,13 +7,14 @@
       <app-filter></app-filter>
     </mat-sidenav>
 
-    <mat-sidenav-content class="main-layout-content">
-      <main class="main-layout-page">
-        <router-outlet></router-outlet>
-        <app-toast />
-      </main>
+    <mat-sidenav-content>
+      <div class="main-layout-scroll">
+        <main class="main-layout-page">
+          <router-outlet></router-outlet>
+          <app-toast />
+        </main>
+        <app-footer></app-footer>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
-  <app-footer></app-footer>
 </div>

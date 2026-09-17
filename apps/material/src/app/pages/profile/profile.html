@@ -119,7 +119,7 @@
             <mat-label>Zobrazované meno</mat-label>
             <input matInput id="displayname" type="text" [formField]="form.displayName" />
             @if (form.displayName().invalid() && (form.displayName().touched() || form.displayName().dirty())) {
-              <mat-error>{{ form.displayName().errors()?.[0]?.message }}</mat-error>
+              <mat-error>{{ form.displayName().errors()[0].message }}</mat-error>
             }
           </mat-form-field>
 
@@ -127,7 +127,7 @@
             <mat-label>Email</mat-label>
             <input matInput id="email" type="email" [formField]="userForm.email" />
             @if (userForm.email().invalid() && (userForm.email().touched() || userForm.email().dirty())) {
-              <mat-error>{{ userForm.email().errors()?.[0]?.message }}</mat-error>
+              <mat-error>{{ userForm.email().errors()[0].message }}</mat-error>
             }
           </mat-form-field>
 
@@ -135,7 +135,7 @@
             <mat-label>Telefón</mat-label>
             <input matInput id="phone" type="text" [formField]="userForm.phoneNumber" />
             @if (userForm.phoneNumber().invalid() && (userForm.phoneNumber().touched() || userForm.phoneNumber().dirty())) {
-              <mat-error>{{ userForm.phoneNumber().errors()?.[0]?.message }}</mat-error>
+              <mat-error>{{ userForm.phoneNumber().errors()[0].message }}</mat-error>
             }
           </mat-form-field>
 
@@ -154,7 +154,7 @@
             <mat-label>Mesto</mat-label>
             <input matInput id="city" type="text" [formField]="form.city" />
             @if (form.city().invalid() && (form.city().touched() || form.city().dirty())) {
-              <mat-error>{{ form.city().errors()?.[0]?.message }}</mat-error>
+              <mat-error>{{ form.city().errors()[0].message }}</mat-error>
             }
           </mat-form-field>
 
@@ -162,7 +162,7 @@
             <mat-label>Ulica</mat-label>
             <input matInput id="addressLine1" type="text" [formField]="form.addressLine1" />
             @if (form.addressLine1().invalid() && (form.addressLine1().touched() || form.addressLine1().dirty())) {
-              <mat-error>{{ form.addressLine1().errors()?.[0]?.message }}</mat-error>
+              <mat-error>{{ form.addressLine1().errors()[0].message }}</mat-error>
             }
           </mat-form-field>
 
@@ -183,7 +183,7 @@
                   placeholder="SK..."
                 />
                 @if (form.iban().invalid() && (form.iban().touched() || form.iban().dirty())) {
-                  <mat-error>{{ form.iban().errors()?.[0]?.message }}</mat-error>
+                  <mat-error>{{ form.iban().errors()[0].message }}</mat-error>
                 }
               </mat-form-field>
 

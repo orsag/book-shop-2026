@@ -1,0 +1,48 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.full-width-table {
+    width: 100%;
+}
+
+.order-id-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-mono {
+    font-family: monospace;
+}
+
+.user-id-text {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    font-family: monospace;
+}
+
+.actions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.empty-cell {
+    text-align: center;
+    padding: 40px 16px;
+    opacity: 0.5;
+}

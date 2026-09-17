@@ -1,0 +1,50 @@
+:host {
+    display: block;
+}
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-titles .title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.header-titles .subtitle {
+    margin: 4px 0 0 0;
+    opacity: 0.6;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-actions button,
+.header-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-card {
+    width: 100%;
+    overflow: hidden;
+}
+
+.table-card-content {
+    padding: 0 !important;
+}

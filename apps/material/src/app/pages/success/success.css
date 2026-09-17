@@ -1,0 +1,142 @@
+:host {
+    display: block;
+}
+
+.page-container {
+    min-height: 100vh;
+    padding: 48px 16px;
+    box-sizing: border-box;
+}
+
+.content-wrapper {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 0;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+}
+
+.success-icon {
+    background-color: var(--mat-sys-primary-container, #e8f5e9);
+    color: var(--mat-sys-on-primary-container, #2e7d32);
+}
+
+.success-icon svg {
+    animation: scale-up 0.3s ease-out;
+}
+
+.error-icon {
+    background-color: var(--mat-sys-error-container, #ffebee);
+    color: var(--mat-sys-on-error-container, #c62828);
+}
+
+.text-secondary {
+    opacity: 0.7;
+}
+
+.text-error {
+    color: var(--mat-sys-error, #d32f2f);
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 768px) {
+    .grid-layout {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.main-column,
+.side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+}
+
+.item-avatar {
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.item-title {
+    font-weight: 600;
+}
+
+.item-subtitle {
+    opacity: 0.6;
+}
+
+.item-price {
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.summary-card {
+    background-color: var(--mat-sys-primary, #3f51b5);
+    color: var(--mat-sys-on-primary, #ffffff);
+}
+
+.summary-title {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+}
+
+.summary-amount {
+    font-size: 1.875rem;
+    font-weight: 900;
+    margin: 8px 0;
+}
+
+.status-chip {
+    margin-top: 8px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.full-width-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+@keyframes scale-up {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}

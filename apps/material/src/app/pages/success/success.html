@@ -1,0 +1,85 @@
+<div class="page-container">
+  <div class="content-wrapper">
+
+    @if (isLoading()) {
+      <div class="loading-container">
+        <mat-spinner diameter="60"></mat-spinner>
+      </div>
+    } @else if (order(); as details) {
+
+      <div class="header-section">
+        <div class="icon-circle success-icon">
+          <svg lucideChessQueen size="48"></svg>
+        </div>
+        <h1 class="mat-headline-medium">Ďakujeme za objednávku!</h1>
+        <p class="mat-body-large text-secondary">
+          Vaša objednávka <strong>#{{ details.id }}</strong> bola úspešne prijatá.
+        </p>
+      </div>
+
+      <div class="grid-layout">
+
+        <div class="main-column">
+          <mat-card appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>Položky objednávky</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-list>
+                @for (item of orderItems(); track item.productId; let last = $last) {
+                  <mat-list-item class="order-item">
+                    <img matListItemAvatar [src]="item.product.coverUrl" [alt]="item.product.name" class="item-avatar" />
+                    <span matListItemTitle class="item-title">{{ item.product.name }}</span>
+                    <span matListItemLine class="item-subtitle">
+                      {{ item.quantity }}x {{ item.product | singlePrice | currency:'EUR' }}
+                    </span>
+                    <span class="item-price">{{ item | totalPrice | currency:'EUR' }}</span>
+                  </mat-list-item>
+                  @if (!last) {
+                    <mat-divider></mat-divider>
+                  }
+                }
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="side-column">
+          <mat-card class="summary-card" appearance="raised">
+            <mat-card-content>
+              <span class="summary-title">Celková suma</span>
+              <div class="summary-amount">{{ details.totalAmount | currency:'EUR' }}</div>
+              <mat-chip class="status-chip">{{ details.status }}</mat-chip>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="actions">
+            <a mat-flat-button color="primary" appRedFocus routerLink="/home" class="full-width-button">
+              <svg lucideShoppingBasket></svg>
+              <span>Späť do obchodu</span>
+            </a>
+            <a mat-flat-button color="primary" appRedFocus routerLink="/profile" class="full-width-button">
+              <svg lucideCircleUserRound></svg>
+              <span>Späť do profilu</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    } @else {
+
+      <div class="header-section">
+        <div class="icon-circle error-icon">
+          <svg lucideFaceSlightlyFrowning size="48"></svg>
+        </div>
+        <h1 class="mat-headline-medium">Objednávku sa nepodarilo nájsť.</h1>
+        <p class="mat-body-large text-secondary">
+          Vaša objednávka <strong class="text-error">#{{ routeId() }}</strong> sa nenašla.
+        </p>
+      </div>
+
+    }
+
+  </div>
+</div>

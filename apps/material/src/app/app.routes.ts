@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { Login as LoginPage } from '../app/pages/login/login';
+import { adminGuard } from './guards/admin.guard';
 
 const pageNotFoundRoute: Route = {
   loadComponent: () =>
@@ -23,6 +24,14 @@ export const appRoutes: Route[] = [
         path: 'home',
         redirectTo: '',
         pathMatch: 'full',
+      },
+      {
+        path: 'administration',
+        loadComponent: () =>
+          import('./pages/administration/administration').then(
+            (m) => m.Administration,
+          ),
+        canActivate: [adminGuard],
       },
       // {
       //   path: '',
@@ -49,11 +58,11 @@ export const appRoutes: Route[] = [
         loadComponent: () =>
           import('./pages/profile/profile').then((m) => m.Profile),
       },
-      // {
-      //   path: 'success/:id',
-      //   loadComponent: () =>
-      //     import('./pages/success/success').then((m) => m.Success),
-      // },
+      {
+        path: 'success/:id',
+        loadComponent: () =>
+          import('./pages/success/success').then((m) => m.Success),
+      },
       {
         path: '**',
         ...pageNotFoundRoute,

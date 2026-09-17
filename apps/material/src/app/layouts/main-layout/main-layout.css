@@ -1,26 +1,54 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
 .main-layout {
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
+/* Force the sidenav container to fill all remaining vertical space.
+   min-height: 0 is required so it may shrink to the leftover space. */
 .main-layout-sidenav {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
 }
 
+/* mat-drawer is absolutely positioned (top: 0; bottom: 0) so it always
+   matches the container height = full viewport minus the navbar. */
 .main-layout-sidebar {
   width: 18rem;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.main-layout-content {
   display: flex;
   flex-direction: column;
 }
 
+/* Ensure the filter fills the drawer; the drawer itself scrolls if needed. */
+.main-layout-sidebar app-filter {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+/* The drawer content is the only scroll container. The inner wrapper is a
+   min-height-100% flex column so a short page keeps the footer at the
+   bottom of the viewport while still scrolling when content overflows. */
+.main-layout-scroll {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page content grows to eat leftover space; footer sits right below it. */
 .main-layout-page {
-  flex: 1;
+  flex: 1 0 auto;
   min-width: 0;
   padding: 1.5rem;
+}
+
+/* Keep app-footer strictly at the bottom */
+app-footer {
+  flex-shrink: 0;
 }

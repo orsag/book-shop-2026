@@ -9,7 +9,7 @@ import {
   LucideSearchX,
 } from '@lucide/angular';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { ErrorCodes, ErrorService, RedFocusDirective, SinglePricePipe } from '@core';
+import { ErrorCodes, ErrorService, SinglePricePipe } from '@core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BookService, ConfigurationService } from '@service';
 import { UXService } from '../../services/ux-service';
@@ -35,7 +35,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     LucideHeadphones,
     LucideClock,
     LucideLanguages,
-    RedFocusDirective,
     SinglePricePipe,
     RouterLink,
     MatButton,

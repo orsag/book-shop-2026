@@ -1,0 +1,67 @@
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CreatedOrder, CreatedOrderItem, OrderService } from '@service';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { TotalPricePipe, SinglePricePipe, RedFocusDirective } from '@core';
+import {
+  LucideChessQueen,
+  LucideShoppingBasket,
+  LucideCircleUserRound,
+  LucideFaceSlightlyFrowning,
+} from '@lucide/angular';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatDivider, MatList, MatListItem } from '@angular/material/list';
+import { MatChip } from '@angular/material/chips';
+
+@Component({
+  selector: 'app-success',
+  imports: [
+    CommonModule,
+    RouterModule,
+    LucideChessQueen,
+    LucideShoppingBasket,
+    LucideCircleUserRound,
+    CurrencyPipe,
+    TotalPricePipe,
+    SinglePricePipe,
+    RedFocusDirective,
+    LucideFaceSlightlyFrowning,
+    MatProgressSpinner,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatList,
+    MatListItem,
+    MatDivider,
+    MatChip,
+  ],
+  templateUrl: './success.html',
+  styleUrl: './success.css',
+})
+export class Success implements OnInit {
+  private route = inject(ActivatedRoute);
+  private orderService = inject(OrderService);
+
+  order = signal<CreatedOrder | null>(null);
+  orderItems = computed<CreatedOrderItem[]>(() => {
+    return (this.order()?.items as CreatedOrderItem[]) ?? [];
+  });
+  isLoading = signal(true);
+  routeId = signal('');
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.routeId.set(id);
+      this.orderService.getOrderById(this.routeId()).subscribe({
+        next: (data) => {
+          this.order.set(data);
+          this.isLoading.set(false);
+        },
+        error: () => this.isLoading.set(false),
+      });
+    }
+  }
+}

@@ -11,7 +11,6 @@ import {
   DEFAULT_SEARCH,
   DEFAULT_TYPE,
 } from '@store/libs';
-import { signal } from '@angular/core';
 import {
   AppActions,
   selectAppFilters,
@@ -85,8 +84,9 @@ describe('Filter', () => {
     component.isContentVisible.set(true);
     fixture.detectChanges();
 
-    const categoryElements =
-      fixture.nativeElement.querySelectorAll('.filter-category-label');
+    const categoryElements = fixture.nativeElement.querySelectorAll(
+      '.filter-category-label',
+    );
     expect(categoryElements.length).toBe(component.bookCategories.length);
 
     component.bookCategories.forEach((category, index) => {
@@ -129,7 +129,8 @@ describe('Filter', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const history = fixture.nativeElement.querySelectorAll('.filter-history li');
+    const history =
+      fixture.nativeElement.querySelectorAll('.filter-history li');
     expect(history.length).toBe(2);
     expect(history[0].textContent).toContain('harry potter');
   });
