@@ -48,3 +48,76 @@
 .table-card-content {
     padding: 0 !important;
 }
+
+.pagination-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Styled container wrapper using MatButtonToggleGroup aesthetic */
+.pagination-group {
+    display: inline-flex;
+    background-color: var(--mat-sys-surface-container-highest, rgba(0, 0, 0, 0.05));
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+}
+
+.pagination-btn {
+    height: 36px;
+    line-height: 36px;
+    padding: 0 12px;
+    min-width: 40px;
+    border-radius: 8px !important;
+    font-size: 0.875rem;
+}
+
+/* Current active page indicator styling */
+.pagination-btn.active-page {
+    font-weight: 700;
+    opacity: 1 !important;
+    cursor: default;
+}
+
+/* Disabled state override for non-active buttons */
+.pagination-btn[disabled]:not(.active-page) {
+    opacity: 0.4;
+}
+
+.content-card {
+    width: 100%;
+}
+
+.search-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    width: 340px;
+    max-width: 100%;
+}
+
+.product-detail p {
+    margin: 4px 0;
+}
+
+.search-input {
+    width: 300px;
+    max-width: 100%;
+}
+
+.search-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-results-table {
+    width: 100%;
+    margin-top: 16px;
+}

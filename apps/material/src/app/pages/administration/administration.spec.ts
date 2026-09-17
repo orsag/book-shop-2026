@@ -7,8 +7,14 @@ import { of } from 'rxjs';
 import { OrderService, ToastService } from '@service';
 import {
   CartActions,
+  selectAppFilters,
+  selectHasMorePage,
   selectIsAdmin,
+  selectIsEmpty,
   selectOrders,
+  selectProductType,
+  selectTotalPages,
+  selectTotalProducts,
   selectUser,
 } from '@ngrx';
 import { OrderStatus } from '@store/shared-models';
@@ -20,6 +26,16 @@ const TEST_USER = {
   phoneNumber: '+421900000000',
   theme: 'light',
   isAdmin: true,
+};
+
+const TEST_FILTERS = {
+  type: 'BOOK' as const,
+  page: 1,
+  limit: 10,
+  search: '',
+  category: null,
+  sortBy: null,
+  isDiscounted: false,
 };
 
 const TEST_ORDER = {
@@ -59,6 +75,12 @@ describe('Administration', () => {
             { selector: selectIsAdmin, value: true },
             { selector: selectUser, value: TEST_USER },
             { selector: selectOrders, value: [TEST_ORDER] },
+            { selector: selectAppFilters, value: TEST_FILTERS },
+            { selector: selectIsEmpty, value: false },
+            { selector: selectHasMorePage, value: false },
+            { selector: selectTotalPages, value: 1 },
+            { selector: selectTotalProducts, value: 1 },
+            { selector: selectProductType, value: 'BOOK' },
           ],
         }),
         { provide: OrderService, useValue: mockOrderService },

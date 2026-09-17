@@ -31,4 +31,139 @@
       <app-order-table></app-order-table>
     </mat-card-content>
   </mat-card>
+
+  @if (!loading.isLoading('products')) {
+    <div class="pagination-row">
+      <mat-button-toggle-group class="pagination-group" aria-label="Pagination">
+
+        <button
+          mat-button
+          appRedFocus
+          class="pagination-btn"
+          [disabled]="store.filters().page <= 1"
+          (click)="store.setPage(1)"
+        >
+          {{ t('administration.first') }}
+        </button>
+
+        <button
+          mat-button
+          appRedFocus
+          class="pagination-btn"
+          [disabled]="store.filters().page <= 1"
+          (click)="store.setPage(store.filters().page - 1)"
+        >
+          {{ store.filters().page - 1 }}
+        </button>
+
+        <button
+          mat-flat-button
+          color="primary"
+          appRedFocus
+          class="pagination-btn active-page"
+          disabled
+        >
+          {{ t('administration.page') }} {{ store.filters().page }} / {{ store.totalPages() }}
+        </button>
+
+        <button
+          mat-button
+          appRedFocus
+          class="pagination-btn"
+          [disabled]="!store.hasMorePage()"
+          (click)="store.setPage(store.filters().page + 1)"
+        >
+          {{ store.filters().page + 1 }}
+        </button>
+
+        <button
+          mat-button
+          appRedFocus
+          class="pagination-btn"
+          [disabled]="!store.hasMorePage()"
+          (click)="store.setPage(store.totalPages())"
+        >
+          {{ t('administration.last') }}
+        </button>
+
+      </mat-button-toggle-group>
+    </div>
+  }
+
+    <mat-card appearance="outlined" class="content-card">
+      <mat-card-content>
+        <div class="search-actions-row">
+          <mat-form-field appearance="outline" class="search-input">
+            <mat-label>Product ID or name</mat-label>
+            <input matInput type="text" placeholder="e.g. PROD-12345 or book name"   [formControl]="searchControl" />
+          </mat-form-field>
+
+          <button mat-stroked-button type="button" (click)="clearSearch()">
+            Clear
+          </button>
+
+          @if (searchMode() === 'id') {
+            <button mat-flat-button color="primary" type="button" (click)="goBack()">
+              Back
+            </button>
+          }
+
+          @if (searchMode() === 'id') {
+            <button mat-flat-button color="warn" type="button" (click)="deleteProduct(confirmDialog)">
+              Delete product
+            </button>
+          }
+        </div>
+
+        @if (searchMode() === 'id' && searchProduct(); as product) {
+          <div class="product-detail">
+            <p><strong>ID:</strong> {{ product.id }}</p>
+            <p><strong>Name:</strong> {{ product.name }}</p>
+            <p><strong>Type:</strong> {{ product.productType }}</p>
+            <p><strong>Price:</strong> {{ product.price | currency:'EUR' }}</p>
+            <p><strong>Available:</strong> {{ product.availableCount }}</p>
+          </div>
+        }
+
+        @if (searchMode() === 'name' && !store.isEmpty()) {
+          <table mat-table [dataSource]="(searchResults()?.data ?? [])" class="mat-elevation-z0 search-results-table">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let product" (click)="copyProductId(product.id)">{{ product.id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['id', 'name']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['id', 'name'];"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="2">No products found.</td>
+            </tr>
+          </table>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <ng-template #confirmDialog>
+      <h2 mat-dialog-title>{{ t('administration.delete_book') }}</h2>
+      <mat-dialog-content>
+        <p class="confirm-dialog-text">
+          {{ t('administration.delete_book2') }}
+          @if (searchProduct(); as product) {
+            <strong>{{ product.name }}</strong>
+          }
+          ?
+        </p>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>{{ t('administration.cancel_btn') }}</button>
+        <button mat-flat-button color="warn" mat-dialog-close="true">
+          {{ t('administration.delete_btn') }}
+        </button>
+      </mat-dialog-actions>
+    </ng-template>
 </div>

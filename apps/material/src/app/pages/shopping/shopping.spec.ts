@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Shopping } from './shopping';
+import { Success } from '../success/success';
 import { OrderService, ToastService, ConfigurationService } from '@service';
 import { ErrorService } from '@core';
 import { MOCKED_PRODUCT } from '@store/libs';
@@ -62,7 +63,12 @@ describe('Shopping', () => {
           provide: ConfigurationService,
           useValue: { isDarkTheme: vi.fn().mockReturnValue(false) },
         },
-        provideRouter([]),
+        provideRouter([
+          {
+            path: 'success/:id',
+            component: Success,
+          },
+        ]),
       ],
     }).compileComponents();
 
