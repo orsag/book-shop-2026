@@ -18,7 +18,6 @@
         color="primary"
         appRedFocus
         type="button"
-        (click)="openCreateModal()"
       >
         <svg lucidePlus size="20"></svg>
         <span>{{ t('administration.add_product') }}</span>
@@ -90,80 +89,162 @@
     </div>
   }
 
-    <mat-card appearance="outlined" class="content-card">
-      <mat-card-content>
-        <div class="search-actions-row">
-          <mat-form-field appearance="outline" class="search-input">
-            <mat-label>Product ID or name</mat-label>
-            <input matInput type="text" placeholder="e.g. PROD-12345 or book name"   [formControl]="searchControl" />
+  <mat-card appearance="outlined" class="content-card">
+    <mat-card-content>
+      <div class="search-actions-row">
+        <mat-form-field appearance="outline" class="search-input">
+          <mat-label>Product ID or name</mat-label>
+          <input matInput type="text" placeholder="e.g. PROD-12345 or book name" [formControl]="searchControl" />
+        </mat-form-field>
+
+        <button mat-stroked-button type="button" (click)="clearSearch()">
+          Clear
+        </button>
+
+        @if (searchMode() === 'id') {
+          <button mat-flat-button color="primary" type="button" (click)="goBack()">
+            Back
+          </button>
+        }
+
+        @if (searchMode() === 'id') {
+          <button mat-flat-button color="warn" type="button" (click)="showEditProduct(editDialog)">
+            Edit product
+          </button>
+        }
+
+        @if (searchMode() === 'id') {
+          <button mat-flat-button color="warn" type="button" (click)="deleteProduct(confirmDialog)">
+            Delete product
+          </button>
+        }
+      </div>
+
+      @if (searchMode() === 'id' && searchProduct(); as product) {
+        <div class="product-detail">
+          <p><strong>ID:</strong> {{ product.id }}</p>
+          <p><strong>Name:</strong> {{ product.name }}</p>
+          <p><strong>Type:</strong> {{ product.productType }}</p>
+          <p><strong>Price:</strong> {{ product.price | currency:'EUR' }}</p>
+          <p><strong>Available:</strong> {{ product.availableCount }}</p>
+        </div>
+      }
+
+      @if (searchMode() === 'name' && !store.isEmpty()) {
+        <table mat-table [dataSource]="(searchResults()?.data ?? [])" class="mat-elevation-z0 search-results-table">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let product" (click)="copyProductId(product.id)">{{ product.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['id', 'name']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['id', 'name'];"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="2">No products found.</td>
+          </tr>
+        </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <ng-template #confirmDialog>
+    <h2 mat-dialog-title>{{ t('administration.delete_book') }}</h2>
+    <mat-dialog-content>
+      <p class="confirm-dialog-text">
+        {{ t('administration.delete_book2') }}
+        @if (searchProduct(); as product) {
+          <strong>{{ product.name }}</strong>
+        }
+        ?
+      </p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>{{ t('administration.cancel_btn') }}</button>
+      <button mat-flat-button color="warn" mat-dialog-close="true">
+        {{ t('administration.delete_btn') }}
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <ng-template #editDialog>
+    <form [formGroup]="editForm" (ngSubmit)="saveEditedProduct()">
+      <h2 mat-dialog-title>Edit product</h2>
+      <mat-dialog-content>
+        <div class="edit-form-grid">
+          <mat-form-field class="edit-form-field" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              appRedFocus
+              class="edit-input"
+            />
+            @if (
+              editForm.get('name')?.touched &&
+              editForm.get('name')?.errors?.['required']
+            ) {
+              <mat-error>Name is required</mat-error>
+            }
+            @if (
+              editForm.get('name')?.touched &&
+              editForm.get('name')?.errors?.['minlength']
+            ) {
+              <mat-error>Name must be at least 3 characters</mat-error>
+            }
           </mat-form-field>
 
-          <button mat-stroked-button type="button" (click)="clearSearch()">
-            Clear
-          </button>
+          <mat-form-field class="edit-form-field" appearance="outline">
+            <mat-label>Price</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="price"
+              appRedFocus
+              class="edit-input"
+            />
+            @if (
+              editForm.get('price')?.touched &&
+              editForm.get('price')?.errors?.['greaterThanPrice']
+            ) {
+              <mat-error>Price must be greater than 5</mat-error>
+            }
+          </mat-form-field>
 
-          @if (searchMode() === 'id') {
-            <button mat-flat-button color="primary" type="button" (click)="goBack()">
-              Back
-            </button>
-          }
-
-          @if (searchMode() === 'id') {
-            <button mat-flat-button color="warn" type="button" (click)="deleteProduct(confirmDialog)">
-              Delete product
-            </button>
-          }
+          <mat-form-field class="edit-form-field" appearance="outline">
+            <mat-label>Available count</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="availableCount"
+              appRedFocus
+              class="edit-input"
+            />
+            @if (
+              editForm.get('availableCount')?.touched &&
+              editForm.get('availableCount')?.errors?.['greaterThanZero']
+            ) {
+              <mat-error>Available count must be greater than 0</mat-error>
+            }
+          </mat-form-field>
         </div>
-
-        @if (searchMode() === 'id' && searchProduct(); as product) {
-          <div class="product-detail">
-            <p><strong>ID:</strong> {{ product.id }}</p>
-            <p><strong>Name:</strong> {{ product.name }}</p>
-            <p><strong>Type:</strong> {{ product.productType }}</p>
-            <p><strong>Price:</strong> {{ product.price | currency:'EUR' }}</p>
-            <p><strong>Available:</strong> {{ product.availableCount }}</p>
-          </div>
-        }
-
-        @if (searchMode() === 'name' && !store.isEmpty()) {
-          <table mat-table [dataSource]="(searchResults()?.data ?? [])" class="mat-elevation-z0 search-results-table">
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let product" (click)="copyProductId(product.id)">{{ product.id }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Name</th>
-              <td mat-cell *matCellDef="let product">{{ product.name }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="['id', 'name']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['id', 'name'];"></tr>
-
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="2">No products found.</td>
-            </tr>
-          </table>
-        }
-      </mat-card-content>
-    </mat-card>
-
-    <ng-template #confirmDialog>
-      <h2 mat-dialog-title>{{ t('administration.delete_book') }}</h2>
-      <mat-dialog-content>
-        <p class="confirm-dialog-text">
-          {{ t('administration.delete_book2') }}
-          @if (searchProduct(); as product) {
-            <strong>{{ product.name }}</strong>
-          }
-          ?
-        </p>
       </mat-dialog-content>
       <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>{{ t('administration.cancel_btn') }}</button>
-        <button mat-flat-button color="warn" mat-dialog-close="true">
-          {{ t('administration.delete_btn') }}
+        <button mat-button type="button" mat-dialog-close>Cancel</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="editForm.invalid"
+        >
+          Save
         </button>
       </mat-dialog-actions>
-    </ng-template>
+    </form>
+  </ng-template>
 </div>

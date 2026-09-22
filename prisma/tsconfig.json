@@ -7,5 +7,5 @@
     "outDir": "../dist/out-tsc",
     "moduleResolution": "bundler"
   },
-  "include": ["prisma.ts", "generated/**/*.ts"]
+  "include": ["prisma.ts", "create.product.ts", "creator.constants.ts", "generated/**/*.ts"]
 }

@@ -19,11 +19,11 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
+  CreateProductDtoProductType,
   DEFAULT_TYPE,
   DEFAULT_PAGE,
   DEFAULT_MAX_LIMIT,
 } from '@book-store-2026/libs';
-import { CreateProductDtoProductType } from '@book-store-2026/libs';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { SanitizeInterceptor } from '../../interceptors/sanitize.interceptor';

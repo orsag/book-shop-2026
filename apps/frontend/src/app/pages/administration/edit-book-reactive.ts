@@ -17,7 +17,7 @@ import {
 import { EMPTY_BOOK } from '@store/libs';
 import { CreateProductDto as IProduct, BookDto } from '@api';
 import { CreateProductDtoProductType as ProductType } from '@api';
-import { createProduct } from '../../../../../../prisma/createProduct';
+import { createProduct } from '@prismaCreator';
 import { CATEGORIES } from '@store/shared-models';
 import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';

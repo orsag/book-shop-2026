@@ -24,6 +24,7 @@
       "@store/libs": ["./apps/libs/src/index.ts"],
       "@prisma-client": ["./prisma/generated/prisma/client"],
       "@prismalib": ["./prisma/prisma.ts"],
+      "@prismaCreator": ["./prisma/create.product.ts"],
       "@core": ["./apps/libs/src/fe/core"],
       "@service": ["./apps/libs/src/fe/services"],
       "@component": ["./apps/frontend/src/app/components"],

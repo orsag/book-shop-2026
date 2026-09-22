@@ -136,9 +136,19 @@ describe('Profile Component (Material + NgRx)', () => {
     it('should display favorite products section', () => {
       const book = {
         id: 'book-1',
+        sku: 'SKU-BOOK-001',
         name: 'Zaklínač',
+        alternativeHeadline: 'Zaklínač',
+        description: 'Prvá časť ságy o zaklínačovi Geraltovi.',
         price: 15,
+        discount: 0,
+        availableCount: 1,
+        isAvailable: true,
+        product_quality: 'new',
+        productType: 'BOOK' as const,
         coverUrl: 'images/placeholder.webp',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
       };
       mockStore.overrideSelector(selectFavoriteProducts, [book]);
       mockStore.overrideSelector(selectFavoriteCount, 1);

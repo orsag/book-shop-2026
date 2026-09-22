@@ -9,22 +9,30 @@ import { BookDto, GameDto, GastroDto, GiftCardDto } from './create-product.dto';
 import { Type } from 'class-transformer';
 
 export class UpdateProductDto implements UpdateProductDto {
+  @IsOptional()
   @IsString()
-  name!: string;
+  name?: string;
+  @IsOptional()
   @IsString()
-  alternativeHeadline!: string;
+  alternativeHeadline?: string;
+  @IsOptional()
   @IsString()
-  description!: string;
+  description?: string;
+  @IsOptional()
   @IsNumber()
-  price!: number;
+  price?: number;
+  @IsOptional()
   @IsNumber()
-  discount!: number;
+  discount?: number;
+  @IsOptional()
   @IsNumber()
-  availableCount!: number;
+  availableCount?: number;
+  @IsOptional()
   @IsString()
-  product_quality!: string;
+  product_quality?: string;
+  @IsOptional()
   @IsString()
-  productType!: CreateProductDtoProductType;
+  productType?: CreateProductDtoProductType;
 
   @IsOptional()
   @ValidateNested()

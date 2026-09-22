@@ -11,7 +11,8 @@ import {
   RATING_MAX,
   RATING_MIN,
 } from './creator.constants';
-import { CreateProductDtoProductType } from '@api';
+
+type CreateProductDtoProductType = "BOOK" | "GAME" | "GASTRO" | "GIFT_CARD";
 
 export function getName(type: CreateProductDtoProductType) {
   const map: Record<CreateProductDtoProductType, string> = {

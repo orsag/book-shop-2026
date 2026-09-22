@@ -121,3 +121,32 @@
     width: 100%;
     margin-top: 16px;
 }
+
+/* Container for the dialog content */
+mat-dialog-content {
+    padding-top: 16px !important; /* Space between title and first field */
+    overflow-y: auto;
+}
+
+/* Form grid arranged in a single column */
+.edit-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Spacing between form fields */
+    width: 100%;
+    min-width: 320px; /* Ensures comfortable field width on smaller screens */
+    box-sizing: border-box;
+}
+
+/* Full-width form fields */
+.edit-form-field {
+    width: 100%;
+}
+
+/* Action buttons alignment and spacing */
+mat-dialog-actions {
+    padding: 16px 24px !important;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}

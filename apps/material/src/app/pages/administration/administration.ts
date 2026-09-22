@@ -1,7 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { LucideFaceSlightlyFrowning, LucidePlus } from '@lucide/angular';
+import { LucidePlus } from '@lucide/angular';
 import { OrderTable } from '../../components/order-table';
-import { ErrorCodes, ErrorService, LoadingService, RedFocusDirective } from '@core';
+import {
+  ErrorCodes,
+  ErrorService,
+  LoadingService,
+  RedFocusDirective,
+} from '@core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { MatButton } from '@angular/material/button';
@@ -14,6 +19,7 @@ import {
   MatDialogClose,
   MatDialogContent,
   MatDialogTitle,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { TemplateRef } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -32,13 +38,32 @@ import {
   selectUser,
   UserStateRoot,
 } from '@ngrx';
-import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { catchError, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import {
+  MatError,
+  MatFormField,
+  MatInput,
+  MatLabel,
+} from '@angular/material/input';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  switchMap,
+} from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateProductDto } from '@api';
-import { BookService } from '@service';
+import { CreateProductDto as IProduct, CreateProductDto } from '@api';
+import { BookService, ToastService } from '@service';
 import { CurrencyPipe } from '@angular/common';
+import { greaterThanValidator } from './validators';
 
 @Component({
   selector: 'app-administration',
@@ -63,17 +88,29 @@ import { CurrencyPipe } from '@angular/common';
     MatInput,
     FormsModule,
     ReactiveFormsModule,
+    MatError,
   ],
   templateUrl: './administration.html',
   styleUrl: './administration.css',
 })
 export class Administration implements OnInit {
   loading = inject(LoadingService);
+  toast = inject(ToastService);
   searchControl = new FormControl('', { nonNullable: true });
   searchProduct = signal<CreateProductDto | null>(null);
+
+  readonly editForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    price: new FormControl(0, [greaterThanValidator(5, 'greaterThanPrice')]),
+    availableCount: new FormControl(0, [
+      greaterThanValidator(0, 'greaterThanZero'),
+    ]),
+  });
+
   private bookService = inject(BookService);
   private errorService = inject(ErrorService);
   private dialog = inject(MatDialog);
+  private editDialogRef?: MatDialogRef<unknown>;
   private readonly appStore = inject(Store<AppStateRoot & UserStateRoot>);
   readonly productType = this.appStore.selectSignal(selectProductType);
   searchResults = this.appStore.selectSignal(selectProductsResponse);
@@ -169,7 +206,35 @@ export class Administration implements OnInit {
       });
   }
 
-  openCreateModal() {
-    // do nothing
+  showEditProduct(editDialog: TemplateRef<unknown>) {
+    const product = this.searchProduct();
+    if (!product) return;
+
+    this.editForm.patchValue({
+      name: product.name,
+      price: Number(product.price),
+      availableCount: Number(product.availableCount),
+    });
+
+    this.editDialogRef = this.dialog.open(editDialog);
+  }
+
+  saveEditedProduct() {
+    const product = this.searchProduct();
+    if (!product) return;
+
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      this.toast.alert('Invalid form');
+      return;
+    }
+
+    this.appStore.dispatch(
+      AppActions.saveProduct({
+        id: product.id,
+        data: this.editForm.getRawValue() as Partial<IProduct>,
+      }),
+    );
+    this.editDialogRef?.close();
   }
 }
