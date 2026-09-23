@@ -24,7 +24,10 @@ export class DebounceEventManagerPlugin extends EventManagerPlugin {
     const baseEvent = parts[0]; // 'input'
     const delay = parseInt(parts[2] || '300', 10); // '500' or default 300
 
-    let timeout: number;
+    // Type this via the SAME overload the compiler resolved, so it's correct
+    // whether lib.dom (number) or @types/node (NodeJS.Timeout) wins — never
+    // hardcode either, and never import NodeJS into a frontend plugin.
+    let timeout: ReturnType<typeof setTimeout>;
 
     const debouncedHandler = (event: Event) => {
       if (timeout) clearTimeout(timeout);

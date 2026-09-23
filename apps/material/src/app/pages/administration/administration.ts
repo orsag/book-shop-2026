@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { EditSessionService } from '../../services/edit-session.service';
 import { LucidePlus } from '@lucide/angular';
 import { OrderTable } from '../../components/order-table';
 import {
@@ -28,6 +29,7 @@ import {
   AppStateRoot,
   CartActions,
   selectAppFilters,
+  selectBooksVersion,
   selectHasMorePage,
   selectIsAdmin,
   selectIsEmpty,
@@ -96,6 +98,7 @@ import { greaterThanValidator } from './validators';
 export class Administration implements OnInit {
   loading = inject(LoadingService);
   toast = inject(ToastService);
+  private readonly editSession = inject(EditSessionService);
   searchControl = new FormControl('', { nonNullable: true });
   searchProduct = signal<CreateProductDto | null>(null);
 
@@ -113,6 +116,7 @@ export class Administration implements OnInit {
   private editDialogRef?: MatDialogRef<unknown>;
   private readonly appStore = inject(Store<AppStateRoot & UserStateRoot>);
   readonly productType = this.appStore.selectSignal(selectProductType);
+  readonly booksVersion = this.appStore.selectSignal(selectBooksVersion);
   searchResults = this.appStore.selectSignal(selectProductsResponse);
   searchMode = signal<'id' | 'name' | null>(null);
 
@@ -147,7 +151,25 @@ export class Administration implements OnInit {
         switchMap((search) => this.search(search)),
         takeUntilDestroyed(),
       )
-      .subscribe((product) => this.searchProduct.set(product));
+      .subscribe((product) => {
+        this.searchProduct.set(product);
+        this.editSession.setCurrent(product);
+      });
+
+    // re-fetch single updated product
+    effect(() => {
+      void this.booksVersion();
+      const pinned = this.editSession.current;
+      if (!pinned) return;
+      this.bookService
+        .getOne(pinned.id, this.productType())
+        .subscribe((updated) => {
+          if (updated) {
+            this.searchProduct.set(updated);
+            this.editSession.setCurrent(updated);
+          }
+        });
+    });
   }
 
   private search(search: string) {
@@ -191,7 +213,7 @@ export class Administration implements OnInit {
   }
 
   deleteProduct(confirmDialog: TemplateRef<unknown>) {
-    const product = this.searchProduct();
+    const product = this.editSession.current;
     if (!product) return;
 
     this.dialog
@@ -207,7 +229,7 @@ export class Administration implements OnInit {
   }
 
   showEditProduct(editDialog: TemplateRef<unknown>) {
-    const product = this.searchProduct();
+    const product = this.editSession.current;
     if (!product) return;
 
     this.editForm.patchValue({
@@ -220,7 +242,7 @@ export class Administration implements OnInit {
   }
 
   saveEditedProduct() {
-    const product = this.searchProduct();
+    const product = this.editSession.current;
     if (!product) return;
 
     if (this.editForm.invalid) {
