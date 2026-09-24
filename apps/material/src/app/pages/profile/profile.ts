@@ -27,6 +27,7 @@ import {
 import { ConfigurationService, OrderService, ToastService } from '@service';
 import { delay } from 'rxjs';
 import { UpdateUserDetailDto } from '@api';
+import isEqual from 'lodash.isequal';
 import {
   AppStateRoot,
   CartActions,
@@ -111,10 +112,23 @@ export class Profile {
     });
 
     effect(() => {
-      const isDirty = this.form().dirty() || this.userForm().dirty();
+      const detailValue = this.form().value();
+      const userValue = this.userForm().value();
       untracked(() => {
+        const detailChanged =
+          this.detailSnapshot() !== undefined &&
+          !this.isEqualModel(this.detailSnapshot()!, detailValue);
+        const userChanged =
+          this.userSnapshot() !== undefined &&
+          !this.isEqualModel(this.userSnapshot()!, userValue);
+
+
+        console.log(detailChanged, userChanged);
         this.store.dispatch(
-          UserActions.updateStore({ key: 'isDirtyForm', value: isDirty }),
+          UserActions.updateStore({
+            key: 'isDirtyForm',
+            value: detailChanged || userChanged,
+          }),
         );
       });
     });
@@ -250,6 +264,10 @@ export class Profile {
         ? new Date(detail.dateOfBirth).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],
     };
+  }
+
+  private isEqualModel<T extends Record<string, unknown>>(a: T, b: T): boolean {
+    return isEqual(a, b);
   }
 
   copyToClipboard(id: string) {

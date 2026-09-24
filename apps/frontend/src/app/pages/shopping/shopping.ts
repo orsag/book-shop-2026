@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { CartStore } from '@store';
 import { CartItem } from '@store/libs';
 import { Router, RouterLink } from '@angular/router';
@@ -26,6 +26,7 @@ export class Shopping implements OnInit {
   private router = inject(Router);
 
   items: Signal<CartItem[]> = this.cartStore.items;
+  hasSomeItems = computed(() => this.cartStore.items().length > 0);
 
   ngOnInit() {
     this.cartStore.syncCartWithServer();
@@ -47,29 +48,6 @@ export class Shopping implements OnInit {
         this.errorService.handleError(ErrorCodes.CHECKOUT);
       },
     });
-  }
-
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      const target = event.target as HTMLElement;
-
-      // Check if the event happened inside a collapse item specific to this component
-      const collapseItem = target.closest('.collapse');
-      if (collapseItem) {
-        event.preventDefault(); // Prevent default page scroll on Space
-
-        const radioInput = collapseItem.querySelector(
-          'input[type="radio"]',
-        ) as HTMLInputElement;
-
-        if (radioInput) {
-          radioInput.checked = true;
-          // Dispatch change event so Angular/DaisyUI picks up the state change
-          radioInput.dispatchEvent(new Event('change'));
-        }
-      }
-    }
   }
 
   protected handleClearCart() {

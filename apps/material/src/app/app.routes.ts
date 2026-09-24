@@ -3,6 +3,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { SimpleLayoutComponent } from './layouts/simple-layout/simple-layout';
 import { Login as LoginPage } from '../app/pages/login/login';
 import { adminGuard } from './guards/admin.guard';
+import { profileGuard } from './guards/profile.guard';
 
 const pageNotFoundRoute: Route = {
   loadComponent: () =>
@@ -57,6 +58,7 @@ export const appRoutes: Route[] = [
         path: 'profile',
         loadComponent: () =>
           import('./pages/profile/profile').then((m) => m.Profile),
+        canDeactivate: [profileGuard],
       },
       {
         path: 'success/:id',

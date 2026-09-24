@@ -20,19 +20,20 @@ import {
   LucideLock,
   LucideCreditCard,
   LucideClipboardCopy,
-  LucideShoppingBag
+  LucideShoppingBag,
 } from '@lucide/angular';
 import { OrderService, ToastService } from '@service';
 import { OrderStatus as OSEnum } from '@store/shared-models';
 import {
   NoFocusJumpDirective,
   RedFocusDirective,
-  BlueFocusDirective
+  BlueFocusDirective,
 } from '@core';
 import { CardSmall, FieldErrorComponent } from '@component';
 import { delay } from 'rxjs';
 import { UpdateUserDetailDto } from '@api';
 import { RouterLink } from '@angular/router';
+import isEqual from 'lodash.isequal';
 
 @Component({
   selector: 'app-profile',
@@ -100,9 +101,23 @@ export class Profile {
     });
 
     effect(() => {
-      const isDirty = this.form().dirty() || this.userForm().dirty();
+      // `.dirty()` is unusable here: this is a SIGNAL-form that derives from
+      // the model signal, and async hydration re-seeds that model AFTER the
+      // form captured its pristine baseline — so a virgin form reports dirty
+      // purely because the load wrote the values (see constructor effect A).
+      // Compare the CURRENT value against the post-hydration snapshot; only a
+      // real edit diverges. Snapshot is set together with the one-shot seed,
+      // so both settle atomically.
+      const detailValue = this.form().value();
+      const userValue = this.userForm().value();
       untracked(() => {
-        this.userStore.updateStore('isDirtyForm', isDirty);
+        const detailChanged =
+          this.detailSnapshot() !== undefined &&
+          !this.isEqualModel(this.detailSnapshot()!, detailValue);
+        const userChanged =
+          this.userSnapshot() !== undefined &&
+          !this.isEqualModel(this.userSnapshot()!, userValue);
+        this.userStore.updateStore('isDirtyForm', detailChanged || userChanged);
       });
     });
   }
@@ -244,6 +259,10 @@ export class Profile {
         ? new Date(detail.dateOfBirth).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],
     };
+  }
+
+  private isEqualModel<T extends Record<string, unknown>>(a: T, b: T): boolean {
+    return isEqual(a, b);
   }
 
   copyToClipboard(id: string) {
