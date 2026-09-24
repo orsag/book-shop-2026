@@ -3,15 +3,15 @@
 <div
   class="navbar"
   aria-label="Main Navigation"
-  [class.navbar-theme-dark]="currentTheme() === 'dark'"
-  [class.navbar-theme-light]="currentTheme() !== 'dark'"
+  [class.navbar-theme-dark]="isDarkTheme()"
+  [class.navbar-theme-light]="!isDarkTheme()"
 >
   <div
     class="navbar-backdrop"
     [style.background-image]="`url(${currentNavbarBackground()})`"
   ></div>
 
-  @if (currentTheme() === 'dark') {
+  @if (isDarkTheme()) {
     <div class="navbar-backdrop-stars">
       <div class="shooting-star-html"></div>
     </div>
@@ -45,7 +45,7 @@
         routerLink="/"
         class="navbar-title"
         [ngClass]="
-          currentTheme() === 'dark' ? 'navbar-title-dark' : 'navbar-title-light'
+          isDarkTheme() ? 'navbar-title-dark' : 'navbar-title-light'
         "
       >
         Golden Bee Bookshop
@@ -70,7 +70,7 @@
               [matTooltip]="'Clear search query'"
               aria-label="Clear search query"
             >
-              <svg lucideX height="16" width="16"></svg>
+              <svg lucideX size="16"></svg>
             </button>
           }
         </div>

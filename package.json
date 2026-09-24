@@ -1,10 +1,7 @@
 {
   "name": "book-store-2026",
-  "version": "3.42",
+  "version": "3.43",
   "license": "MIT",
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "seed": "npx tsx prisma/seed.ts",
     "pipe": "clear && gitlab-ci-local",
@@ -38,7 +35,7 @@
     "@angular/router": "~22.1.2",
     "@faker-js/faker": "^10.6.0",
     "@hono/node-server": "^2.1.1",
-    "@hono/zod-validator": "^0.9.0",
+    "@hono/zod-validator": "^0.9.1",
     "@jsverse/transloco": "^8.4.0",
     "@lucide/angular": "^1.48.0",
     "@nestjs/common": "^11.1.0",
@@ -67,8 +64,8 @@
     "drizzle-orm": "^0.45.2",
     "express": "^5.2.1",
     "helmet": "^8.3.0",
-    "hono": "^4.12.30",
-    "hono-rate-limiter": "^0.5.3",
+    "hono": "^4.13.9",
+    "hono-rate-limiter": "^0.5.4",
     "jsonwebtoken": "^9.0.3",
     "lodash.isequal": "^4.5.0",
     "lorem-ipsum": "^3.0.0",

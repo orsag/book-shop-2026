@@ -107,7 +107,7 @@ export class Navbar {
     logout: () => this.appStore.dispatch(UserActions.logout()),
   };
 
-  currentTheme = this.config.theme;
+  isDarkTheme = computed(() => this.config.isDarkTheme());
 
   currentNavbarBackground = computed(() =>
     this.config.isDarkTheme()

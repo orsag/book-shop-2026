@@ -72,7 +72,7 @@ import { LucideFaceSlightlyFrowning } from '@lucide/angular';
           <ul class="space-y-1">
             @for (error of formState()?.errors() ?? []; track error.message) {
               <li class="flex items-center gap-1 validator-hint">
-                <svg lucideFaceSlightlyFrowning height="10" width="10"></svg>
+                <svg lucideFaceSlightlyFrowning size="10"></svg>
                 <span>{{ error.message }}</span>
               </li>
             }

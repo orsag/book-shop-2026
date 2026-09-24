@@ -76,7 +76,7 @@ export class Navbar {
   private isBrowser = isPlatformBrowser(this.platformId);
   showProfileModal = signal(false);
   @ViewChild('myInput') inputElement!: ElementRef<HTMLInputElement>;
-  currentTheme = this.config.theme;
+  isDarkTheme = computed(() => this.config.isDarkTheme());
 
   currentNavbarBackground = computed(() =>
     this.config.isDarkTheme()
