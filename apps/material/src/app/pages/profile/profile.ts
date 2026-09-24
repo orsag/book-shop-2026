@@ -71,7 +71,6 @@ export class Profile {
   orderService = inject(OrderService);
   toast = inject(ToastService);
   config = inject(ConfigurationService);
-  private isFormInitialized = false;
   OrderStatus = OSEnum;
   private detailSnapshot = signal<UserDetailSmall | undefined>(undefined);
   private userSnapshot = signal<UpdateUserDtoSmall | undefined>(undefined);
@@ -96,10 +95,10 @@ export class Profile {
             return; // Wait for the next run when data arrives
           }
 
-          if (!this.isFormInitialized && latestDetail) {
-            this.userDetailModel.set(this.mapToDetailModel(latestDetail));
-            this.isFormInitialized = true;
-            this.detailSnapshot.set(this.mapToDetailModel(latestDetail));
+          if (latestDetail) {
+            const seededDetail = this.mapToDetailModel(latestDetail);
+            this.userDetailModel.set(seededDetail);
+            this.detailSnapshot.set(seededDetail);
             this.userSnapshot.set({
               username: this.user()?.username ?? '',
               email: this.user()?.email ?? '',

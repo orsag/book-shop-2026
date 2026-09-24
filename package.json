@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.43",
+  "version": "3.44",
   "license": "MIT",
   "scripts": {
     "seed": "npx tsx prisma/seed.ts",
