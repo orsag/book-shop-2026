@@ -5,7 +5,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { AppStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import {
-  LucideTrash2,
+  LucideTrash,
   LucidePencil,
   LucideImagePlus,
   LucideChevronsRight,
@@ -23,7 +23,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     CurrencyPipe,
     DatePipe,
     TranslocoDirective,
-    LucideTrash2,
+    LucideTrash,
     LucidePencil,
     LucideImagePlus,
     LucideChevronsRight,

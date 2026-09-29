@@ -10,11 +10,16 @@ import {
   SuccessCodes,
   RedFocusDirective,
 } from '@core';
-import { LucideTrash2 } from '@lucide/angular';
+import { LucideTrash } from '@lucide/angular';
 
 @Component({
   selector: 'app-shopping',
-  imports: [CurrencyPipe, LucideTrash2, RouterLink, RedFocusDirective],
+  imports: [
+    CurrencyPipe,
+    RouterLink,
+    RedFocusDirective,
+    LucideTrash,
+  ],
   templateUrl: './shopping.html',
   styleUrl: './shopping.css',
 })

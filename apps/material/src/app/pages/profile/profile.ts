@@ -27,7 +27,7 @@ import {
 import { ConfigurationService, OrderService, ToastService } from '@service';
 import { delay } from 'rxjs';
 import { UpdateUserDetailDto } from '@api';
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash-es';
 import {
   AppStateRoot,
   CartActions,

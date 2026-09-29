@@ -5,7 +5,14 @@
     "declaration": true,
     "module": "commonjs",
     "outDir": "../dist/out-tsc",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["node"]
   },
-  "include": ["prisma.ts", "create.product.ts", "creator.constants.ts", "generated/**/*.ts"]
+  "include": [
+    "prisma.ts",
+    "creator.ts",
+    "create.product.ts",
+    "creator.constants.ts",
+    "generated/**/*.ts"
+  ]
 }

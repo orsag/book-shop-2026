@@ -33,7 +33,7 @@ import { CardSmall, FieldErrorComponent } from '@component';
 import { delay } from 'rxjs';
 import { UpdateUserDetailDto } from '@api';
 import { RouterLink } from '@angular/router';
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash-es';
 
 @Component({
   selector: 'app-profile',

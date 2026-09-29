@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { OrderService, CreatedOrder, ToastService, ConfigurationService } from '@service';
 import { ErrorCodes, ErrorService, SuccessCodes } from '@core';
-import { LucideTrash2 } from '@lucide/angular';
+import { LucideTrash } from '@lucide/angular';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatCard, MatCardContent } from '@angular/material/card';
@@ -23,7 +23,7 @@ import {
   selector: 'app-shopping',
   imports: [
     CurrencyPipe,
-    LucideTrash2,
+    LucideTrash,
     RouterLink,
     MatButton,
     MatDivider,

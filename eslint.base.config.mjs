@@ -31,16 +31,16 @@ export default [
               onlyDependOnLibsWithTags: ['scope:prisma', 'scope:shared'],
             },
             {
-              sourceTag: 'scope:prisma',
-              onlyDependOnLibsWithTags: ['scope:shared'],
-            },
-            {
               sourceTag: 'scope:material',
               onlyDependOnLibsWithTags: ['scope:prisma', 'scope:shared'],
             },
             {
+              sourceTag: 'scope:prisma',
+              onlyDependOnLibsWithTags: ['scope:shared'],
+            },
+            {
               sourceTag: '*',
-              onlyDependOnLibsWithTags: ['scope:prisma'],
+              onlyDependOnLibsWithTags: ['scope:prisma', 'scope:shared', '*'],
             },
           ],
         },

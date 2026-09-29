@@ -1,19 +1,16 @@
 import 'dotenv/config';
 import * as bcrypt from 'bcryptjs';
+import { faker } from '@faker-js/faker';
 import {
   DEFAULT_EMAIL,
   DEFAULT_AVATAR,
   DEFAULT_TEST_EMAIL,
 } from './creator.constants';
-import { faker } from '@faker-js/faker';
+import { CartItem } from '@store/libs';
 
-// @ts-ignore
 const username = `${process.env['USERNAME']}`;
-// @ts-ignore
 const rawPassword = `${process.env['PASSWORD']}`;
-// @ts-ignore
 const testUserName = `${process.env['TEST_NAME']}`;
-// @ts-ignore
 const testUserPassword = `${process.env['TEST_PASSWORD']}`;
 
 export async function createAdmin() {
@@ -29,7 +26,7 @@ export async function createAdmin() {
     avatarUrl: DEFAULT_AVATAR,
     theme: 'light',
     favorites: [] as string[],
-    cartItems: [] as any[],
+    cartItems: [] as CartItem[],
   };
 }
 
@@ -46,7 +43,7 @@ export async function createTestUser() {
     avatarUrl: DEFAULT_AVATAR,
     theme: 'light',
     favorites: [] as string[],
-    cartItems: [] as any[],
+    cartItems: [] as CartItem[],
   };
 }
 
