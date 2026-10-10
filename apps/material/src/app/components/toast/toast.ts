@@ -15,7 +15,6 @@ import {
   LucideCircleX,
   LucideX,
 } from '@lucide/angular';
-import { MatCard } from '@angular/material/card';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
@@ -27,7 +26,6 @@ import { MatIconButton } from '@angular/material/button';
     LucideTriangleAlert,
     LucideCircleX,
     LucideX,
-    MatCard,
     MatIconButton,
   ],
   templateUrl: './toast.html',

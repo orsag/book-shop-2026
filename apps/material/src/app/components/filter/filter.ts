@@ -92,11 +92,9 @@ export class Filter {
 
   showHistory = signal(false);
   activeIndex = signal(-1); // For keyboard navigation
-  private openTimeout: ReturnType<typeof setTimeout> | null = null;
 
   showFilter = computed(() => this.config.flags().SHOW_FILTER);
 
-  isContentVisible = signal(false);
   // Initialize from store instead of hardcoded defaults
   filters = linkedSignal<BookFilters>(() => {
     const f = this.store.filters();
@@ -111,29 +109,6 @@ export class Filter {
   debouncedFilters = debounced(this.filters, 500);
 
   constructor() {
-    effect(() => {
-      const collapsed = this.showFilter();
-
-      untracked(() => {
-        if (this.showFilter()) {
-          if (this.openTimeout) {
-            clearTimeout(this.openTimeout);
-            this.openTimeout = null;
-          }
-        }
-
-        if (collapsed) {
-          // 1. Shrinking begins: Remove content IMMEDIATELY
-          this.isContentVisible.set(false);
-        } else {
-          // 2. Opening begins: Wait for the 300ms CSS animation to finish
-          this.openTimeout = setTimeout(() => {
-            this.isContentVisible.set(true);
-          }, 300); // Matches the transition duration
-        }
-      });
-    });
-
     effect(() => {
       const debouncedVal = this.debouncedFilters.value();
       if (!debouncedVal.search) return;

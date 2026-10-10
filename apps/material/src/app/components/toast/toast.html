@@ -1,10 +1,9 @@
 @if (toastService.toasts().length > 0) {
   <div data-testid="toast" class="toast">
     @for (toast of toastService.toasts(); track toast.id) {
-      <mat-card
+      <div
         data-testid="toast-item"
         role="alert"
-        appearance="outlined"
         class="toast-card"
       >
         <div class="toast-icon" [ngClass]="typeCircleClasses[toast.type]">
@@ -37,7 +36,7 @@
         >
           <svg lucideX></svg>
         </button>
-      </mat-card>
+      </div>
     }
   </div>
 }

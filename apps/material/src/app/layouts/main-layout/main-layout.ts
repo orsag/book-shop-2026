@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
   MatSidenav,
@@ -10,6 +10,8 @@ import { Footer } from '../../components/footer/footer';
 import { ProgressBarComponent } from '../../components/progress-bar/progress-bar';
 import { Filter } from '../../components/filter/filter';
 import { Toast } from '../../components/toast/toast';
+import { AppStore } from '@store';
+import { ConfigurationService } from '@service';
 
 @Component({
   selector: 'app-main-layout',
@@ -27,4 +29,10 @@ import { Toast } from '../../components/toast/toast';
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+  store = inject(AppStore);
+  config = inject(ConfigurationService);
+
+  showFilter = computed(() => this.config.flags().SHOW_FILTER);
+  showBanner = computed(() => this.config.flags().SHOW_DISCOUNT_BANNER);
+}

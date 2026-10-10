@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FeatureName, FEATURES } from '@store/shared-models';
 import { isPlatformBrowser } from '@angular/common';
+import { OverlayContainer } from '@angular/cdk/overlay';
 type FeatureFlags = Record<FeatureName, boolean>;
 
 @Injectable({
@@ -17,6 +18,7 @@ export class ConfigurationService {
   private readonly THEME_KEY = 'app_theme';
 
   private platformId = inject(PLATFORM_ID);
+  private overlayContainer = inject(OverlayContainer);
   private isBrowser = isPlatformBrowser(this.platformId);
 
   // 1. Core storage-linked signals using linkedSignal!
@@ -47,6 +49,23 @@ export class ConfigurationService {
       if (this.isBrowser) {
         localStorage.setItem(this.THEME_KEY, currentTheme);
         document.documentElement.setAttribute('data-theme', currentTheme);
+      }
+    });
+
+    // Inside your theme effect where you apply the theme:
+    effect(() => {
+      const currentTheme = this.theme();
+      if (this.isBrowser) {
+        localStorage.setItem(this.THEME_KEY, currentTheme);
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        // This ensures Material dialogs, menus, and select overlays turn dark too!
+        const containerClassList = this.overlayContainer.getContainerElement().classList;
+        if (currentTheme === 'dark') {
+          containerClassList.add('dark-theme'); // or whatever dark class you target
+        } else {
+          containerClassList.remove('dark-theme');
+        }
       }
     });
   }

@@ -1,4 +1,110 @@
-@import '../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+/* Default / Light Theme */
+[data-theme="light"] {
+  @import '@angular/material/prebuilt-themes/indigo-pink.css';
+}
+
+/* Dark Theme (e.g., pink-bluegrey or purple-amber) */
+[data-theme="dark"] {
+  @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/* Light Mode Background & Text */
+html[data-theme="light"] body {
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Dark Mode Background & Text */
+html[data-theme="dark"] body {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* ==========================================================
+   Global Angular Material Dialog Dark Mode Overrides
+   ========================================================== */
+html[data-theme="dark"] {
+  .mat-mdc-dialog-surface {
+    background-color: #1e1e1e !important;
+    color: #f3f4f6 !important;
+  }
+
+  .mat-mdc-dialog-title {
+    color: #f3f4f6 !important;
+  }
+
+  .mat-mdc-dialog-content {
+    color: #e0e0e0 !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    color: #f3f4f6 !important;
+  }
+}
+
+/* ==========================================================
+   Global Angular Material Button Dark Mode Fixes
+   ========================================================== */
+html[data-theme="dark"] {
+  /* Fix primary and flat buttons in dark mode */
+  .mat-mdc-unelevated-button,
+  .mat-mdc-raised-button,
+  .mat-mdc-flat-button {
+    &.mat-primary {
+      &:hover {
+        /* Mix with black/darkness instead of white, or use a state overlay */
+        background-color: color-mix(in srgb, var(--mat-primary, #818cf8) 85%, black) !important;
+      }
+    }
+  }
+
+  /* Fix standard stroked / outlined buttons */
+  .mat-mdc-outlined-button {
+    color: #f3f4f6 !important;
+    border-color: rgba(255, 255, 255, 0.24) !important;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+  }
+}
+
+/* ==========================================================
+   Fix MDC Button State Layers & Ripples in Dark Mode
+   ========================================================== */
+html[data-theme="dark"] {
+  .mat-mdc-unelevated-button.mat-primary,
+  .mat-mdc-raised-button.mat-primary,
+  .mat-mdc-flat-button.mat-primary {
+    /* Override MDC's internal state layer opacity and hover colors */
+    --mdc-unelevated-button-hover-state-layer-opacity: 0.08;
+    --mdc-unelevated-button-focus-state-layer-opacity: 0.12;
+    --mdc-unelevated-button-state-layer-color: #ffffff; /* Use a subtle white glow instead of a solid wash */
+  }
+}
+
+/* ==========================================================
+   Override Material Prebuilt Theme State Layer Overrides
+   ========================================================== */
+[data-theme="light"] {
+  .mat-mdc-unelevated-button.mat-primary,
+  .mat-mdc-raised-button.mat-primary,
+  .mat-mdc-flat-button.mat-primary {
+    --mat-button-filled-state-layer-color: rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+[data-theme="dark"] {
+  .mat-mdc-unelevated-button.mat-primary,
+  .mat-mdc-raised-button.mat-primary,
+  .mat-mdc-flat-button.mat-primary {
+    --mat-button-filled-state-layer-color: rgba(255, 255, 255, 0.15) !important;
+  }
+}
 
 *,
 *::before,
@@ -11,12 +117,6 @@
 html,
 body {
   height: 100%;
-}
-
-body {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #fafafa;
 }
 
 /* Global utility class for buttons with leading icons */
