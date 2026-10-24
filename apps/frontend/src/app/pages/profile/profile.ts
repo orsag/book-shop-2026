@@ -102,13 +102,18 @@ export class Profile {
       const detailValue = this.form().value();
       const userValue = this.userForm().value();
       untracked(() => {
-        const detailChanged =
-          this.detailSnapshot() !== undefined &&
-          !this.isEqualModel(this.detailSnapshot()!, detailValue);
-        const userChanged =
-          this.userSnapshot() !== undefined &&
-          !this.isEqualModel(this.userSnapshot()!, userValue);
-        this.userStore.updateStore('isDirtyForm', detailChanged || userChanged);
+        const detailSnapshot = this.detailSnapshot();
+        const userSnapshot = this.userSnapshot();
+
+        if (detailSnapshot) {
+          const detailChanged = !this.isEqualModel(detailSnapshot, detailValue);
+          this.userStore.updateStore('isDirtyForm', detailChanged);
+        }
+
+        if (userSnapshot) {
+          const userChanged = !this.isEqualModel(userSnapshot, userValue);
+          this.userStore.updateStore('isDirtyForm', userChanged);
+        }
       });
     });
   }
