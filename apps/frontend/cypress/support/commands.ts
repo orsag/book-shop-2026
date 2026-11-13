@@ -36,8 +36,6 @@ Cypress.Commands.add('login', () => {
         cy.get('input[placeholder="Password"]').type(password);
 
         cy.get('button[name="login"]').should('not.be.disabled').click();
-
-        cy.wait(1000);
       },
       {
         validate() {

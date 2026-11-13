@@ -34,6 +34,13 @@ volumes:
   upload_data:
 ```
 
+## Database cleanup
+```shell
+docker exec -it devel psql -U myuser -d mydatabase
+TRUNCATE TABLE "Order", "OrderItem" RESTART IDENTITY CASCADE;
+SELECT COUNT(*) FROM "Order";
+```
+
 ## Database setup
 ```sh
 npx prisma migrate dev --name initial

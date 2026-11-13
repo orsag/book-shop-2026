@@ -42,7 +42,7 @@ export function createProduct(type: CreateProductDtoProductType) {
     isAvailable: isAvailable,
     availableCount: availableCount,
     product_quality: condition,
-    coverUrl: `https://picsum.photos/seed/${faker.string.uuid()}/400/600`,
+    coverUrl: faker.image.dataUri({ type: 'svg-uri', width: 400, height: 600 }),
     // 2. Create the Rating as a child
     rating: {
       create: {

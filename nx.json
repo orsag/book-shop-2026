@@ -97,6 +97,18 @@
         "componentTestingTargetName": "component-test",
         "ciTargetName": "e2e-ci"
       }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "apps/frontend/**/*",
+        "apps/material/**/*",
+        "apps/backend/**/*",
+        "apps/libs/**/*"
+      ]
     }
   ]
 }

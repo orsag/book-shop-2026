@@ -43,11 +43,20 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ],
       "options": {
-        "lintFilePatterns": ["apps/backend/**/*.ts"],
-        "tsconfig": "apps/backend/tsconfig.app.json"
+        "tsconfig": "apps/backend/tsconfig.app.json",
+        "args": ["**/*.ts"]
       }
     },
     "prune": {
