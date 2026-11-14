@@ -1,5 +1,5 @@
 export * from './banner/banner';
-export * from './book-table/book-table';
+export * from './product-table/product-table';
 export * from './card-small/card-small';
 export * from './common/index';
 export * from './filter/filter';

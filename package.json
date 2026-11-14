@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.48",
+  "version": "3.49",
   "license": "MIT",
   "scripts": {
     "reset": "npx nx reset",

@@ -11,7 +11,7 @@ import {
 } from '@store/libs';
 import { vi } from 'vitest';
 import { MockComponent } from 'ng-mocks';
-import { OrderTable, BookTable } from '@component';
+import { OrderTable, ProductTable } from '@component';
 import { provideRouter } from '@angular/router';
 
 describe('Administration', () => {
@@ -53,8 +53,8 @@ describe('Administration', () => {
     };
 
     TestBed.overrideComponent(Administration, {
-      remove: { imports: [OrderTable, BookTable] },
-      add: { imports: [MockComponent(OrderTable), MockComponent(BookTable)] },
+      remove: { imports: [OrderTable, ProductTable] },
+      add: { imports: [MockComponent(OrderTable), MockComponent(ProductTable)] },
     });
 
     await TestBed.configureTestingModule({

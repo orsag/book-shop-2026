@@ -15,7 +15,7 @@ import { PaginationAccumulatorService } from '@service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'app-book-table',
+  selector: 'app-product-table',
   imports: [
     CommonModule,
     ScrollingModule,
@@ -29,10 +29,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     LucideChevronsRight,
     SinglePricePipe,
   ],
-  templateUrl: './book-table.html',
-  styleUrl: './book-table.css',
+  templateUrl: './product-table.html',
+  styleUrl: './product-table.css',
 })
-export class BookTable {
+export class ProductTable {
   appStore = inject(AppStore);
   edit = output<CreateProductDto>();
   remove = output<CreateProductDto>();

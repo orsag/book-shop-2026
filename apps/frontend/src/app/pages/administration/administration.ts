@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { BookTable, OrderTable } from '@component';
+import { ProductTable, OrderTable } from '@component';
 import { CommonModule } from '@angular/common';
 import { CreateProductDto as IProduct } from '@api';
 import { AppStore, UserStore, CartStore } from '@store';
@@ -15,7 +15,7 @@ import { EditBookReactiveComponent } from './edit-book-reactive';
 @Component({
   selector: 'app-administration',
   imports: [
-    BookTable,
+    ProductTable,
     LucidePlus,
     CommonModule,
     EditBookModalComponent,

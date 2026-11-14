@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BookTable } from '@component';
+import { ProductTable } from '@component';
 import { getTranslocoModule } from '@core';
 import { computed, signal } from '@angular/core';
 import { CreateProductDto } from '@api';
@@ -10,11 +10,11 @@ import { MOCK_PRODUCTS } from '@store/libs';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('BookTable', () => {
-  let component: BookTable;
+describe('ProductTable', () => {
+  let component: ProductTable;
   let mockAppStore: any;
   let mockPaginationAccumulatorService: any;
-  let fixture: ComponentFixture<BookTable>;
+  let fixture: ComponentFixture<ProductTable>;
 
   beforeEach(async () => {
     mockPaginationAccumulatorService = {
@@ -28,7 +28,7 @@ describe('BookTable', () => {
       isGastro: computed(() => false),
     };
     await TestBed.configureTestingModule({
-      imports: [BookTable, getTranslocoModule()],
+      imports: [ProductTable, getTranslocoModule()],
       providers: [
         provideRouter([]),
         { provide: AppStore, useValue: mockAppStore },
@@ -39,7 +39,7 @@ describe('BookTable', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BookTable);
+    fixture = TestBed.createComponent(ProductTable);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
