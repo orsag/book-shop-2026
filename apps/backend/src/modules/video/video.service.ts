@@ -23,7 +23,7 @@ export class VideoService {
 
     if (!video) throw new NotFoundException('Video not found');
 
-    const raw: any = video.data;
+    const raw: Uint8Array<ArrayBuffer> = video.data;
     if (raw && typeof raw.slice === 'function') {
       return raw.slice(start, end + 1);
     }

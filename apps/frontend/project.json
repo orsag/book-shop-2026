@@ -102,6 +102,8 @@
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/eslint.base.config.mjs",
+        "{workspaceRoot}/apps/frontend/eslint.config.mjs",
         "{workspaceRoot}/tools/eslint-rules/**/*",
         {
           "externalDependencies": ["eslint"]

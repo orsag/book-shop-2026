@@ -18,10 +18,12 @@
       }
     },
     "test": {
-      "executor": "@nx/vitest:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/apps/libs"
+      ],
       "options": {
-        "reportsDirectory": "coverage/apps/libs"
+        "coverage.reportsDirectory": "../../coverage/apps/libs"
       }
     },
     "lint": {
@@ -31,6 +33,8 @@
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/eslint.base.config.mjs",
+        "{workspaceRoot}/apps/libs/eslint.config.mjs",
         "{workspaceRoot}/tools/eslint-rules/**/*",
         {
           "externalDependencies": ["eslint"]

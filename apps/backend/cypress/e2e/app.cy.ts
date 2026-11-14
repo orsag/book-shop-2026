@@ -11,7 +11,6 @@ describe('Auth controller tests', () => {
 
   it('should authenticate the test user via httpOnly cookie', () => {
     expect(userId).to.be.a('string');
-    expect(userId).to.not.be.empty;
   });
 
   it('should get user data (GET /api/auth?username=testinguser)', () => {

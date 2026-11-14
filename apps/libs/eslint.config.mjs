@@ -39,6 +39,28 @@ export default [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
+          // apps/libs is a standalone package that only owns axios. Everything
+          // else is installed and versioned by the workspace root.
+          ignoredDependencies: [
+            '@analogjs/vitest-angular',
+            '@angular/cdk',
+            '@angular/common',
+            '@angular/compiler',
+            '@angular/core',
+            '@angular/router',
+            '@jsverse/transloco',
+            '@ngrx/effects',
+            '@ngrx/operators',
+            '@ngrx/signals',
+            '@ngrx/store',
+            '@swc/helpers',
+            'rxjs',
+            'vite',
+            'vite-tsconfig-paths',
+            // axios lives in apps/libs/node_modules, so it is not part of the
+            // root install that Nx builds its external dependency graph from.
+            'axios',
+          ],
         },
       ],
     },

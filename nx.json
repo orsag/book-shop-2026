@@ -29,21 +29,6 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "@nx/eslint:lint": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/eslint.config.mjs",
-        "{workspaceRoot}/tools/eslint-rules/**/*"
-      ]
-    },
-    "@nx/vitest:test": {
-      "cache": true,
-      "inputs": ["default", "^production"]
-    },
     "@nx/js:swc": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -61,7 +46,6 @@
       "style": "css"
     }
   },
-  "defaultProject": "book-store-2026",
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -75,12 +59,6 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "eslint:lint"
       }
     },
     {
@@ -102,13 +80,15 @@
       "plugin": "@nx/eslint/plugin",
       "options": {
         "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testMode": "watch",
+        "testTargetName": "test"
       },
-      "include": [
-        "apps/frontend/**/*",
-        "apps/material/**/*",
-        "apps/backend/**/*",
-        "apps/libs/**/*"
-      ]
+      "include": ["apps/libs/**/*", "apps/material/**/*"]
     }
   ]
 }

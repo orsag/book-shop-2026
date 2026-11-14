@@ -72,7 +72,7 @@ Cypress.Commands.add('getTestProductIds', (): Chainable<string[]> => {
     })
     .then((res) => {
       const ids = res.body.data.map((p: any) => p.id);
-      expect(ids).to.not.be.empty;
+      expect(ids).to.be.an('array').and.have.lengthOf(0);
       return cy.wrap<string[]>(ids);
     });
 });

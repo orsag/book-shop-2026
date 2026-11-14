@@ -109,9 +109,9 @@ export class GiftCardDto {
 
 export class CreateProductDto implements Product {
   @IsString()
-  id: string = 'default-id-123';
+  id = 'default-id-123';
   @IsString()
-  sku: string = '27Z6SGMY';
+  sku = '27Z6SGMY';
   @IsString()
   name!: string;
   @IsString()

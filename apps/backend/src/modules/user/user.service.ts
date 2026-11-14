@@ -9,17 +9,13 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    try {
-      return await this.prisma.user.create({
-        data: {
-          ...createUserDto,
-          password: await bcrypt.hash(createUserDto.password, 10),
-        },
-        omit: { password: true },
-      });
-    } catch (error: unknown) {
-      throw error; // Rethrow any other unexpected database errors
-    }
+    return await this.prisma.user.create({
+      data: {
+        ...createUserDto,
+        password: await bcrypt.hash(createUserDto.password, 10),
+      },
+      omit: { password: true },
+    });
   }
 
   findAll() {
@@ -40,27 +36,18 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     const { password, ...rest } = updateUserDto;
-
-    try {
-      return await this.prisma.user.update({
-        where: { id },
-        data: {
-          ...rest,
-          ...(password ? { password: await bcrypt.hash(password, 10) } : {}),
-        },
-      });
-    } catch (error: unknown) {
-      throw error; // Rethrow any other unexpected database errors
-    }
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...rest,
+        ...(password ? { password: await bcrypt.hash(password, 10) } : {}),
+      },
+    });
   }
 
   async remove(id: string) {
-    try {
-      return await this.prisma.user.delete({
-        where: { id },
-      });
-    } catch (error: unknown) {
-      throw error; // Rethrow any other unexpected database errors
-    }
+    return await this.prisma.user.delete({
+      where: { id },
+    });
   }
 }

@@ -158,12 +158,11 @@ export class ProductsService {
       throw new Error(`This action updates a #${id} product`); // Standard runtime error
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {
-      bookDetails,
-      cardDetails,
-      gameDetails,
-      gastroDetails,
+      bookDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
+      cardDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
+      gameDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
+      gastroDetails, // eslint-disable-line @typescript-eslint/no-unused-vars
       ...restProps
     } = updateProduct;
 
@@ -172,10 +171,9 @@ export class ProductsService {
     };
 
     if (selectedProduct.productType === 'BOOK' && updateProduct.bookDetails) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {
-        id: _,
-        productId: __,
+        id: _, // eslint-disable-line @typescript-eslint/no-unused-vars
+        productId: __, // eslint-disable-line @typescript-eslint/no-unused-vars
         ...bookUpdateData
       } = updateProduct.bookDetails; // Clean ES6 destructuring
 
@@ -187,10 +185,9 @@ export class ProductsService {
     }
 
     if (selectedProduct.productType === 'GAME' && updateProduct.gameDetails) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {
-        id: _,
-        productId: __,
+        id: _, // eslint-disable-line @typescript-eslint/no-unused-vars
+        productId: __, // eslint-disable-line @typescript-eslint/no-unused-vars
         ...gameUpdateData
       } = updateProduct.gameDetails;
       updateData.gameDetails = {
@@ -204,10 +201,9 @@ export class ProductsService {
       selectedProduct.productType === 'GASTRO' &&
       updateProduct.gastroDetails
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {
-        id: _,
-        productId: __,
+        id: _, // eslint-disable-line @typescript-eslint/no-unused-vars
+        productId: __, // eslint-disable-line @typescript-eslint/no-unused-vars
         ...gastroUpdateData
       } = updateProduct.gastroDetails;
       updateData.gastroDetails = {
@@ -282,6 +278,7 @@ export class ProductsService {
     };
 
     if (createProductDto.productType === 'BOOK' && bookDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _, productId: __, ...bookData } = bookDetails;
       createData.bookDetails = {
         create: bookData,
@@ -289,6 +286,7 @@ export class ProductsService {
     }
 
     if (createProductDto.productType === 'GAME' && gameDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _, productId: __, ...gameData } = gameDetails;
       createData.gameDetails = {
         create: gameData,
@@ -296,6 +294,7 @@ export class ProductsService {
     }
 
     if (createProductDto.productType === 'GASTRO' && gastroDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _, productId: __, ...gastroData } = gastroDetails;
       createData.gastroDetails = {
         create: gastroData,
@@ -303,6 +302,7 @@ export class ProductsService {
     }
 
     if (createProductDto.productType === 'GIFT_CARD' && cardDetails) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _, productId: __, ...cardData } = cardDetails;
       createData.cardDetails = {
         create: cardData,

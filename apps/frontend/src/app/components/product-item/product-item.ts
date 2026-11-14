@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CreateProductDto } from '@api';
 import { RouterLink } from '@angular/router';
-import { CommonModule, CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CartStore, UserStore } from '@store';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LucideHeart } from '@lucide/angular';
@@ -22,7 +22,6 @@ import { AppStore } from '@store';
   imports: [
     CommonModule,
     RouterLink,
-    NgOptimizedImage,
     LucideHeart,
     TranslocoDirective,
     CurrencyPipe,

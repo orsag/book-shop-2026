@@ -2,7 +2,7 @@ const { nxE2EPreset } = require('@nx/cypress/plugins/cypress-preset');
 const { defineConfig } = require('cypress');
 import { fileURLToPath } from 'url';
 
-// @ts-ignore
+// @ts-expect-ignore
 const __filename: string = fileURLToPath(import.meta.url);
 const prodRun = 'nx run backend:serve:production';
 

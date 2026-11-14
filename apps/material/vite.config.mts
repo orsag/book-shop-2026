@@ -2,12 +2,25 @@
 import { defineConfig } from 'vite';
 import angular from '@analogjs/vite-plugin-angular';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/material',
-  plugins: [angular(), tsconfigPaths(), nxCopyAssetsPlugin(['*.md'])],
+  plugins: [
+    angular(),
+    tsconfigPaths(),
+    viteStaticCopy({
+      // The old helper was a silent no-op when no file matched.
+      silent: true,
+      targets: [
+        {
+          src: '*.md',
+          dest: '.',
+        },
+      ],
+    }),
+  ],
   // Uncomment this if you are using workers.
   // worker: {
   //   plugins: () => [ nxViteTsPaths() ],

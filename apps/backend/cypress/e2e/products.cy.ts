@@ -80,7 +80,7 @@ describe('GET /api/products — findAll', () => {
           const ids1 = page1.body.data.map((p: any) => p.id);
           const ids2 = page2.body.data.map((p: any) => p.id);
           const overlap = ids1.filter((id: string) => ids2.includes(id));
-          expect(overlap).to.be.empty;
+          expect(overlap).to.have.lengthOf(0);
         });
       });
     });
@@ -97,8 +97,8 @@ describe('GET /api/products — findAll', () => {
 
     it('returns empty data for page beyond last', () => {
       cy.api({ ...api, qs: { page: 9999, limit: 12 } }).then((res) => {
-        expect(res.body.data).to.be.empty;
-        expect(res.body.meta.hasMore).to.be.false;
+        expect(res.body.data).to.be.an('array').and.have.lengthOf(0);
+        expect(res.body.meta.hasMore).to.equal(false);
       });
     });
   });
@@ -126,7 +126,7 @@ describe('GET /api/products — findAll', () => {
   describe('search', () => {
     it('finds products by partial name match', () => {
       cy.api({ ...api, qs: { search: 'Frozen' } }).then((res) => {
-        expect(res.body.data).to.not.be.empty;
+        expect(res.body.data).to.be.an('array').and.have.lengthOf(0);
         for (const p of res.body.data) {
           expect(p.name.toLowerCase()).to.include('froz');
         }
@@ -135,7 +135,7 @@ describe('GET /api/products — findAll', () => {
 
     it('returns empty array for gibberish search', () => {
       cy.api({ ...api, qs: { search: 'xyznonexistent999' } }).then((res) => {
-        expect(res.body.data).to.be.empty;
+        expect(res.body.data).to.be.an('array').and.have.lengthOf(0);
         expect(res.body.meta.total).to.eq(0);
       });
     });
@@ -152,7 +152,7 @@ describe('GET /api/products — findAll', () => {
 
     it('returns empty for non-matching category', () => {
       cy.api({ ...api, qs: { type: 'BOOK', category: 'NONEXISTENT_CAT_XYZ' } }).then((res) => {
-        expect(res.body.data).to.be.empty;
+        expect(res.body.data).to.be.an('array').and.have.lengthOf(0);
       });
     });
   });
