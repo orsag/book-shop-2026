@@ -7,8 +7,8 @@ import {
   DEFAULT_TYPE,
   DEFAULT_PAGE,
   DEFAULT_MAX_LIMIT,
-  ProductType,
 } from '@book-store-2026/libs';
+import { CreateProductDtoProductType } from '@api';
 
 const router = Router();
 const productsService = new ProductsService();
@@ -18,7 +18,7 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     // Mimic DefaultValuePipe and type conversion logic
     const rawType = getSingleQueryParam(req.query['type']);
-    const type = (rawType as ProductType) || DEFAULT_TYPE;
+    const type = (rawType as CreateProductDtoProductType) || DEFAULT_TYPE;
 
     const rawPage = getSingleQueryParam(req.query['page']);
     const page = rawPage ? parseInt(rawPage, 10) : DEFAULT_PAGE;
@@ -84,7 +84,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = getRequiredParam(req.params['id']);
     const rawType = getSingleQueryParam(req.query['type']);
-    const type = (rawType as ProductType) || DEFAULT_TYPE;
+    const type = (rawType as CreateProductDtoProductType) || DEFAULT_TYPE;
 
     const result = await productsService.findOne(id, type);
     if (!result) {

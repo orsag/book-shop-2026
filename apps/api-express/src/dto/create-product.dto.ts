@@ -1,4 +1,7 @@
-import type { Product, ProductType } from '@book-store-2026/libs';
+import type {
+  CreateProductDto as ICreateProductDto,
+  CreateProductDtoProductType,
+} from '@book-store-2026/libs';
 import {
   IsString,
   IsNumber,
@@ -10,21 +13,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-
-// export class AggregateRatingDto {
-//   @IsString()
-//   id: string;
-//   @IsNumber()
-//   ratingValue: number;
-//   @IsNumber()
-//   ratingCount: number;
-//   @IsNumber()
-//   bestRating: number;
-//   @IsNumber()
-//   worstRating: number;
-//   @IsString()
-//   productId: string;
-// }
 
 export class BookDto {
   @IsString()
@@ -46,7 +34,7 @@ export class BookDto {
   @IsString()
   binding!: string;
   @IsString()
-  publishedDate!: Date;
+  publishedDate!: string;
   @IsOptional()
   @IsBoolean()
   audioBook!: boolean;
@@ -107,7 +95,7 @@ export class GiftCardDto {
   priceCurrency!: string;
 }
 
-export class CreateProductDto implements Product {
+export class CreateProductDto implements ICreateProductDto {
   @IsString()
   id = 'default-id-123';
   @IsString()
@@ -137,13 +125,7 @@ export class CreateProductDto implements Product {
   @IsIn(['BOOK', 'GAME', 'GASTRO', 'GIFT_CARD'], {
     message: 'category must be one of: BOOK, GAME, GASTRO, GIFT_CARD',
   })
-  productType!: ProductType;
-
-  // Relations (optional for partial DTOs or loaded relations)
-  // @IsOptional()
-  // @ValidateNested()
-  // @Type(() => AggregateRatingDto)
-  // rating?: AggregateRatingDto | null;
+  productType!: CreateProductDtoProductType;
 
   @IsOptional()
   @ValidateNested()
@@ -165,7 +147,7 @@ export class CreateProductDto implements Product {
   @Type(() => GiftCardDto)
   cardDetails?: GiftCardDto | null;
   @IsString()
-  createdAt: Date = new Date();
+  createdAt!: string;
   @IsString()
-  updatedAt: Date = new Date();
+  updatedAt!: string;
 }

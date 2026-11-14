@@ -1,4 +1,4 @@
-import type { ProductType } from '@book-store-2026/libs';
+import type { CreateProductDtoProductType } from '@api';
 import {
   IsString,
   IsNumber,
@@ -24,7 +24,7 @@ export class UpdateProductDto implements UpdateProductDto {
   @IsString()
   product_quality!: string;
   @IsString()
-  productType!: ProductType;
+  productType!: CreateProductDtoProductType;
 
   @IsOptional()
   @ValidateNested()

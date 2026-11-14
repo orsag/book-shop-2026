@@ -1,16 +1,8 @@
 export const DEFAULT_EMAIL = 'martin.orsag108@gmail.com';
 export const DEFAULT_TEST_EMAIL = 'test.user.108@gmail.com';
 export const DISCOUNT = [0, 0, 0, 0, 0, 0.05, 0.1, 0.2];
-export const RATING_MAX = 5;
-export const RATING_MIN = 1;
 export const DEFAULT_AVATAR =
   'https://avatars.githubusercontent.com/u/971652350';
-
-export const RATING = {
-  min: RATING_MIN,
-  max: RATING_MAX,
-  fractionDigits: 1,
-};
 
 export const computerGameCategory = [
   'Strategic',

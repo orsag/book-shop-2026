@@ -36,13 +36,12 @@ model Product {
   availableCount      Int     @default(0)
   isAvailable         Boolean @default(true)
   product_quality     String  @default("new")
-  coverUrl            String?
+  coverUrl            String  @default("")
 
   // The "Type" discriminator
   productType ProductType
 
   // Shared Relations
-  rating     AggregateRating?
   orderItems OrderItem[]
 
   // Extension Relations (Optional)
@@ -114,18 +113,6 @@ model Gastro {
   binding   String
   edition   Int
   weight    Int
-}
-
-model AggregateRating {
-  id          String @id @default(uuid())
-  ratingValue Float
-  ratingCount Int
-  bestRating  Int
-  worstRating Int
-
-  // This side OWNS the relationship
-  productId String  @unique
-  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Order {

@@ -7,9 +7,6 @@ import {
   DISCOUNT,
   gastroBrands,
   gatroCategory,
-  RATING,
-  RATING_MAX,
-  RATING_MIN,
 } from './creator.constants';
 
 type CreateProductDtoProductType = "BOOK" | "GAME" | "GASTRO" | "GIFT_CARD";
@@ -43,15 +40,6 @@ export function createProduct(type: CreateProductDtoProductType) {
     availableCount: availableCount,
     product_quality: condition,
     coverUrl: faker.image.dataUri({ type: 'svg-uri', width: 400, height: 600 }),
-    // 2. Create the Rating as a child
-    rating: {
-      create: {
-        ratingValue: faker.number.float(RATING),
-        ratingCount: faker.number.int({ min: 0, max: 1000 }),
-        bestRating: RATING_MAX,
-        worstRating: RATING_MIN,
-      },
-    },
   };
 
   if (type === 'BOOK') {

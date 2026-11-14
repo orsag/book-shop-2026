@@ -14,21 +14,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-// export class AggregateRatingDto {
-//   @IsString()
-//   id: string;
-//   @IsNumber()
-//   ratingValue: number;
-//   @IsNumber()
-//   ratingCount: number;
-//   @IsNumber()
-//   bestRating: number;
-//   @IsNumber()
-//   worstRating: number;
-//   @IsString()
-//   productId: string;
-// }
-
 export class BookDto {
   @IsString()
   id!: string;
@@ -141,12 +126,6 @@ export class CreateProductDto implements ICreateProductDto {
     message: 'category must be one of: BOOK, GAME, GASTRO, GIFT_CARD',
   })
   productType!: CreateProductDtoProductType;
-
-  // Relations (optional for partial DTOs or loaded relations)
-  // @IsOptional()
-  // @ValidateNested()
-  // @Type(() => AggregateRatingDto)
-  // rating?: AggregateRatingDto | null;
 
   @IsOptional()
   @ValidateNested()

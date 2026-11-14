@@ -20,8 +20,6 @@
 //   // Type discriminator
 //   productType: ProductType;
 //
-//   // Shared Relations
-//   rating?: AggregateRating | null;
 //
 //   // Extension Relations (Optional)
 //   bookDetails?: BookDetails | null;
@@ -79,15 +77,6 @@
 //   price: number;
 //   priceCurrency: string;
 // }
-
-export interface AggregateRating {
-  id: string;
-  ratingValue: number;
-  ratingCount: number;
-  bestRating: number;
-  worstRating: number;
-  productId: string;
-}
 
 // export interface UpdateProductDto {
 //   name: string;

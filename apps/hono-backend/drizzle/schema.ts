@@ -95,22 +95,6 @@ export const gastro = pgTable("Gastro", {
 		}).onUpdate("cascade").onDelete("restrict"),
 ]);
 
-export const aggregateRating = pgTable("AggregateRating", {
-	id: text().primaryKey().notNull(),
-	ratingValue: doublePrecision().notNull(),
-	ratingCount: integer().notNull(),
-	bestRating: integer().notNull(),
-	worstRating: integer().notNull(),
-	productId: text().notNull(),
-}, (table) => [
-	uniqueIndex("AggregateRating_productId_key").using("btree", table.productId.asc().nullsLast().op("text_ops")),
-	foreignKey({
-			columns: [table.productId],
-			foreignColumns: [product.id],
-			name: "AggregateRating_productId_fkey"
-		}).onUpdate("cascade").onDelete("restrict"),
-]);
-
 export const order = pgTable("Order", {
 	id: text().primaryKey().notNull(),
 	userId: text().notNull(),

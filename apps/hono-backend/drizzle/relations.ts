@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { order, orderItem, product, book, game, gastro, aggregateRating, user, giftCard, userDetail } from "./schema";
+import { order, orderItem, product, book, game, gastro, user, giftCard, userDetail } from "./schema";
 
 export const orderItemRelations = relations(orderItem, ({one}) => ({
 	order: one(order, {
@@ -25,7 +25,6 @@ export const productRelations = relations(product, ({many}) => ({
 	books: many(book),
 	games: many(game),
 	gastros: many(gastro),
-	aggregateRatings: many(aggregateRating),
 	giftCards: many(giftCard),
 }));
 
@@ -46,13 +45,6 @@ export const gameRelations = relations(game, ({one}) => ({
 export const gastroRelations = relations(gastro, ({one}) => ({
 	product: one(product, {
 		fields: [gastro.productId],
-		references: [product.id]
-	}),
-}));
-
-export const aggregateRatingRelations = relations(aggregateRating, ({one}) => ({
-	product: one(product, {
-		fields: [aggregateRating.productId],
 		references: [product.id]
 	}),
 }));

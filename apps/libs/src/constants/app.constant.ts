@@ -1,4 +1,4 @@
-import { CreateProductDtoProductType } from '@api';
+import type { CreateProductDtoProductType } from '@api';
 
 export const DEFAULT_LOADER_DELAY = 2000;
 export const DEFAULT_MAX_LIMIT = 20;

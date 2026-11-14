@@ -107,7 +107,6 @@ export class ProductsService {
         take: limit,
         orderBy,
         include: {
-          rating: true, // Always include pre-calculated ratings
           bookDetails: type === 'BOOK',
           gameDetails: type === 'GAME',
           gastroDetails: type === 'GASTRO',
@@ -132,7 +131,6 @@ export class ProductsService {
     return prisma.product.findUnique({
       where: { id },
       include: {
-        rating: true,
         bookDetails: type === 'BOOK',
         gameDetails: type === 'GAME',
         gastroDetails: type === 'GASTRO',
@@ -267,14 +265,6 @@ export class ProductsService {
     const createData: any = {
       ...productData,
       sku: this.generateInternalSku(),
-      rating: {
-        create: {
-          ratingValue: 0,
-          ratingCount: 0,
-          bestRating: 5,
-          worstRating: 1,
-        },
-      },
     };
 
     if (createProductDto.productType === 'BOOK' && bookDetails) {
@@ -312,7 +302,6 @@ export class ProductsService {
     return prisma.product.create({
       data: createData,
       include: {
-        rating: true,
         bookDetails: createProductDto.productType === 'BOOK',
         gameDetails: createProductDto.productType === 'GAME',
         gastroDetails: createProductDto.productType === 'GASTRO',

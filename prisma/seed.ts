@@ -5,7 +5,6 @@ import { createProduct } from './create.product';
 
 async function main() {
   await prisma.gastro.deleteMany();
-  await prisma.aggregateRating.deleteMany();
   await prisma.book.deleteMany();
   await prisma.game.deleteMany();
   console.log(' ✅ Deleted extensions successfully');

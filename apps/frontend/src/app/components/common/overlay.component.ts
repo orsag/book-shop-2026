@@ -23,6 +23,5 @@ export class OverlayComponent {
   product_quality: string
   coverUrl?: string | null
   productType: ProductType
-  rating?: AggregateRating | null
    */
 }
