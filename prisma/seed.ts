@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { prisma, Prisma } from './prisma';
+import { prisma } from './prisma';
 import { createAdmin, createTestUser, createUserDetail } from './creator';
 import { createProduct } from './create.product';
 
@@ -21,7 +21,7 @@ async function main() {
   for (let i = 0; i < 1200; i++) {
     const type = faker.helpers.arrayElement(['BOOK', 'GAME']); // 'GASTRO'
     // 1. Create the Base Product
-    const createInput: Prisma.ProductCreateInput = createProduct(type);
+    const createInput = createProduct(type);
     // database create
     await prisma.product.create({ data: createInput });
   }

@@ -8,6 +8,13 @@
       "when": 1784193967823,
       "tag": "0000_lethal_wrecking_crew",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794668660583,
+      "tag": "0001_remove_aggregate_rating",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker/locale/en';
+import { Prisma } from './prisma';
 import {
   categories,
   computerGames,
@@ -21,14 +22,16 @@ export function getName(type: CreateProductDtoProductType) {
   return map[type] ?? faker.commerce.productName();
 }
 
-export function createProduct(type: CreateProductDtoProductType) {
+export function createProduct(
+  type: CreateProductDtoProductType,
+): Prisma.ProductCreateInput {
   const availableCount = faker.number.int({ min: 0, max: 50 });
   const isAvailable = availableCount > 0;
   const condition = Math.random() < 0.9 ? 'new' : 'used';
   const discount = faker.helpers.arrayElement(DISCOUNT);
   const price = parseFloat(faker.commerce.price({ min: 9, max: 300, dec: 2 }));
 
-  const createInput: any = {
+  const createInput: Prisma.ProductCreateInput = {
     sku: faker.string.alphanumeric(8).toUpperCase(),
     name: getName(type),
     alternativeHeadline: faker.company.catchPhrase(),

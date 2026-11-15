@@ -1,6 +1,6 @@
 {
   "name": "book-store-2026",
-  "version": "3.51",
+  "version": "3.52",
   "license": "MIT",
   "scripts": {
     "reset": "npx nx reset",
@@ -24,7 +24,8 @@
     "clean": "rm -rf dist .angular/cache .nx/cache",
     "modules": "rm -rf node_modules package-lock.json",
     "e2e": "npx nx run frontend:e2e",
-    "e2ebe": "npx nx run backend:e2e"
+    "e2ebe": "npx nx run backend:e2e",
+    "drizzle": "npx drizzle-kit pull"
   },
   "private": true,
   "dependencies": {
